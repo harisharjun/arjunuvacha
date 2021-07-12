@@ -1,4 +1,4 @@
-baseurl: https://stack-test-a41a1.web.app/
+baseurl: https://arjunuvacha.com/
 languageCode: en-us
 theme: hugo-theme-stack
 paginate: 10
@@ -8,7 +8,7 @@ title: Arjun Uvacha
 disqusShortname: arjunuvacha
 
 # GA Tracking ID
-googleAnalytics:
+googleAnalytics: "UA-187775971-1"
 
 # Theme i18n support
 # Available values: en, fr, id, ja, ko, pt-br, zh-cn, es, de, nl
@@ -111,10 +111,10 @@ params:
 
     colorScheme:
         # Display toggle
-        toggle: true
+        toggle: false
 
         # Available values: auto, light, dark
-        default: auto
+        default: light
 
     imageProcessing:
         cover:

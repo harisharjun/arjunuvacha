@@ -1,6 +1,7 @@
 ---
 title: About
-description: 
+description: 🔍 a product manager's perspective of everyday things.
+image: /sky.jpg
 date:
 aliases:
   - about-us
@@ -34,3 +35,16 @@ Keeping that spirit of curiosity at the center, in this blog, I try and pen down
 **Thus the name for this blog!**
 
 **[Continue to the blog...](../)**
+
+---
+
+## About me
+
+I am Arjun, a product manager.
+
+It is rather inconspicuous how our behaviours are shaped. They make us do certain things in a certain way; and the role of products around us in shaping our behaviours is compelling, which has always fascinated me.
+
+And here I am, trying my bit to build better products, for **Good!**
+
+### Find me on:
+[LinkedIn](https://www.linkedin.com/in/harisharjun/) • [GitHub](https://github.com/harisharjun) • [Twitter](https://twitter.com/arjunuvacha_) •  [Clubhouse](https://clubhouse.com/@arjunuvacha) • [Instagram](https://www.instagram.com/arjunuvacha/)

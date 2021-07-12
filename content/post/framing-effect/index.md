@@ -6,6 +6,7 @@ slug: framing-effect
 image: framing.jpg
 categories:
     - psychology
+    - product-management
 tags: [
     "cognitive bias",
     "product management",

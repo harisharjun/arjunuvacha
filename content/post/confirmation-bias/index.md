@@ -1,7 +1,7 @@
 ---
 title: 01 Confirmation Bias
 description: Things we believe because we like to believe
-date: 2021-05-02T23:10:47+05:30
+date: 2021-06-20T23:10:47+05:30
 slug: confirmation-bias
 image: football.jpg
 categories:

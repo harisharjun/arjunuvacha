@@ -6,6 +6,7 @@ slug: forer-effect
 image: forer.jpg
 categories:
     - psychology
+    - product-management
 tags: [
     "cognitive bias",
     "product management",

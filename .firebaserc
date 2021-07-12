@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "stack-test-a41a1"
+    "default": "stack-test-a41a1",
+    "production": "arjunuvacha-3de80",
+    "staging": "arjunuvacha-test"
   }
 }

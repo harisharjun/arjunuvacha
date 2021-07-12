@@ -2,26 +2,71 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Arjun Uvacha</title>
-    <link>https://stack-test-a41a1.web.app/tags/</link>
+    <link>https://arjunuvacha.com/tags/</link>
     <description>Recent content in Tags on Arjun Uvacha</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Jun 2021 00:04:18 +0530</lastBuildDate><atom:link href="https://stack-test-a41a1.web.app/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 11 Jul 2021 21:03:07 +0530</lastBuildDate><atom:link href="https://arjunuvacha.com/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>cognitive bias</title>
-      <link>https://stack-test-a41a1.web.app/tags/cognitive-bias/</link>
-      <pubDate>Tue, 22 Jun 2021 00:04:18 +0530</pubDate>
+      <link>https://arjunuvacha.com/tags/cognitive-bias/</link>
+      <pubDate>Sun, 11 Jul 2021 21:03:07 +0530</pubDate>
       
-      <guid>https://stack-test-a41a1.web.app/tags/cognitive-bias/</guid>
+      <guid>https://arjunuvacha.com/tags/cognitive-bias/</guid>
       <description></description>
     </item>
     
     <item>
       <title>product management</title>
-      <link>https://stack-test-a41a1.web.app/tags/product-management/</link>
-      <pubDate>Tue, 22 Jun 2021 00:04:18 +0530</pubDate>
+      <link>https://arjunuvacha.com/tags/product-management/</link>
+      <pubDate>Sun, 11 Jul 2021 21:03:07 +0530</pubDate>
       
-      <guid>https://stack-test-a41a1.web.app/tags/product-management/</guid>
+      <guid>https://arjunuvacha.com/tags/product-management/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>interview preparation</title>
+      <link>https://arjunuvacha.com/tags/interview-preparation/</link>
+      <pubDate>Sun, 27 Jun 2021 13:39:38 +0530</pubDate>
+      
+      <guid>https://arjunuvacha.com/tags/interview-preparation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>habits</title>
+      <link>https://arjunuvacha.com/tags/habits/</link>
+      <pubDate>Thu, 04 Mar 2021 20:40:29 +0530</pubDate>
+      
+      <guid>https://arjunuvacha.com/tags/habits/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>motivation</title>
+      <link>https://arjunuvacha.com/tags/motivation/</link>
+      <pubDate>Sat, 10 Aug 2019 19:57:05 +0530</pubDate>
+      
+      <guid>https://arjunuvacha.com/tags/motivation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>meditation</title>
+      <link>https://arjunuvacha.com/tags/meditation/</link>
+      <pubDate>Thu, 17 Jan 2019 00:34:42 +0530</pubDate>
+      
+      <guid>https://arjunuvacha.com/tags/meditation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>personal stories</title>
+      <link>https://arjunuvacha.com/tags/personal-stories/</link>
+      <pubDate>Fri, 23 Sep 2016 19:27:50 +0530</pubDate>
+      
+      <guid>https://arjunuvacha.com/tags/personal-stories/</guid>
       <description></description>
     </item>
     
