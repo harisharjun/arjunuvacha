@@ -27,7 +27,7 @@ Let's get started with this one!
 
 **Let’s go back to the 1600s for a while and explore a couple of the discoveries back then!** 
 
-### Experiment from Leaning Tower of Pisa
+### Experiment from the Leaning Tower of Pisa
 You would have heard of Galileo Galilei. If not, he is the one known for his famous experiment of dropping two objects of different weights from the ‘Leaning Tower of Pisa’. His experiment contradicted what Aristotle had taught before: heavier objects fall faster than the lighter objects. And as the experiment reveals, both the objects hit the ground almost at the same time, busting the popular belief till then.
 
 Isn’t it very intuitive to think that a lighter object will obviously take more time than a heavier object? We experience this phenomenon daily - if a pen and paper slip away from a table, the pen hits the ground first, isn’t it? It is a fact that the pen hits first, but we do not tend to think beyond the easy evidence. The easy evidence is that pen weighs more than the paper, so we correlate the weight of the object to the time taken.

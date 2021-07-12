@@ -8,38 +8,38 @@
     <language>en-us</language>
     <lastBuildDate>Sun, 11 Jul 2021 21:03:07 +0530</lastBuildDate><atom:link href="https://arjunuvacha.com/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Book Reviews</title>
-      <link>https://arjunuvacha.com/categories/book-reviews/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://arjunuvacha.com/categories/book-reviews/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Motivation</title>
-      <link>https://arjunuvacha.com/categories/motivation/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://arjunuvacha.com/categories/motivation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Product Management</title>
+      <title>product-management</title>
       <link>https://arjunuvacha.com/categories/product-management/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 11 Jul 2021 21:03:07 +0530</pubDate>
       
       <guid>https://arjunuvacha.com/categories/product-management/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Psychology</title>
+      <title>psychology</title>
       <link>https://arjunuvacha.com/categories/psychology/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 11 Jul 2021 21:03:07 +0530</pubDate>
       
       <guid>https://arjunuvacha.com/categories/psychology/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>book-reviews</title>
+      <link>https://arjunuvacha.com/categories/book-reviews/</link>
+      <pubDate>Thu, 04 Mar 2021 20:40:29 +0530</pubDate>
+      
+      <guid>https://arjunuvacha.com/categories/book-reviews/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>motivation</title>
+      <link>https://arjunuvacha.com/categories/motivation/</link>
+      <pubDate>Sat, 10 Aug 2019 19:57:05 +0530</pubDate>
+      
+      <guid>https://arjunuvacha.com/categories/motivation/</guid>
       <description></description>
     </item>
     
