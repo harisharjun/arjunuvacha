@@ -41,21 +41,19 @@ The contradicting theory is '**heliocentrism**'. Also known as Copernicanism, de
 
 Galileo successfully provided physical evidence to explain this phenomenon, but the then community disregarded his claims and forced him to accept that the Earth only was the centre of the universe. And due to this, in 1633, Galileo was ordered to stand trial, was imprisoned for a few years and was then held on house arrest for the rest of his life!
 
-But why was it so difficult for people to believe this newly proposed way of the planetary system which has some scientific explanation?
-
+**But why was it so difficult for people to believe this newly proposed way of the planetary system which has some scientific explanation?**\
 You see, in the Catholic world prior to Galileo's conflict, geocentrism agreed with the literal interpretation of the Bible in several places: Chronicles 16:30, Psalm 93:1, Psalm 96:10, Psalm 104:5, Ecclesiastes 1:5 and all the people subscribed to this view as it has got references in the Bible itself. As the connection was established with the Bible, it was hard to contradict this view.
 
 **I would like to highlight two takeaways from the above two anecdotes:**
 
 #### From anecdote 1:
-A belief could be false no matter how popular or intuitive it is, and it takes rigorous experiments to prove it
+*A belief could be false no matter how popular or intuitive it is, and it takes rigorous experiments to prove it*
 
 #### From anecdote 2:
-No matter how scientific an experiment and explanation is for a phenomenon, people will not be ready to change their beliefs. In fact, people will be ready to take extreme measures to safeguard their beliefs than try to find out the truth
+*No matter how scientific an experiment and explanation is for a phenomenon, people will not be ready to change their beliefs. In fact, people will be ready to take extreme measures to safeguard their beliefs than try to find out the truth*
 
-**What is Galileo doing in an article that is supposed to be on psychology, you wonder?**
-
-These two anecdotes are only to convey how our beliefs and belief systems are very difficult to understand, difficult to prove and difficult to change. And thus, a lot of what we say, what we do and what we decide are based on these true or false beliefs, knowingly or unknowingly.
+**What is Galileo doing in an article that is supposed to be on psychology, you wonder?**\
+These two anecdotes are only to convey that our beliefs and belief systems are very difficult to understand, difficult to prove and difficult to change. And thus, a lot of what we say, what we do and what we decide are based on these true or false beliefs, knowingly or unknowingly.
 
 ---
 
@@ -79,7 +77,7 @@ As we were having a conversation about what could he possibly do next, he said h
 
 I couldn’t convince him out of it. I am still wondering how do we make someone realise if they are so driven just by their beliefs!
 
-#### As I think more about it, I realise that the belief bias is not just seen at a personal level like the above examples. We are exposed to it as a society, as a community and as a global fraternity as well.
+As I think more about it, I realise that the belief bias is not just seen at a personal level like the above examples. We are exposed to it as a society, as a community and as a global fraternity as well.
 
 **Let’s take a look at some examples**
 
@@ -92,23 +90,23 @@ It took me one complete season of Money Heist to realise that patriarchy is ingr
 * entrusting ownership without power
 * a lot more...
 
-There could be reasons for some of the practices (not the above) that bestow roles for males and females separately in the society, which is good. This furthers our progress as a society, but many of these practises are simply followed because they are just laid out there, because we have been following them since a long time and for no other reason.
+There could be reasons for some of the practices (not the above) that bestow roles for males and females separately in the society, which is good as this furthers our progress as a society. But, many of these practises are simply followed because they are just laid out there, because we have been following them since a long time and for no other reason.
 
 ### Buying a car gives a good life
 I have many friends who believe that having a car gives a good life. Ask them why, and they say 'a car is needed, no?' The argument dies at the beginning itself. There could be many reasons how a car improves the lifestyle (if not life) which is fine, but a deeper thought is not given into these when such a purchase is made. It is bought because ‘we need a car, right?’
 
 ### The silly bad omens
-There are many instances in my childhood when we did a few things just because we believed them to be true!
+There are many instances in my childhood when we did a few things just because we believed them to be true! Let's take a look at one such incident.
 
-Let's take a look at one such incident. We are three kids in our family - my brother, sister and I. I vividly remember the incident when we had to go to a nearby relative's house. We had to attend a function in the night and had to walk to the relative’s place.
+We are three kids in our family - my brother, sister and I. I vividly remember the incident when we had to go to a nearby relative's house. We had to attend a function in the night and had to walk to the relative’s place.
 
 ‘We should not travel in groups of three’, we heard someone tell us, one of our elders. As we were three of us, we believed that it was not good for us to go. But there was a way around, a hack to bypass this! My sister picked up a stone from the ground, put it in the purse and told we were then good to go. We had ‘stone’ as the fourth member, can you believe it?
 
 Sounds silly, right? It is!
 
 **There are more:**
-* Looking into a broken mirror is bad luck. You can judge me, but I am still scared to look into a broken mirror!
-* A black cat crossing the path is bad luck. Many of you still believe this, right?
+* Looking into a broken mirror is bad luck. *You can judge me, but I am still scared to look into a broken mirror!*
+* A black cat crossing the path is bad luck. *Many of you still believe this, right?*
 
 ### More examples:
 * Graduating from an IIT gives a good life
