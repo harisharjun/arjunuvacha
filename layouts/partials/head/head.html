@@ -2,7 +2,21 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 
 {{- $description := partialCached "data/description" . .RelPermalink -}}
+<meta property="og:title" content="{{ .Title }} | {{ .Site.Title }}" />
 <meta name='description' content='{{ $description }}'>
+
+{{ with .Params.image }} 
+  <meta itemprop="image" content="{{ . | absURL }}" />
+  <meta property="og:image" content="{{ . | absURL }}" /> 
+  <meta name="twitter:image" content="{{ . | absURL }}" />
+  <meta name="twitter:image:src" content="{{ . | absURL }}" /> 
+{{ else }}
+  <meta itemprop="image" content="{{ .Site.Params.ogimage | absURL }}" />
+  <meta property="og:image" content="{{ .Site.Params.ogimage | absURL }}" />
+  <meta name="twitter:image" content="{{ .Site.Params.ogimage | absURL }}" />
+  <meta name="twitter:image:src" content="{{ .Site.Params.ogimage | absURL }}" /> 
+{{ end }}
+
 {{ with .Params.Keywords }}<meta name="keywords" content="{{ delimit . ", " }}">{{ end }}
 
 {{- $title := partialCached "data/title" . .RelPermalink -}}
