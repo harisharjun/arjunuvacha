@@ -6,7 +6,91 @@
         <description>Recent content in product-management on Arjun Uvacha</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Tue, 02 Nov 2021 14:10:54 +0530</lastBuildDate><atom:link href="https://www.arjunuvacha.com/categories/product-management/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 22 Jan 2023 16:16:32 +0530</lastBuildDate><atom:link href="https://www.arjunuvacha.com/categories/product-management/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>The Value of Defaults</title>
+        <link>https://www.arjunuvacha.com/p/the-value-of-defaults/</link>
+        <pubDate>Sun, 22 Jan 2023 16:16:32 +0530</pubDate>
+        
+        <guid>https://www.arjunuvacha.com/p/the-value-of-defaults/</guid>
+        <description>&lt;img src="https://www.arjunuvacha.com/p/the-value-of-defaults/defaults.jpg" alt="Featured image of post The Value of Defaults" /&gt;&lt;h2 id=&#34;lets-start-with-a-story&#34;&gt;Let’s start with a story&lt;/h2&gt;
+&lt;p&gt;I have recently migrated from an Android smartphone to an iPhone. One stark difference I saw between the both of them was in their default settings. This difference was stark yet so subtle that it’s hard to realise unless you pay attention. And that’s the beauty of a great product… That it is hard to learn how easy it is to use it.&lt;/p&gt;
+&lt;p&gt;Diving into the story… I remember when I was using the Android smartphone I had to follow this routine of going through my notifications at the end of the day, clearing off the irrelevant ones to figure out if anything needed my attention. However, I was often swindled by some irrelevant notification which should not have had my attention. I then, without any intention, spent the next hour or two browsing random Apps which otherwise did not provide any value to me.&lt;/p&gt;
+&lt;p&gt;After an hour-long unproductive exercise, I used to convince myself that it was probably worth spending that time. “&lt;em&gt;I got relaxed. Great stress-buster&lt;/em&gt;,” I gave false assurance to myself. The particularly impermissible part about this was this happened day after day, every day.&lt;/p&gt;
+&lt;p&gt;Now, after I switched to the iPhone, I spend less time “&lt;em&gt;relaxing&lt;/em&gt;” myself going through irrelevant notifications or browsing unnecessary Apps. I know exactly which notifications need my attention and when. &lt;em&gt;How? you might ask.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;It is quite simple actually. When a new App is installed on an iPhone, the Notifications preference is asked by default. It asks you how you want to receive the notifications from that App and gives you three options to choose from:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Allow immediately&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;This allows the App to deliver the notifications immediately. This could be used for the ones which are important and require your attention immediately&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Allow in schedule&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;This is a brilliant notification feature in iPhone, one that I love the most. If this is selected, the notifications will be delivered &lt;strong&gt;only as per the schedule you set&lt;/strong&gt; - like at 8 PM in the night and you won’t be interrupted in the middle of the day. Could be used for the ones which are important but do not need immediate attention&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Don’t Allow&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;This simply does not deliver any notifications from the App. Could be used for the ones that are not important and do not need any immediate attention&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The default way of asking you to choose the Notifications preference immediately after installing the App ensures that it is set. And that makes your life easy. It is a smooth way to control the usage of the App. If this was not done at the time of installing the App, it most likely won’t be changed again. Any other way would have made it difficult, may be impossible. Let me tell you why.&lt;/p&gt;
+&lt;p&gt;The steps you have to take to change notification settings, for a single App, are the ones with a high amount of friction. Taking any initiative, of any kind, comes with a high amount of friction because it requires you to spend your energy but you, as a human, are inherently wired to conserve energy as part of our evolution. Another reason is, you do not exactly know what needs to be done to change the notification settings because neither is it something that you do very often nor are you trained on where in settings could the notifications be enabled or disabled for an App. And because of this barrier of not knowing what to do, you don’t want to do it. Third, you subconsciously don’t want to spend your effort on something that snatches away your right to “&lt;em&gt;relaxation&lt;/em&gt;.”&lt;/p&gt;
+&lt;p&gt;Fourth, if you get irrelevant notifications daily from not just one, not just two, but from many Applications, you know that you need to turn off the notification for each one of them! “&lt;em&gt;Turning off notifications for one App itself seems a big task, now you’re asking me to turn them off for all of them? It is not happening. I rather not turn off any&lt;/em&gt;,” thinks the mind.&lt;/p&gt;
+&lt;p&gt;Asking the Notifications preference to be set by default stops you from getting swamped with a flurry of notifications, most of them being irrelevant. iPhone nudges to set the preference so that you have it as a default. Without this default setting, I bet, I would have never gone into changing the App notification settings.&lt;/p&gt;
+&lt;p&gt;Not just for notifications, the iPhone comes with many other defaults which even the users also do not realise was what they needed. Some users would take that extra effort to go to the settings and change the defaults to something else if required, but iPhone solves it for most users.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For example:
+&lt;ul&gt;
+&lt;li&gt;‘Allow location tracking’ for all Apps is disabled by default on iPhone. All the Apps ask for permission to use the location, which is quite the contrary on Android where location sharing is enabled by default. So, on Android, again for the same reason that nobody wants to take that extra effort to change the preference, the permissions are not changed, leaving no location privacy!&lt;/li&gt;
+&lt;li&gt;‘Screentime’ is turned on by default: iPhone calculates the ‘Screentime’ - time spent on each App and gives you a summary of it on a daily/weekly/monthly basis.&lt;/li&gt;
+&lt;li&gt;When an iPhone is put on silent, it does not vibrate too: ‘Vibrate on silent’ is disabled by default.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;what-do-defaults-do-anyway&#34;&gt;What do &amp;lsquo;defaults&amp;rsquo; do, anyway?&lt;/h2&gt;
+&lt;p&gt;These defaults, though very trivial and minute, simplify the things we do every day and that makes THE difference in the long run. It is hard to understand how they help you if you have something by default because you get to do things without much effort, sometimes without you even noticing them and hence you hardly appreciate their value. You generally tend to value something if it was difficult for you, if it was something noticeable or if you had spent a considerable amount of time or money on it. The greater the loss, the greater the perceived value.&lt;/p&gt;
+&lt;p&gt;When something happens by default, you assume that it was ought to happen. You don’t tend to appreciate how difficult it must have been for something to happen by default. You do not realise how different things would have been in the absence of that ‘default.’&lt;/p&gt;
+&lt;p&gt;Let’s take a look at another example.&lt;/p&gt;
+&lt;h3 id=&#34;making-life-easy-at-home&#34;&gt;Making life easy at home&lt;/h3&gt;
+&lt;p&gt;When I was at home in Hyderabad, my mother was the one taking care of the chores, preparing food, ensuring I take care of my health and well-being and doing everything to keep the household together. And now, after marriage, my wife helps me with most of these things though she also is a working employee. (Side note: I am grateful for the women in my life!)&lt;/p&gt;
+&lt;p&gt;Now I realise the importance and significance of getting these things done by default, without my notice and realisation. Because I know that my stay in Bengaluru was a struggle as a bachelor, when these things were not taken care of by default. When things happen by default, you don’t give it a damn. Remove the default and life goes haywire.&lt;/p&gt;
+&lt;h2 id=&#34;setting-the-right-defaults&#34;&gt;Setting the right defaults&lt;/h2&gt;
+&lt;p&gt;Think about it, is there anything that is happening with you that is making your life easy? You may not realise them immediately, but I am sure there are a plenty of things that are happening in your life without your intervention which are keeping your peace of mind. Those are your defaults.&lt;/p&gt;
+&lt;p&gt;Setting the right defaults leads to a great design of the product. And the same thing applies to life too. We come across defaults in our day-to-day life also. They go so subdued that they hardly get noticed. But you can take action to set these defaults.&lt;/p&gt;
+&lt;h3 id=&#34;mutual-fund-sips&#34;&gt;Mutual Fund SIPs&lt;/h3&gt;
+&lt;p&gt;For example, we understand the importance of investing and know that if the money is invested properly, we get a good chance of leading a more harmonious life in the long run. However, investing takes time, effort and skill and we seldom do it. But, the default of ‘monthly SIPs in a mutual fund’ comes in as a saviour. You don’t have to break your head and make a decision every month. By subscribing to a SIP, you are setting a default amount to be invested in a mutual fund. Once set, you don’t have to worry about it (unless the market sentiment looks gloomy for many years to come) and it takes care of the investment for you until you figure out more profitable investment avenues.&lt;/p&gt;
+&lt;h3 id=&#34;lunchtime&#34;&gt;Lunchtime&lt;/h3&gt;
+&lt;p&gt;Another example is setting your lunchtime. Earlier, I was not very punctual in having my lunch. I used to get carried away by my work, be stuck in a meeting or work on something without realising that it was getting late. Having lunch at a fixed time was a luxury, it was very rare! Over time (read: getting old 😛) I realised that not having food on time could lead to potential health issues and I had to figure out a way to fix that.&lt;/p&gt;
+&lt;p&gt;I simply set a default for that. I blocked my calendar for 1 PM - 2 PM every day for lunch, this time was blocked for lunch no matter what. With this, I had set a reminder for myself and because my calendar was blocked, my colleagues refrained from setting up a meeting during that time. I had set a default time for my lunch. And, now, more often than not, I have my lunch between the default 1 PM - 2 PM!&lt;/p&gt;
+&lt;h3 id=&#34;the-reason-i-love-uber&#34;&gt;The reason I love Uber&lt;/h3&gt;
+&lt;p&gt;Another product example of how setting a default helps is Uber. Let’s say you use Uber to travel to the office daily. It automatically updates the pickup location by default without you entering it. You just need to select the destination location, and even that would be shown in the suggestions (Uber uses your travel history from a given location and suggests the most recent and frequent destinations). All you need to do is just tap on the suggestion and confirm the booking. This simple determination and suggestion of a location by default is one of the main reasons why I am habituated to opening Uber to find a cab. Only if I do not find a cab on Uber do I open any other App. I was so tuned, that a simple default nudge (of showing/selecting a location) made my life easy and helped me form a habit, without my awareness.&lt;/p&gt;
+&lt;p&gt;The same thing is done by Swiggy as well. It picks the default address based on your location.&lt;/p&gt;
+&lt;h2 id=&#34;what-else-can-defaults-do&#34;&gt;What else can defaults do?&lt;/h2&gt;
+&lt;p&gt;Defaults don’t just make life easy. They are particularly used in high-risk situations which could lead to damage of life or property if enough attention is not paid.&lt;/p&gt;
+&lt;h3 id=&#34;the-abcs-of-a-car&#34;&gt;The ABCs of a car&lt;/h3&gt;
+&lt;p&gt;Consider the accelerator, the brake and the clutch in a car (the ABCs of a car). Their default positions ensure that torque from the engine is zero, as the accelerator is always in a zero position unless an effort is applied. Similarly, the brake functions such that if more force is applied the car comes to a halt. And the default position of the clutch ensures that the power from the engine is always transmitted to the wheels. Only when the clutch is applied, the transmission stops. Why are their default positions designed that way?&lt;/p&gt;
+&lt;p&gt;Let’s take a look. If either the accelerator or the brake or the clutch were designed oppositely, then their default positions would have resulted in: Accelerator = High, Brakes = Applied, and Clutch = Not transmitting power. This combination is ridiculous because high acceleration when brakes are applied is a contradiction. And having high acceleration as soon as you start the car would make it difficult to control and is life-threatening for you and others. On top, to get the car moving, one would have to do three things together:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Press to reduce the acceleration&lt;/li&gt;
+&lt;li&gt;Press to remove the brakes&lt;/li&gt;
+&lt;li&gt;Press the clutch to transmit the power&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All three at the SAME TIME!!! That would be impossible and nobody would be driving cars. If it was like that, they would have just been vehicles to perform heroics by professional stuntmen in a circus.&lt;/p&gt;
+&lt;p&gt;The ease of operation of a car is due to its default controls. One could easily learn these controls, get training and pay little attention to manage their travel needs. Any change or reverse of these default controls, the car would become a museum product.&lt;/p&gt;
+&lt;h3 id=&#34;minimise-your-losses-if-not-maximising-gains&#34;&gt;Minimise your losses, if not maximising gains&lt;/h3&gt;
+&lt;p&gt;Defaults need to be set to ensure that even if no action is taken it minimises the loss. Make it so easy that if you don’t take any decision about something, the default will ensure that it is good enough and your losses are minimised. You also need to set a default when decision-making is bound to consume time and effort, a lack of which might harm you.&lt;/p&gt;
+&lt;p&gt;Anything where you don’t want to spend your energy, where the returns do not entice you to put in the effort, set defaults. Defaults ensure that you do not go down, they offer stability and guarantee a minimum promise to be delivered.&lt;/p&gt;
+&lt;p&gt;Defaults take a one-time effort, with returns going on for perpetuity till you change them. You will save a lot of headaches by setting defaults.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Netflix subscription, leaving your car keys on the stand beside your door, automating bill payments, setting an alarm that goes off in the morning - all these are examples of defaults that make your life a tad bit easier.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;whats-in-it-for-you&#34;&gt;What&amp;rsquo;s in it for you?&lt;/h2&gt;
+&lt;p&gt;So, what default are you going to set today? What value do you see it deliver you?&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>How the iPhone disappointed me!</title>
         <link>https://www.arjunuvacha.com/p/how-the-iphone-disappointed-me/</link>
         <pubDate>Tue, 02 Nov 2021 14:10:54 +0530</pubDate>

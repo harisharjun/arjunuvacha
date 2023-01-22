@@ -2,7 +2,7 @@
 title: "The Value of Defaults"
 date: 2023-01-22T16:16:32+05:30
 draft: false
-description: Remember you had your lunchbox ready when you went to school? It always was and you didn't realise it. Go thank your mom!
+description: Remember you had your lunchbox ready when you went to school? Ever wondered how? Go thank your mom!
 image: defaults.jpg
 categories:
     - product-management
