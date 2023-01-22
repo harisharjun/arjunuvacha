@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "arjunuvacha-test",
+    "prod": "arjunuvacha-3de80",
+    "staging": "arjunuvacha-test"
+  },
+  "targets": {},
+  "etags": {}
+}
