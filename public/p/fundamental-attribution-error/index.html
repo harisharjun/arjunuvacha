@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='You lost because you are lousy. I lost because life’s unfair'>
+<title>02 Fundamental Attribution Error</title>
+
+<link rel='canonical' href='https://www.arjunuvacha.com/p/fundamental-attribution-error/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='02 Fundamental Attribution Error'>
+<meta property='og:description' content='You lost because you are lousy. I lost because life’s unfair'>
+<meta property='og:url' content='https://www.arjunuvacha.com/p/fundamental-attribution-error/'>
+<meta property='og:site_name' content='Arjun Uvacha'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cognitive bias' /><meta property='article:tag' content='product management' /><meta property='article:published_time' content='2021-06-21T19:55:13&#43;05:30'/><meta property='article:modified_time' content='2021-06-21T19:55:13&#43;05:30'/><meta property='og:image' content='https://www.arjunuvacha.com/p/fundamental-attribution-error/fae.jpg' />
+<meta name="twitter:site" content="@arjunuvacha_">
+    <meta name="twitter:creator" content="@arjunuvacha_"><meta name="twitter:title" content="02 Fundamental Attribution Error">
+<meta name="twitter:description" content="You lost because you are lousy. I lost because life’s unfair"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://www.arjunuvacha.com/p/fundamental-attribution-error/fae.jpg' />
+    <link rel="shortcut icon" href="favicon.png" />
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-187775971-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+        <link rel="stylesheet" href="/styles.css">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            localStorage.setItem(colorSchemeKey, "light");
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/au_hub85b891999db1c786a7f5e71f3e9fa26_19310_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✏️</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Arjun Uvacha</a></h1>
+            <h2 class="site-description">🔍 a product manager&#39;s perspective of everyday things.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/harisharjun'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/arjunuvacha_'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#fundamental-attribution-error">Fundamental Attribution Error</a></li>
+    <li><a href="#section-375">Section 375</a></li>
+    <li><a href="#chak-de-india">Chak De! India</a></li>
+    <li><a href="#performance-appraisals">Performance appraisals!</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/fundamental-attribution-error/">
+                <img src="/p/fundamental-attribution-error/fae_hu82c25fa98cd4e9a8103220017be4b8cb_203345_800x0_resize_q75_box.jpg"
+                        srcset="/p/fundamental-attribution-error/fae_hu82c25fa98cd4e9a8103220017be4b8cb_203345_800x0_resize_q75_box.jpg 800w, /p/fundamental-attribution-error/fae_hu82c25fa98cd4e9a8103220017be4b8cb_203345_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="524" 
+                        loading="lazy"
+                        alt="Featured image of post 02 Fundamental Attribution Error" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/psychology/" >
+                psychology
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/fundamental-attribution-error/">02 Fundamental Attribution Error</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            You lost because you are lousy. I lost because life’s unfair
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 21, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    12 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>👋🏼 Hello! Thank you for stopping by.</p>
+<p>Please note that this is the second in a series of articles I am writing on Cognitive Biases. If you haven’t read the first article yet, I’d recommend you read that first 😀. <strong>Link below:</strong></p>
+<ol>
+<li><a class="link" href="/p/confirmation-bias" >Confirmation Bias</a> ✅</li>
+</ol>
+<hr>
+<h2 id="fundamental-attribution-error">Fundamental Attribution Error</h2>
+<blockquote>
+<p>The Fundamental Attribution Error basically says that we judge others based on their personality and fundamental character, but judge ourselves based on our situation and circumstances.</p>
+</blockquote>
+<p><img src="/p/fundamental-attribution-error/fundamental-attribution-error.jpeg"
+	width="1400"
+	height="787"
+	srcset="/p/fundamental-attribution-error/fundamental-attribution-error_huefd08a0bb7217fa43458495250b36e5a_56484_480x0_resize_q75_box.jpeg 480w, /p/fundamental-attribution-error/fundamental-attribution-error_huefd08a0bb7217fa43458495250b36e5a_56484_1024x0_resize_q75_box.jpeg 1024w"
+	loading="lazy"
+	
+		alt="Fundamental Attribution Error"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="177"
+		data-flex-basis="426px"
+	
+></p>
+<p>To explain this, I am going to take a rather filmy route. Please bear with me as I get into quite a few details of these film stories to drive home the point. If you are into movies, you’d enjoy it, I believe. Even otherwise, cut me some slack, would you?</p>
+<p>Okay, let’s get started.</p>
+<h2 id="section-375">Section 375</h2>
+<p>Let’s look at the story of the movie Section 375. If you have watched it already, you’d be able to relate better, but for others, I’ve tried to lay the plot briefly below to give you enough context.</p>
+<p>The movie is a very well written courtroom drama with Tarun Saluja (Akshaye Khanna) as the defence lawyer, Hiral Gandhi (Richa Chadda) as the prosecutor arguing rape charges filed by the victim Anjali Dangle (Meera Chopra) against Rohan Khurana (Rahul Bhatt).</p>
+<p>Rohan, a successful Bollywood director and Anjali, a budding costume designer hoping to build a successful career in the industry, get along well in showbiz. Anjali bags a couple of big projects working under Rohan and is optimistic of a bright future.</p>
+<p>Their relationship, however, turns into an affair and when things do not turn out well between the two is when the plot thickens. And it is unfortunate and absolutely miserable to see people in influential position misuse their power to personal whims and fancies.</p>
+<p>Long story short, one thing leads to another and Rohan (who is already married to Kainaaz Khurana) ends the affair suddenly and withdraws Anjali from all the ongoing projects. From working on a few big projects and making a name for herself in the industry to losing everything instantly, reality hits Anjali hard. She realises this, apologises to Rohan and goes back to him to avoid any further lost opportunities. Taking advantage of his position, Rohan calls her to his residence and yet again, tries to exploit her of the situation, assaults her and forces her into having sex. Anjali couldn’t stand it any further, it was the end of the line for her.</p>
+<p>So, as it happens, Anjali files a case against Rohan for rape and sexual assault. She presses charges and gains the media and public support overnight!</p>
+<p>The rest of the case is discussed in a highly engaging courtroom drama. One thing I particularly like about this movie is how fine the dialogues are written and how the director, Ajay Bahl, explores a very controversial and uncomfortable territory.</p>
+<p>With this backdrop and before discussing the movie any further, let’s look at a few things very objectively.</p>
+<ul>
+<li>Is Rohan a nice guy? Absolutely not.</li>
+<li>Did Rohan have a history of misbehaviour? Yes.</li>
+<li>Did Anjali have an affair with Rohan, knowing he is married? Yes.</li>
+<li>Did Anjali have consensual sex with Rohan before the rape incident? Yes.</li>
+<li>Does having a bad past make the accused guilty of current charges? No.</li>
+<li>Do we have strong proof of rape? Not rape, but marks of physical abuse and sex. And a confession by Anjali.</li>
+<li>Did Anjali have a blemishless history to take her word as gospel? No.</li>
+</ul>
+<p>So, as you can see — the case stands on a knife’s edge. And in cases like these, the victim’s confession against the accused is sufficient to pronounce him guilty. And the court will decide that based on the facts, the evidence and the victim’s statement, which will be the final judgement and that is fine! And that’s exactly how a judgement is passed — after a thorough and unbiased examination of the facts and evidence, not from hearsay and definitely not because some section of the public thinks so.</p>
+<p><strong>So, what has this story got to do with Fundamental Attribution Error, you wonder?</strong></p>
+<p>The reason I gave this entire backdrop is to show the relevance and importance of context and facts before a judgement is passed about anything or anyone. And the ‘Fundamental Attribution Error’ I would like to refer to in this story is that made by the media and the public, <strong>people like you and me. People like us.</strong></p>
+<p>In this case, the defence lawyer, Tarun, was seen by the media and the public as the villain for defending the accused. In fact, even Hiral Gandhi, the prosecutor (who herself was Tarun’s student) was surprised at Tarun’s lack of awareness. She wondered how Tarun was not able to see things that clearly portrayed Rohan guilty and was surprised at how hard he was trying to defend Rohan of rape charges!</p>
+<p>The media and public outrage are understandable — they are disgusted with such pathetic behaviour of men across industries, strata, and geographies. But are they right in calling the accused guilty already? Because people knew Rohan’s past and his character, they judged him based on his past and his character than the facts. And they believed it and could have bet their life on it. They believed they were right, no matter what the actual truth was. They knew that Rohan was a sick person, and hence must be the culprit.</p>
+<p>But, is that the truth? Did their judgement stand on a strong ground? Were they prone to the fundamental attribution error? I guess so.</p>
+<p>As it happens in the end, Anjali confesses to Hiral Gandhi that it was not rape. Anjali couldn’t digest the fact that she got those projects, not because of her talent and skills but because Rohan did her a favour by spending time with him. She felt like a whore, and was hurt. She wanted to take revenge. Cleverly, and with vengeance, she made a case for herself.</p>
+<hr>
+<p>I would have stretched the explanation by quite a bit on a very sensitive topic, you think. But let me tell you, it is prevalent in many and very mundane real-life situations as well. But before going there, let me tell you another story.</p>
+<h2 id="chak-de-india">Chak De! India</h2>
+<p>Remember Kabir Khan from Chak De! India?</p>
+<p>The movie opens with the final between India and Pakistan in the World Hockey Championship. Pakistan is leading 2–1. With 2 minutes to go India desperately need a goal. And luckily for India, they get a penalty shot. It is highly unlikely to not score a goal on a penalty shot. So, all the Indians, the team management, the entire team and the captain Kabir Khan — all are very hopeful of the goal.</p>
+<p>Kabir Khan takes the shot and as the drama unfolds, he misses it! India loses the final!</p>
+<p>The entire country is disappointed at the loss. The public outrage is palpable. The media accuses Kabir Khan of the loss. With a few pictures of Kabir Khan with the Pakistan players, it questions his patriotism. The question catches heat and in no time the public actually declares him as a traitor. A traitor who gave away the win to Pakistan. Kabir Khan’s neighbourhood disowned him. He and his family were forced to vacate and move to a new place.</p>
+<p>But why? How did the public come to that conclusion?</p>
+<p>Let’s look at what happened.</p>
+<ul>
+<li>Do India-Pakistan matches carry an extra dose of emotions? <em>Hell, yes!</em></li>
+<li>Did India lose the match against Pakistan? <em>Yes, happens in sports.</em></li>
+<li>Was there a possibility that the loss was just circumstantial? Definitely. <em>You can’t control everything that happens in a hockey match!</em></li>
+<li>People were outraged by the loss. <em>Yes, understandable.</em></li>
+<li>The loss was attributed to Kabir Khan. <em>Yes, understandable. He was the captain, after all.</em></li>
+<li>Did Kabir Khan deliberately lose the match? <em>No!</em></li>
+<li>Kabir Khan was a Muslim. <em>This shouldn’t matter, but it did for the public.</em></li>
+<li>Being a Muslim is attributed as favouritism to Pakistan. <em>I guess this is a stretch, but again the public attributed it whatsoever!</em></li>
+<li>Displaying sportsmanship by shaking hands is attributed as anti-national. <em>The public had taken it too far here.</em></li>
+</ul>
+<p>Well, it may seem alright that people were outraged and furious about the loss and this kind of accusation could just have been an outpour of emotions. This, right here, is a Fundamental Attribution Error. When you look at it again, people were strongly carried away by their emotions because of the loss and believed that the loss was only because of Kabir Khan. Unfortunately, in that flurry of emotions, they took it too far, they declared him anti-national on the mere basis that he was a Muslim.</p>
+<p><strong>All this filmy Gyan is OK! Does this happen in real life too?</strong></p>
+<p>We make this kind of attribution errors in our life too! We jump to conclusions and judge others based on our prior notion, opinion and perception about them. If someone does something, we do not critically assess the situation and pass our judgement based on our preconceived notions in the spur of the moment. Though we think we are very rational, we are driven by emotions most of the time.</p>
+<p>Let me give you some examples. Real-ones this time :)</p>
+<h2 id="performance-appraisals">Performance appraisals!</h2>
+<p>Do you feel that you are not being recognised? That your performance rating and salary hike is not as per your expectations despite working really hard and giving all you got because your boss is an idiot? But your colleague is well promoted and treated nicely because she maintains good terms with her manager despite not being very talented and hard-working as you are?</p>
+<p>Do you blame your poor performance on your boss but your colleague’s better rating on her character?</p>
+<p>I am not sure about you, but I certainly did. In one of my previous companies, I did not get the hike I expected, I blamed my poor performance on the market and my manager for not recognizing my efforts. I, in fact, was convinced that only those who are in the close network of the manager got the benefits, not all! I blamed my inability to perform on my circumstances and my manager.</p>
+<p>Fast forward a few years, I now know that I was wrong! I know that I was naive. That growth requires effort and it can’t just merely be circumstantial. Now I don’t take others’ growth for granted just like mine!</p>
+<p>I mean, we wear different lens when we judge others and different (self-fulfilling) lens when we judge ourselves.
+<img src="/p/fundamental-attribution-error/tuhada-kutta-tommy.jpeg"
+	width="1024"
+	height="576"
+	srcset="/p/fundamental-attribution-error/tuhada-kutta-tommy_hu84506561a7d672aafd642a5e4b3aeee0_87834_480x0_resize_q75_box.jpeg 480w, /p/fundamental-attribution-error/tuhada-kutta-tommy_hu84506561a7d672aafd642a5e4b3aeee0_87834_1024x0_resize_q75_box.jpeg 1024w"
+	loading="lazy"
+	
+		alt="Tuhada Kutta Tommy, Sada Kutta Kutta?"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="177"
+		data-flex-basis="426px"
+	
+></p>
+<p>I get reminded of this meme, ‘tumhara kutta tommy, hamara kutta kutta?’ — says how self-serving we are, how we judge others to suit our convenience!</p>
+<p>We favour our own people and disregard others. If we make some mistake, we blame it on the situation. But if the same mistake is made by others, we somehow know for a fact that it is because of their inability, their personality and their carelessness. We care less about the role of circumstances and situations in the case of others than in our own.</p>
+<p>I mean, we are not ready to cut someone some slack because of their past choices and past mistakes. We carry their past all through our life and use it to judge them. And judge them as per our convenience, to fit our narrative.</p>
+<p><strong>Sounds strange? Let’s look at some more examples…</strong></p>
+<ul>
+<li>If someone fails an entrance exam, you say ‘he’s not capable.’ But, if you fail in the exam, the narrative changes to ‘I had a fever, I couldn’t study.’</li>
+<li>If someone is good at sketching, ‘he’s just talented.’ And why don’t you sketch? ‘you know I don’t have time to practice.’</li>
+<li>If a colleague takes a leave because he’s sick, you already know he is lying. But when you fall sick and skip work, nobody should blame you.</li>
+<li>If someone loses money in stocks, ‘she’s such a bad investor.’ But if you lose money in stocks, ‘the market crashed!’</li>
+<li>If someone did not get selected for a job, ‘he was not qualified in the first place.’ But if you did not get selected, ‘the interviewer asked tough questions.’</li>
+<li>If someone loses a game, ‘she was unfit, she shouldn’t have been selected.’ But if you lose a business deal, ‘they did not understand the benefits of our product.’</li>
+</ul>
+<p>We also pass judgements based on mere appearances and personalities:</p>
+<ul>
+<li>A candidate is not well organized and well planned because he is wearing a wrinkled shirt in an interview.</li>
+<li>A girl is a slut because she is wearing a skirt.</li>
+<li>A girl is inviting you for sex because she is talking to you with a smile.</li>
+<li>Someone is lazy just because he is fat.</li>
+</ul>
+<p>These judgements might be true in some cases. But they are most certainly NOT true all the time. We form these judgments because our mind is in a rush and our experience says that these are true most of the time.</p>
+<p>The world is chaotic and we are trying to figure out our way through all this chaos. It’s like cracking a code or solving a puzzle. It appears very random at first, but as we solve it we see patterns and realise that we can crack the code by following those patterns.</p>
+<p>Similarly, in life too, we are trying to find patterns around us — the way people talk, the way they eat, the way they commute, the way they dress, the way they treat others etc. And when we see a pattern, it gets registered in our mind. We use these patterns subsequently to navigate through the chaos and make choices quickly. That, however, doesn’t mean that the patterns hold good all the time. There could be and there will be deviations in the patterns. And in life, we should embrace these deviations.</p>
+<p><strong>We must be cognizant of the fact that our judgements could be wrong and think twice before we judge or comment on others.</strong></p>
+<hr>
+<p><strong>Thank you for reading! 🙏🏼</strong></p>
+<p>👍🏼 ➡️ If you liked it, please share it with others who might find it interesting!</p>
+<p><strong>💬 Also, please leave your comment or feedback below.</strong></p>
+<hr>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/cognitive-bias/">cognitive bias</a>
+        
+            <a href="/tags/product-management/">product management</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/07-belief-bias/">
+        
+        
+            <div class="article-image">
+                <img src="/p/07-belief-bias/belief-bias.5318f5be936c9e5efaf43bc11a59c62f_hua1944781b04c4a2a7d6ea0b3841960e2_244882_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 07 Belief Bias"
+                        
+                        data-hash="md5-Uxj1vpNsnl769DvBGlnGLw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">07 Belief Bias</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/forer-effect/">
+        
+        
+            <div class="article-image">
+                <img src="/p/forer-effect/forer.a3ce5a7698d2b8c1d8dc9e7d8bc76a7a_hucb76e60b581c73ff06dc4c86d9b587cb_1023327_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 06 Forer Effect"
+                        data-key="forer-effect" 
+                        data-hash="md5-o85adpjSuMHY3J59i8dqeg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">06 Forer Effect</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/framing-effect/">
+        
+        
+            <div class="article-image">
+                <img src="/p/framing-effect/framing.1f3d192df13fa8b94cf7011f103b5d44_hu913944859529bb6f629ec835282bdf41_234021_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 05 Framing Effect"
+                        data-key="framing-effect" 
+                        data-hash="md5-Hz0ZLfE/qLlM9wEfEDtdRA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">05 Framing Effect</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/availability-heuristic/">
+        
+        
+            <div class="article-image">
+                <img src="/p/availability-heuristic/doge.1bf8aab632c3b46b1ed2d0d68cac50aa_hud84e301d54b07076c32957fba60c7c3a_209034_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 04 Availability Heuristic"
+                        data-key="availability-heuristic" 
+                        data-hash="md5-G/iqtjLDtGse0tDWjKxQqg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">04 Availability Heuristic</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/ikea-effect/">
+        
+        
+            <div class="article-image">
+                <img src="/p/ikea-effect/ikea.af34487205080cfde045e6d50f23644c_hu836d32aa1a5c6856263d2a6647cb78f0_215927_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 03 Ikea effect"
+                        data-key="ikea-effect" 
+                        data-hash="md5-rzRIcgUIDP3gRebVDyNkTA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">03 Ikea effect</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2023 Arjun Uvacha
+    </section>
+    
+        
+        <div style="margin-top: 10px; display: block;"></div>
+        <a href="https://www.linkedin.com/in/harisharjun/" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height=24 fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+            </svg>
+        </a>
+
+        <div style="margin-right: 20px; display: inline-block;"></div>
+
+        <a href="https://github.com/harisharjun" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+        </a>
+
+        <div style="margin-right: 20px; display: inline-block;"></div>
+
+        <a href="https://twitter.com/arjunuvacha_" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
+                <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+            </svg>
+        </a>
+
+        <div style="margin-right: 20px; display: inline-block;"></div>
+
+        <a href="https://www.instagram.com/arjunuvacha" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24" width="24" viewBox="0 -8 62 67"><defs><linearGradient id="a" y2="1.7526" x2="1.7537" y1="-5.8041" x1="-5.8093"><stop offset="0%" stop-color="#34485E"/><stop offset="5%" stop-color="#34485E"/><stop offset="50.1119%" stop-color="#34485E"/><stop offset="95%" stop-color="#34485E"/><stop offset="95.0079%" stop-color="#34485E"/><stop offset="100%" stop-color="#34485E"/></linearGradient><linearGradient id="b" y2=".9175" x2=".9175" y1=".0091" x1=".009"><stop offset="0%" stop-color="#34485E"/><stop offset="5%" stop-color="#34485E"/><stop offset="50.1119%" stop-color="#34485E"/><stop offset="95%" stop-color="#34485E"/><stop offset="95.0079%" stop-color="#34485E"/><stop offset="100%" stop-color="#34485E"/></linearGradient><linearGradient id="c" y2="1.3128" x2="1.3126" y1="-.456" x1="-.4558"><stop offset="0%" stop-color="#34485E"/><stop offset="5%" stop-color="#34485E"/><stop offset="50.1119%" stop-color="#34485E"/><stop offset="95%" stop-color="#34485E"/><stop offset="95.0079%" stop-color="#34485E"/><stop offset="100%" stop-color="#34485E"/></linearGradient><linearGradient gradientUnits="userSpaceOnUse" gradientTransform="scale(1.00041 .99959)" y2="11.412" x2="11.3667" y1="-37.5455" x1="-37.6312" id="d" xlink:href="#a"/><linearGradient gradientUnits="userSpaceOnUse" y2="49.554" x2="49.5047" y1=".536" x1=".4867" id="e" xlink:href="#b"/><linearGradient gradientUnits="userSpaceOnUse" gradientTransform="scale(.99988 1.00012)" y2="36.4816" x2="36.4315" y1="-12.5305" x1="-12.5688" id="f" xlink:href="#c"/></defs><g fill="none"><path d="M6.4867 3.292c0 1.7933-1.4534 3.2413-3.24 3.2413C1.46 6.5333.0053 5.0853.0053 3.292.0053 1.5053 1.46.0573 3.2467.0573c1.7866 0 3.24 1.448 3.24 3.2347" fill="url(#d)" transform="matrix(1 0 0 -1 38.1333 15.8707)"/><path d="M48.9373 16.124c-.12-2.6307-.56-4.06-.9253-5.0093-.4907-1.2587-1.076-2.1587-2.0253-3.1027-.9387-.944-1.8387-1.528-3.0974-2.0133-.9493-.3707-2.384-.812-5.0146-.9374-2.844-.1253-3.6867-.152-10.8987-.152-7.2053 0-8.0547.0267-10.8987.152-2.6306.1254-4.0586.5667-5.008.9374C9.804 6.484 8.9107 7.068 7.9667 8.012c-.9507.944-1.536 1.844-2.02 3.1027-.3654.9493-.812 2.3786-.9254 5.0093-.1386 2.844-.164 3.7-.164 10.8973 0 7.212.0254 8.0614.164 10.9054.1134 2.6306.56 4.0586.9254 5.016.484 1.2573 1.0693 2.152 2.02 3.096.944.9426 1.8373 1.528 3.1026 2.0186.9494.372 2.3774.8067 5.008.932 2.844.1254 3.6934.1574 10.8987.1574 7.212 0 8.0547-.032 10.8987-.1574 2.6306-.1253 4.0653-.56 5.0146-.932 1.2587-.4906 2.1587-1.076 3.0974-2.0186.9493-.944 1.5346-1.8387 2.0253-3.096.3653-.9574.8053-2.3854.9253-5.016.132-2.844.164-3.6934.164-10.9054 0-7.1973-.032-8.0533-.164-10.8973zm4.8574 22.024c-.132 2.8747-.5854 4.8387-1.2587 6.5493-.6853 1.7747-1.604 3.2787-3.108 4.7827-1.4973 1.4973-3.0013 2.416-4.776 3.1093-1.7173.6667-3.6747 1.1254-6.5507 1.2507-2.876.1387-3.7946.164-11.1253.164-7.324 0-8.2493-.0253-11.1253-.164-2.8694-.1253-4.8254-.584-6.5507-1.2507-1.768-.6933-3.272-1.612-4.7693-3.1093-1.504-1.504-2.4227-3.008-3.1147-4.7827C.7493 42.9867.296 41.0227.1573 38.148.032 35.272 0 34.352 0 27.0213c0-7.324.032-8.2426.1573-11.1186.1387-2.8694.592-4.832 1.2587-6.5507.692-1.768 1.6107-3.2787 3.1147-4.776C6.028 3.0787 7.532 2.1533 9.3 1.4613c1.7253-.6666 3.6813-1.12 6.5507-1.252 2.876-.132 3.8013-.164 11.1253-.164 7.3307 0 8.2493.032 11.1253.164 2.876.132 4.8334.5854 6.5507 1.252 1.7747.692 3.2787 1.6174 4.776 3.1147 1.504 1.4973 2.4227 3.008 3.108 4.776.6733 1.7187 1.1267 3.6813 1.2587 6.5507.132 2.876.164 3.7946.164 11.1186 0 7.3307-.032 8.2507-.164 11.1267z" fill="url(#e)" transform="matrix(1 0 0 -1 0 54.004)"/><path d="M13.9093 4.9693c-4.964 0-8.992 4.0214-8.992 8.9854 0 4.972 4.028 8.9986 8.992 8.9986 4.9654 0 8.9987-4.0266 8.9987-8.9986 0-4.964-4.0333-8.9854-8.9987-8.9854zm0 22.848C6.2573 27.8173.06 21.6067.06 13.9547.06 6.3093 6.2573.1053 13.9093.1053c7.652 0 13.856 6.204 13.856 13.8494 0 7.652-6.204 13.8626-13.856 13.8626z" fill="url(#f)" transform="matrix(1 0 0 -1 13.0667 40.9373)"/></g></svg>
+        </a>
+
+        <div style="margin-right: 20px; display: inline-block;"></div>
+
+        <a href="mailto:k.harisharjun@gmail.com">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
+            </svg>
+        </a>
+
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

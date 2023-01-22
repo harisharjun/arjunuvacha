@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='You lost because you are lousy. I lost because life’s unfair'>
+<title>02 Fundamental Attribution Error</title>
+
+<link rel='canonical' href='http://example.org/post/fundamental-attribution-error/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='02 Fundamental Attribution Error'>
+<meta property='og:description' content='You lost because you are lousy. I lost because life’s unfair'>
+<meta property='og:url' content='http://example.org/post/fundamental-attribution-error/'>
+<meta property='og:site_name' content='My New Hugo Site'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cognitive bias' /><meta property='article:tag' content='product management' /><meta property='article:published_time' content='2021-06-21T19:55:13&#43;05:30'/><meta property='article:modified_time' content='2021-06-21T19:55:13&#43;05:30'/><meta property='og:image' content='http://example.org/post/fundamental-attribution-error/fae.jpg' />
+<meta name="twitter:title" content="02 Fundamental Attribution Error">
+<meta name="twitter:description" content="You lost because you are lousy. I lost because life’s unfair"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='http://example.org/post/fundamental-attribution-error/fae.jpg' />
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huda2458f72ce188392d75c5d51cd8e24e_373_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">My New Hugo Site</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/fundamental-attribution-error/">
+                <img src="/post/fundamental-attribution-error/fae_hu82c25fa98cd4e9a8103220017be4b8cb_203345_800x0_resize_q75_box.jpg"
+                        srcset="/post/fundamental-attribution-error/fae_hu82c25fa98cd4e9a8103220017be4b8cb_203345_800x0_resize_q75_box.jpg 800w, /post/fundamental-attribution-error/fae_hu82c25fa98cd4e9a8103220017be4b8cb_203345_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="524" 
+                        loading="lazy"
+                        alt="Featured image of post 02 Fundamental Attribution Error" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/psychology/" >
+                psychology
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/fundamental-attribution-error/">02 Fundamental Attribution Error</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            You lost because you are lousy. I lost because life’s unfair
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 21, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    12 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>👋🏼 Hello! Thank you for stopping by.</p>
+<p>Please note that this is the second in a series of articles I am writing on Cognitive Biases. If you haven’t read the first article yet, I’d recommend you read that first 😀. <strong>Link below:</strong></p>
+<ol>
+<li><a class="link" href="/p/confirmation-bias" >Confirmation Bias</a> ✅</li>
+</ol>
+<hr>
+<h2 id="fundamental-attribution-error">Fundamental Attribution Error</h2>
+<blockquote>
+<p>The Fundamental Attribution Error basically says that we judge others based on their personality and fundamental character, but judge ourselves based on our situation and circumstances.</p>
+</blockquote>
+<p><img src="/post/fundamental-attribution-error/fundamental-attribution-error.jpeg"
+	width="1400"
+	height="787"
+	srcset="/post/fundamental-attribution-error/fundamental-attribution-error_huefd08a0bb7217fa43458495250b36e5a_56484_480x0_resize_q75_box.jpeg 480w, /post/fundamental-attribution-error/fundamental-attribution-error_huefd08a0bb7217fa43458495250b36e5a_56484_1024x0_resize_q75_box.jpeg 1024w"
+	loading="lazy"
+	
+		alt="Fundamental Attribution Error"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="177"
+		data-flex-basis="426px"
+	
+></p>
+<p>To explain this, I am going to take a rather filmy route. Please bear with me as I get into quite a few details of these film stories to drive home the point. If you are into movies, you’d enjoy it, I believe. Even otherwise, cut me some slack, would you?</p>
+<p>Okay, let’s get started.</p>
+<h2 id="section-375">Section 375</h2>
+<p>Let’s look at the story of the movie Section 375. If you have watched it already, you’d be able to relate better, but for others, I’ve tried to lay the plot briefly below to give you enough context.</p>
+<p>The movie is a very well written courtroom drama with Tarun Saluja (Akshaye Khanna) as the defence lawyer, Hiral Gandhi (Richa Chadda) as the prosecutor arguing rape charges filed by the victim Anjali Dangle (Meera Chopra) against Rohan Khurana (Rahul Bhatt).</p>
+<p>Rohan, a successful Bollywood director and Anjali, a budding costume designer hoping to build a successful career in the industry, get along well in showbiz. Anjali bags a couple of big projects working under Rohan and is optimistic of a bright future.</p>
+<p>Their relationship, however, turns into an affair and when things do not turn out well between the two is when the plot thickens. And it is unfortunate and absolutely miserable to see people in influential position misuse their power to personal whims and fancies.</p>
+<p>Long story short, one thing leads to another and Rohan (who is already married to Kainaaz Khurana) ends the affair suddenly and withdraws Anjali from all the ongoing projects. From working on a few big projects and making a name for herself in the industry to losing everything instantly, reality hits Anjali hard. She realises this, apologises to Rohan and goes back to him to avoid any further lost opportunities. Taking advantage of his position, Rohan calls her to his residence and yet again, tries to exploit her of the situation, assaults her and forces her into having sex. Anjali couldn’t stand it any further, it was the end of the line for her.</p>
+<p>So, as it happens, Anjali files a case against Rohan for rape and sexual assault. She presses charges and gains the media and public support overnight!</p>
+<p>The rest of the case is discussed in a highly engaging courtroom drama. One thing I particularly like about this movie is how fine the dialogues are written and how the director, Ajay Bahl, explores a very controversial and uncomfortable territory.</p>
+<p>With this backdrop and before discussing the movie any further, let’s look at a few things very objectively.</p>
+<ul>
+<li>Is Rohan a nice guy? Absolutely not.</li>
+<li>Did Rohan have a history of misbehaviour? Yes.</li>
+<li>Did Anjali have an affair with Rohan, knowing he is married? Yes.</li>
+<li>Did Anjali have consensual sex with Rohan before the rape incident? Yes.</li>
+<li>Does having a bad past make the accused guilty of current charges? No.</li>
+<li>Do we have strong proof of rape? Not rape, but marks of physical abuse and sex. And a confession by Anjali.</li>
+<li>Did Anjali have a blemishless history to take her word as gospel? No.</li>
+</ul>
+<p>So, as you can see — the case stands on a knife’s edge. And in cases like these, the victim’s confession against the accused is sufficient to pronounce him guilty. And the court will decide that based on the facts, the evidence and the victim’s statement, which will be the final judgement and that is fine! And that’s exactly how a judgement is passed — after a thorough and unbiased examination of the facts and evidence, not from hearsay and definitely not because some section of the public thinks so.</p>
+<p><strong>So, what has this story got to do with Fundamental Attribution Error, you wonder?</strong></p>
+<p>The reason I gave this entire backdrop is to show the relevance and importance of context and facts before a judgement is passed about anything or anyone. And the ‘Fundamental Attribution Error’ I would like to refer to in this story is that made by the media and the public, <strong>people like you and me. People like us.</strong></p>
+<p>In this case, the defence lawyer, Tarun, was seen by the media and the public as the villain for defending the accused. In fact, even Hiral Gandhi, the prosecutor (who herself was Tarun’s student) was surprised at Tarun’s lack of awareness. She wondered how Tarun was not able to see things that clearly portrayed Rohan guilty and was surprised at how hard he was trying to defend Rohan of rape charges!</p>
+<p>The media and public outrage are understandable — they are disgusted with such pathetic behaviour of men across industries, strata, and geographies. But are they right in calling the accused guilty already? Because people knew Rohan’s past and his character, they judged him based on his past and his character than the facts. And they believed it and could have bet their life on it. They believed they were right, no matter what the actual truth was. They knew that Rohan was a sick person, and hence must be the culprit.</p>
+<p>But, is that the truth? Did their judgement stand on a strong ground? Were they prone to the fundamental attribution error? I guess so.</p>
+<p>As it happens in the end, Anjali confesses to Hiral Gandhi that it was not rape. Anjali couldn’t digest the fact that she got those projects, not because of her talent and skills but because Rohan did her a favour by spending time with him. She felt like a whore, and was hurt. She wanted to take revenge. Cleverly, and with vengeance, she made a case for herself.</p>
+<hr>
+<p>I would have stretched the explanation by quite a bit on a very sensitive topic, you think. But let me tell you, it is prevalent in many and very mundane real-life situations as well. But before going there, let me tell you another story.</p>
+<h2 id="chak-de-india">Chak De! India</h2>
+<p>Remember Kabir Khan from Chak De! India?</p>
+<p>The movie opens with the final between India and Pakistan in the World Hockey Championship. Pakistan is leading 2–1. With 2 minutes to go India desperately need a goal. And luckily for India, they get a penalty shot. It is highly unlikely to not score a goal on a penalty shot. So, all the Indians, the team management, the entire team and the captain Kabir Khan — all are very hopeful of the goal.</p>
+<p>Kabir Khan takes the shot and as the drama unfolds, he misses it! India loses the final!</p>
+<p>The entire country is disappointed at the loss. The public outrage is palpable. The media accuses Kabir Khan of the loss. With a few pictures of Kabir Khan with the Pakistan players, it questions his patriotism. The question catches heat and in no time the public actually declares him as a traitor. A traitor who gave away the win to Pakistan. Kabir Khan’s neighbourhood disowned him. He and his family were forced to vacate and move to a new place.</p>
+<p>But why? How did the public come to that conclusion?</p>
+<p>Let’s look at what happened.</p>
+<ul>
+<li>Do India-Pakistan matches carry an extra dose of emotions? <em>Hell, yes!</em></li>
+<li>Did India lose the match against Pakistan? <em>Yes, happens in sports.</em></li>
+<li>Was there a possibility that the loss was just circumstantial? Definitely. <em>You can’t control everything that happens in a hockey match!</em></li>
+<li>People were outraged by the loss. <em>Yes, understandable.</em></li>
+<li>The loss was attributed to Kabir Khan. <em>Yes, understandable. He was the captain, after all.</em></li>
+<li>Did Kabir Khan deliberately lose the match? <em>No!</em></li>
+<li>Kabir Khan was a Muslim. <em>This shouldn’t matter, but it did for the public.</em></li>
+<li>Being a Muslim is attributed as favouritism to Pakistan. <em>I guess this is a stretch, but again the public attributed it whatsoever!</em></li>
+<li>Displaying sportsmanship by shaking hands is attributed as anti-national. <em>The public had taken it too far here.</em></li>
+</ul>
+<p>Well, it may seem alright that people were outraged and furious about the loss and this kind of accusation could just have been an outpour of emotions. This, right here, is a Fundamental Attribution Error. When you look at it again, people were strongly carried away by their emotions because of the loss and believed that the loss was only because of Kabir Khan. Unfortunately, in that flurry of emotions, they took it too far, they declared him anti-national on the mere basis that he was a Muslim.</p>
+<p><strong>All this filmy Gyan is OK! Does this happen in real life too?</strong></p>
+<p>We make this kind of attribution errors in our life too! We jump to conclusions and judge others based on our prior notion, opinion and perception about them. If someone does something, we do not critically assess the situation and pass our judgement based on our preconceived notions in the spur of the moment. Though we think we are very rational, we are driven by emotions most of the time.</p>
+<p>Let me give you some examples. Real-ones this time :)</p>
+<h2 id="performance-appraisals">Performance appraisals!</h2>
+<p>Do you feel that you are not being recognised? That your performance rating and salary hike is not as per your expectations despite working really hard and giving all you got because your boss is an idiot? But your colleague is well promoted and treated nicely because she maintains good terms with her manager despite not being very talented and hard-working as you are?</p>
+<p>Do you blame your poor performance on your boss but your colleague’s better rating on her character?</p>
+<p>I am not sure about you, but I certainly did. In one of my previous companies, I did not get the hike I expected, I blamed my poor performance on the market and my manager for not recognizing my efforts. I, in fact, was convinced that only those who are in the close network of the manager got the benefits, not all! I blamed my inability to perform on my circumstances and my manager.</p>
+<p>Fast forward a few years, I now know that I was wrong! I know that I was naive. That growth requires effort and it can’t just merely be circumstantial. Now I don’t take others’ growth for granted just like mine!</p>
+<p>I mean, we wear different lens when we judge others and different (self-fulfilling) lens when we judge ourselves.
+<img src="/post/fundamental-attribution-error/tuhada-kutta-tommy.jpeg"
+	width="1024"
+	height="576"
+	srcset="/post/fundamental-attribution-error/tuhada-kutta-tommy_hu84506561a7d672aafd642a5e4b3aeee0_87834_480x0_resize_q75_box.jpeg 480w, /post/fundamental-attribution-error/tuhada-kutta-tommy_hu84506561a7d672aafd642a5e4b3aeee0_87834_1024x0_resize_q75_box.jpeg 1024w"
+	loading="lazy"
+	
+		alt="Tuhada Kutta Tommy, Sada Kutta Kutta?"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="177"
+		data-flex-basis="426px"
+	
+></p>
+<p>I get reminded of this meme, ‘tumhara kutta tommy, hamara kutta kutta?’ — says how self-serving we are, how we judge others to suit our convenience!</p>
+<p>We favour our own people and disregard others. If we make some mistake, we blame it on the situation. But if the same mistake is made by others, we somehow know for a fact that it is because of their inability, their personality and their carelessness. We care less about the role of circumstances and situations in the case of others than in our own.</p>
+<p>I mean, we are not ready to cut someone some slack because of their past choices and past mistakes. We carry their past all through our life and use it to judge them. And judge them as per our convenience, to fit our narrative.</p>
+<p><strong>Sounds strange? Let’s look at some more examples…</strong></p>
+<ul>
+<li>If someone fails an entrance exam, you say ‘he’s not capable.’ But, if you fail in the exam, the narrative changes to ‘I had a fever, I couldn’t study.’</li>
+<li>If someone is good at sketching, ‘he’s just talented.’ And why don’t you sketch? ‘you know I don’t have time to practice.’</li>
+<li>If a colleague takes a leave because he’s sick, you already know he is lying. But when you fall sick and skip work, nobody should blame you.</li>
+<li>If someone loses money in stocks, ‘she’s such a bad investor.’ But if you lose money in stocks, ‘the market crashed!’</li>
+<li>If someone did not get selected for a job, ‘he was not qualified in the first place.’ But if you did not get selected, ‘the interviewer asked tough questions.’</li>
+<li>If someone loses a game, ‘she was unfit, she shouldn’t have been selected.’ But if you lose a business deal, ‘they did not understand the benefits of our product.’</li>
+</ul>
+<p>We also pass judgements based on mere appearances and personalities:</p>
+<ul>
+<li>A candidate is not well organized and well planned because he is wearing a wrinkled shirt in an interview.</li>
+<li>A girl is a slut because she is wearing a skirt.</li>
+<li>A girl is inviting you for sex because she is talking to you with a smile.</li>
+<li>Someone is lazy just because he is fat.</li>
+</ul>
+<p>These judgements might be true in some cases. But they are most certainly NOT true all the time. We form these judgments because our mind is in a rush and our experience says that these are true most of the time.</p>
+<p>The world is chaotic and we are trying to figure out our way through all this chaos. It’s like cracking a code or solving a puzzle. It appears very random at first, but as we solve it we see patterns and realise that we can crack the code by following those patterns.</p>
+<p>Similarly, in life too, we are trying to find patterns around us — the way people talk, the way they eat, the way they commute, the way they dress, the way they treat others etc. And when we see a pattern, it gets registered in our mind. We use these patterns subsequently to navigate through the chaos and make choices quickly. That, however, doesn’t mean that the patterns hold good all the time. There could be and there will be deviations in the patterns. And in life, we should embrace these deviations.</p>
+<p><strong>We must be cognizant of the fact that our judgements could be wrong and think twice before we judge or comment on others.</strong></p>
+<hr>
+<p><strong>Thank you for reading! 🙏🏼</strong></p>
+<p>👍🏼 ➡️ If you liked it, please share it with others who might find it interesting!</p>
+<p><strong>💬 Also, please leave your comment or feedback below.</strong></p>
+<hr>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/cognitive-bias/">cognitive bias</a>
+        
+            <a href="/tags/product-management/">product management</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/post/confirmation-bias/">
+        
+        
+            <div class="article-image">
+                <img src="/post/confirmation-bias/football.41654bbae06ff054cc8b875e55d9d5b6_hubb7f093e94e52d7fb5a0d9995b405d4b_758522_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 01 Confirmation Bias"
+                        data-key="confirmation-bias" 
+                        data-hash="md5-QWVLuuBv8FTMi4deVdnVtg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">01 Confirmation Bias</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/post/hooked/">
+        
+        
+            <div class="article-image">
+                <img src="/post/hooked/dice.cb33626859f4b2b4052632843ad822a7_huf7d0c94a4c53b1b8b74d356a22e0c5ff_100633_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Hooked - book review"
+                        
+                        data-hash="md5-yzNiaFn0srQFJjKEOtgipw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Hooked - book review</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2023 My New Hugo Site
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

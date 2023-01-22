@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Things we believe because we like to believe'>
+<title>01 Confirmation Bias</title>
+
+<link rel='canonical' href='http://example.org/post/confirmation-bias/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='01 Confirmation Bias'>
+<meta property='og:description' content='Things we believe because we like to believe'>
+<meta property='og:url' content='http://example.org/post/confirmation-bias/'>
+<meta property='og:site_name' content='My New Hugo Site'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cognitive bias' /><meta property='article:tag' content='product management' /><meta property='article:published_time' content='2021-06-20T23:10:47&#43;05:30'/><meta property='article:modified_time' content='2021-06-20T23:10:47&#43;05:30'/><meta property='og:image' content='http://example.org/post/confirmation-bias/football.jpg' />
+<meta name="twitter:title" content="01 Confirmation Bias">
+<meta name="twitter:description" content="Things we believe because we like to believe"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='http://example.org/post/confirmation-bias/football.jpg' />
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huda2458f72ce188392d75c5d51cd8e24e_373_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">My New Hugo Site</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/confirmation-bias/">
+                <img src="/post/confirmation-bias/football_hubb7f093e94e52d7fb5a0d9995b405d4b_758522_800x0_resize_q75_box.jpg"
+                        srcset="/post/confirmation-bias/football_hubb7f093e94e52d7fb5a0d9995b405d4b_758522_800x0_resize_q75_box.jpg 800w, /post/confirmation-bias/football_hubb7f093e94e52d7fb5a0d9995b405d4b_758522_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="533" 
+                        loading="lazy"
+                        alt="Featured image of post 01 Confirmation Bias" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/psychology/" >
+                psychology
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/confirmation-bias/">01 Confirmation Bias</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Things we believe because we like to believe
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 20, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    8 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="cognitive-biases">Cognitive Biases</h2>
+<p>Cognitive Biases are a set of unwritten guidelines that nudge us to make decisions and take actions. They reduce our mental or intellectual effort to process information and make rational choices. We generally follow them without our awareness and in total submission. We follow them as they reduce our cognitive overload.</p>
+<p>We, very commonly, fall into the trap of these biases as they are easy to follow, reduce the stress and efforts to decide and take an action. Our brain is wired to process information only when necessary. It wants to off-load as much of its work as possible and go into the ‘chill zone’ as soon and as often as possible. It doesn’t want to be disturbed. It wants to be left alone!</p>
+<p>Hence, we form some heuristics with which we process information without troubling the brain very much and very often.</p>
+<p><img src="/post/confirmation-bias/confirmation-bias.jpeg"
+	width="1400"
+	height="787"
+	srcset="/post/confirmation-bias/confirmation-bias_hu8157a1fda72e8c1893067a51a712f881_81394_480x0_resize_q75_box.jpeg 480w, /post/confirmation-bias/confirmation-bias_hu8157a1fda72e8c1893067a51a712f881_81394_1024x0_resize_q75_box.jpeg 1024w"
+	loading="lazy"
+	
+		alt="Confirmation Bias"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="177"
+		data-flex-basis="426px"
+	
+></p>
+<h2 id="confirmation-bias">Confirmation Bias</h2>
+<p>One such heuristic, one such bias, is the Confirmation Bias. Let me give you a situation.</p>
+<p>In fact, go through this situation and think about what would you do in such a situation. Don’t lie to yourself — more likely than not, you are biased ;)</p>
+<p>Ok, let’s see.</p>
+<p>You are part of your school WhatsApp group. The group, which was formed 4 years ago, is moderately active. Members generally post birthday or anniversary wishes, news on current affairs, some memes and jokes.</p>
+<p>One fine day, a discussion starts on Football. You don’t watch much Football and are just aware of only a few famous leagues and players. The discussion picks up heat, and some of your friends are madly debating about who is the best: <strong>Messi or Ronaldo!</strong></p>
+<p>You go away for an hour and when you come back, you see <strong>937 unread</strong> messages. You go berserk. Stunned by this madness, you like to figure out who is the best yourself! And you have the greatest resort one can have to aid you in this endeavour, <strong>the all-knowing master of the universe: Google!</strong></p>
+<p>So, if you had to ask Google to find out who is actually ‘The Best’, what would you type? What would you search for?</p>
+<p>Now, pause for a moment and think.</p>
+<p>No, really, pause and think. What is the phrase that you’d search in Google?</p>
+<p><strong>I am serious. Pause and think!</strong></p>
+<p>Ok, did you think? Ready now?
+Fine.</p>
+<p>Before reading further, write the phrase you’d search for in the comments below (or write it down somewhere) so that you have proof and you can lock it down. We will come back to it in a moment.</p>
+<p>You can continue reading after you comment. Trust me, it will be fun.</p>
+<p>Done commenting?</p>
+<p>Ok. Now that you’ve decided what you’d search for, let’s see the possibilities. I have written some possible searches and their results:</p>
+<ol>
+<li>is messi better than ronaldo</li>
+<li>is ronaldo better than messi</li>
+<li>why is messi better than ronaldo</li>
+<li>why is ronaldo better than messi</li>
+<li>who is better, messi or ronaldo</li>
+<li>who is the best between messi and ronaldo</li>
+<li>football statistics of messi and ronaldo</li>
+</ol>
+<p>Of course, there could be many other combinations, but let us look at these.</p>
+<p><strong>Based on the order in which you read those articles, you form some initial opinion about Messi and Ronaldo.</strong> You start to subscribe to what you read. And as each subsequent fact reinforces the previously read facts, your belief in it strengthens. Once you read a good number of articles (could just be 2 or 3), you will form a very strong opinion about each player.</p>
+<p><strong>Options 1, 2, 3, 4:</strong><br>
+Please go through the below Google results carefully…
+<img src="/post/confirmation-bias/options1234.png"
+	width="1400"
+	height="1281"
+	srcset="/post/confirmation-bias/options1234_hu47ef9f3d5c17ddbbf2b6c3a033681907_516293_480x0_resize_box_3.png 480w, /post/confirmation-bias/options1234_hu47ef9f3d5c17ddbbf2b6c3a033681907_516293_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="is one better than the other"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="109"
+		data-flex-basis="262px"
+	
+></p>
+<p>Clearly, as you can see, these results are already biased towards one player (Messi) than the other! <strong>Google filters out articles for you that tend to argue that Messi is better than Ronaldo!</strong> And as you read one article after the other, the reinforcement (the confirmation of your beliefs) happens, you tend to subscribe to one school of thought. So, if you search ‘is messi better than ronaldo’, you are more likely to end up in the ‘Messi Clan’ than the ‘Ronaldo Clan’ as you read more articles that favour Messi over Ronaldo.</p>
+<p>And once you end up in that clan, you do not question your allegiance at all! Would you? I mean, according to you, you have searched by all fairness and Google is CLEARLY saying that Messi is better than Ronaldo. And you wouldn’t doubt the ‘all-knowing master’, would you? Hence you are right! Or, so you think!</p>
+<p>Well, a while ago, you did not have any connection with Football. You do not watch much of Football and do not have much knowledge about the players and probably have a piece of very poor knowledge about what’s happening in the Football world. Yet, here you are, almost convinced that Messi is better than Ronaldo.</p>
+<p>Similar will be the search results for options 2, 3, and 4 — and you tend to form a strong opinion on either Messi or Ronaldo based on those articles.</p>
+<p><strong>Options 5, 6:</strong><br>
+Please read these results carefully now…
+<img src="/post/confirmation-bias/options56.png"
+	width="1400"
+	height="1311"
+	srcset="/post/confirmation-bias/options56_huf4a70772533d05c02a0c97c238681c6c_545362_480x0_resize_box_3.png 480w, /post/confirmation-bias/options56_huf4a70772533d05c02a0c97c238681c6c_545362_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="who is better"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="106"
+		data-flex-basis="256px"
+	
+></p>
+<p>On the other hand, searches 5 and 6 are not targeted to either Messi or Ronaldo and they give a set of partially unbiased results. Yet, these results are someone’s opinions about both the players. So, if the author of those articles is partially biased towards any player, that would reflect in the article as well.</p>
+<p><strong>Option 7:</strong><br>
+<img src="/post/confirmation-bias/option7.png"
+	width="1400"
+	height="1316"
+	srcset="/post/confirmation-bias/option7_hu328ee8703b158fd8b20289370e06b912_512340_480x0_resize_box_3.png 480w, /post/confirmation-bias/option7_hu328ee8703b158fd8b20289370e06b912_512340_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="player statistics"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="106"
+		data-flex-basis="255px"
+	
+></p>
+<p>The search results for 7 give statistics about the players. <strong>They give details about the number of matches, goals, awards, possession time, win % etc.</strong> These will help you do an easy number-by-number comparison. However, comparing different kinds of numbers is also not easy. I mean, it is not possible to compare the number of goals to the ball possession time or the number of assists or the number of awards etc. Also, if you know a little about Football, you will know that the game is not just about numbers, after all!</p>
+<h2 id="how-to-actually-compare-then">How to actually compare then?</h2>
+<p>If you really wanted to make such a comparison, you’d have to watch 100s of Football matches, read through 100s of player stats and study the hardships each player faced in their life among other things. And the best answer you could probably arrive at is that the comparison itself is futile! Each of them is ‘best’ in their own way… Or if you had to conclude, you’d be very specific and categorical in your answer instead of giving a generic statement like ‘Messi is better than Ronaldo’. <strong>Because the harder question people forget to ask here is what does ‘better’ actually mean?</strong></p>
+<p>And, who really wants to go through this gruelling process of analysing the information in such an impartial way just to decide who is a better player, right! Instead, we tend to spend some time going through various videos and articles on the internet and form our own opinion as soon as possible.</p>
+<p>Unfortunately, it is not just for discussions like these but also for many important decisions in our life that we ignore such thinking. We do not want to burden ourselves so much in our daily decision making. <strong>We off-load as much thinking as possible and spend our mental energy only in certain situations — typically the office work!</strong></p>
+<p><strong>This kind of confirmation bias happens all the time:</strong></p>
+<ul>
+<li>Religious affiliations: Is Hinduism better than Christianity</li>
+<li>Political affiliations: Is Biden better than Trump</li>
+<li>National Affairs: Is the farm bill bad for the farmers</li>
+<li>Fanbases: Is Marvel better than DC</li>
+<li>Diet plans: Is Vegan better than Keto</li>
+<li>Global warming is not real</li>
+<li>Covid vaccines do not work</li>
+</ul>
+<p><strong>The list is endless!</strong></p>
+<p>As we are no experts in certain situations, we rely on the views or opinions of others on the subject and seek answers. However, rather than looking for answers, <strong>we should question what we are looking for!</strong> Sadly, that kind of questioning requires a lot of rationality and our mind is super lazy to do that! The mind would rather know the answer ready-made than actually probe further. It would take the answer on the face of it than question the correctness of the question itself!</p>
+<blockquote>
+<p>So, Confirmation Bias, basically, reinforces your already existing notions, beliefs, opinions, views, and expectations about anything. This helps us assess a situation faster, make decisions quickly and take necessary actions immediately. With that, we can spend our ‘mental energy’ on things that actually matter to us.</p>
+</blockquote>
+<p>This happens because our mind doesn’t like to be questioned. It doesn’t want to be challenged. It doesn’t want to lose. It wants to win. It wants to be satisfied. The moment it finds that what it thinks is true, it becomes happy and reinforces that thought and tends to relax without any effort to validate it further. It requires an extra push to take the next step and validate further and we don’t want to give that extra push!</p>
+<p>On the other hand, if it finds out anything contrary to the existing beliefs and expectations, it denies, resists, becomes restless and unhappy. And the mind tries very hard to avoid such situations and the easy way to do that is to comply with anything that reinforces the existing beliefs without questioning further.</p>
+<p>So, the next time, when you think you are sure of something, that you are not biased in what you are saying and that you make total sense… <strong>Think again!</strong></p>
+<hr>
+<p><strong>Thank you for reading! 🙏🏼</strong></p>
+<p>👍🏼 ➡️ If you liked it, please share it with others who might find it interesting!</p>
+<p><strong>💬 Also, please leave your comment or feedback below.</strong></p>
+<hr>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/cognitive-bias/">cognitive bias</a>
+        
+            <a href="/tags/product-management/">product management</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/post/hooked/">
+        
+        
+            <div class="article-image">
+                <img src="/post/hooked/dice.cb33626859f4b2b4052632843ad822a7_huf7d0c94a4c53b1b8b74d356a22e0c5ff_100633_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Hooked - book review"
+                        
+                        data-hash="md5-yzNiaFn0srQFJjKEOtgipw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Hooked - book review</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2023 My New Hugo Site
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

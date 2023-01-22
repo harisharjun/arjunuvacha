@@ -1,0 +1,13 @@
+.site-footer {
+    text-align: center;
+}
+
+.site-footer:before {
+    text-align: center !important;
+    content: "";
+    display: inline-block  !important;
+    height: 3px;
+    width: 50px;
+    background: var(--body-text-color);
+    margin-bottom: 20px;
+}
