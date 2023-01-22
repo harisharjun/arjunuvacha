@@ -1,5 +1,5 @@
 ---
-title: "My Aunty - my Guru"
+title: "My Aunty, my Guru"
 date: 2022-01-16T21:34:49+05:30
 draft: false
 description: I owe a lot of what I am today to my Guru. A humble tribute to her, for being my guiding light.
