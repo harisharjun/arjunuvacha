@@ -1,7 +1,7 @@
 ---
 title: About
 description: 🔍 a product manager's perspective of everyday things.
-image: /sky.jpg
+image: img/sky.jpg
 date:
 aliases:
   - about-us
