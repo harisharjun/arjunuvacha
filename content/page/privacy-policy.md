@@ -1,7 +1,7 @@
 ---
 title: "Privacy Policy"
 date: 2023-01-23T23:29:12+05:30
-draft: true
+draft: false
 ---
 
 Updated and Effective: Jan 23, 2023
