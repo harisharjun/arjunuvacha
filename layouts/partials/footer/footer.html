@@ -5,7 +5,8 @@
         {{ if and (.Site.Params.footer.since) (ne .Site.Params.footer.since (int (now.Format "2023"))) }}
             {{ .Site.Params.footer.since }} - 
         {{ end }}
-        {{ now.Format "2006" }} {{ .Site.Title }}
+        {{ now.Format "2006" }} {{ .Site.Title }} <div style="display: inline-block;">|</div>
+        <a href="/privacy-policy/" target="_blank"> Privacy Policy </a>
     </section>
     
         
