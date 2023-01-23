@@ -130,38 +130,46 @@ enabled = true
 enabled = true
 
 [menu]
+  [[menu.main]]
+identifier = "home"
+name = "Home"
+url = "/"
+weight = -100
+pre = "home"
 
-[[menu.social]]
-identifier = "linkedin"
-name = "Linkedin"
-url = "https://linkedin.com/in/harisharjun"
+[menu.main.params]
 
-  [menu.social.params]
-  icon = "brand-linkedin"
+  [[menu.social]]
+    identifier = "linkedin"
+    name = "Linkedin"
+    url = "https://linkedin.com/in/harisharjun"
 
-[[menu.social]]
-identifier = "twitter"
-name = "Twitter"
-url = "https://twitter.com/arjunuvacha_"
+      [menu.social.params]
+        icon = "brand-linkedin"
 
-  [menu.social.params]
-  icon = "brand-twitter"
+  [[menu.social]]
+    identifier = "twitter"
+    name = "Twitter"
+    url = "https://twitter.com/arjunuvacha_"
 
-[[menu.social]]
-identifier = "github"
-name = "GitHub"
-url = "https://github.com/harisharjun"
+    [menu.social.params]
+      icon = "brand-twitter"
 
-  [menu.social.params]
-  icon = "brand-github"
+  [[menu.social]]
+    identifier = "github"
+    name = "GitHub"
+    url = "https://github.com/harisharjun"
 
-[[menu.social]]
-identifier = "instagram"
-name = "Instagram"
-url = "https://instagram.com/arjunuvacha"
+    [menu.social.params]
+      icon = "brand-github"
 
-  [menu.social.params]
-  icon = "brand-instagram"
+  [[menu.social]]
+    identifier = "instagram"
+    name = "Instagram"
+    url = "https://instagram.com/arjunuvacha"
+
+    [menu.social.params]
+      icon = "brand-instagram"
 
 
 [related]
