@@ -15,6 +15,7 @@ menu:
         pre: user
 ---
 
+## Naming the blog
 ***Arjun Uvacha*** (/ˈɜːʤʊn ʊwɒʧɑː/)\
 ***Arjun Uvacha*** is a Sanskrit phrase which simply translates to 'Arjun said' or 'Arjun spoke'.
 
@@ -46,5 +47,5 @@ It is rather inconspicuous how our behaviours are shaped. They make us do certai
 
 And here I am, trying my bit to build better products, for **Good!**
 
-### Find me on:
+## Find me on
 [LinkedIn](https://www.linkedin.com/in/harisharjun/) • [GitHub](https://github.com/harisharjun) • [Twitter](https://twitter.com/arjunuvacha_) •  [Clubhouse](https://clubhouse.com/@arjunuvacha) • [Instagram](https://www.instagram.com/arjunuvacha/)
