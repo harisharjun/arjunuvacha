@@ -116,7 +116,7 @@ site = "arjunuvacha_"
 card = "summary_large_image"
 
 [params.defaultImage.opengraph]
-enabled = false
+enabled = true
 local = false
 
   [params.colorScheme]
