@@ -1,6 +1,5 @@
 <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta property='og:image:url' content='{{ absURL $image.permalink }}' />
 
 {{- $description := partialCached "data/description" . .RelPermalink -}}
 <meta property="og:title" content="{{ .Title }} | {{ .Site.Title }}" />

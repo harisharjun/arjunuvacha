@@ -139,13 +139,6 @@ pre = "home"
 
 [menu.main.params]
 
-  [[menu.social]]
-  identifier = "github"
-  name = "GitHub"
-  url = "https://github.com/harisharjun"
-
-    [menu.social.params]
-    icon = "brand-github"
 
   [[menu.social]]
   identifier = "twitter"
@@ -154,6 +147,16 @@ pre = "home"
 
     [menu.social.params]
     icon = "brand-twitter"
+
+  [[menu.social]]
+  identifier = "github"
+  name = "GitHub"
+  url = "https://github.com/harisharjun"
+
+    [menu.social.params]
+    icon = "brand-github"
+
+
 
 [related]
 includeNewer = true
