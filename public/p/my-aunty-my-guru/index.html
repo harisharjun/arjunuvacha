@@ -546,33 +546,27 @@ Another aspect that I was privileged to witness under Aunty’s guidance was her
      
     
         
-    <div id="remark42"></div>
-<script>
-    var remark_config = {
-        host: 'https:\/\/www.arjunuvacha.com\/',
-        site_id: 'arjunuvacha',
-        components: ['embed'],
-        url: 'https:\/\/www.arjunuvacha.com\/p\/my-aunty-my-guru\/',
-        max_shown_comments:  15 ,
-        theme: document.documentElement.dataset.scheme,
-        page_title: 'My Aunty, my Guru',
-        locale: 'en',
-        show_email_subscription:  true 
-    };
+    <div id="cusdis_thread"
+    data-host="https://arjunuvacha.com"
+    data-app-id="ac4ac4e3-ee84-4182-8b19-7ad6edca09b9"
+    data-page-id="8b33f4ea2ae7128e16b41d4fc5002325"
+    data-page-url="https://www.arjunuvacha.com/p/my-aunty-my-guru/"
+    data-page-title="My Aunty, my Guru"></div>
+<script async defer src="https://arjunuvacha.com/js/cusdis.es.js"></script>
 
-    function(e, n) {
-        for (var o = 0; o < e.length; o++) {
-            var r = n.createElement('script'),
-            c = '.js',
-            d = n.head || n.body;
-            'noModule' in r ? (r.type = 'module', c = '.mjs') : r.async = !0, r.defer = !0, r.src = remark_config.host + '/web/' + e[o] + c, d.appendChild(r)
+<script>
+    function setCusdisTheme(theme) {
+        let cusdis = document.querySelector('#cusdis_thread iframe');
+        if (cusdis) {
+            window.CUSDIS.setTheme(theme)
         }
-    }(remark_config.components || ['embed'], document);
+    }
 
     window.addEventListener('onColorSchemeChange', (e) => {
-        window.REMARK42.changeTheme(e.detail);
+        setCusdisTheme(e.detail)
     })
 </script>
+
 
     
 

@@ -51,7 +51,7 @@ enabled = false
 
 [params.comments]
 enabled = true
-provider = "remark42"
+provider = "cusdis"
 noComment = false
 
 [params.comments.disqusjs]
@@ -89,6 +89,8 @@ shortname = "arjunuvacha"
     [params.comments.gitalk]
 
     [params.comments.cusdis]
+    host = "https://arjunuvacha.com"
+    id ="ac4ac4e3-ee84-4182-8b19-7ad6edca09b9"
 
 [[params.widgets.homepage]]
 type = "search"
