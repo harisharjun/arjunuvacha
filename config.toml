@@ -3,8 +3,8 @@ languageCode = 'en-us'
 title = 'Arjun Uvacha'
 theme = 'hugo-theme-stack'
 
-disqusShortname = "arjunuvacha"
-googleAnalytics = "UA-187775971-1"
+
+googleAnalytics = "350625145"
 DefaultContentLanguage = "en"
 hasCJKLanguage = false
 
