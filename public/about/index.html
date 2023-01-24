@@ -408,27 +408,33 @@
      
     
         
-    <div id="cusdis_thread"
-    data-host="https://arjunuvacha.com"
-    data-app-id="ac4ac4e3-ee84-4182-8b19-7ad6edca09b9"
-    data-page-id="405ba581599f556cd14af94d199e20b1"
-    data-page-url="https://www.arjunuvacha.com/about/"
-    data-page-title="About"></div>
-<script async defer src="https://arjunuvacha.com/js/cusdis.es.js"></script>
-
+    <div id="remark42"></div>
 <script>
-    function setCusdisTheme(theme) {
-        let cusdis = document.querySelector('#cusdis_thread iframe');
-        if (cusdis) {
-            window.CUSDIS.setTheme(theme)
+    var remark_config = {
+        host: 'https:\/\/arjunuvacha-3de80-default-rtdb.firebaseio.com\/',
+        site_id: 'remark',
+        components: ['embed'],
+        url: 'https:\/\/www.arjunuvacha.com\/about\/',
+        max_shown_comments:  15 ,
+        theme: document.documentElement.dataset.scheme,
+        page_title: 'About',
+        locale: 'en',
+        show_email_subscription:  true 
+    };
+
+    function(e, n) {
+        for (var o = 0; o < e.length; o++) {
+            var r = n.createElement('script'),
+            c = '.js',
+            d = n.head || n.body;
+            'noModule' in r ? (r.type = 'module', c = '.mjs') : r.async = !0, r.defer = !0, r.src = remark_config.host + '/web/' + e[o] + c, d.appendChild(r)
         }
-    }
+    }(remark_config.components || ['embed'], document);
 
     window.addEventListener('onColorSchemeChange', (e) => {
-        setCusdisTheme(e.detail)
+        window.REMARK42.changeTheme(e.detail);
     })
 </script>
-
 
     
 
