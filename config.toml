@@ -4,7 +4,6 @@ title = 'Arjun Uvacha'
 theme = 'hugo-theme-stack'
 
 
-googleAnalytics = "350625145"
 DefaultContentLanguage = "en"
 hasCJKLanguage = false
 
