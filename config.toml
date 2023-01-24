@@ -50,9 +50,9 @@ readingTime = true
 enabled = false
 
 [params.comments]
-enabled = false
-provider = "disqus"
-noComment = true
+enabled = true
+provider = "remark42"
+noComment = false
 
 [params.comments.disqusjs]
 shortname = "arjunuvacha"
@@ -61,6 +61,9 @@ shortname = "arjunuvacha"
     issueTerm = "pathname"
 
     [params.comments.remark42]
+    host = "https://www.arjunuvacha.com/"
+    site = "arjunuvacha"
+    locale = "en"
 
     [params.comments.vssue]
     autoCreateIssue = false
