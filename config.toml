@@ -19,7 +19,7 @@ page = "/:slug/"
 
 [params]
 mainSections = [ "post" ]
-featuredImageField = "image"
+featuredImageField = "au.png"
 rssFullContent = true
 favicon = "favicon.png"
 
