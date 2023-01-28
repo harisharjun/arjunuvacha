@@ -2,11 +2,14 @@ baseURL = 'https://www.arjunuvacha.com/'
 languageCode = 'en-us'
 title = 'Arjun Uvacha'
 theme = 'hugo-theme-stack'
-image = "au.png"
-
 
 DefaultContentLanguage = "en"
 hasCJKLanguage = false
+
+enableEmoji = true
+enableGitInfo = true
+enableRobotsTXT = true
+canonifyURLs = true
 
 [languages.en]
 languageName = "English"
@@ -19,10 +22,16 @@ post = "/p/:slug/"
 page = "/:slug/"
 
 [params]
+description = "🔍 a product manager's perspective of everyday things."
 mainSections = [ "post"]
 featuredImageField = "image"
 rssFullContent = true
 favicon = "favicon.png"
+author = "Praveen Juge"
+github = "https://github.com/harisharjun"
+image = "img/au.png"
+sitename = "Example Site Name"
+twitter = "@praveenjuge"
 
 [params.footer]
 since = 2020
