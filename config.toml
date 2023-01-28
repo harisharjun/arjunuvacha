@@ -30,8 +30,8 @@ favicon = "favicon.png"
 author = "Praveen Juge"
 github = "https://github.com/harisharjun"
 image = "img/au.png"
-sitename = "Example Site Name"
-twitter = "@praveenjuge"
+sitename = "Arjun Uvacha"
+twitter = "@arjunuvacha_"
 
 [params.footer]
 since = 2020
