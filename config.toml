@@ -2,7 +2,7 @@ baseURL = 'https://www.arjunuvacha.com/'
 languageCode = 'en-us'
 title = 'Arjun Uvacha'
 theme = 'hugo-theme-stack'
-image = 'img/au.png'
+image = "test.png"
 
 
 DefaultContentLanguage = "en"
