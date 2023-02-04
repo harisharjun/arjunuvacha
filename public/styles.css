@@ -1,5 +1,5 @@
 .site-footer {
-    text-align: center;
+    text-align: center !important;
 }
 
 .site-footer:before {

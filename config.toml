@@ -59,8 +59,8 @@ readingTime = true
 enabled = false
 
 [params.comments]
-enabled = true
-provider = "remark42"
+enabled = false
+provider = ""
 noComment = false
 
 [params.comments.disqusjs]
