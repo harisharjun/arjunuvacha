@@ -1,5 +1,5 @@
 ---
-title: "Are you building a washing machine to cook your rice?"
+title: "How to identify the right problems to solve?"
 date: 2023-02-04T19:00:10+05:30
 draft: true
 image: right-problems.jpg

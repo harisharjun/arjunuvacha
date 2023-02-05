@@ -4,7 +4,7 @@ date: 2021-06-27T00:03:56+05:30
 draft: true
 ---
 
-* Added the custom styles sheet <link rel="stylesheet" href="/styles.css"> in baseof.html under themes folder
+* Added the custom styles sheet <link rel="stylesheet" href="../../styles.css"> in baseof.html under themes folder
 
 * Added Favicon in layouts/partials/head/head.html
 <link href="/favicon.png" rel="icon" type="image/x-icon" />
