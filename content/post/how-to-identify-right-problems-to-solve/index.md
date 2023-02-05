@@ -107,11 +107,13 @@ The matrix would look something like this:
 How do I make this entire process less difficult?
 
 Let’s add one column to this matrix: Difficulty x Impact = product of difficulty points and impact points. The matrix would look like this:
+
 ![Adding the difficulty x impact column](difficulty-impact-column-added.png)
 
 Now, if I had to choose which jobs to work on, to give a better cooking experience, I would  choose the ones with **High Difficulty and High Impact.**
 
 This can be achieved by looking at the **‘Difficulty x Impact’ column**, I would get the prioritised jobs as:
+
 ![Prioritising based on difficulty x impact](difficulty-impact-prioritisation.png)
 
 ### Prioritising the problems
@@ -130,6 +132,7 @@ Based on this, I could ask Abhinav to use an electric cooker instead of a pressu
 #### The outcome: Rice is cooked!
 
 If we look at the matrix again, replacing the pressure cooker with an electric cooker, it would look something like this:
+
 ![Problem solved with electric cooker](electric-cooker-matrix.png)
 
 ## Final observations
