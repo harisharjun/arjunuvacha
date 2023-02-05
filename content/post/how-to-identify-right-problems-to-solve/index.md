@@ -14,18 +14,20 @@ tags: [
 ## Introduction
 As Product Managers, our primary responsibility is to solve user problems and make the user’s life easy. More often than not, we are tasked to deal with one or the other complex problem with a lot of nuances, made up of smaller interconnected problems making it a complex web to address.
 
-For example, look at the following problem statement: **Increase the monthly revenue from a product category by 10%.**
+For example, look at the following problem statement: **Increase the monthly revenue from the 'Electronics' product category of an e-commerce website by 10%.**
 
 It is a vague problem to work on. But you can get started by asking some questions to understand the problem better, like:
-1. Is there enough demand for the product?
-2. Which channel offers the best scope to improve revenues?
-3. Is the communication and messaging by the marketing team bang on?
-4. Are there any delivery constraints?
-5. And so on…
+1. Is there enough demand for the products?
+2. What does the user journey look like?
+3. How does the conversion funnel look like?
+4. Which channel offers the best scope to improve revenues?
+5. Is the communication and messaging by the marketing team bang on?
+6. Are there any delivery constraints?
+7. And so on…
 
 These are very important questions to answer and we often get swamped with so much data that it gets difficult to identify which ones to pick and work on. How do we deal with such situations?
 
-One of the ways of doing this is by identifying or breaking the complex problem into multiple smaller sets of tasks or jobs to be done by different stakeholders along the user journey.
+One of the ways of doing this is by identifying or breaking the complex problem into multiple smaller sets of tasks or jobs to be done by different stakeholders along the user journey. This will help us look at a set of smaller, easily comprehendible problems rather than a gigantic web.
 
 ### Example
 For example, if you look at the user journey of placing an order from the above-discussed product category problem statement, these could be some of the jobs to be done:

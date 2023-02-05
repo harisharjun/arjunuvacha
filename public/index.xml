@@ -80,17 +80,19 @@
         <guid>https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/</guid>
         <description>&lt;img src="https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/right-problems.jpg" alt="Featured image of post How to identify the right problems to solve?" /&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;As Product Managers, our primary responsibility is to solve user problems and make the user’s life easy. More often than not, we are tasked to deal with one or the other complex problem with a lot of nuances, made up of smaller interconnected problems making it a complex web to address.&lt;/p&gt;
-&lt;p&gt;For example, look at the following problem statement: &lt;strong&gt;Increase the monthly revenue from a product category by 10%.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;For example, look at the following problem statement: &lt;strong&gt;Increase the monthly revenue from the &amp;lsquo;Electronics&amp;rsquo; product category of an e-commerce website by 10%.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;It is a vague problem to work on. But you can get started by asking some questions to understand the problem better, like:&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;Is there enough demand for the product?&lt;/li&gt;
+&lt;li&gt;Is there enough demand for the products?&lt;/li&gt;
+&lt;li&gt;What does the user journey look like?&lt;/li&gt;
+&lt;li&gt;How does the conversion funnel look like?&lt;/li&gt;
 &lt;li&gt;Which channel offers the best scope to improve revenues?&lt;/li&gt;
 &lt;li&gt;Is the communication and messaging by the marketing team bang on?&lt;/li&gt;
 &lt;li&gt;Are there any delivery constraints?&lt;/li&gt;
 &lt;li&gt;And so on…&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;These are very important questions to answer and we often get swamped with so much data that it gets difficult to identify which ones to pick and work on. How do we deal with such situations?&lt;/p&gt;
-&lt;p&gt;One of the ways of doing this is by identifying or breaking the complex problem into multiple smaller sets of tasks or jobs to be done by different stakeholders along the user journey.&lt;/p&gt;
+&lt;p&gt;One of the ways of doing this is by identifying or breaking the complex problem into multiple smaller sets of tasks or jobs to be done by different stakeholders along the user journey. This will help us look at a set of smaller, easily comprehendible problems rather than a gigantic web.&lt;/p&gt;
 &lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
 &lt;p&gt;For example, if you look at the user journey of placing an order from the above-discussed product category problem statement, these could be some of the jobs to be done:&lt;/p&gt;
 &lt;ol&gt;
