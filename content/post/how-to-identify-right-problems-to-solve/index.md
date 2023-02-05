@@ -1,7 +1,7 @@
 ---
 title: "How to identify the right problems to solve?"
 date: 2023-02-04T19:00:10+05:30
-draft: true
+draft: false
 image: right-problems.jpg
 description: How not to be consumed by the magnanimity of a problem and dissect it methodically - a quick view.
 categories:

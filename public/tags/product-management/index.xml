@@ -6,7 +6,177 @@
         <description>Recent content in product management on Arjun Uvacha</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Sun, 22 Jan 2023 16:16:32 +0530</lastBuildDate><atom:link href="https://www.arjunuvacha.com/tags/product-management/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 04 Feb 2023 19:00:10 +0530</lastBuildDate><atom:link href="https://www.arjunuvacha.com/tags/product-management/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>How to identify the right problems to solve?</title>
+        <link>https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/</link>
+        <pubDate>Sat, 04 Feb 2023 19:00:10 +0530</pubDate>
+        
+        <guid>https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/</guid>
+        <description>&lt;img src="https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/right-problems.jpg" alt="Featured image of post How to identify the right problems to solve?" /&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;As Product Managers, our primary responsibility is to solve user problems and make the user’s life easy. More often than not, we are tasked to deal with one or the other complex problem with a lot of nuances, made up of smaller interconnected problems making it a complex web to address.&lt;/p&gt;
+&lt;p&gt;For example, look at the following problem statement: &lt;strong&gt;Increase the monthly revenue from a product category by 10%.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;It is a vague problem to work on. But you can get started by asking some questions to understand the problem better, like:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Is there enough demand for the product?&lt;/li&gt;
+&lt;li&gt;Which channel offers the best scope to improve revenues?&lt;/li&gt;
+&lt;li&gt;Is the communication and messaging by the marketing team bang on?&lt;/li&gt;
+&lt;li&gt;Are there any delivery constraints?&lt;/li&gt;
+&lt;li&gt;And so on…&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;These are very important questions to answer and we often get swamped with so much data that it gets difficult to identify which ones to pick and work on. How do we deal with such situations?&lt;/p&gt;
+&lt;p&gt;One of the ways of doing this is by identifying or breaking the complex problem into multiple smaller sets of tasks or jobs to be done by different stakeholders along the user journey.&lt;/p&gt;
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+&lt;p&gt;For example, if you look at the user journey of placing an order from the above-discussed product category problem statement, these could be some of the jobs to be done:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Identify the right target user&lt;/li&gt;
+&lt;li&gt;Market (or show an Ad) to the user&lt;/li&gt;
+&lt;li&gt;Get the user to click on the marketing campaign&lt;/li&gt;
+&lt;li&gt;Make the user register&lt;/li&gt;
+&lt;li&gt;Show the user what the user wants&lt;/li&gt;
+&lt;li&gt;Make the experience smooth for the user to add products to the cart&lt;/li&gt;
+&lt;li&gt;Build a smooth payment/check-out journey&lt;/li&gt;
+&lt;li&gt;Deliver the product to the user&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;what-does-this-do&#34;&gt;What does this do?&lt;/h3&gt;
+&lt;p&gt;This helps break down complex problems into a series of jobs to be executed (by people) at a granular level. Because each job is at a granular level, it gets easy to identify how difficult is it for the user to do the job. The more the difficulty implies more the problem. And the more the problem more the opportunity to solve. Similarly, if each job is complicated or takes more time or effort by the user, it offers more opportunities to solve.&lt;/p&gt;
+&lt;h3 id=&#34;ok-but-how-does-this-help&#34;&gt;Ok. But, how does this help?&lt;/h3&gt;
+&lt;p&gt;Once all the complex problems are broken down into a series of smaller jobs to be done by various stakeholders involved, you will end up with a simple list of jobs. And you can then choose which jobs are ‘worth solving’ based on how difficult they are and what impact they create for the user.&lt;/p&gt;
+&lt;p&gt;It helps in breaking the complex problem into granular bits giving better visibility and the ability to prioritise them.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Unable to follow?&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;a-case-study-from-personal-life&#34;&gt;A case study from personal life&lt;/h2&gt;
+&lt;p&gt;Let me explain this by taking a very simple day-to-day scenario.&lt;/p&gt;
+&lt;h3 id=&#34;scenario&#34;&gt;Scenario&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;The scenario:&lt;/strong&gt; Abhinav is a working professional and he finds it difficult to cook rice.&lt;/p&gt;
+&lt;p&gt;If I was asked to simplify the cooking experience and make the &lt;em&gt;‘complex problem’&lt;/em&gt; of cooking rice easy, how would I do it? Would I build a washing machine or an electric cooker? How do I decide what needs to be built?&lt;/p&gt;
+&lt;h3 id=&#34;breaking-down-the-problem&#34;&gt;Breaking down the problem&lt;/h3&gt;
+&lt;p&gt;Now, if I break down this problem for the user (Abhinav), there would be 7 jobs involved as listed below:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Take one cup of rice&lt;/li&gt;
+&lt;li&gt;Rinse the rice&lt;/li&gt;
+&lt;li&gt;Put the rice in a pressure cooker&lt;/li&gt;
+&lt;li&gt;Add two cups of water&lt;/li&gt;
+&lt;li&gt;Put the pressure cooker on the stoke with low flame&lt;/li&gt;
+&lt;li&gt;Wait for 3 whistles&lt;/li&gt;
+&lt;li&gt;Turn off the stove&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;the-outcome-cooked-rice&#34;&gt;The outcome: Cooked rice!&lt;/h4&gt;
+&lt;p&gt;An easy way to make the cooking experience better for Abhinav is by identifying which of those jobs are the most difficult and simplifying them. Right?&lt;/p&gt;
+&lt;p&gt;Let’s do that.&lt;/p&gt;
+&lt;h3 id=&#34;the-job-difficulty-impact-matrix&#34;&gt;The job, difficulty, impact matrix&lt;/h3&gt;
+&lt;p&gt;To do this, let me first create a matrix with four columns:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The job to be done&lt;/li&gt;
+&lt;li&gt;The category of the job&lt;/li&gt;
+&lt;li&gt;Difficulty in doing the job&lt;/li&gt;
+&lt;li&gt;The impact created for Abhinav if the job is simplified&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The category column could simply be some way of bucketing/categorising the jobs.&lt;/p&gt;
+&lt;p&gt;The difficulty and impact could be assigned on a scale of 1 to 5, with 1 being least difficult/impactful and 5 being most difficult/impactful.&lt;/p&gt;
+&lt;p&gt;By doing this, instead of looking at a complex problem, I will now be able to look at a list of categorised tasks, the effort required to perform them and their impact on Abhinav.&lt;/p&gt;
+&lt;p&gt;I have broken these jobs into two categories: Prep and Cook, and assigned their level of difficulty and impact.&lt;/p&gt;
+&lt;p&gt;The matrix would look something like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/jobs-with-difficulty-impact.png&#34;
+	width=&#34;1094&#34;
+	height=&#34;432&#34;
+	srcset=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/jobs-with-difficulty-impact_huddcc7fdeee2988f8cd567e9568686675_174126_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/jobs-with-difficulty-impact_huddcc7fdeee2988f8cd567e9568686675_174126_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Jobs to be done - difficulty and impact matrix&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;253&#34;
+		data-flex-basis=&#34;607px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;You can notice that steps 1 to 4 are simple and do not take much effort from Abhinav, hence the difficulty assigned for them is 1. And because Abhinav does not perceive much impact if these steps are solved, the assigned impact also is 1 for them.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The next two steps require Abhinav to handle the pressure cooker correctly, turn on the stove, put it on low flame and wait for 3 whistles - these are burdensome. It calls for the user’s effort, availability and attention. Hence they are assigned higher difficulty points. Solving these steps will make it that much less burdensome for the user, so the impact created for Abhinav also will be much higher if these steps are simplified.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The final step, Step 7, is also of low effort, with a difficulty of 1 point. But it is the closing and an important step. Abhinav has to turn off the stove without fail, if not the rice will be burnt. Though it does not take much effort, it is a must. Now, if this step is solved, then the perceived impact for Abhinav is very high as he does not have to worry about turning off the stove. That’s a great relief and would also allow him to focus on other activities. Hence this job is assigned an impact of 4 points if simplified.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;The total difficulty of the user to cook the rice is 11 points.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;adding-the-difficulty-x-impact-column&#34;&gt;Adding the Difficulty x Impact column&lt;/h3&gt;
+&lt;p&gt;How do I make this entire process less difficult?&lt;/p&gt;
+&lt;p&gt;Let’s add one column to this matrix: Difficulty x Impact = product of difficulty points and impact points. The matrix would look like this:
+&lt;img src=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-column-added.png&#34;
+	width=&#34;1342&#34;
+	height=&#34;430&#34;
+	srcset=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-column-added_hu35ec9111afcc0cd4692c736bd955b192_86767_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-column-added_hu35ec9111afcc0cd4692c736bd955b192_86767_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Adding the difficulty x impact column&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;312&#34;
+		data-flex-basis=&#34;749px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Now, if I had to choose which jobs to work on, to give a better cooking experience, I would  choose the ones with &lt;strong&gt;High Difficulty and High Impact.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This can be achieved by looking at the &lt;strong&gt;‘Difficulty x Impact’ column&lt;/strong&gt;, I would get the prioritised jobs as:
+&lt;img src=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-prioritisation.png&#34;
+	width=&#34;1346&#34;
+	height=&#34;442&#34;
+	srcset=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-prioritisation_hu12c203b5309d8d8d3f3863e5224263a6_95348_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-prioritisation_hu12c203b5309d8d8d3f3863e5224263a6_95348_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Prioritising based on difficulty x impact&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;304&#34;
+		data-flex-basis=&#34;730px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;prioritising-the-problems&#34;&gt;Prioritising the problems&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;So, I would like to ensure that:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The user doesn’t have to wait&lt;/li&gt;
+&lt;li&gt;The user doesn’t worry about putting the cooker on the stove with the right flame&lt;/li&gt;
+&lt;li&gt;The user doesn’t have to worry about turning off the stove&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Based on this, I could ask Abhinav to use an electric cooker instead of a pressure cooker, which solves the top three challenges for him. And below will the steps he would need to follow:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Take one cup of rice&lt;/li&gt;
+&lt;li&gt;Rinse the rice&lt;/li&gt;
+&lt;li&gt;Put the rice in a pressure cooker&lt;/li&gt;
+&lt;li&gt;Add two cups of water&lt;/li&gt;
+&lt;li&gt;Put the rice in an electric cooker (the cooker will turn off automatically)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;the-outcome-rice-is-cooked&#34;&gt;The outcome: Rice is cooked!&lt;/h4&gt;
+&lt;p&gt;If we look at the matrix again, replacing the pressure cooker with an electric cooker, it would look something like this:
+&lt;img src=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/electric-cooker-matrix.png&#34;
+	width=&#34;994&#34;
+	height=&#34;344&#34;
+	srcset=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/electric-cooker-matrix_hu524c5443e905984527875531bb85d7a3_147809_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/electric-cooker-matrix_hu524c5443e905984527875531bb85d7a3_147809_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Problem solved with electric cooker&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;288&#34;
+		data-flex-basis=&#34;693px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;final-observations&#34;&gt;Final observations&lt;/h2&gt;
+&lt;p&gt;With this solution (of using an electric cooker), &lt;strong&gt;the effort has been reduced from 11 points to 5 points,&lt;/strong&gt; with the same outcome in both cases: cooked rice!&lt;/p&gt;
+&lt;p&gt;If you notice, I worked on the ‘Cook’ category of the problems, without worrying much about the ‘Prep’ category.&lt;/p&gt;
+&lt;p&gt;Instead, imagine if I had prioritised the ‘Prep’ category and focused on solving steps 2 or 3 or 4: rinsing of rice or automatic measurement of water quantity then I would have proposed using &lt;strong&gt;a washing machine for cooking rice&lt;/strong&gt; (which sounds like a ridiculous idea!) because a washing machine does the best job in solving the rinsing and the measurement problem. However, those steps are not what the user sees as daunting or difficult. So, if I had chosen to solve steps 2, 3, or 4, I would have put all my efforts into solving the &lt;strong&gt;wrong&lt;/strong&gt; problems for the user. And had this solution been proposed and implemented, it would have probably made life even more difficult for Abhinav, isn&amp;rsquo;t it?&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Long story short, what I want to convey is, if you break down the complex problem (or process) into minor tasks or jobs, assign them their difficulty and impact, and prioritise based on their difficulty and impact levels, it becomes much clearer (and easier) to pick which parts of the seemingly complex problem to work on.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;So, are you working on building a washing machine or an electric cooker?&lt;/strong&gt;&lt;br&gt;
+Well, think again!&lt;/p&gt;
+&lt;p&gt;Thank you for reading. If you found this interesting, please share this with other Product aspirants!&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>The Value of Defaults</title>
         <link>https://www.arjunuvacha.com/p/the-value-of-defaults/</link>
         <pubDate>Sun, 22 Jan 2023 16:16:32 +0530</pubDate>
