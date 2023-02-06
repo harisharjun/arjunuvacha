@@ -35,7 +35,7 @@ image: k-harish-arjun.jpg
 ### **WhatsDplan**, Co founder
 **Mar 2015 - Mar 2017**, Hyderabad\
 • Product: User research | Wireframes | Workflows | Design | Beta testing | GTM strategy | Process design\
-• Tech: Built the website for WhatsDplan, HTML5, JS, and CSS3\
+• Tech: Built the website for WhatsDplan, HTML5, JS, and CSS3. [Check the GitHub Repo here.](https://github.com/harisharjun/whatsdplan-website)\
 • Business: MoUs with Zomato, EventsHigh, Play zones, and Restaurants | Implemented offline& online marketing strategies | Drove App installations from 0 to 5000, with an MAU of 100+ users
 
 ### **Others**
