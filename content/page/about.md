@@ -47,5 +47,11 @@ It is rather inconspicuous how our behaviours are shaped. They make us do certai
 
 And here I am, trying my bit to build better products, for **Good!**
 
+## Blog set-up
+
+This blog is built on HUGO framework, the world's fastest framework for building websites, and is hosted on Firebase.
+
+I have used the Stack Theme created by [Jimmy Cai](https://stack.jimmycai.com/). Learn more about HUGO [here](https://gohugo.io/).
+
 ## Find me on
 [LinkedIn](https://www.linkedin.com/in/harisharjun/) • [GitHub](https://github.com/harisharjun) • [Twitter](https://twitter.com/arjunuvacha_) • [Instagram](https://www.instagram.com/arjunuvacha/)
