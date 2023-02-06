@@ -3,6 +3,7 @@ title: "K Harish Arjun - Resume"
 date: 2023-02-06T15:19:50+05:30
 draft: false
 description: A problem solver with 5+ years of hands-on experience in building technology products. Expertise in designing product & GTM strategy, launching new products & scaling them from scratch. I use a user-centric approach & display hustle to deliver things, with analytical, design, communication, stakeholder management and leadership skills.
+image: k-harish-arjun.jpg
 ---
 
 | [**View PDF Resume** 📄](https://drive.google.com/file/d/1anplBC3gS62t-aAaFjwAJd-qH78INWJm/view?usp=share_link) | [**View My LinkedIn Profile** 🔗](https://www.linkedin.com/in/harisharjun)|
