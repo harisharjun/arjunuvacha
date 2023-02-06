@@ -31,14 +31,14 @@ image: k-harish-arjun.jpg
 • Developed the product and executed the GTM for a brand-new [Full Stack Internship Program](https://www.edureka.co/internship/full-stack-web-development). Scaled it 5X from 5L to 50L in 3months
 
 ### **WhatsDplan**, Co founder
-**Mar 2015 - Mar 2017**, Bengaluru\
+**Mar 2015 - Mar 2017**, Hyderabad\
 • Product: User research | Wireframes | Workflows | Design | Beta testing | GTM strategy | Process design\
 • Tech: Built the website for WhatsDplan, HTML5, JS, and CSS3\
 • Business: MoUs with Zomato, EventsHigh, Play zones, and Restaurants | Implemented offline& online marketing strategies | Drove App installations from 0 to 5000, with an MAU of 100+ users
 
 ### **Others**
-• Sales Head, Treebo (2017 to 2019): Sales Head for a team of 10 | Increased revenue from 18L to 47L | On-boarded 150+ clients | Reduced DSO from 100 to 55 days | Handled two regions: AP and Telangana | Winner of Treebo Millenia Award thrice\
-• Senior Financial Analyst (2013 to 2015): Standard Chartered Bank
+• Sales Head, Treebo (2017 to 2019), Hyderabad: Sales Head for a team of 10 | Increased revenue from 18L to 47L | On-boarded 150+ clients | Reduced DSO from 100 to 55 days | Handled two regions: AP and Telangana | Winner of Treebo Millenia Award thrice\
+• Senior Financial Analyst, Standard Chartered Bank (2013 to 2015), Chennai: Change Management and Performance Management Governanace
 
 > ## Personal Projects
 > ### Arjun Uvacha (this blog)
