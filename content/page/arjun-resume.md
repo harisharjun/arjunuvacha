@@ -9,13 +9,15 @@ image: k-harish-arjun.jpg
 | [**View PDF Resume** 📄](https://drive.google.com/file/d/1anplBC3gS62t-aAaFjwAJd-qH78INWJm/view?usp=share_link) | [**View My LinkedIn Profile** 🔗](https://www.linkedin.com/in/harisharjun)|
 | --- | --- |
 
+**Note:** I am actively looking for full-time Senior Product Manager or Group Product Manager opportunities. If you like my profile, please reach out to me on [LinkedIn](https://www.linkedin.com/in/harisharjun).
+
 ## **Key Skills**
 `User Research` &nbsp; • &nbsp;`First Principles Thinking` &nbsp; • &nbsp;`Leadership` &nbsp; • &nbsp;`Product Strategy` &nbsp; • &nbsp;`Problem Solving` &nbsp; • &nbsp;`GTM Strategy` &nbsp; • &nbsp;`Stakeholder Management` &nbsp; • &nbsp;`Product Design` &nbsp; • &nbsp;`Competitive Analysis` &nbsp; • &nbsp;`Data Analysis`
 
 ## Work Experience
 ### **Phable Care**, Senior Product Manager II
 **Jun 2022 - Jan 2023**, Bengaluru\
-• Conducted extensive doctor interviews (in Blr, Hyd, Chennai), market research and data analysis to lay out the Phable Doctor Strategy\
+• Conducted extensive doctor interviews (in Bengaluru, Hyderabad, Chennai), market research and data analysis to lay out the Phable Doctor Strategy\
 • Worked at break-neck speed on the new UI for the patient queue, self-check-in portal, and doctor dashboard Devised strategy and executed the GTM for the patient queue product\
 • Worked closely with Sales and improved the user retention from 18% w-o-w to 65% w-o-w Built the payments module for the in-house ops team. Increased the ops efficiency by reducing the avg. TAT from 66s to 28s
 

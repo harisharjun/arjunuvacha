@@ -151,7 +151,15 @@ url = "/"
 weight = -100
 pre = "home"
 
+[[menu.main]]
+identifier = "resume"
+name = "My Resume"
+url = "/k-harish-arjun-resume/"
+weight=-50
+pre = "resume"
+
 [menu.main.params]
+  icon = "resume"
 
   [[menu.social]]
     identifier = "linkedin"
