@@ -68,7 +68,7 @@ Now, if I break down this problem for the user (Abhinav), there would be 7 jobs 
 2. Rinse the rice
 3. Put the rice in a pressure cooker
 4. Add two cups of water
-5. Put the pressure cooker on the stoke with low flame
+5. Put the pressure cooker on the stove with low flame
 6. Wait for 3 whistles
 7. Turn off the stove
 
