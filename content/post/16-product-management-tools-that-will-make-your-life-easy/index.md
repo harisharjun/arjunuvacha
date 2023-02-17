@@ -15,7 +15,11 @@ Over the past few years of working as a Product Manager, I have realised that a 
 
 So, to help other Product Managers or aspiring Product Managers, I have compiled a list of tools that I have benefitted from, which I think will benefit you also. This list of top Product Management tools, I believe would help you improve your work. If you are looking for tools that help you be more effective at work, continue reading…
 
-For ease of understanding to you, I have divided the tools as per the typical product development process:
+NOTE: I will publish another list of tools that would help you propel your personal growth. Keeping watching this space!
+
+Ok, getting on with this one then...
+
+For the ease of understanding, I have divided the tools as per the typical product development process:
 1. Discover
 2. Ideate / Brainstorm
 3. Design
