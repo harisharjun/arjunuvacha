@@ -42,7 +42,6 @@ But why do we attach so much value to things we create? There’s a reason.
 ## 🎇 The IKEA effect
 >The IKEA effect simply says that we place a higher value on things we partially created ourselves.
 
-![Ikea effect](ikea-effect-explanation.jpeg)
 
 One of the many Cognitive Biases, the IKEA effect draws its name from the world-famous Swedish furniture company, IKEA.
 

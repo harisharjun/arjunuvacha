@@ -13,7 +13,7 @@ tags: [
 ## Introduction
 Over the past few years of working as a Product Manager, I have realised that a Product Manager needs to have a good grasp and control over a lot of things which cannot be left to chance. Doing this, with multiple stakeholders, a variety of user problems, and a bunch of different types of users is a nightmare if you are not equipped sufficiently.
 
-So, to help other Product Managers or aspiring Product Managers, I have compiled a list of tools that I have benefitted from, which I think will benefit you also. This list of top Product Management tools, I believe would help you improve your work. If you are looking for tools that help you be more effective at work, continue reading…
+So, to help other Product Managers or aspiring Product Managers, I have compiled a list of tools that I have benefitted from, which I think will benefit you also. This list of top Product Management tools, I believe, would help you improve your work. If you are looking for tools that help you be more effective at work, continue reading…
 
 NOTE: I will publish another list of tools that would help you propel your personal growth. Keeping watching this space!
 
