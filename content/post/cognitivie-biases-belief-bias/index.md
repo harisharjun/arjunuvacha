@@ -2,7 +2,8 @@
 title: "Cognitive Biases - Part 07: Belief Bias"
 description: I think he is right because I believe in him
 date: 2021-07-11T21:03:07+05:30
-image: belief-bias.jpg
+slug: cognitive-bias-belief-bias
+image: belief-bias.png
 categories:
     - product-management
     - psychology

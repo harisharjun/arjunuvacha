@@ -2,8 +2,8 @@
 title: "Cognitive Biases - Part 06: Forer Effect"
 description: ‘I got an email that I won $100,000 lottery. Let me just fill this form now…’
 date: 2021-06-22T00:04:18+05:30
-slug: forer-effect
-image: forer.jpg
+slug: cognitive-bias-forer-effect
+image: forer-effect.png
 categories:
     - psychology
     - product-management

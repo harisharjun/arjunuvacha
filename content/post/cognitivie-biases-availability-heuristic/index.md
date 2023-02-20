@@ -2,8 +2,8 @@
 title: "Cognitive Biases - Part 04: Availability Heuristic"
 description: Nick is a bad boy; I saw him steal a chocolate yesterday.
 date: 2021-06-21T23:22:49+05:30
-slug: availability-heuristic
-image: doge.jpg
+slug: cognitive-bias-availability-heuristic
+image: availability-heuristic.png
 categories:
     - psychology
     - product-management
@@ -43,8 +43,6 @@ In the behavioural sciences world, the phenomenon of arriving at conclusions bas
 
 ## Availability Heuristic
 >We rely on immediate examples that come to our mind while making judgements.
-
-![Availability Heuristic](availability-heuristic.jpeg)
 
 ## The Shawshank Redemption
 Sometime back, a group of our friends went for a drive outside of the city. There were a bunch of people whom I met for the first time and made some new friends too. As I was discussing with a girl, she asked me to suggest some good movies to watch. Without any further questions or thoughts, I started to blurt out my favourite movie names, movies which I felt were good — the typical must-watch list — which included The Shawshank Redemption, Shutter Island, The Schindler’s List, The Godfather, some of Nolan’s, and some newly released movies on Netflix and Prime.

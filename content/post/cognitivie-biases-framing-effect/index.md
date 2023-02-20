@@ -2,8 +2,8 @@
 title: "Cognitive Biases - Part 05: Framing Effect"
 description: ‘Madam, take this life insurance. It will give the best cover.’
 date: 2021-06-21T23:41:24+05:30
-slug: framing-effect
-image: framing.jpg
+slug: cognitive-bias-framing-effect
+image: framing-effect.jpg
 categories:
     - psychology
     - product-management
@@ -70,7 +70,7 @@ Interesting examples, but sound too far-fetched. How do they relate to me, hmmm?
 Hold on!
 
 **Do you go well with memes?**
-![Framing Effect](framing-effect.jpeg)
+![Framing Effect](framing-effect-meme.jpeg)
 
 Seems familiar? Been in that situation? I’d bet you did!
 

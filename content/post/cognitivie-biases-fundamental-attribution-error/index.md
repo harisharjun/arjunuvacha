@@ -2,8 +2,8 @@
 title: "Cognitive Biases - Part 02: Fundamental Attribution Error"
 description: You lost because you are lousy. I lost because life’s unfair
 date: 2021-06-21T19:55:13+05:30
-slug: fundamental-attribution-error
-image: fae.jpg
+slug: congnitive-bias-fundamental-attribution-error
+image: fundamental-attribution-error.png
 categories:
     - psychology
 tags: [
@@ -20,8 +20,6 @@ Please note that this is the second in a series of articles I am writing on Cogn
 ---
 ## Fundamental Attribution Error
 >The Fundamental Attribution Error basically says that we judge others based on their personality and fundamental character, but judge ourselves based on our situation and circumstances.
-
-![Fundamental Attribution Error](fundamental-attribution-error.jpeg)
 
 To explain this, I am going to take a rather filmy route. Please bear with me as I get into quite a few details of these film stories to drive home the point. If you are into movies, you’d enjoy it, I believe. Even otherwise, cut me some slack, would you?
 

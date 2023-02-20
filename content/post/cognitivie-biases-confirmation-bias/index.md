@@ -2,8 +2,8 @@
 title: "Cognitive Biases - Part  01: Confirmation Bias"
 description: Things we believe because we like to believe
 date: 2021-06-20T23:10:47+05:30
-slug: confirmation-bias
-image: football.jpg
+slug: cognitive-bias-confirmation-bias
+image: confirmation-bias.png
 categories:
     - psychology
 tags: [
@@ -19,8 +19,6 @@ Cognitive Biases are a set of unwritten guidelines that nudge us to make decisio
 We, very commonly, fall into the trap of these biases as they are easy to follow, reduce the stress and efforts to decide and take an action. Our brain is wired to process information only when necessary. It wants to off-load as much of its work as possible and go into the ‘chill zone’ as soon and as often as possible. It doesn’t want to be disturbed. It wants to be left alone!
 
 Hence, we form some heuristics with which we process information without troubling the brain very much and very often.
-
-![Confirmation Bias](confirmation-bias.jpeg)
 
 ## Confirmation Bias
 

@@ -11,3 +11,13 @@
     background: var(--body-text-color);
     margin-bottom: 20px;
 }
+
+.article-list article .article-image img {
+    height: 180px !important;
+}
+
+@media (min-width: 1280px){
+    .article-list article .article-image img {
+        height: 400px !important;
+    }
+}

@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<link rel="stylesheet" href="../../styles.css">
+
+<title itemprop="name">Cognitive Biases - Part 04: Availability Heuristic | Arjun Uvacha</title>
+<meta property="og:title" content="Cognitive Biases - Part 04: Availability Heuristic | Arjun Uvacha" />
+<meta name="twitter:title" content="Cognitive Biases - Part 04: Availability Heuristic | Arjun Uvacha" />
+<meta itemprop="name" content="Cognitive Biases - Part 04: Availability Heuristic | Arjun Uvacha" />
+<meta name="application-name" content="Cognitive Biases - Part 04: Availability Heuristic | Arjun Uvacha" />
+<meta property="og:site_name" content="Arjun Uvacha" /><meta name='description' content='Nick is a bad boy; I saw him steal a chocolate yesterday.'>
+<meta name="description" content="Nick is a bad boy; I saw him steal a chocolate yesterday." />
+<meta itemprop="description" content="Nick is a bad boy; I saw him steal a chocolate yesterday." />
+<meta property="og:description" content="Nick is a bad boy; I saw him steal a chocolate yesterday." />
+<meta name="twitter:description" content="Nick is a bad boy; I saw him steal a chocolate yesterday." />
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2MQEL0WD3M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2MQEL0WD3M');
+</script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3674340862123795"
+     crossorigin="anonymous"></script>
+
+<title>Cognitive Biases - Part 04: Availability Heuristic</title>
+
+<link rel='canonical' href='https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/'>
+
+<link rel="stylesheet" href="https://www.arjunuvacha.com/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='Cognitive Biases - Part 04: Availability Heuristic'>
+<meta property='og:description' content='Nick is a bad boy; I saw him steal a chocolate yesterday.'>
+<meta property='og:url' content='https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/'>
+<meta property='og:site_name' content='Arjun Uvacha'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cognitive bias' /><meta property='article:tag' content='product management' /><meta property='article:published_time' content='2021-06-21T23:22:49&#43;05:30'/><meta property='article:modified_time' content='2023-02-08T12:40:30&#43;05:30'/><meta property='og:image' content='https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/availability-heuristic.png' />
+<meta name="twitter:site" content="@arjunuvacha_">
+    <meta name="twitter:creator" content="@arjunuvacha_"><meta name="twitter:title" content="Cognitive Biases - Part 04: Availability Heuristic">
+<meta name="twitter:description" content="Nick is a bad boy; I saw him steal a chocolate yesterday."><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/availability-heuristic.png' />
+    <link rel="shortcut icon" href="favicon.png" />
+    <link href="https://www.arjunuvacha.com/favicon.png" rel="icon" type="image/x-icon" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            localStorage.setItem(colorSchemeKey, "light");
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="https://www.arjunuvacha.com/">
+                
+                    
+                    
+                    
+                        
+                        <img src="https://www.arjunuvacha.com/img/au_hub85b891999db1c786a7f5e71f3e9fa26_19310_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🖋</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="https://www.arjunuvacha.com/">Arjun Uvacha</a></h1>
+            <h2 class="site-description">🔍 a product manager&#39;s perspective of everyday things.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/harisharjun'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://instagram.com/arjunuvacha'
+                        target="_blank"
+                        title="Instagram"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-instagram" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="4" y="4" width="16" height="16" rx="4" />
+  <circle cx="12" cy="12" r="3" />
+  <line x1="16.5" y1="7.5" x2="16.5" y2="7.501" />
+</svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://linkedin.com/in/harisharjun'
+                        target="_blank"
+                        title="Linkedin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-linkedin" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="4" y="4" width="16" height="16" rx="2" />
+  <line x1="8" y1="11" x2="8" y2="16" />
+  <line x1="8" y1="8" x2="8" y2="8.01" />
+  <line x1="12" y1="16" x2="12" y2="11" />
+  <path d="M16 16v-3a2 2 0 0 0 -4 0" />
+</svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/arjunuvacha_'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='https://www.arjunuvacha.com/about/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://www.arjunuvacha.com/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://www.arjunuvacha.com/archives/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://www.arjunuvacha.com/search/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://www.arjunuvacha.com/k-harish-arjun-resume/' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-notebook" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bababa" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18" />
+  <line x1="13" y1="8" x2="15" y2="8" />
+  <line x1="13" y1="12" x2="15" y2="12" />
+</svg>
+                
+                <span>My Resume</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#the-geyser-story">The geyser story</a></li>
+    <li><a href="#availability-heuristic">Availability Heuristic</a></li>
+    <li><a href="#the-shawshank-redemption">The Shawshank Redemption</a></li>
+    <li><a href="#some-other-examples">Some other examples</a></li>
+    <li><a href="#more-examples">More examples</a></li>
+    <li><a href="#so-whats-the-problem-with-this-anyway">So, what’s the problem with this, anyway?</a></li>
+    <li><a href="#why-do-we-have-this-bias-anyway">Why do we have this bias, anyway?</a></li>
+    <li><a href="#so-how-to-avoid-falling-into-these-pitfalls">So, how to avoid falling into these pitfalls?</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/">
+                <img src="https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/availability-heuristic_hu7c3bed759bb3560e936972186ce21bba_134287_800x0_resize_box_3.png"
+                        srcset="https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/availability-heuristic_hu7c3bed759bb3560e936972186ce21bba_134287_800x0_resize_box_3.png 800w, https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/availability-heuristic_hu7c3bed759bb3560e936972186ce21bba_134287_1600x0_resize_box_3.png 1600w"
+                        width="800" 
+                        height="463" 
+                        loading="lazy"
+                        alt="Featured image of post Cognitive Biases - Part 04: Availability Heuristic" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="https://www.arjunuvacha.com/categories/psychology/" >
+                psychology
+            </a>
+        
+            <a href="https://www.arjunuvacha.com/categories/product-management/" >
+                product-management
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/">Cognitive Biases - Part 04: Availability Heuristic</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Nick is a bad boy; I saw him steal a chocolate yesterday.
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 21, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    10 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>👋🏼 Hello! Thank you for stopping by!</p>
+<p>😀 Please note that this is the fourth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other three yet, I’d recommend you read them first. <strong>Links below:</strong></p>
+<ol>
+<li><a class="link" href="https://www.arjunuvacha.com/p/confirmation-bias" >Confirmation Bias</a> ✅</li>
+<li><a class="link" href="https://www.arjunuvacha.com/p/fundamental-attribution-error" >Fundamental Attribution Error</a> ✅</li>
+<li><a class="link" href="https://www.arjunuvacha.com/p/ikea-effect" >Ikea effect</a> ✅</li>
+</ol>
+<hr>
+<p>Let’s get started with this one.</p>
+<h2 id="the-geyser-story">The geyser story</h2>
+<p>Last year, we moved into our newly built house in Hyderabad. Nothing fancy, just a decent one with a few more comforts compared to the old house. For one, the new house had a facility for geyser whereas the old one didn’t.</p>
+<p>One of my school friends, Naresh, visited us when we were getting the geysers fitted. We had ordered Havells geysers from Amazon. They seemed fine, the power rating, the warranty, the make of the product and the price — they fit our requirement.</p>
+<p>What amazed me was what happened after that. When Naresh wanted to buy geysers for his home, he too ordered the ‘Havells geysers from Amazon’. They performed well and were energy efficient, after all, and it made sense to order the same product he thought. All he did was, he searched for Havells geysers on Amazon, placed the order and they got delivered. Only, there was one problem — <strong>the geyser did not fit the height in his bathroom!</strong> He did not check that, the geyser did not fit his requirements. And he had to replace it!</p>
+<p>So, what happened here? Naresh was presented with a similar situation as I. He just reproduced what I did as if it was the natural thing to do. In fact, it sounds fairly simple too — When I wanted to have a geyser, I ordered a Havells from Amazon and when Naresh wanted to have a geyser, he too ordered a Havells from Amazon, because it worked for me. He took my geyser as an example and applied it in his judgement!</p>
+<p>I realised, when we are in a situation where we are supposed to decide if something works or not, we most often think of the situations in the past and identify what had worked already and reproduce the same. Seems like a fully scientific approach, right? We are using historic data to predict what needs to be done in the future. However, there is one catch. A big one.</p>
+<p>You see, we, humans, are not computers. Our ability to recollect data and information and process it is limited. We do not see the entire context as clearly. Our natural tendency is to process only that information that is very vivid in our mind. And whatever is vivid doesn’t necessarily mean that it is sufficient and that could lead to some potential errors. So, it requires quite an additional effort to actually process the information in its entirety to avoid errors. But, as you know, our brain is lazy to do that.</p>
+<p>Speaking in statistical terms, the sample size or the number of data points we could recollect and process at a time is very minimal. Though the capacity of our brain is unbelievably large, it is just not a natural thing for us to process such larger portions in a very short span of time. Because our life demands us to make decisions all the time, we tend to use the references which are very fresh in our memory to arrive at decisions rather quickly. And if we make the decisions based on the ‘notions’ derived from such a small sample (of memories), we are prone to what is called a <strong>Type II</strong> error in statistics. It means that due to the small sample size, we conclude that our hypothesis is true, when, in fact, the hypothesis is not true. That means, if we are given a larger number of samples (memories), we would have arrived at a different conclusion, after all.</p>
+<p>In the behavioural sciences world, the phenomenon of arriving at conclusions based on the examples we can immediately recollect is called the <strong>‘Availability Heuristic.’</strong></p>
+<h2 id="availability-heuristic">Availability Heuristic</h2>
+<blockquote>
+<p>We rely on immediate examples that come to our mind while making judgements.</p>
+</blockquote>
+<h2 id="the-shawshank-redemption">The Shawshank Redemption</h2>
+<p>Sometime back, a group of our friends went for a drive outside of the city. There were a bunch of people whom I met for the first time and made some new friends too. As I was discussing with a girl, she asked me to suggest some good movies to watch. Without any further questions or thoughts, I started to blurt out my favourite movie names, movies which I felt were good — the typical must-watch list — which included The Shawshank Redemption, Shutter Island, The Schindler’s List, The Godfather, some of Nolan’s, and some newly released movies on Netflix and Prime.</p>
+<p>Little did I try to actually find out what her interests were or what she liked to watch before suggesting anything! And as it turned out, she watched The Shawshank Redemption and did not find it as compelling as I thought it would! I couldn’t understand why would someone not like such a beautiful movie!</p>
+<p>What I did there — which, I think, most of you also do — was resorting to a list of movies which I had in my mind, ready as examples to be given to anyone who wanted to watch a movie. The examples were ready, they only needed an avenue to come out and these movies had to be good for everybody, I thought. I was wrong.</p>
+<p>Wondering why I am making such a fuss about just watching a movie?</p>
+<p>Allow me, I am trying to arrive at something here, will you?</p>
+<h2 id="some-other-examples">Some other examples</h2>
+<p>You are chilling out with your friends. After a week full of busy office work, you finally get to relax! If a discussion comes up whether it is the government’s failure to control Covid or if it was people’s negligence — which side would you take and whom do you blame? I am sure you won’t do a root cause analysis to arrive at this conclusion. Some would probably quote a few instances where the government was absolutely foolish and some would say that the public behaved irresponsibly and brought it on to themselves. Or some argue for both sides.</p>
+<p>In any case, all these discussions are drawn from the examples you and your friends can recollect. But, how good are those examples to actually validate the blame? They are too subjective to even compare and say that one stands way over the above, but our mind forms some heuristics to do this comparison. It somehow can reduce this hugely complex problem to a set of a few examples, and you don’t realise that. You don’t realise that your notions and conclusions can be grossly inaccurate.</p>
+<p>When posed with a situation of ‘why is India not doing well?’, you tend to recollect examples of superficial things, like the population, literacy, pollution, unemployment among others which are very clear in your memory, of which you have an example or two to present as an argument to validate your views. But you don’t realise that these are not sufficient to establish your argument. These are only the things that are available to your memory, to state as examples. They are not sufficient.</p>
+<h2 id="more-examples">More examples</h2>
+<ul>
+<li>You are not promoting a deserving candidate— ‘When I had an interaction with her last time, she seemed very immature.’</li>
+<li>Which restaurant to go to for dinner? — ‘Where did we go last time?’</li>
+<li>What food to order? — ‘What did we order last time, either order the same thing or order anything other than that?’</li>
+<li>Want to buy a new hair straightener? — ‘Which brand’s Ad did I see recently?’</li>
+<li>Feeling lazy to choose what to wear to the office? — ‘Which dress gave me good compliments from a bunch of people?’</li>
+<li>Is he a good guy? — ‘What did my friend tell me about him?’</li>
+<li>Is this investment worth it? — ‘Did it work for others I know?’</li>
+</ul>
+<h2 id="so-whats-the-problem-with-this-anyway">So, what’s the problem with this, anyway?</h2>
+<p>Wouldn’t you curse Netflix if it only shows you video recommendations based on just the recent browsing history and not considering all your older watch history? Wouldn’t that be irritating? Wouldn’t you be annoyed at how lame the recommendations are? What you like to watch cannot just be based on one day’s activity, right?</p>
+<p>Similarly, just like how Netflix’s recommendation system works, you too should not judge anything or anyone based on one or two examples that come to your mind.</p>
+<p><strong>Let’s look at a few more examples that can take a hit on your pocket straight away.</strong> Maybe, then you’d realise the importance ;)</p>
+<p>It was the August of 2020. If you follow the world of commodities, you would know that the gold prices hit an all-time high! Many of my friends had bought gold; gold seemed to be a good investment, after all. However, one friend, unfortunately, saw this trend. He badly wanted to invest his money and even asked me for better ways of investment — I couldn’t help as I am no good — So, when he saw that others already made good profits from gold, he wanted to do just that! He bought ₹2,00,000 worth of gold at a whopping ₹5,600/gram! That’s it… Bam! As you must be guessing, the prices fell from there… He lost ₹20,000 in one day and is still hoping the price to climb up. But hey, the current price is nowhere near that point!</p>
+<p>Oh, wait! This happened pretty recently too… <strong>Does Doge strike a chord?</strong></p>
+<p>Just because you have vivid examples of others who made profits from a particular investment, you cannot judge that it is going to be good for you too, right? By looking at an example just as an example without the constraints and the context it is operating in, you cannot make a correct judgement.</p>
+<p>They say, information is wealth, but ensure that you have the complete information, not just a few examples to suit your narration.</p>
+<p><strong>Hmm. Gotcha.</strong></p>
+<h2 id="why-do-we-have-this-bias-anyway">Why do we have this bias, anyway?</h2>
+<p>All cognitive biases are based on the fact that our brain is lazy and doesn’t want to do any work unless necessary. That it wants to waste as few resources as possible and consume lesser and lesser energy. And use it only when needed, in the best possible way. However, for the brain to take the best possible way and use the resources in an efficient way we have to train it! But we don’t do that very often, do we?</p>
+<p>Whenever there is a need to process information, the mind looks for the easiest possible way to do it. Of the many ways and shortcuts which the mind takes — I discussed a few of these in my previous articles <strong><a class="link" href="https://www.arjunuvacha.com/p/confirmation-bias" >Confirmation Bias</a></strong> and <strong><a class="link" href="https://www.arjunuvacha.com/p/ikea-effect" >IKEA effect</a></strong> — finding a similar example for comparison is probably more qualified yet an easier option.</p>
+<p>When you judge someone or something, you automatically scan for a benchmark — a benchmark in that category or in that field or in that country or in that region or the community or in that era. Anything that could be used to form some notion about whether this someone or something is good in comparison with the immediate examples that occur to you, that you could recollect.</p>
+<p>But that’s not how judgements are supposed to be made — read my article on <strong><a class="link" href="https://www.arjunuvacha.com/p/fundamental-attribution-error" >Fundamental Attribution Error</a></strong> where I talk about how judgements should usually be made.</p>
+<h2 id="so-how-to-avoid-falling-into-these-pitfalls">So, how to avoid falling into these pitfalls?</h2>
+<ul>
+<li><strong>Try and avoid getting into ‘urgent’ situations.</strong> Give your mind enough time and resources to take a calculated decision. This could be done by avoiding getting into ‘urgent’ situations as much as possible.</li>
+<li><strong>Do research.</strong> When you know that you just have one example which you are using to conclude, look out for more examples. Look out for more data points. Look out for more evidence. Do not decide straight off the bat.</li>
+<li><strong>Discuss and deliberate.</strong> Many times we do not know whether it came from one example or multiple data points. We do not know whether our choice is the best one or not. It is safe to discuss and deliberate on your choices with others whom you trust.</li>
+</ul>
+<p>Have any other suggestions to avoid these pitfalls? Please comment them below.</p>
+<hr>
+<p><strong>Thank you for reading! 🙏🏼</strong></p>
+<p>👍🏼 ➡️ If you liked it, please share it with others who might find it interesting!</p>
+<p><strong>💬 Also, please leave your comment or feedback below.</strong></p>
+<hr>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://www.arjunuvacha.com/tags/cognitive-bias/">cognitive bias</a>
+        
+            <a href="https://www.arjunuvacha.com/tags/product-management/">product management</a>
+        
+    </section>
+
+
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            Last updated on Feb 08, 2023 12:40 IST
+        </span>
+    </section></footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="https://www.arjunuvacha.com/p/cognitive-bias-belief-bias/">
+        
+        
+            <div class="article-image">
+                <img src="https://www.arjunuvacha.com/p/cognitive-bias-belief-bias/belief-bias.d23f218c73233808e801f0d8f1adaa05_hu1f07a852f1d4ae58076e11b7b68e6315_149753_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Cognitive Biases - Part 07: Belief Bias"
+                        data-key="cognitive-bias-belief-bias" 
+                        data-hash="md5-0j8hjHMjOAjoAfDY8a2qBQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cognitive Biases - Part 07: Belief Bias</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="https://www.arjunuvacha.com/p/cognitive-bias-forer-effect/">
+        
+        
+            <div class="article-image">
+                <img src="https://www.arjunuvacha.com/p/cognitive-bias-forer-effect/forer-effect.16d9a6955c94df55b77115e6e8064f0f_huf8681f6d025827686157ec6f0fb85891_89882_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Cognitive Biases - Part 06: Forer Effect"
+                        data-key="cognitive-bias-forer-effect" 
+                        data-hash="md5-FtmmlVyU31W3cRXm6AZPDw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cognitive Biases - Part 06: Forer Effect</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/">
+        
+        
+            <div class="article-image">
+                <img src="https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect.2577ef2f4aad9fb292a9e1bddf22fbee_hu1e4147d338311d71f4b2dc176274288b_286872_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Cognitive Biases - Part 05: Framing Effect"
+                        data-key="cognitive-bias-framing-effect" 
+                        data-hash="md5-JXfvL0qtn7KSqeG93yL77g==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cognitive Biases - Part 05: Framing Effect</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="https://www.arjunuvacha.com/p/hooked-book-review/">
+        
+        
+            <div class="article-image">
+                <img src="https://www.arjunuvacha.com/p/hooked-book-review/dice.cb33626859f4b2b4052632843ad822a7_huf7d0c94a4c53b1b8b74d356a22e0c5ff_100633_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Hooked - book review"
+                        
+                        data-hash="md5-yzNiaFn0srQFJjKEOtgipw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Hooked - book review</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="https://www.arjunuvacha.com/p/the-value-of-defaults/">
+        
+        
+            <div class="article-image">
+                <img src="https://www.arjunuvacha.com/p/the-value-of-defaults/defaults-resized.5f4ec23bcc95d4b0cce5f79f75c49336_hu5ca53f6b55601305d24a8dc79ffbcbbd_115805_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post The Value of Defaults"
+                        
+                        data-hash="md5-X07CO8yV1LDM5fefdcSTNg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">The Value of Defaults</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2023 Arjun Uvacha<div style="display: inline-block;">&nbsp;&nbsp;•&nbsp;</div>
+        <a href="https://www.arjunuvacha.com/contact-me/" target="_blank"> Contact me</a>
+    </section>
+
+    <div style="margin-top: 10px; display: block;"></div>
+    <a href="https://www.linkedin.com/in/harisharjun/" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-linkedin" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <rect x="4" y="4" width="16" height="16" rx="2" />
+            <line x1="8" y1="11" x2="8" y2="16" />
+            <line x1="8" y1="8" x2="8" y2="8.01" />
+            <line x1="12" y1="16" x2="12" y2="11" />
+            <path d="M16 16v-3a2 2 0 0 0 -4 0" />
+          </svg>
+    </a>
+
+    <div style="margin-right: 20px; display: inline-block;"></div>
+    <a href="https://github.com/harisharjun" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+          </svg>
+    </a>
+
+    <div style="margin-right: 20px; display: inline-block;"></div>
+    <a href="https://twitter.com/arjunuvacha_" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+          </svg>
+    </a>
+
+    <div style="margin-right: 20px; display: inline-block;"></div>
+    <a href="https://www.instagram.com/arjunuvacha" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-instagram" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <rect x="4" y="4" width="16" height="16" rx="4" />
+            <circle cx="12" cy="12" r="3" />
+            <line x1="16.5" y1="7.5" x2="16.5" y2="7.501" />
+          </svg>
+    </a>
+
+    <div style="margin-right: 20px; display: inline-block;"></div>
+    <a href="mailto:harisharjun.online+arjunuvacha@gmail.com">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <polyline points="3 7 12 13 21 7" />
+          </svg>
+    </a>
+
+    <section class="copyright">
+        <a href="https://www.arjunuvacha.com/privacy-policy/" target="_blank"> Privacy Policy </a>
+        <div style="display: inline-block;">|</div>
+        <a href="https://www.arjunuvacha.com/terms-and-conditions/" target="_blank"> Terms and Conditions </a>
+        <div style="display: inline-block;">|</div>
+        <a href="https://www.arjunuvacha.com/disclaimer/" target="_blank"> Disclaimer </a>
+    </section>
+</footer>
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="https://www.arjunuvacha.com/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

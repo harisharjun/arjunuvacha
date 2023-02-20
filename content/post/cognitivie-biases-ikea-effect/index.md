@@ -2,8 +2,8 @@
 title: "Cognitive Biases - Part 03: Ikea effect"
 description: I love what I’ve created; it’s better than others
 date: 2021-06-21T22:54:56+05:30
-slug: ikea-effect
-image: ikea.jpg
+slug: cognitive-bias-ikea-effect
+image: ikea-effect.png
 categories:
     - psychology
 tags: [
