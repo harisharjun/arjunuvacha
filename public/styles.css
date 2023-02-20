@@ -18,6 +18,6 @@
 
 @media (min-width: 1280px){
     .article-list article .article-image img {
-        height: 400px !important;
+        height: 350px !important;
     }
 }

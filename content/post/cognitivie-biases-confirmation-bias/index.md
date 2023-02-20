@@ -106,6 +106,8 @@ Unfortunately, it is not just for discussions like these but also for many impor
 
 **The list is endless!**
 
+## Conclusion
+
 As we are no experts in certain situations, we rely on the views or opinions of others on the subject and seek answers. However, rather than looking for answers, **we should question what we are looking for!** Sadly, that kind of questioning requires a lot of rationality and our mind is super lazy to do that! The mind would rather know the answer ready-made than actually probe further. It would take the answer on the face of it than question the correctness of the question itself!
 
 >So, Confirmation Bias, basically, reinforces your already existing notions, beliefs, opinions, views, and expectations about anything. This helps us assess a situation faster, make decisions quickly and take necessary actions immediately. With that, we can spend our ‘mental energy’ on things that actually matter to us.
