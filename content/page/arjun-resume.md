@@ -50,7 +50,7 @@ image: k-harish-arjun.jpg
 • Increased revenue from 18L to 47L\
 • Three-time winner of Treebo Millenia Award\
 • On-boarded 150+ clients\
-• Reduced DSO from 100 to 55 days\
+• Reduced DSO from 100 to 55 days
 
 • **Senior Financial Analyst, Standard Chartered Bank (2013 to 2015), Chennai**: Change Management and Performance Management Governanace
 
