@@ -26,6 +26,8 @@ tags: [
 
 Let's get started with this one!
 
+## Introduction
+
 **Let’s go back to the 1600s for a while and explore a couple of the discoveries back then!** 
 
 ### Experiment from the Leaning Tower of Pisa
@@ -45,12 +47,13 @@ Galileo successfully provided physical evidence to explain this phenomenon, but 
 **But why was it so difficult for people to believe this newly proposed way of the planetary system which has some scientific explanation?**\
 You see, in the Catholic world prior to Galileo's conflict, geocentrism agreed with the literal interpretation of the Bible in several places: Chronicles 16:30, Psalm 93:1, Psalm 96:10, Psalm 104:5, Ecclesiastes 1:5 and all the people subscribed to this view as it has got references in the Bible itself. As the connection was established with the Bible, it was hard to contradict this view.
 
-**I would like to highlight two takeaways from the above two anecdotes:**
+**I would like to highlight two takeaways from the above two anecdotes.**
 
-#### From anecdote 1:
+### Takeaways
+#### From the leaning tower of Pisa experiment:
 *A belief could be false no matter how popular or intuitive it is, and it takes rigorous experiments to prove it*
 
-#### From anecdote 2:
+#### From the Galileo's story:
 *No matter how scientific an experiment and explanation is for a phenomenon, people will not be ready to change their beliefs. In fact, people will be ready to take extreme measures to safeguard their beliefs than try to find out the truth*
 
 **What is Galileo doing in an article that is supposed to be on psychology, you wonder?**\
@@ -59,19 +62,19 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
 ---
 
 That brings us to what is called a **‘Belief Bias’**:\
-***"We judge an argument’s strength not by how strongly it supports the conclusion but by how plausible the conclusion is in our minds."***
+>***"We judge an argument’s strength not by how strongly it supports the conclusion but by how plausible the conclusion is in our minds."***
 
 Let's look at a couple of my personal experiences around this.
 
 ## The belief dilemma
-### Personal story 1
+### Lesson from my first startup
 My first startup was WhatsDplan (more details about this in my earlier article **[IKEA effect](/p/ikea-effect)**). We started WhatsDdplan because we believed in the idea. And frankly, this belief is good. Without any belief, you wouldn’t achieve anything great. Belief is needed to do something which otherwise would not have been possible. If you want to conquer the moon you need to first believe it and then only will you be able to experience it. But even for that, you need to have a very good grasp of reality and not be drown in a false sense of belief.
 
 My assessment about ‘WhatsDplan’, if I recollect some of the discussions I have had with a few investors and also with a few of my friends and colleagues, was riveted around belief and belief alone! Rather than a strong argument on ‘why’ exactly would it work, I thought it will work because ‘WE’ were building it and we were good. We were invested in the idea since the beginning and did not want to doubt it even for a little while. We carried on with a lot of vigour and purpose, and did not want to give up.
 
 Unfortunately, the startup ended in a tragedy. We had to shut it down after a year-long effort to make it work. We missed a lot of critical observations and assessments which could have helped us pivot and survive. Well, let's save that story for another day!
 
-### Personal story 2
+### Skewed beliefs of my friend
 Recently, I was having a conversation with a friend. He has had a troubled past and was still figuring it out - about his life and career. He has tried his hand at a variety of things, but nothing seemed concrete. He hopped from one thing to another after giving it a try for a short while - from analytics to data science to finance to consulting to starting up. He did 100 different things and lacked focus in all.
 
 As we were having a conversation about what could he possibly do next, he said he wanted to pursue UPSC! I was shocked. He believed that he could just do it because he thought so. There was no strong argument for it. All he said was, ‘because I want to do it, I will do it!’ But I knew that this was another whim he was having. As his past suggested, he struggled to keep focus in getting a job as an analyst itself, I knew, he will not have the focus and dedication required to crack UPSC. But he was just driven by the idea of it without having a credible argument!
@@ -109,13 +112,14 @@ Sounds silly, right? It is!
 * Looking into a broken mirror is bad luck. *You can judge me, but I am still scared to look into a broken mirror!*
 * A black cat crossing the path is bad luck. *Many of you still believe this, right?*
 
-### More examples:
+### More examples
 * Graduating from an IIT gives a good life
 * Charity is just donating some money to an NGO
 * Our religion is superior to the other
 * My responsibility as a citizen is just to cast my vote
 
 ---
+## How are our beliefs formed?
 
 Many of our beliefs are formed because of what we see and perceive from the society, the environment and everything happening around us. We ponder on some, question some, but accept many as they are. We develop some form of intuition with things and how to deal with them. We take them for granted on the face of it. As we develop these beliefs, when we encounter a similar situation and respond to it, we consider it to be valid without critically looking at the situation.
 
@@ -129,6 +133,7 @@ Though we are required to validate everything, it is practically not possible. M
 
 It is hard to critically assess and question the existing set of notions and beliefs - sometimes because  we don’t know that our decisions are driven by them and sometimes because we do not want to put ourselves in the struggle of pursuit of truth as **we are lazy and afraid!** So, it is hard to control our existing belief systems from interfering in our objective decision making. It requires training, a lot of it, just like overcoming any other cognitive bias.
 
+## How to avoid this bias?
 **Here are a few things that you could do to safeguard yourself from this bias.**
 
 * **Look for objective reasons.** If you think something is true or something is the best thing to do, look for objective reasons why it could be true. Don’t get carried away by the end result just because that seems plausible or intuitive
