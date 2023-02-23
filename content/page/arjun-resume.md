@@ -34,14 +34,14 @@ image: k-harish-arjun.jpg
 ### Associate Product Manager, **Edureka**
 **Nov 2019 - Jan 2022**, Bengaluru\
 • For the [AIML Post Graduate Program](https://www.edureka.co/executive-programs/machine-learning-and-ai): Improved the traffic-to-lead conversion rate from **3.6% to 4.8%** | Improved the lead-to-payment conversion from **0.9% to 1.4%** | Reduced the 'hot-lead to sale' conversion TAT by 33.3% from **30 days to 20 days**\
-• Developed the product and executed the GTM for a brand-new [Full Stack Internship Program](https://www.edureka.co/internship/full-stack-web-development). **Scaled it 5X from 5L to 50L in 6 months**
+• Developed the product and executed the GTM for a brand-new [Full Stack Internship Program](https://www.edureka.co/internship/full-stack-web-development). **Scaled it 10X from 5L to 50L in 6 months**
 
 ### Co-founder, **WhatsDplan**, 
 **Mar 2015 - Mar 2017**, Hyderabad\
 • **Interviewed 50+ users** to identify the user pain points and built an MVP. Took it to our network to validate the solution.
 • Launched the core product and achieved **5000+ installations** on Play Store with **100+ MAUs** through a series of online and offline marketing campaigns.\
 • Business partnerships: Signed MoUs with local players like Zomato, EventsHigh, Play zones, and Restaurants for their affiliate marketing.\
-• Built the website for WhatsDplan, HTML5, JS, and CSS3. [Check the GitHub Repo here.](https://github.com/harisharjun/whatsdplan-website)\
+• Built the website for WhatsDplan, HTML5, JS, and CSS3. [Check the GitHub Repo here.](https://github.com/harisharjun/whatsdplan-website)
 
 ### **Others**
 **Sales Head, Treebo (2017 to 2019), Hyderabad**\
