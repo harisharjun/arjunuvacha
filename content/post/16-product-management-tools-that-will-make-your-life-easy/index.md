@@ -3,7 +3,7 @@ title: "16 Product Management Tools That Will Make Your Life Easy"
 date: 2023-02-16T19:43:32+05:30
 draft: false
 description: As a Product Manager, if you are not equipped with tools that make you perform effectively, every day, you are asking for misery.
-image : pm-tools.jpg
+image : pm-tools.png
 categories:
     - product-management
 tags: [
