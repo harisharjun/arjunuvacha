@@ -6,7 +6,7 @@ description: An entrepreneur and problem solver with 9+ years of experience in s
 image: k-harish-arjun.jpg
 ---
 
-| [**View PDF Resume** 📄](https://drive.google.com/file/d/1WN0fcCrGUAqO5TxwMaQehOl6x_N1OFoK/view?usp=share_link) | [**View My LinkedIn Profile** 🔗](https://www.linkedin.com/in/harisharjun)|
+| [**View PDF Resume** 📄](https://drive.google.com/file/d/1dhV7aVGtPh8vDCQ8OB_pOZ5gZTwRcb6l/view?usp=share_link) | [**View My LinkedIn Profile** 🔗](https://www.linkedin.com/in/harisharjun)|
 | --- | --- |
 
 **Note:** I am actively looking for full-time Senior Product Manager or Group Product Manager opportunities. If you like my profile, please reach out to me on [**LinkedIn**](https://www.linkedin.com/in/harisharjun).
