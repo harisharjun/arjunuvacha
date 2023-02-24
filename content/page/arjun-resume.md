@@ -2,7 +2,7 @@
 title: "K Harish Arjun - Resume"
 date: 2023-02-06T15:19:50+05:30
 draft: false
-description: An entrepreneur and problem solver with 9+ years of experience in solving customer problems and driving organisational growth. With cross-functional collaboration across diverse teams and aligning them with the Product Vision, I have a proven track record in designing product & GTM strategies, and building, launching & scaling new products from scratch. I use a user-centric approach & display hustle to deliver things, with analytical, design, communication, stakeholder management and leadership skills.
+description: An entrepreneur and problem solver with 9+ years of experience in solving customer problems and driving organisational growth. With cross-functional collaboration across diverse teams and aligning them with the Product Vision, I have a proven track record in designing product & GTM strategies and building, launching and scaling new products from scratch. I use a user-centric approach and display hustle to deliver things, with analytical, design, communication, stakeholder management, and leadership skills.
 image: k-harish-arjun.jpg
 ---
 
@@ -36,7 +36,7 @@ image: k-harish-arjun.jpg
 • For the [AIML Post Graduate Program](https://www.edureka.co/executive-programs/machine-learning-and-ai): Improved the traffic-to-lead conversion rate from **3.6% to 4.8%** | Improved the lead-to-payment conversion from **0.9% to 1.4%** | Reduced the 'hot-lead to sale' conversion TAT by 33.3% from **30 days to 20 days**\
 • Developed the product and executed the GTM for a brand-new [Full Stack Internship Program](https://www.edureka.co/internship/full-stack-web-development). **Scaled it 10X from 5L to 50L in 6 months**
 
-### Co-founder, **WhatsDplan**, 
+### Co-founder, **WhatsDplan**
 **Mar 2015 - Mar 2017**, Hyderabad\
 • **Interviewed 50+ users** to identify the user pain points and built an MVP. Took it to our network to validate the solution.
 • Launched the core product and achieved **5000+ installations** on Play Store with **100+ MAUs** through a series of online and offline marketing campaigns.\
@@ -46,11 +46,11 @@ image: k-harish-arjun.jpg
 ### **Others**
 **Sales Head, Treebo (2017 to 2019), Hyderabad**\
 • Handled two regions: AP and Telangana\
-• Sales Head for a team of 10\
-• Increased revenue from 18L to 47L\
+• Sales Head, led a team of 10 rockstar sales managers\
+• Increased revenue from 18L to 47L within 4 months of leading the team\
 • Three-time winner of Treebo Millenia Award\
 • On-boarded 150+ clients\
-• Reduced DSO from 100 to 55 days
+• Reduced DSO from 100 to 55 days over a year
 
 • **Senior Financial Analyst, Standard Chartered Bank (2013 to 2015), Chennai**: Change Management and Performance Management Governanace
 
