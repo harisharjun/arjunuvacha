@@ -32,6 +32,7 @@ You are part of your school WhatsApp group. The group, which was formed 4 years 
 
 One fine day, a discussion starts on Football. You don’t watch much Football and are just aware of only a few famous leagues and players. The discussion picks up heat, and some of your friends are madly debating about who is the best: **Messi or Ronaldo!**
 
+![Ronaldo vs Messi](ronaldo-messi.jpg)
 You go away for an hour and when you come back, you see **937 unread** messages. You go berserk. Stunned by this madness, you like to figure out who is the best yourself! And you have the greatest resort one can have to aid you in this endeavour, **the all-knowing master of the universe: Google!**
 
 So, if you had to ask Google to find out who is actually ‘The Best’, what would you type? What would you search for?
