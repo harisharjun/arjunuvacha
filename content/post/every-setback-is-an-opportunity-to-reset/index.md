@@ -35,7 +35,7 @@ This could have been partly because of my wife. She is employed by the Governmen
 
 But keeping the financial security aside, there were a few other factors that helped me keep my calm.
 
-## A much needed break
+## A much-needed break
 
 I think one major reason was I personally wanted to take a break and slow down because so many things were happening very fast and I wasn’t able to be **there fully** in those moments. I didn’t particularly want to rush into things.
 
@@ -67,7 +67,9 @@ However, the past month of having time for myself was really a boon, a blessing 
 
 ### Changed my routine.
 
-Staying up late in the night watching a movie or doing some work was a normal thing. But when I was asked to leave Phable I realised that I would have more time at my disposal and that it was an opportunity to change my routine. So, I started sleeping early and waking up early. This was a welcome change that I wanted for so long which wouldn’t have happened if not for the layoff.
+Staying up late in the night watching a movie or doing some work was a normal thing. But when I was asked to leave Phable I realised that I would have more time at my disposal and that it was an opportunity to change my routine. So, I started sleeping early and waking up early. From getting up at 8:30 AM, I have been able to move it to 7:00 AM these days and hope to gradually move it to 6:00 AM.
+
+This was a welcome change that I wanted for so long which wouldn’t have happened if not for the layoff.
 
 ### Practised meditation again.
 
@@ -111,19 +113,19 @@ To stand out in my job search, I created an online resume for myself: [Resume li
 
 ### Built a website for a friend.
 
-I tested my skills in building and launching a portfolio website from scratch. Out of nowhere, one of my friends asked me if someone could help him set up a website for his manufacturing company. I just took it upon myself and set up a basic website. [Here’s the link](https://marvelroctec.com). The website is still a work in progress but setting this up in just one day gave me a reassurance that I can do new things if I will. I wouldn’t have done this if not for the layoff.
+I tested my skills in building and launching a portfolio website from scratch. Out of nowhere, one of my friends asked me if someone could help him set up a website for his manufacturing company. I just took it upon myself and set up a basic website. [Here’s the link](https://marvelroctec.com). The website is still a work in progress but setting this up in just one day gave me reassurance that I can do new things if I will. I wouldn’t have done this if not for the layoff.
 
 **These are small but great things.**
 
->Adversities throw you into deep waters and it is in these deep waters that you discover great things which you otherwise wouldn’t have. The layoff which seemed like a setback actually helped me discover my older self.
+>Adversities throw you into deep waters and it is in these deep waters that you discover great things which you otherwise wouldn’t have. The layoff, which seemed like a setback, helped me discover my older self.
 
 Completing this ‘long-pending’ list of activities felt liberating and helped me ‘reset.’ I am calling it a reset because I used to do these activities earlier before I got ‘too busy’ or just got ‘too lazy’ and this break helped me reset back to myself. And rediscovering your older self sometimes feels liberating.
 
-Although you should convert every setback into an opportunity it should not always take a major setback to do what feels liberating to you. You don’t want to burn your fingers every time you want to do something great. You can simply do great things all the time, and occasionally burn your fingers in that pursuit. And it should be a constant pursuit.
+Although you should convert every setback into an opportunity it should not always take a major setback to do what feels liberating to you. You don’t want to burn your fingers whenever you want to do something great. You can simply do great things all the time, and occasionally burn your fingers in that pursuit. And it should be a constant pursuit.
 
 I have now slowly moved into the new ‘Normal’ after the reset, slowly fitting all these fulfilling activities into my routine - in some form or the other.
 
-Again, the idea is not to get overwhelmed by these additional sets of tasks/activities but to embrace them and fit them into the daily routine to the best of your ability, with a lot of diligence and conviction to complete them and not leave them midway.
+Again, the idea is not to get overwhelmed by these additional tasks/activities but to embrace them and fit them into the daily routine to the best of your ability, with a lot of diligence and conviction to complete them and not leave them midway.
 
 *Did you ever find yourself in such situations? What makes you feel liberated? What fulfilling activity did you do recently?*
 
