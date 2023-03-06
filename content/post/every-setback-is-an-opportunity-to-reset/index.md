@@ -65,11 +65,11 @@ However, the past month of having time for myself was really a boon, a blessing 
 
 ## **A few things helped me gain myself.**
 
-### I changed my routine.
+### Changed my routine.
 
 Staying up late in the night watching a movie or doing some work was a normal thing. But when I was asked to leave Phable I realised that I would have more time at my disposal and that it was an opportunity to change my routine. So, I started sleeping early and waking up early. This was a welcome change that I wanted for so long which wouldn’t have happened if not for the layoff.
 
-### I practised meditation again.
+### Practised meditation again.
 
 I practised meditation regularly since my 7th grade but that wasn’t the case in the past 3-4 years. I stopped practising meditation completely. But, in the past, I had experienced that meditation made me calmer, more productive, and more creative. The layoff gave me that extra push to practise meditation again and I have now made it a point to meditate for 15-20min every day.
 
