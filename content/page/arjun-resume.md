@@ -4,6 +4,7 @@ date: 2023-02-06T15:19:50+05:30
 draft: false
 description: An entrepreneur and problem solver with 9+ years of experience in solving customer problems and driving organisational growth. With cross-functional collaboration across diverse teams and aligning them with the Product Vision, I have a proven track record in designing product & GTM strategies and building, launching and scaling new products from scratch. I use a user-centric approach and display hustle to deliver things, with analytical, design, communication, stakeholder management, and leadership skills.
 image: k-harish-arjun.jpg
+slug: resume
 ---
 
 | [**View PDF Resume** 📄](https://drive.google.com/file/d/1dhV7aVGtPh8vDCQ8OB_pOZ5gZTwRcb6l/view?usp=share_link) | [**View My LinkedIn Profile** 🔗](https://www.linkedin.com/in/harisharjun)|
