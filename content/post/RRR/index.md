@@ -35,7 +35,7 @@ RRR is the first ‘Indian movie’ produced by an Indian production house, DVV 
 
 (RRR missed its coveted chance for Best International Feature Film - blame Indian Film Council if you want for not sending it!)
 
-### Hugo market potential
+### Huge market potential
 Would open up a HUGE movie market in the West (and the East!). A lot of new avenues have already been broke open, thanks to SS Rajamouli, but there’s still a long way to go.
 
 Total movie market (theater biz) is more than $42bn. India currently stands at 5th position:\
@@ -81,6 +81,6 @@ We all would be rooting for you!
 There are other nominations this year:
 Kartiki Gonsalves's The Elephant Whisperers, Shaunak Sen's touching All That Breathes. But it is RRR that is taking away all the media light.
 
-If you’re a movie buff like me, you can watch it live on Disney+ Hotstar.
+If you’re a movie buff like me, you can watch it live on [Disney+ Hotstar](https://www.hotstar.com/) in India.
 
 Thanks for reading! Check out my other articles too...
