@@ -73,7 +73,7 @@ With Bahubali 1 & 2, he brought the entire film fraternity together - across dif
 
 His RRR has grossed INR 1200 Cr already and has garnered so much attention, love and thumping responses from audiences around the world.
 
-![The Singers - Rahul Sipligunj and Kaala Bhairava](rrr-singers.jpeg)
+![The Singers - Rahul Sipligunj and Kaala Bhairava](rrr-singers.jpg)
 
 The audience filled the theatres completely whenever the movie was screened in the US and there was a re-release after a re-release multiple times. In fact, it set up a record of getting sold out in a mere 98 seconds when the tickets opened for booking in a 932 seater TCL’s Chinese Theatre in LA. The world was astounded by this craze!
 
