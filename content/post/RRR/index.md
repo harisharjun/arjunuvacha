@@ -33,18 +33,18 @@ Though there have been Indian representations at the Oscars in the past - #RRR w
 
 ### First Indian Movie
 
-RRR is the first ‘Indian movie’ produced by an Indian production house, DVV Entertainment, to win an Oscar in any category, it's unprecedented! (RRR missed another chance for Best International Feature Film - blame IFC if you want!)
+RRR is the first ‘Indian movie’ produced by an Indian production house, DVV Entertainment, to win an Oscar in any feature films category, it's unprecedented! (RRR missed another chance for Best International Feature Film - blame IFC if you want!)
 
 ### Huge market potential
 
 This could open up a HUGE movie market around the world. A lot of new avenues have already been broke open, thanks to SS Rajamouli, but there’s still a long way to go…
 
-The total movie market (theatre biz) is more than $42bn. India currently stands in 5th position:
-US: $10.5bn
-China: $9.3bn
-Japan: $2.4bn
-France: $1.62bn
-India: $1.6bn
+The total movie market (theatre biz) is more than $42bn (as in 2019, when the business saw the highest numbers). India currently stands in 5th position:\
+US: $10.5bn\
+China: $9.3bn\
+Japan: $2.4bn\
+France: $1.62bn\
+India: $1.6bn\
 South Korea: ~1.6bn
 
 There are other major markets beyond these regions, including UK, UAE etc which account to about $7.1bn where Indian movies are actively screened.
@@ -67,11 +67,17 @@ So, you can only imagine bigger, better, and grander movies coming from India in
 
 A torchbearer, and a pioneer in many ways, SS Rajamouli now leads the path to greater glory for Indian cinema at the world cinema, and has permanently changed the trajectory of Indian cinema!
 
+![SS Rajamouli along with MM Keeravani, Jr NTR, and Ram Charan](team-rrr.jpeg)
+
 With Bahubali 1 & 2, he brought the entire film fraternity together - across different languages, transcending boundaries. Now, with RRR he has truly taken Indian Cinema global. From drawing people of the country together to taking the Indian Cinema global, SS Rajamouli is in a league of his own!
 
 His RRR has grossed INR 1200 Cr already and has garnered so much attention, love and thumping responses from audiences around the world.
 
+![The Singers - Rahul Sipligunj and Kaala Bhairava](rrr-singers.jpeg)
+
 The audience filled the theatres completely whenever the movie was screened in the US and there was a re-release after a re-release multiple times. In fact, it set up a record of getting sold out in a mere 98 seconds when the tickets opened for booking in a 932 seater TCL’s Chinese Theatre in LA. The world was astounded by this craze!
+
+![Prem Rakshit, the choreographer along with SS Rajamouli](prem-rakshit-with-rajamouli.jpeg)
 
 And the movie is the highest-grossing Indian movie in Japan!
 
@@ -81,9 +87,9 @@ It has received multiple awards including from Hollywood Critics Association, LA
 
 Check all the awards [HERE](https://www.imdb.com/title/tt8178634/awards/).
 
-Congratulations to SS Rajamouli, NTR Jr, Ram Charan, MM Keeravani, Prem Rakshit, Chandrabose, Rahul Sipligunj, Kaala Bhairava and the entire team of RRR for truly ‘bringing back the glory of Indian Cinema!’
+👏🏼👏🏼👏🏼 Congratulations to SS Rajamouli, NTR Jr, Ram Charan, MM Keeravani, Prem Rakshit, Chandrabose, Rahul Sipligunj, Kaala Bhairava and the entire team of RRR for truly ‘bringing back the glory of Indian Cinema!’🕺🏻💃🏻🕺🏻💃🏻🕺🏻💃🏻🕺🏻💃🏻
 
-The other nominations this year: Kartiki Gonsalves's The Elephant Whisperers, Shaunak Sen's touching All That Breathes couldn’t win though.
+Also, congratulations also to the team of Kartiki Gonsalves’ The Elephant Whisperers for winning an Oscar for Best Documentary Short! 👏🏼👏🏼👏🏼
 
 But the win by RRR is taking away all the media light!
 

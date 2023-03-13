@@ -82,7 +82,7 @@ This trick is used in a myriad number of ways. Let’s see.
 
 A shoe store displays 40% off. You get lured, you enter the store and try different shoes. However, you notice that the 40% off is only on a few shoes displayed at the corner, as part of the clearance sale, not on all the shoes. But having entered the store already you are reluctant to leave now. And inside the store, the sales agents are ready to entice you more, serve you more and make you feel like their hero. And you try more shoes. The chances are you end up buying a different shoe than what you anticipated when you entered. Happened with you?
 
-**Another example.**
+**Another example**
 ![Fat Free Ice-cream](fat-free-ice-cream.jpeg)
 
 Two ice-cream boxes containing the same ingredients display their contents differently. The first box says ‘10% fat’, the second box says ‘90% fat-free!’. It is highly likely that, given a chance, you would choose the second box more often than the first one.
