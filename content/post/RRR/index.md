@@ -4,7 +4,7 @@ date: 2023-03-13T06:42:24+05:30
 slug: rrr
 image: RRR-wins-the-Oscars.jpeg
 draft: false
-description: As the clock struck 5:30 AM today, India woke up to history. And the Dark Knight in me screamed, “This is what we deserve. Not what we need." But what's in it for the Indian Cinema? Read on...
+description: As the clock struck 8:30 AM today, India woke up to history. And the Dark Knight in me screamed, “This is what we deserve. Not what we need." Here's how it will be game-changing for Indian Cinema... Read on...
 categories:
     - business
 tags: [
