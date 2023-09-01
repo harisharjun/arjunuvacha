@@ -7,7 +7,7 @@ image: k-harish-arjun.jpg
 slug: resume
 ---
 
-| [**View PDF Resume** 📄](https://drive.google.com/file/d/1gP5OK5SWBLhGb3d48sv3zwkjdO-CPxd7/view?usp=sharing) | [**View My LinkedIn Profile** 🔗](https://www.linkedin.com/in/harisharjun)|
+| [**View My LinkedIn Profile** 🔗](https://www.linkedin.com/in/harisharjun)|
 | --- | --- |
 
 **Note:** I am actively looking for full-time Senior Product Manager or Group Product Manager opportunities. If you like my profile, please reach out to me on [**LinkedIn**](https://www.linkedin.com/in/harisharjun).
@@ -19,7 +19,7 @@ slug: resume
 
 ## Work Experience
 ### Senior Product Manager II, **Phable Care**
-**Jun 2022 - Jan 2023**, Bengaluru\
+**Jun 2022 - Jul 2023**, Bengaluru\
 • Laid out the Phable **Doctor SaaS Product Strategy** through extensive doctor interviews, market research and data analysis.\
 • Worked at break-neck speed to complete the new UI for the patient queue, self-check-in portal, and doctor dashboard.\
 • **Devised and executed the GTM** for the patient queue. Worked closely with Marketing, Sales, and Operations and improved user retention from **10% w-o-w to 65% w-o-w**.\
