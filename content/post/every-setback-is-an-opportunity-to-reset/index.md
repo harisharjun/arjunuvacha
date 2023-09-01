@@ -2,7 +2,7 @@
 title: "Every setback is an opportunity to reset"
 description: Adversities throw you into deep waters and it is in these deep waters that you discover great things which you otherwise wouldn’t have.
 date: 2023-03-04T15:40:53+05:30
-draft: false
+draft: true
 slug: every-setback-is-an-opportunity-to-reset
 image: harish-arjun-reset.jpeg
 categories:
