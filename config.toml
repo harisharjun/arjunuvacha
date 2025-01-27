@@ -117,7 +117,7 @@ type = "tag-cloud"
 type = "archives"
 
   [params.widgets.homepage.params]
-  limit = 5
+  limit = 3
 
 [[params.widgets.page]]
 type = "toc"
