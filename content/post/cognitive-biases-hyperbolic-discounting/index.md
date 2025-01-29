@@ -1,11 +1,13 @@
 ---
 title: "Cognitive Biases - Part 08: Hyperbolic Discounting"
 description: "The reason why we fall (and keep falling) prey to short term gains. And how we realise our stupidity an eon later"
+image: hyperbolic-discounting.jpg
+slug: cognitive-bias-hyperbolic-discounting
 date: 2024-10-14T17:30:42+05:30
 draft: false
 categories:
     - psychology
-    - cognitive-bias
+    - product-management
 tags: [
     "cognitive bias",
     "psychology"
@@ -21,7 +23,7 @@ tags: [
 4. [Availability Heuristic](/p/availability-heuristic) ✅
 5. [Framing effect](/p/framing-effect) ✅
 6. [Forer effect](/p/forer-effect) ✅
-7. [Belief Bias](p/belief-bias) ✅
+7. [Belief Bias](/p/belief-bias) ✅
 ---
 
 Let’s start with a quick scenario. It’s January 1st, and you’re feeling invincible. You’ve just signed up for a year-long gym membership, convinced that *this* is the year you’ll finally get in shape. The first week is fantastic—you hit the gym every day, share your progress with friends, and feel unstoppable. Fast forward to February. Work gets busier, motivation dips, and soon enough, your gym bag gathers dust. By March, you’re left regretting the expensive membership, wondering what went wrong. 🤔
