@@ -6,7 +6,7 @@ description: "Outsourcing the mundane to keep up with the pace of change in prod
 image: ai.webp
 categories:
     - product-management
-    - business
+    - artificial-intelligence
 tags: [
     "product management",
 ]

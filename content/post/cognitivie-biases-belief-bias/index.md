@@ -21,7 +21,7 @@ tags: [
 3. [Ikea effect](/p/ikea-effect) ✅
 4. [Availability Heuristic](/p/availability-heuristic) ✅
 5. [Framing effect](/p/framing-effect) ✅
-6. [Forer effect](/p/forer-effect)
+6. [Forer effect](/p/forer-effect) ✅
 ---
 
 Let's get started with this one!

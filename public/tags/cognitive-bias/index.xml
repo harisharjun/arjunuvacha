@@ -6,7 +6,98 @@
         <description>Recent content in cognitive bias on Arjun Uvacha</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en</language>
-        <lastBuildDate>Sun, 11 Jul 2021 21:03:07 +0530</lastBuildDate><atom:link href="https://www.arjunuvacha.com/tags/cognitive-bias/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 14 Oct 2024 17:30:42 +0530</lastBuildDate><atom:link href="https://www.arjunuvacha.com/tags/cognitive-bias/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Cognitive Biases - Part 08: Hyperbolic Discounting</title>
+        <link>https://www.arjunuvacha.com/p/cognitive-biases-part-08-hyperbolic-discounting/</link>
+        <pubDate>Mon, 14 Oct 2024 17:30:42 +0530</pubDate>
+        
+        <guid>https://www.arjunuvacha.com/p/cognitive-biases-part-08-hyperbolic-discounting/</guid>
+        <description>&lt;p&gt;👋🏼 Hey there! Thank you for stopping by.&lt;/p&gt;
+&lt;p&gt;😀 Please note that this is the eighth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other seven yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;p/belief-bias&#34; &gt;Belief Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;p&gt;Let’s start with a quick scenario. It’s January 1st, and you’re feeling invincible. You’ve just signed up for a year-long gym membership, convinced that &lt;em&gt;this&lt;/em&gt; is the year you’ll finally get in shape. The first week is fantastic—you hit the gym every day, share your progress with friends, and feel unstoppable. Fast forward to February. Work gets busier, motivation dips, and soon enough, your gym bag gathers dust. By March, you’re left regretting the expensive membership, wondering what went wrong. 🤔&lt;/p&gt;
+&lt;p&gt;Sounds familiar?&lt;/p&gt;
+&lt;p&gt;This isn’t just about fitness. It’s about the way we tend to &lt;strong&gt;overestimate short-term wins&lt;/strong&gt; while underestimating the patience, consistency, and discipline required for long-term success.&lt;/p&gt;
+&lt;p&gt;Take another example—a credit card with an irresistible 0% interest offer. You think, &lt;em&gt;“This is easy! I’ll pay it off before the period ends.”&lt;/em&gt; But months later, life happens, you miss the deadline, and suddenly, you’re hit with high-interest debt you didn’t see coming.&lt;/p&gt;
+&lt;p&gt;So, why do we keep falling into this trap?&lt;/p&gt;
+&lt;p&gt;The answer lies in &lt;strong&gt;hyperbolic discounting&lt;/strong&gt;, a cognitive bias that tricks our brains into valuing immediate rewards far more than future benefits. Let’s dig into why this happens and how to escape the cycle.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;hyperbolic-discounting-the-brains-short-term-bias&#34;&gt;&lt;strong&gt;Hyperbolic Discounting: The Brain’s Short-Term Bias&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;Hyperbolic discounting is our tendency to prefer smaller, immediate rewards over larger, delayed ones. It’s why we procrastinate, struggle with long-term goals, and make impulsive decisions. Our brain naturally prioritizes NOW over LATER, even when later is objectively better.&lt;/p&gt;
+&lt;h3 id=&#34;why-do-we-fall-for-it&#34;&gt;&lt;strong&gt;Why Do We Fall for It?&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Here are the top 5 reasons why I think this happens.&lt;/p&gt;
+&lt;h3 id=&#34;-1-evolutionary-instincts&#34;&gt;🧠 &lt;strong&gt;1. Evolutionary Instincts&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Back in the day, our ancestors had to prioritize immediate survival. If they found food, they ate it immediately—because who knew when the next meal would come? Planning for the distant future wasn’t valuable in an unpredictable world. Fast forward to today, and our brains still hold on to this wiring, making it hard to resist instant gratification.&lt;/p&gt;
+&lt;h3 id=&#34;-2-uncertainty-of-the-future&#34;&gt;🔮 &lt;strong&gt;2. Uncertainty of the Future&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;One of the biggest reasons people overestimate short-term wins is the uncertainty of the future.
+When faced with a choice between immediate rewards and long-term benefits, we instinctively favor the present because the future feels unpredictable and beyond our control.&lt;/p&gt;
+&lt;p&gt;For example, consider a tech startup with limited funding. The founders have two choices:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Invest in long-term product development—building a robust platform, focusing on retention, and gradually acquiring loyal users.&lt;/li&gt;
+&lt;li&gt;Push for rapid user growth through heavy discounts, aggressive marketing, and short-term promotions, hoping that high numbers will attract investors.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Most likely, many startups choose the second option because future success is uncertain. They think, “Who knows if we’ll survive long enough to see long-term results? Let’s show impressive numbers now.” However, once the discounts stop, most of these users churn, leaving the startup with unsustainable growth and financial strain.&lt;/p&gt;
+&lt;p&gt;This decision-making pattern isn’t just seen in businesses. Individuals do it all the time. Many people avoid investing for retirement because the benefits feel distant and uncertain. Instead, they spend impulsively on things that bring immediate pleasure, assuming they will “figure it out” later.&lt;/p&gt;
+&lt;h3 id=&#34;-3-emotional-impulsivity&#34;&gt;😍 &lt;strong&gt;3. Emotional Impulsivity&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Immediate rewards trigger dopamine, the brain’s pleasure chemical. That’s why eating a donut feels better than saying no in favor of long-term health. Delayed gratification takes discipline, and let’s be honest—it’s hard!&lt;/p&gt;
+&lt;h3 id=&#34;-4-short-term-motivation-loops&#34;&gt;🎯 &lt;strong&gt;4. Short-Term Motivation Loops&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Short-term wins give us quick validation. Posting about a gym session on Instagram brings instant likes, while real results—like losing weight or building muscle—take months. This immediate feedback keeps us hooked.&lt;/p&gt;
+&lt;h3 id=&#34;-5-cognitive-overload&#34;&gt;🤯 &lt;strong&gt;5. Cognitive Overload&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;When life gets overwhelming, our brain defaults to the easiest, most rewarding option. Long-term goals require sustained effort, patience, and strategic planning—things that feel mentally exhausting when juggling daily stressors. The harder a decision appears, the more tempting it becomes to choose short-term relief, even if it leads to long-term setbacks. This is why consistency often feels so difficult.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;undersood-why-we-fall-for-it-but-what-do-we-gain&#34;&gt;&lt;strong&gt;Undersood why we fall for it. But what do we gain?&lt;/strong&gt;&lt;/h2&gt;
+&lt;h3 id=&#34;-1-instant-gratification-bias&#34;&gt;⚡ &lt;strong&gt;1. Instant Gratification Bias&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;We crave rewards &lt;em&gt;now&lt;/em&gt; rather than waiting for bigger payoffs later. Whether it’s junk food over meal prep, or binge-watching instead of studying, our brains prioritize immediate pleasure over patience.&lt;/p&gt;
+&lt;h3 id=&#34;-2-short-term-metrics-drive-motivation&#34;&gt;📊 &lt;strong&gt;2. Short-Term Metrics Drive Motivation&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Immediate feedback feels more rewarding than waiting for long-term progress. That’s why businesses focus on quarterly earnings rather than sustainable growth, and why students cram instead of adopting better study habits.&lt;/p&gt;
+&lt;h3 id=&#34;-3-social-proof--peer-influence&#34;&gt;👥 &lt;strong&gt;3. Social Proof &amp;amp; Peer Influence&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Seeing others celebrate quick wins influences our perception of success. When startups flaunt rapid user growth but ignore retention, or influencers share overnight success stories, we assume short-term wins are more valuable than they actually are.&lt;/p&gt;
+&lt;h3 id=&#34;-4-the-present-bias-illusion&#34;&gt;🌀 &lt;strong&gt;4. The “Present Bias” Illusion&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;We assume our future self will be more disciplined, focused, and capable of handling challenges. “I’ll start saving next year” or “Future me will be more responsible” are classic examples of how we trick ourselves into postponing key decisions.&lt;/p&gt;
+&lt;h3 id=&#34;-5-underestimating-long-term-effort&#34;&gt;🚧 &lt;strong&gt;5. Underestimating Long-Term Effort&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;We often miscalculate how much time, effort, and consistency are required for real success. Many expect to see drastic results after just a few weeks of dieting, but true health transformations take months or years.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;when-does-this-become-a-problem&#34;&gt;&lt;strong&gt;When does this become a problem?&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;Short-term wins aren’t inherently bad, but when they take priority over long-term strategy, they can be &lt;strong&gt;destructive&lt;/strong&gt;:&lt;/p&gt;
+&lt;p&gt;❌ &lt;strong&gt;Poor Financial Decisions&lt;/strong&gt; – People often prioritize immediate spending on luxuries or impulsive purchases rather than long-term financial health. This leads to accumulating debt, missed investment opportunities, and financial stress in the future.&lt;/p&gt;
+&lt;p&gt;❌ &lt;strong&gt;Unrealistic Business Strategies&lt;/strong&gt; – Companies chasing quick profits frequently compromise sustainable growth by neglecting innovation, customer retention, or long-term value creation, ultimately leading to instability.&lt;/p&gt;
+&lt;p&gt;❌ &lt;strong&gt;Burnout &amp;amp; Frustration&lt;/strong&gt; – Expecting instant success in careers or personal goals often results in disappointment. When results take longer than expected, frustration sets in, leading many to give up too soon.&lt;/p&gt;
+&lt;p&gt;❌ &lt;strong&gt;Shallow Skill Development&lt;/strong&gt; – Constantly jumping between different pursuits for quick wins prevents deep expertise. Mastery requires sustained effort, but chasing rapid results results in limited proficiency and weaker long-term outcomes.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;got-it-how-can-i-work-on-it&#34;&gt;&lt;strong&gt;Got it. How can I work on it?&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;Breaking free from the cycle of hyperbolic discounting takes effort, but it’s absolutely possible! Let&amp;rsquo;s see how.&lt;/p&gt;
+&lt;h3 id=&#34;-1-adopt-a-long-term-mindset-the-10-year-rule&#34;&gt;🌍 &lt;strong&gt;1. Adopt a Long-Term Mindset (The &amp;ldquo;10-Year Rule&amp;rdquo;)&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Before making a decision, ask yourself: &lt;em&gt;Will this choice still benefit me in 10 years?&lt;/em&gt; If the answer is no, reconsider. This rule helps filter out impulsive decisions and encourages choices that align with long-term success. Many decisions that seem urgent today will feel irrelevant a decade from now. Prioritizing future stability over momentary pleasure prevents regret and fosters consistent growth.&lt;/p&gt;
+&lt;h3 id=&#34;-2-create-systems-instead-of-just-goals&#34;&gt;🔄 &lt;strong&gt;2. Create Systems Instead of Just Goals&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Rather than focusing on &lt;em&gt;one-time goals&lt;/em&gt; like &amp;ldquo;lose 10kg,&amp;rdquo; shift your focus to &lt;strong&gt;building habits&lt;/strong&gt;—such as consistently exercising, eating well, and tracking progress. Goals are great for setting direction, but systems ensure long-term sustainability. A well-designed system keeps you moving forward even when motivation fades, making success more predictable and manageable over time.&lt;/p&gt;
+&lt;h3 id=&#34;-3-use-the-24-hour-rule-for-big-decisions&#34;&gt;⏳ &lt;strong&gt;3. Use the “24-Hour Rule” for Big Decisions&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;If you’re about to make a major decision—whether it’s making a large purchase, quitting a job, or responding to an emotional situation—wait 24 hours before acting. This cooling-off period allows you to assess whether your decision is driven by impulse or logic. Often, after a day, what felt urgent no longer seems as appealing, helping you avoid costly mistakes.&lt;/p&gt;
+&lt;h3 id=&#34;-4-validate-short-term-gains-with-long-term-data&#34;&gt;📈 &lt;strong&gt;4. Validate Short-Term Gains With Long-Term Data&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Short-term success can be misleading if it’s not backed by real, long-term impact. In business, product development, and personal growth, rely on &lt;strong&gt;data-driven insights&lt;/strong&gt; rather than momentary spikes. Track trends over time to differentiate sustainable growth from temporary surges. By making decisions based on consistent patterns rather than short-term excitement, you avoid chasing misleading wins that don’t contribute to lasting success.&lt;/p&gt;
+&lt;h3 id=&#34;-5-celebrate-long-term-wins&#34;&gt;🏆 &lt;strong&gt;5. Celebrate Long-Term Wins&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Instead of only acknowledging short-term achievements, shift your focus to recognizing &lt;strong&gt;sustainable progress&lt;/strong&gt;. Whether in personal goals, career growth, or business milestones, long-term success often goes unnoticed because it lacks immediate excitement. However, celebrating consistent effort and meaningful progress fosters resilience and encourages sustained commitment. Leaders should create an environment where perseverance and strategic growth are valued over quick wins.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;conclusion-think-long&#34;&gt;&lt;strong&gt;Conclusion: Think long!&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;Short-term wins feel great, but they rarely lead to meaningful success on their own. Understanding &lt;strong&gt;why&lt;/strong&gt; we overestimate them and &lt;strong&gt;how&lt;/strong&gt; hyperbolic discounting tricks our brain can help us make better choices.&lt;/p&gt;
+&lt;p&gt;Whether it’s fitness, finances, career goals, or business decisions, learning to &lt;strong&gt;balance short-term motivation with long-term vision&lt;/strong&gt; is the key to sustained success.&lt;/p&gt;
+&lt;p&gt;Next time you’re about to make a decision, pause and ask: &lt;em&gt;Am I choosing short-term excitement over long-term value?&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Making that small shift in thinking can unlock greater success, stability, and fulfillment in the long run.&lt;/p&gt;
+&lt;p&gt;💬 &lt;strong&gt;What’s one short-term decision you regret? Share your thoughts below!&lt;/strong&gt; 😊&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Thank you for reading! 🙏🏼&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;👍🏼 ➡️ If you liked it, please share it with others who might find it interesting!&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Cognitive Biases - Part 07: Belief Bias</title>
         <link>https://www.arjunuvacha.com/p/cognitive-bias-belief-bias/</link>
         <pubDate>Sun, 11 Jul 2021 21:03:07 +0530</pubDate>
@@ -20,7 +111,7 @@
 &lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
 &lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;p&gt;Let&amp;rsquo;s get started with this one!&lt;/p&gt;
