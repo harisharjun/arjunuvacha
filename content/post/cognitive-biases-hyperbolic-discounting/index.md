@@ -44,6 +44,8 @@ The answer lies in **hyperbolic discounting**, a cognitive bias that tricks our 
 
 Hyperbolic discounting is our tendency to prefer smaller, immediate rewards over larger, delayed ones. It’s why we procrastinate, struggle with long-term goals, and make impulsive decisions. Our brain naturally prioritizes NOW over LATER, even when later is objectively better. 
 
+<img src="hyperbolic.webp" alt="Hyperbolic Discounting" style="display: block; margin-left: auto; margin-right: auto; max-width: 400px; height: auto;">
+
 ### **Why Do We Fall for It?**
 Here are the top 5 reasons why I think this happens.
 

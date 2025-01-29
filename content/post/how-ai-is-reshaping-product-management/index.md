@@ -43,7 +43,8 @@ These real-time insights remind us that being proactive is key to staying ahead 
 ## 🤖 Automating Routine Tasks to Elevate Strategy
 
 Let’s face it, we’ve all been there — stuck in the endless loop of managing backlogs, compiling user feedback, and updating roadmaps. While these tasks are important, they often leave little room for strategic thinking. That’s where AI steps in to save the day.
-![Automate Tasks](automate.jpg)
+
+<img src="automate.jpg" alt="Automate Tasks" style="display: block; margin-left: auto; margin-right: auto; max-width: 400px; height: auto;">
 
 ### 🔍 Streamlining Market Research
 Market research, which used to take weeks, can now be done in minutes. AI tools equipped with Natural Language Processing (NLP) analyze reviews, social media chatter, and survey responses to extract actionable insights.
@@ -79,7 +80,8 @@ Or imagine an online grocery store predicting when a customer might run out of e
 As AI continues to transform the role of product management, it’s clear that product managers need to evolve alongside it. While AI automates and simplifies many tasks, it also introduces new challenges and opportunities. Embracing this change requires a shift in mindset and a willingness to learn. Let’s discuss the skills that PMs need to stay ahead in this AI-powered world.
 
 The role of a PM is no longer limited to traditional responsibilities like roadmap planning or stakeholder management. Today, PMs must act as the bridge between cutting-edge AI capabilities and real-world user needs. They must learn how to work with AI, use it effectively, and ensure it aligns with the overall product vision. Here are a few skills that I believe are crucial:
-![AI forcing PMs to hone new skills](keyskills.jpg)
+
+<img src="keyskills.jpg" alt="AI forcing PMs to hone new skills" style="display: block; margin-left: auto; margin-right: auto; max-width: 400px; height: auto;">
 
 ### 📊 Embrace Data Literacy
 Data literacy is the foundation of thriving in an AI-driven environment. PMs don’t need to be data scientists, but they must be comfortable interpreting AI outputs and working with data teams. Understanding data structures, metrics, and AI algorithms allows PMs to ask the right questions and make informed decisions.

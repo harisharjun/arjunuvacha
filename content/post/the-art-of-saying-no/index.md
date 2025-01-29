@@ -2,7 +2,7 @@
 title: "The Art of Saying No - a PM Superpower"
 description: "Unlocking better products and happier users through a no, you know!"
 date: 2024-07-19T19:12:43+05:30
-draft: true
+draft: false
 image: unlockingproducts.jpg
 categories:
     - product-management

@@ -195,9 +195,6 @@ toLower = false
   name = "categories"
   weight = 200
 
-[markup.goldmark.renderer]
-unsafe = false
-
 [markup.tableOfContents]
 endLevel = 4
 ordered = true
@@ -212,3 +209,7 @@ lineNos = true
 lineNumbersInTable = true
 tabWidth = 4
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
