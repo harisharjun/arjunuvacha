@@ -1,0 +1,38 @@
+{{/* Floating "Ask Arjun" chat widget + command palette. Included on /work/ pages. */}}
+<div class="aa-widget">
+    <button id="aa-launcher" class="aa-launcher" type="button" aria-label="Ask Arjun — chat about Arjun's work">
+        <span class="aa-launcher-icon">💬</span>
+        <span class="aa-launcher-text">Ask Arjun <span class="aa-badge">AI</span></span>
+    </button>
+    <div id="aa-panel" class="aa-panel" hidden>
+        <div class="aa-head">
+            <div>
+                <p class="aa-title">Ask Arjun <span class="aa-badge">AI</span></p>
+                <p class="aa-subtitle">Built by Arjun, about Arjun — ask anything</p>
+            </div>
+            <button id="aa-close" type="button" aria-label="Minimise chat">−</button>
+        </div>
+        <div class="aa-log" id="aa-log"></div>
+        <div class="aa-chips" id="aa-chips"></div>
+        <form class="aa-form" id="aa-form">
+            <input type="text" id="aa-input" placeholder="e.g. How does he handle pushback?" autocomplete="off" maxlength="300">
+            <button type="submit" aria-label="Send">➤</button>
+        </form>
+    </div>
+</div>
+
+<div class="work-cmdk" id="work-cmdk" hidden>
+    <div class="work-cmdk-box">
+        <input type="text" id="work-cmdk-input" placeholder="Type a command… try 'impact' or 'coffee'" autocomplete="off">
+        <ul id="work-cmdk-list"></ul>
+    </div>
+</div>
+
+<script>
+window.WORK_DATA = Object.assign(window.WORK_DATA || {}, {
+    qa: {{ .Site.Data.askarjun | jsonify | safeJS }},
+    worker: {{ .Site.Params.askArjunWorker | default "" | jsonify | safeJS }}
+});
+</script>
+{{ $js := resources.Get "js/work.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" defer></script>

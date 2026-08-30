@@ -1,0 +1,5 @@
+node_modules/
+slips/
+slips_text.json
+local-only/
+*.png

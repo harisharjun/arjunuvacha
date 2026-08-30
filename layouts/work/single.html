@@ -1,0 +1,45 @@
+{{ define "body-class" }}template-work{{ end }}
+
+{{ define "main" }}
+<article class="work-case">
+    <header class="work-case-header">
+        <a class="work-back" href="{{ .Parent.RelPermalink }}">← All product work</a>
+        <p class="work-kicker">{{ .Params.company }} · {{ .Params.role }} · {{ .Params.period }}</p>
+        <h1 class="work-title">{{ .Title }}</h1>
+        {{ with .Params.highlights }}
+        <div class="work-chips">
+            {{ range . }}<span class="work-chip">{{ . }}</span>{{ end }}
+        </div>
+        {{ end }}
+        {{ with .Params.tldr }}
+        <div class="work-tldr">
+            <span class="work-tldr-label">TL;DR</span>
+            <p>{{ . }}</p>
+        </div>
+        {{ end }}
+    </header>
+
+    <div class="work-case-content article-content">
+        {{ .Content }}
+    </div>
+
+    <footer class="work-case-footer">
+        <div class="work-cta">
+            <h2>Want the full story?</h2>
+            <p>Every number above has a messy, interesting path behind it. I'm happy to walk through any of them.</p>
+            <div class="work-cta-actions">
+                <a class="work-btn" href="mailto:k.harisharjun@gmail.com">Email me</a>
+                <a class="work-btn work-btn--outline" href="https://linkedin.com/in/harisharjun" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+        </div>
+        <nav class="work-case-nav">
+            {{ with .PrevInSection }}<a href="{{ .RelPermalink }}">← {{ .Title }}</a>{{ end }}
+            {{ with .NextInSection }}<a href="{{ .RelPermalink }}">{{ .Title }} →</a>{{ end }}
+        </nav>
+    </footer>
+</article>
+
+{{ partial "work-chat.html" . }}
+
+{{ partialCached "footer/footer" . }}
+{{ end }}

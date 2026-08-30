@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>product-management on Arjun Uvacha</title>
-        <link>https://www.arjunuvacha.com/categories/product-management/</link>
+        <link>https://arjunuvacha.com/categories/product-management/</link>
         <description>Recent content in product-management on Arjun Uvacha</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en</language>
-        <lastBuildDate>Mon, 14 Oct 2024 17:30:42 +0530</lastBuildDate><atom:link href="https://www.arjunuvacha.com/categories/product-management/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 14 Oct 2024 17:30:42 +0530</lastBuildDate><atom:link href="https://arjunuvacha.com/categories/product-management/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Cognitive Biases - Part 08: Hyperbolic Discounting</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</link>
         <pubDate>Mon, 14 Oct 2024 17:30:42 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/hyperbolic-discounting.jpg" alt="Featured image of post Cognitive Biases - Part 08: Hyperbolic Discounting" /&gt;&lt;p&gt;👋🏼 Hey there! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/hyperbolic-discounting.jpg" alt="Featured image of post Cognitive Biases - Part 08: Hyperbolic Discounting" /&gt;&lt;p&gt;👋🏼 Hey there! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the eighth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other seven yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/cognitive-bias-belief-bias/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Belief Bias&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
@@ -34,6 +34,7 @@
 &lt;hr&gt;
 &lt;h2 id=&#34;hyperbolic-discounting-the-brains-short-term-bias&#34;&gt;&lt;strong&gt;Hyperbolic Discounting: The Brain’s Short-Term Bias&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Hyperbolic discounting is our tendency to prefer smaller, immediate rewards over larger, delayed ones. It’s why we procrastinate, struggle with long-term goals, and make impulsive decisions. Our brain naturally prioritizes NOW over LATER, even when later is objectively better.&lt;/p&gt;
+&lt;img src=&#34;hyperbolic.webp&#34; alt=&#34;Hyperbolic Discounting&#34; style=&#34;display: block; margin-left: auto; margin-right: auto; max-width: 400px; height: auto;&#34;&gt;
 &lt;h3 id=&#34;why-do-we-fall-for-it&#34;&gt;&lt;strong&gt;Why Do We Fall for It?&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;Here are the top 5 reasons why I think this happens.&lt;/p&gt;
 &lt;h3 id=&#34;-1-evolutionary-instincts&#34;&gt;🧠 &lt;strong&gt;1. Evolutionary Instincts&lt;/strong&gt;&lt;/h3&gt;
@@ -100,11 +101,11 @@ When faced with a choice between immediate rewards and long-term benefits, we in
         </item>
         <item>
         <title>AI: The product intern we all wanted</title>
-        <link>https://www.arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/</link>
+        <link>https://arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/</link>
         <pubDate>Sun, 25 Aug 2024 13:00:23 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/ai.webp" alt="Featured image of post AI: The product intern we all wanted" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/ai.webp" alt="Featured image of post AI: The product intern we all wanted" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 If you’re a product manager or an AI enthusiast, this article is for you. In this article, I have explored how AI is transforming the world of product management and how we, as leaders, can embrace this change to create a lasting impact.&lt;/p&gt;
 &lt;p&gt;Before we dive in, take a moment to reflect: Have you ever made a decision that felt more instinctual than data-driven? Or spent hours poring over routine tasks that seemed to pull you away from strategy and innovation? If so, you’re not alone. And here’s the good news — AI is here to help.&lt;/p&gt;
 &lt;p&gt;Let’s walk through how AI is reshaping three critical aspects of product management: decision-making, automating routine tasks, and creating deeply personalized customer experiences. Along the way, I’ll share a few stories and lessons to make it relatable. I hope they resonate with you as much as they do with me.&lt;/p&gt;
@@ -120,21 +121,8 @@ When faced with a choice between immediate rewards and long-term benefits, we in
 &lt;p&gt;These real-time insights remind us that being proactive is key to staying ahead in a fast-paced market.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;-automating-routine-tasks-to-elevate-strategy&#34;&gt;🤖 Automating Routine Tasks to Elevate Strategy&lt;/h2&gt;
-&lt;p&gt;Let’s face it, we’ve all been there — stuck in the endless loop of managing backlogs, compiling user feedback, and updating roadmaps. While these tasks are important, they often leave little room for strategic thinking. That’s where AI steps in to save the day.
-&lt;img src=&#34;https://www.arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/automate.jpg&#34;
-	width=&#34;1024&#34;
-	height=&#34;601&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/automate_hu04277048d5faccfbd71261b15585540e_257852_480x0_resize_q75_box.jpg 480w, https://www.arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/automate_hu04277048d5faccfbd71261b15585540e_257852_1024x0_resize_q75_box.jpg 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;Automate Tasks&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;170&#34;
-		data-flex-basis=&#34;408px&#34;
-	
-&gt;&lt;/p&gt;
+&lt;p&gt;Let’s face it, we’ve all been there — stuck in the endless loop of managing backlogs, compiling user feedback, and updating roadmaps. While these tasks are important, they often leave little room for strategic thinking. That’s where AI steps in to save the day.&lt;/p&gt;
+&lt;img src=&#34;automate.jpg&#34; alt=&#34;Automate Tasks&#34; style=&#34;display: block; margin-left: auto; margin-right: auto; max-width: 400px; height: auto;&#34;&gt;
 &lt;h3 id=&#34;-streamlining-market-research&#34;&gt;🔍 Streamlining Market Research&lt;/h3&gt;
 &lt;p&gt;Market research, which used to take weeks, can now be done in minutes. AI tools equipped with Natural Language Processing (NLP) analyze reviews, social media chatter, and survey responses to extract actionable insights.&lt;/p&gt;
 &lt;p&gt;This reminds me of a conversation with a PM friend working in consumer tech. He shared how an AI tool helped him uncover user pain points by analyzing thousands of online reviews. What would have taken weeks was done in a single afternoon — leaving him free to focus on designing solutions.&lt;/p&gt;
@@ -154,21 +142,8 @@ When faced with a choice between immediate rewards and long-term benefits, we in
 &lt;hr&gt;
 &lt;h2 id=&#34;-key-skills-for-product-managers-in-the-ai-era&#34;&gt;🔑 Key Skills for Product Managers in the AI Era&lt;/h2&gt;
 &lt;p&gt;As AI continues to transform the role of product management, it’s clear that product managers need to evolve alongside it. While AI automates and simplifies many tasks, it also introduces new challenges and opportunities. Embracing this change requires a shift in mindset and a willingness to learn. Let’s discuss the skills that PMs need to stay ahead in this AI-powered world.&lt;/p&gt;
-&lt;p&gt;The role of a PM is no longer limited to traditional responsibilities like roadmap planning or stakeholder management. Today, PMs must act as the bridge between cutting-edge AI capabilities and real-world user needs. They must learn how to work with AI, use it effectively, and ensure it aligns with the overall product vision. Here are a few skills that I believe are crucial:
-&lt;img src=&#34;https://www.arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/keyskills.jpg&#34;
-	width=&#34;1024&#34;
-	height=&#34;750&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/keyskills_hub2e3b78adb5468ec9e99989da16acb75_288940_480x0_resize_q75_box.jpg 480w, https://www.arjunuvacha.com/p/ai-the-product-intern-we-all-wanted/keyskills_hub2e3b78adb5468ec9e99989da16acb75_288940_1024x0_resize_q75_box.jpg 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;AI forcing PMs to hone new skills&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;136&#34;
-		data-flex-basis=&#34;327px&#34;
-	
-&gt;&lt;/p&gt;
+&lt;p&gt;The role of a PM is no longer limited to traditional responsibilities like roadmap planning or stakeholder management. Today, PMs must act as the bridge between cutting-edge AI capabilities and real-world user needs. They must learn how to work with AI, use it effectively, and ensure it aligns with the overall product vision. Here are a few skills that I believe are crucial:&lt;/p&gt;
+&lt;img src=&#34;keyskills.jpg&#34; alt=&#34;AI forcing PMs to hone new skills&#34; style=&#34;display: block; margin-left: auto; margin-right: auto; max-width: 400px; height: auto;&#34;&gt;
 &lt;h3 id=&#34;-embrace-data-literacy&#34;&gt;📊 Embrace Data Literacy&lt;/h3&gt;
 &lt;p&gt;Data literacy is the foundation of thriving in an AI-driven environment. PMs don’t need to be data scientists, but they must be comfortable interpreting AI outputs and working with data teams. Understanding data structures, metrics, and AI algorithms allows PMs to ask the right questions and make informed decisions.&lt;/p&gt;
 &lt;h3 id=&#34;-cultivate-empathy&#34;&gt;❤️ Cultivate Empathy&lt;/h3&gt;
@@ -191,11 +166,11 @@ When faced with a choice between immediate rewards and long-term benefits, we in
         </item>
         <item>
         <title>The Art of Saying No - a PM Superpower</title>
-        <link>https://www.arjunuvacha.com/p/the-art-of-saying-no-a-pm-superpower/</link>
+        <link>https://arjunuvacha.com/p/the-art-of-saying-no-a-pm-superpower/</link>
         <pubDate>Fri, 19 Jul 2024 19:12:43 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/the-art-of-saying-no-a-pm-superpower/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/the-art-of-saying-no-a-pm-superpower/unlockingproducts.jpg" alt="Featured image of post The Art of Saying No - a PM Superpower" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/the-art-of-saying-no-a-pm-superpower/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/the-art-of-saying-no-a-pm-superpower/unlockingproducts.jpg" alt="Featured image of post The Art of Saying No - a PM Superpower" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 If you’re a product manager, you’ve likely been in situations where you’ve had to make tough calls—balancing stakeholder demands, team capacity, and user needs. Let’s face it, saying no is hard, especially when you’re dealing with passionate team members and ambitious business goals. But here’s the thing: Saying no is not a limitation. It’s a superpower.&lt;/p&gt;
 &lt;p&gt;Let me take you through my journey as a product manager and share why learning to say no has been one of the most impactful skills I’ve developed.&lt;/p&gt;
 &lt;hr&gt;
@@ -275,11 +250,11 @@ When faced with a choice between immediate rewards and long-term benefits, we in
         </item>
         <item>
         <title>16 Product Management Tools That Will Make Your Life Easy</title>
-        <link>https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/</link>
+        <link>https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/</link>
         <pubDate>Thu, 16 Feb 2023 19:43:32 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/pm-tools.png" alt="Featured image of post 16 Product Management Tools That Will Make Your Life Easy" /&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+        <guid>https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/pm-tools.png" alt="Featured image of post 16 Product Management Tools That Will Make Your Life Easy" /&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Over the past few years of working as a Product Manager, I have realised that a Product Manager needs to have a good grasp and control over a lot of things which cannot be left to chance. Doing this, with multiple stakeholders, a variety of user problems, and a bunch of different types of users is a nightmare if you are not equipped sufficiently.&lt;/p&gt;
 &lt;p&gt;So, to help other Product Managers or aspiring Product Managers, I have compiled a list of tools that I have benefitted from, which I think will benefit you also. This list of top Product Management tools, I believe, would help you improve your work. If you are looking for tools that help you be more effective at work, continue reading…&lt;/p&gt;
 &lt;p&gt;NOTE: I will publish another list of tools that would help you propel your personal growth. Keeping watching this space!&lt;/p&gt;
@@ -300,10 +275,10 @@ When faced with a choice between immediate rewards and long-term benefits, we in
 &lt;p&gt;As a Product Manager, you could indulge in different ways of discovering user problems and pain points: face-to-face user interviews, online user interviews, surveys, market research, data analysis etc. I have suggested a few tools for conducting user interviews, and surveys and organizing the findings. The other ways of discovering - market research and data analysis - are very broad and I have left them out.&lt;/p&gt;
 &lt;h3 id=&#34;user-interviews&#34;&gt;User interviews&lt;/h3&gt;
 &lt;h4 id=&#34;calendly&#34;&gt;Calendly&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/calendly.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/calendly.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/calendly_hu3810a59ef37317c73b3331fc29729d3b_127547_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/calendly_hu3810a59ef37317c73b3331fc29729d3b_127547_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/calendly_hu3810a59ef37317c73b3331fc29729d3b_127547_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/calendly_hu3810a59ef37317c73b3331fc29729d3b_127547_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Calendly&#34;
@@ -326,10 +301,10 @@ Calendly lets you create your availability schedule on a calendar and share it w
     &gt;HERE&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id=&#34;surveys&#34;&gt;Surveys&lt;/h3&gt;
 &lt;h4 id=&#34;typeform&#34;&gt;Typeform&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/typeform.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/typeform.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/typeform_hud99610a55e452732702c795e7a8ba5a0_114946_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/typeform_hud99610a55e452732702c795e7a8ba5a0_114946_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/typeform_hud99610a55e452732702c795e7a8ba5a0_114946_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/typeform_hud99610a55e452732702c795e7a8ba5a0_114946_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Typeform&#34;
@@ -346,10 +321,10 @@ When it comes to surveys, I think Typeform is one of the best services out there
 &lt;h3 id=&#34;online-user-interviews&#34;&gt;Online user interviews&lt;/h3&gt;
 &lt;p&gt;Many times, you may not be able to do a user interview by meeting the person face-to-face due to geographical constraints or simply because you don’t have time. Though meeting in person brings a lot of credibility to the user interviews, you can make use of online meeting tools to conduct online user interviews.&lt;/p&gt;
 &lt;h4 id=&#34;zoom&#34;&gt;Zoom&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/zoom.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/zoom.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/zoom_hub676e5e01741b3465b28d4e63d119802_109519_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/zoom_hub676e5e01741b3465b28d4e63d119802_109519_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/zoom_hub676e5e01741b3465b28d4e63d119802_109519_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/zoom_hub676e5e01741b3465b28d4e63d119802_109519_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Zoom&#34;
@@ -365,10 +340,10 @@ Zoom is now widely adopted after the Covid pandemic and is one of the easy-to-us
 &lt;p&gt;&lt;strong&gt;Find Zoom &lt;a class=&#34;link&#34; href=&#34;https://zoom.us/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;HERE&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;h4 id=&#34;google-meet&#34;&gt;Google Meet&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlemeet.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlemeet.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlemeet_hu6228520bd13ead38f52b1ce1791fda3f_96196_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlemeet_hu6228520bd13ead38f52b1ce1791fda3f_96196_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlemeet_hu6228520bd13ead38f52b1ce1791fda3f_96196_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlemeet_hu6228520bd13ead38f52b1ce1791fda3f_96196_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Google Meet&#34;
@@ -386,10 +361,10 @@ Another alternative here is Google Meet. It is FREE and does not have any time l
 &lt;p&gt;It is one thing to conduct user interviews, market research and data analysis, and an altogether different things to organise the research to gather insights.&lt;/p&gt;
 &lt;p&gt;If I don’t sound too simplistic, I use very simple and easily available tools for my organisation and prioritisation of user problems.&lt;/p&gt;
 &lt;h4 id=&#34;google-drive&#34;&gt;Google Drive&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googledrive.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googledrive.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googledrive_huf8f13db7efef0f2aff07b2fdb3257378_126253_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googledrive_huf8f13db7efef0f2aff07b2fdb3257378_126253_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googledrive_huf8f13db7efef0f2aff07b2fdb3257378_126253_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googledrive_huf8f13db7efef0f2aff07b2fdb3257378_126253_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Google Drive&#34;
@@ -405,10 +380,10 @@ Yes, you read it right! The first one is Google Drive!&lt;/p&gt;
 &lt;p&gt;I label all my user interview recordings, survey findings, and market research documents in a proper referencable manner and upload them on Google Drive.&lt;/p&gt;
 &lt;p&gt;Having everything on Google Drive also helps me share my research with others very easily! So, the collaboration also becomes effective.&lt;/p&gt;
 &lt;h4 id=&#34;google-sheets&#34;&gt;Google Sheets&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlesheets.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlesheets.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlesheets_hu35b788fc000b850c0cb5891fa027df5f_130587_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlesheets_hu35b788fc000b850c0cb5891fa027df5f_130587_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlesheets_hu35b788fc000b850c0cb5891fa027df5f_130587_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googlesheets_hu35b788fc000b850c0cb5891fa027df5f_130587_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Google Sheets&#34;
@@ -431,10 +406,10 @@ High-fidelity designing&lt;/p&gt;
 &lt;h3 id=&#34;wireframing&#34;&gt;Wireframing&lt;/h3&gt;
 &lt;p&gt;Over time, I realised that it is easier to convey things by drawing them rather than by writing them. I mean, a picture is worth a thousand words, right? So, wireframing is very important, hence it calls for a good wireframing tool!&lt;/p&gt;
 &lt;h4 id=&#34;balsamiq&#34;&gt;Balsamiq&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/balsamiq.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/balsamiq.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/balsamiq_huc499a78eee90572a5e8763b0814e7030_87706_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/balsamiq_huc499a78eee90572a5e8763b0814e7030_87706_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/balsamiq_huc499a78eee90572a5e8763b0814e7030_87706_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/balsamiq_huc499a78eee90572a5e8763b0814e7030_87706_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Balsamiq&#34;
@@ -451,10 +426,10 @@ I have used Balsamiq for over 5 years now and would recommend it to anyone who i
     &gt;HERE&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id=&#34;high-fidelity-designing&#34;&gt;High-fidelity designing&lt;/h3&gt;
 &lt;h4 id=&#34;figma&#34;&gt;Figma&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/figma.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/figma.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/figma_hub1c01eb56bc59aaf65d9e94a2d9c0400_128944_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/figma_hub1c01eb56bc59aaf65d9e94a2d9c0400_128944_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/figma_hub1c01eb56bc59aaf65d9e94a2d9c0400_128944_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/figma_hub1c01eb56bc59aaf65d9e94a2d9c0400_128944_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Figma&#34;
@@ -478,10 +453,10 @@ In fact, I use Figma for a lot of my personal works as well - from creating pict
 &lt;p&gt;One important job for me as a Product Manager after the prototype is tested is to get it developed by the engineering team. And be on top of things and ensure that the timelines are met. This is nothing but essentially project management and I cannot run away from it.&lt;/p&gt;
 &lt;p&gt;There are a good number of tools to do this, especially in the software products space. I would recommend a couple of them.&lt;/p&gt;
 &lt;h3 id=&#34;jira&#34;&gt;Jira&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/jira.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/jira.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/jira_hu854616697292acd34435fa4cb333b644_104330_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/jira_hu854616697292acd34435fa4cb333b644_104330_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/jira_hu854616697292acd34435fa4cb333b644_104330_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/jira_hu854616697292acd34435fa4cb333b644_104330_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Jira&#34;
@@ -497,10 +472,10 @@ A well know name, Jira is of the most widely used software product management to
 &lt;p&gt;&lt;strong&gt;Find Jira &lt;a class=&#34;link&#34; href=&#34;https://www.atlassian.com/software/jira&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;HERE&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id=&#34;trello&#34;&gt;Trello&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/trello.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/trello.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/trello_huf8e1933b19cdc51cc432767c1ad1dcd6_94070_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/trello_huf8e1933b19cdc51cc432767c1ad1dcd6_94070_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/trello_huf8e1933b19cdc51cc432767c1ad1dcd6_94070_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/trello_huf8e1933b19cdc51cc432767c1ad1dcd6_94070_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Trello&#34;
@@ -520,10 +495,10 @@ Another Project Management tool that we used in our Startup was Trello.&lt;/p&gt
 &lt;p&gt;Product launches could be done either by doing a controlled release (also called a Beta release or A/B testing) to a set of users or by releasing the product to all users.&lt;/p&gt;
 &lt;p&gt;For A/B testing (of web pages), there are multiple tools which offer A/B testing functionalities. The top one that I have come across is Optimizely.&lt;/p&gt;
 &lt;h3 id=&#34;optimizely&#34;&gt;Optimizely&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/optimizely.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/optimizely.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/optimizely_huf292b08bb41c9288d9bd38ec44c2f269_107602_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/optimizely_huf292b08bb41c9288d9bd38ec44c2f269_107602_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/optimizely_huf292b08bb41c9288d9bd38ec44c2f269_107602_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/optimizely_huf292b08bb41c9288d9bd38ec44c2f269_107602_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Optimizely&#34;
@@ -541,10 +516,10 @@ You can use Optimizely to split your traffic to the A version (typically the old
 &lt;p&gt;Once the product is launched (or is ready for launch), product marketing becomes very crucial in taking it to the users. Product marketing is a subject in itself. Keeping it simple, I will just focus on the tools used for online marketing - especially through email and Push Notifications. (Note that there are many other online and offline channels of marketing: SMS, WhatsApp, blog posts, social media posts, news articles, TV, Radio etc which I am leaving out here.)&lt;/p&gt;
 &lt;p&gt;For email/push notifications, a few suggestions are Mailchimp and Hubspot.&lt;/p&gt;
 &lt;h3 id=&#34;mailchimp&#34;&gt;Mailchimp&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mailchimp.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mailchimp.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mailchimp_hu9da5397566a935b18ed436500330832a_123934_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mailchimp_hu9da5397566a935b18ed436500330832a_123934_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mailchimp_hu9da5397566a935b18ed436500330832a_123934_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mailchimp_hu9da5397566a935b18ed436500330832a_123934_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Mailchimp&#34;
@@ -559,10 +534,10 @@ Probably the widely known name in email marketing. Mailchimp offers templates, a
 &lt;p&gt;&lt;strong&gt;Find Mailchimp &lt;a class=&#34;link&#34; href=&#34;https://mailchimp.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;HERE&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id=&#34;hubspot&#34;&gt;HubSpot&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hubspot.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hubspot.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hubspot_hue77c82cf04541204809ff70e9b33d314_105647_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hubspot_hue77c82cf04541204809ff70e9b33d314_105647_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hubspot_hue77c82cf04541204809ff70e9b33d314_105647_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hubspot_hue77c82cf04541204809ff70e9b33d314_105647_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hubspot&#34;
@@ -580,10 +555,10 @@ HubSpot offers a variety of services: CRM, marketing automation, sales automatio
 &lt;p&gt;After the product is out there in the market, in the hands of the users, you need to figure out if the product is meeting its objectives, analyse whether the users are consuming the product as expected, or figure out if there are any issues that arose after the product launch.&lt;/p&gt;
 &lt;p&gt;Again, multiple tools offer this service and there are many good tools as well. So, choose as you like.&lt;/p&gt;
 &lt;h3 id=&#34;google-analytics&#34;&gt;Google Analytics&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googleanalytics.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googleanalytics.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googleanalytics_hu02ca4780b4a41e98a8b2e9aefe2d04f5_133128_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googleanalytics_hu02ca4780b4a41e98a8b2e9aefe2d04f5_133128_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googleanalytics_hu02ca4780b4a41e98a8b2e9aefe2d04f5_133128_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/googleanalytics_hu02ca4780b4a41e98a8b2e9aefe2d04f5_133128_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;GA&#34;
@@ -597,10 +572,10 @@ HubSpot offers a variety of services: CRM, marketing automation, sales automatio
 Among the many products in its portfolio, Google Analytics is one such product that is used by almost everyone I know in the Product and Technology space. From giving the basic insights around unique page views, unique users, and duration on the page, it gives more nuanced information about user acquisition channels and other engagement metrics with an option to slice and dice the data across multiple user and product dimensions.&lt;/p&gt;
 &lt;p&gt;If your Analytics is integrated with Google Ads and Google Adsense, you can get insights around the Ad Spend for customer acquisition or money made from Ads on your web/App as well!&lt;/p&gt;
 &lt;h3 id=&#34;mixpanel&#34;&gt;Mixpanel&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mixpanel.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mixpanel.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mixpanel_hud045c6fd94fe573b2665c389c7f9f080_142229_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mixpanel_hud045c6fd94fe573b2665c389c7f9f080_142229_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mixpanel_hud045c6fd94fe573b2665c389c7f9f080_142229_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/mixpanel_hud045c6fd94fe573b2665c389c7f9f080_142229_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Mixpanel&#34;
@@ -617,10 +592,10 @@ I used Mixpanel when I was at Phable care. And there are so many reasons why I l
 &lt;p&gt;&lt;strong&gt;Find Mixpanle &lt;a class=&#34;link&#34; href=&#34;https://mixpanel.com/home/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;HERE&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id=&#34;hotjar&#34;&gt;Hotjar&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hotjar.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hotjar.png&#34;
 	width=&#34;2000&#34;
 	height=&#34;540&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hotjar_hu0fa328bb71a10b1f461f6f1e2c56abd6_109176_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hotjar_hu0fa328bb71a10b1f461f6f1e2c56abd6_109176_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hotjar_hu0fa328bb71a10b1f461f6f1e2c56abd6_109176_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/16-product-management-tools-that-will-make-your-life-easy/hotjar_hu0fa328bb71a10b1f461f6f1e2c56abd6_109176_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hotjar&#34;
@@ -647,11 +622,11 @@ One primary use case I find tools like Hotjar (or Smartlook) solve is the ease o
         </item>
         <item>
         <title>How to identify the right problems to solve?</title>
-        <link>https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/</link>
+        <link>https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/</link>
         <pubDate>Sat, 04 Feb 2023 19:00:10 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/right-problems.jpg" alt="Featured image of post How to identify the right problems to solve?" /&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+        <guid>https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/right-problems.jpg" alt="Featured image of post How to identify the right problems to solve?" /&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;As Product Managers, our primary responsibility is to solve user problems and make the user’s life easy. More often than not, we are tasked to deal with one or the other complex problem with a lot of nuances, made up of smaller interconnected problems making it a complex web to address.&lt;/p&gt;
 &lt;p&gt;For example, look at the following problem statement: &lt;strong&gt;Increase the monthly revenue from the &amp;lsquo;Electronics&amp;rsquo; product category of an e-commerce website by 10%.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;It is a vague problem to work on. But you can get started by asking some questions to understand the problem better, like:&lt;/p&gt;
@@ -716,10 +691,10 @@ One primary use case I find tools like Hotjar (or Smartlook) solve is the ease o
 &lt;p&gt;By doing this, instead of looking at a complex problem, I will now be able to look at a list of categorised tasks, the effort required to perform them and their impact on Abhinav.&lt;/p&gt;
 &lt;p&gt;I have broken these jobs into two categories: Prep and Cook, and assigned their level of difficulty and impact.&lt;/p&gt;
 &lt;p&gt;The matrix would look something like this:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/jobs-with-difficulty-impact.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/jobs-with-difficulty-impact.png&#34;
 	width=&#34;1094&#34;
 	height=&#34;432&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/jobs-with-difficulty-impact_huddcc7fdeee2988f8cd567e9568686675_174126_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/jobs-with-difficulty-impact_huddcc7fdeee2988f8cd567e9568686675_174126_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/jobs-with-difficulty-impact_huddcc7fdeee2988f8cd567e9568686675_174126_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/jobs-with-difficulty-impact_huddcc7fdeee2988f8cd567e9568686675_174126_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Jobs to be done - difficulty and impact matrix&#34;
@@ -745,10 +720,10 @@ One primary use case I find tools like Hotjar (or Smartlook) solve is the ease o
 &lt;h3 id=&#34;adding-the-difficulty-x-impact-column&#34;&gt;Adding the Difficulty x Impact column&lt;/h3&gt;
 &lt;p&gt;How do I make this entire process less difficult?&lt;/p&gt;
 &lt;p&gt;Let’s add one column to this matrix: Difficulty x Impact = product of difficulty points and impact points. The matrix would look like this:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-column-added.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-column-added.png&#34;
 	width=&#34;1342&#34;
 	height=&#34;430&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-column-added_hu35ec9111afcc0cd4692c736bd955b192_86767_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-column-added_hu35ec9111afcc0cd4692c736bd955b192_86767_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-column-added_hu35ec9111afcc0cd4692c736bd955b192_86767_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-column-added_hu35ec9111afcc0cd4692c736bd955b192_86767_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Adding the difficulty x impact column&#34;
@@ -761,10 +736,10 @@ One primary use case I find tools like Hotjar (or Smartlook) solve is the ease o
 &gt;&lt;/p&gt;
 &lt;p&gt;Now, if I had to choose which jobs to work on, to give a better cooking experience, I would  choose the ones with &lt;strong&gt;High Difficulty and High Impact.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;This can be achieved by looking at the &lt;strong&gt;‘Difficulty x Impact’ column&lt;/strong&gt;, I would get the prioritised jobs as:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-prioritisation.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-prioritisation.png&#34;
 	width=&#34;1346&#34;
 	height=&#34;442&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-prioritisation_hu12c203b5309d8d8d3f3863e5224263a6_95348_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-prioritisation_hu12c203b5309d8d8d3f3863e5224263a6_95348_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-prioritisation_hu12c203b5309d8d8d3f3863e5224263a6_95348_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/difficulty-impact-prioritisation_hu12c203b5309d8d8d3f3863e5224263a6_95348_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Prioritising based on difficulty x impact&#34;
@@ -792,10 +767,10 @@ One primary use case I find tools like Hotjar (or Smartlook) solve is the ease o
 &lt;/ol&gt;
 &lt;h4 id=&#34;the-outcome-rice-is-cooked&#34;&gt;The outcome: Rice is cooked!&lt;/h4&gt;
 &lt;p&gt;If we look at the matrix again, replacing the pressure cooker with an electric cooker, it would look something like this:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/electric-cooker-matrix.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/electric-cooker-matrix.png&#34;
 	width=&#34;994&#34;
 	height=&#34;344&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/electric-cooker-matrix_hu524c5443e905984527875531bb85d7a3_147809_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/electric-cooker-matrix_hu524c5443e905984527875531bb85d7a3_147809_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/electric-cooker-matrix_hu524c5443e905984527875531bb85d7a3_147809_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/how-to-identify-the-right-problems-to-solve/electric-cooker-matrix_hu524c5443e905984527875531bb85d7a3_147809_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Problem solved with electric cooker&#34;
@@ -819,11 +794,11 @@ Well, think again!&lt;/p&gt;
         </item>
         <item>
         <title>The Value of Defaults</title>
-        <link>https://www.arjunuvacha.com/p/the-value-of-defaults/</link>
+        <link>https://arjunuvacha.com/p/the-value-of-defaults/</link>
         <pubDate>Sun, 22 Jan 2023 16:16:32 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/the-value-of-defaults/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/the-value-of-defaults/defaults-resized.jpg" alt="Featured image of post The Value of Defaults" /&gt;&lt;h2 id=&#34;lets-start-with-a-story&#34;&gt;Let’s start with a story&lt;/h2&gt;
+        <guid>https://arjunuvacha.com/p/the-value-of-defaults/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/the-value-of-defaults/defaults-resized.jpg" alt="Featured image of post The Value of Defaults" /&gt;&lt;h2 id=&#34;lets-start-with-a-story&#34;&gt;Let’s start with a story&lt;/h2&gt;
 &lt;p&gt;I have recently migrated from an Android smartphone to an iPhone. One stark difference I saw between the both of them was in their default settings. This difference was stark yet so subtle that it’s hard to realise unless you pay attention.&lt;/p&gt;
 &lt;p&gt;Diving into the story… I remember when I was using the Android smartphone I had to follow this routine of going through my notifications at the end of the day, clearing off the irrelevant ones to figure out if anything needed my attention. However, I was often swindled by some irrelevant notification which should not have had my attention. I then, without any intention, spent the next hour or two browsing random Apps which otherwise did not provide any value to me.&lt;/p&gt;
 &lt;p&gt;After an hour-long unproductive exercise, I used to convince myself that it was probably worth spending that time. “&lt;em&gt;I got relaxed. Great stress-buster&lt;/em&gt;,” I gave false assurance to myself. The particularly impermissible part about this was this happened day after day, every day.&lt;/p&gt;
@@ -915,11 +890,11 @@ Well, think again!&lt;/p&gt;
         </item>
         <item>
         <title>How the iPhone disappointed me!</title>
-        <link>https://www.arjunuvacha.com/p/how-the-iphone-disappointed-me/</link>
+        <link>https://arjunuvacha.com/p/how-the-iphone-disappointed-me/</link>
         <pubDate>Tue, 02 Nov 2021 14:10:54 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/how-the-iphone-disappointed-me/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/how-the-iphone-disappointed-me/iphone.jpg" alt="Featured image of post How the iPhone disappointed me!" /&gt;&lt;p&gt;Despite the widespread belief that the iPhone is a product manager’s marvel, I do see some very infuriating features (rather the lack of them) that when I switched from an Android to iPhone, I was disappointed. Not just disappointed, I felt lost, helpless and angry.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/how-the-iphone-disappointed-me/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/how-the-iphone-disappointed-me/iphone.jpg" alt="Featured image of post How the iPhone disappointed me!" /&gt;&lt;p&gt;Despite the widespread belief that the iPhone is a product manager’s marvel, I do see some very infuriating features (rather the lack of them) that when I switched from an Android to iPhone, I was disappointed. Not just disappointed, I felt lost, helpless and angry.&lt;/p&gt;
 &lt;p&gt;I wouldn’t have bought a new phone had Xiaomi given an Android OS upgrade from Nougat to Oreo, but that was not going to happen. I didn’t mind working on the Nougat OS either but I had just one problem - Slack deprecated its App for the Nougat OS and Slack is our company’s internal communication App! So, in a way, I was forced to buy a new phone. 🤷🏻‍♂️&lt;/p&gt;
 &lt;p&gt;One major requirement for me was to have a small and sleek phone. I did not want to carry a bulky, huge, not-fitting-in-my pocket kind of a phone. When I searched the market for a suitable option, iPhone was the only option with smaller screen sizes. It was hard for me to consider iPhone (from Android) as the best option, but I did. I bought the iPhone 12 Mini.&lt;/p&gt;
 &lt;p&gt;It took a while for me to get adjusted to the iOS ecosystem, but I got a hang of it in a few days. I love some of the features and use them daily, but I also miss some beautiful and simple features which I enjoyed on my Android.&lt;/p&gt;
@@ -948,19 +923,19 @@ That is for some other day!&lt;/p&gt;
         </item>
         <item>
         <title>Cognitive Biases - Part 07: Belief Bias</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-belief-bias/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-belief-bias/</link>
         <pubDate>Sun, 11 Jul 2021 21:03:07 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-belief-bias/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-belief-bias/belief-bias.png" alt="Featured image of post Cognitive Biases - Part 07: Belief Bias" /&gt;&lt;p&gt;👋🏼👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-belief-bias/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-belief-bias/belief-bias.png" alt="Featured image of post Cognitive Biases - Part 07: Belief Bias" /&gt;&lt;p&gt;👋🏼👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the seventh in a series of articles I am writing on Cognitive Biases. If you haven’t read the other six yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;p&gt;Let&amp;rsquo;s get started with this one!&lt;/p&gt;
@@ -992,7 +967,7 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
 &lt;p&gt;Let&amp;rsquo;s look at a couple of my personal experiences around this.&lt;/p&gt;
 &lt;h2 id=&#34;the-belief-dilemma&#34;&gt;The belief dilemma&lt;/h2&gt;
 &lt;h3 id=&#34;lesson-from-my-first-startup&#34;&gt;Lesson from my first startup&lt;/h3&gt;
-&lt;p&gt;My first startup was WhatsDplan (more details about this in my earlier article &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;IKEA effect&lt;/a&gt;&lt;/strong&gt;). We started WhatsDdplan because we believed in the idea. And frankly, this belief is good. Without any belief, you wouldn’t achieve anything great. Belief is needed to do something which otherwise would not have been possible. If you want to conquer the moon you need to first believe it and then only will you be able to experience it. But even for that, you need to have a very good grasp of reality and not be drown in a false sense of belief.&lt;/p&gt;
+&lt;p&gt;My first startup was WhatsDplan (more details about this in my earlier article &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;IKEA effect&lt;/a&gt;&lt;/strong&gt;). We started WhatsDdplan because we believed in the idea. And frankly, this belief is good. Without any belief, you wouldn’t achieve anything great. Belief is needed to do something which otherwise would not have been possible. If you want to conquer the moon you need to first believe it and then only will you be able to experience it. But even for that, you need to have a very good grasp of reality and not be drown in a false sense of belief.&lt;/p&gt;
 &lt;p&gt;My assessment about ‘WhatsDplan’, if I recollect some of the discussions I have had with a few investors and also with a few of my friends and colleagues, was riveted around belief and belief alone! Rather than a strong argument on ‘why’ exactly would it work, I thought it will work because ‘WE’ were building it and we were good. We were invested in the idea since the beginning and did not want to doubt it even for a little while. We carried on with a lot of vigour and purpose, and did not want to give up.&lt;/p&gt;
 &lt;p&gt;Unfortunately, the startup ended in a tragedy. We had to shut it down after a year-long effort to make it work. We missed a lot of critical observations and assessments which could have helped us pivot and survive. Well, let&amp;rsquo;s save that story for another day!&lt;/p&gt;
 &lt;h3 id=&#34;skewed-beliefs-of-my-friend&#34;&gt;Skewed beliefs of my friend&lt;/h3&gt;
@@ -1055,11 +1030,11 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
         </item>
         <item>
         <title>How to Land a Product Manager Job?</title>
-        <link>https://www.arjunuvacha.com/p/how-to-land-a-product-manager-job/</link>
+        <link>https://arjunuvacha.com/p/how-to-land-a-product-manager-job/</link>
         <pubDate>Sun, 27 Jun 2021 13:39:38 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/how-to-land-a-product-manager-job/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/how-to-land-a-product-manager-job/product-interview.jpg" alt="Featured image of post How to Land a Product Manager Job?" /&gt;&lt;p&gt;In 2019, I was in Sales at Treebo, taking care of a couple of regions in the South. While this role was good, I felt I had a strong passion for problem solving and building products. Though I had a desire to move into Product, neither did I have enough courage to make the move nor did I have interest to start preparing for a new role altogether. I knew, I got complacent.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/how-to-land-a-product-manager-job/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/how-to-land-a-product-manager-job/product-interview.jpg" alt="Featured image of post How to Land a Product Manager Job?" /&gt;&lt;p&gt;In 2019, I was in Sales at Treebo, taking care of a couple of regions in the South. While this role was good, I felt I had a strong passion for problem solving and building products. Though I had a desire to move into Product, neither did I have enough courage to make the move nor did I have interest to start preparing for a new role altogether. I knew, I got complacent.&lt;/p&gt;
 &lt;p&gt;And then it happened. Sighting funding reasons, Treebo laid off about 200 of its employees, and I was one of them. I got lucky, I should say! Though it was a bit of a shocker for me, it was a blessing in disguise&amp;hellip; That finally let me try my hand at Product.&lt;/p&gt;
 &lt;p&gt;And as a I moved from Sales to Product, the transition was anything but easy.&lt;/p&gt;
 &lt;p&gt;Landing a PM interview itself was a big hurdle, leave alone getting selected. Nevertheless, with the right attitude and approach to becoming a Product Manager, I was able to make it. It took me about two months to land an interview and a good four months to get selected at Edureka, my first company as a Product Manager.&lt;/p&gt;
@@ -1172,23 +1147,23 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
 &lt;p&gt;👍🏼 Hope you found this useful. If you think this could help any other aspiring Product Manager, do share it with them too!&lt;/p&gt;
 &lt;p&gt;💬 &lt;strong&gt;Also, if you need my help with anything else, do leave your comment below!&lt;/strong&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/&#34; &gt;&amp;hellip;Continue to my blog to read more articles&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/&#34; &gt;&amp;hellip;Continue to my blog to read more articles&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 </description>
         </item>
         <item>
         <title>Cognitive Biases - Part 06: Forer Effect</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-forer-effect/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-forer-effect/</link>
         <pubDate>Tue, 22 Jun 2021 00:04:18 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-forer-effect/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-forer-effect/forer-effect.png" alt="Featured image of post Cognitive Biases - Part 06: Forer Effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-forer-effect/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-forer-effect/forer-effect.png" alt="Featured image of post Cognitive Biases - Part 06: Forer Effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the sixth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other five yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;what-is-the-forer-effect&#34;&gt;What is the Forer effect?&lt;/h2&gt;
@@ -1247,17 +1222,17 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
         </item>
         <item>
         <title>Cognitive Biases - Part 05: Framing Effect</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-framing-effect/</link>
         <pubDate>Mon, 21 Jun 2021 23:41:24 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect.jpg" alt="Featured image of post Cognitive Biases - Part 05: Framing Effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-framing-effect/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect.jpg" alt="Featured image of post Cognitive Biases - Part 05: Framing Effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the fifth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other four yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;p&gt;Ok, let’s get started with this one.&lt;/p&gt;
@@ -1296,10 +1271,10 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
 &lt;p&gt;Interesting examples, but sound too far-fetched. How do they relate to me, hmmm?&lt;br&gt;
 Hold on!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Do you go well with memes?&lt;/strong&gt;
-&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme.jpeg&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme.jpeg&#34;
 	width=&#34;1400&#34;
 	height=&#34;787&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme_huaf3960c9a10ac7c0ef797621d0e58110_95224_480x0_resize_q75_box.jpeg 480w, https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme_huaf3960c9a10ac7c0ef797621d0e58110_95224_1024x0_resize_q75_box.jpeg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme_huaf3960c9a10ac7c0ef797621d0e58110_95224_480x0_resize_q75_box.jpeg 480w, https://arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme_huaf3960c9a10ac7c0ef797621d0e58110_95224_1024x0_resize_q75_box.jpeg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Framing Effect&#34;
@@ -1314,10 +1289,10 @@ Hold on!&lt;/p&gt;
 &lt;h2 id=&#34;the-classic-tale-of-discount-marketing&#34;&gt;The classic tale of discount marketing&lt;/h2&gt;
 &lt;p&gt;You are drawn to the discount ‘%’ more than the price itself. The discount % is perceived as saving, as a benefit. And the mind is tricked into believing that you are actually in for a good deal. &lt;strong&gt;A 50% off deal cannot be bad, right?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;This trick is used in a myriad number of ways. Let’s see.
-&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store.jpeg&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store.jpeg&#34;
 	width=&#34;400&#34;
 	height=&#34;300&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store_huf4a072f37926aa75d784996d03e14611_16431_480x0_resize_q75_box.jpeg 480w, https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store_huf4a072f37926aa75d784996d03e14611_16431_1024x0_resize_q75_box.jpeg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store_huf4a072f37926aa75d784996d03e14611_16431_480x0_resize_q75_box.jpeg 480w, https://arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store_huf4a072f37926aa75d784996d03e14611_16431_1024x0_resize_q75_box.jpeg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shoe Store Discount&#34;
@@ -1330,10 +1305,10 @@ Hold on!&lt;/p&gt;
 &gt;&lt;/p&gt;
 &lt;p&gt;A shoe store displays 40% off. You get lured, you enter the store and try different shoes. However, you notice that the 40% off is only on a few shoes displayed at the corner, as part of the clearance sale, not on all the shoes. But having entered the store already you are reluctant to leave now. And inside the store, the sales agents are ready to entice you more, serve you more and make you feel like their hero. And you try more shoes. The chances are you end up buying a different shoe than what you anticipated when you entered. Happened with you?&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Another example&lt;/strong&gt;
-&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream.jpeg&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream.jpeg&#34;
 	width=&#34;400&#34;
 	height=&#34;300&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream_hu009182573146785f7be216a616894523_18620_480x0_resize_q75_box.jpeg 480w, https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream_hu009182573146785f7be216a616894523_18620_1024x0_resize_q75_box.jpeg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream_hu009182573146785f7be216a616894523_18620_480x0_resize_q75_box.jpeg 480w, https://arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream_hu009182573146785f7be216a616894523_18620_1024x0_resize_q75_box.jpeg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Fat Free Ice-cream&#34;
@@ -1374,16 +1349,16 @@ Hold on!&lt;/p&gt;
         </item>
         <item>
         <title>Cognitive Biases - Part 04: Availability Heuristic</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-availability-heuristic/</link>
         <pubDate>Mon, 21 Jun 2021 23:22:49 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/availability-heuristic.png" alt="Featured image of post Cognitive Biases - Part 04: Availability Heuristic" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by!&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-availability-heuristic/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-availability-heuristic/availability-heuristic.png" alt="Featured image of post Cognitive Biases - Part 04: Availability Heuristic" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by!&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the fourth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other three yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;p&gt;Let’s get started with this one.&lt;/p&gt;
@@ -1431,9 +1406,9 @@ Hold on!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Hmm. Gotcha.&lt;/strong&gt;&lt;/p&gt;
 &lt;h2 id=&#34;why-do-we-have-this-bias-anyway&#34;&gt;Why do we have this bias, anyway?&lt;/h2&gt;
 &lt;p&gt;All cognitive biases are based on the fact that our brain is lazy and doesn’t want to do any work unless necessary. That it wants to waste as few resources as possible and consume lesser and lesser energy. And use it only when needed, in the best possible way. However, for the brain to take the best possible way and use the resources in an efficient way we have to train it! But we don’t do that very often, do we?&lt;/p&gt;
-&lt;p&gt;Whenever there is a need to process information, the mind looks for the easiest possible way to do it. Of the many ways and shortcuts which the mind takes — I discussed a few of these in my previous articles &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;IKEA effect&lt;/a&gt;&lt;/strong&gt; — finding a similar example for comparison is probably more qualified yet an easier option.&lt;/p&gt;
+&lt;p&gt;Whenever there is a need to process information, the mind looks for the easiest possible way to do it. Of the many ways and shortcuts which the mind takes — I discussed a few of these in my previous articles &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;IKEA effect&lt;/a&gt;&lt;/strong&gt; — finding a similar example for comparison is probably more qualified yet an easier option.&lt;/p&gt;
 &lt;p&gt;When you judge someone or something, you automatically scan for a benchmark — a benchmark in that category or in that field or in that country or in that region or the community or in that era. Anything that could be used to form some notion about whether this someone or something is good in comparison with the immediate examples that occur to you, that you could recollect.&lt;/p&gt;
-&lt;p&gt;But that’s not how judgements are supposed to be made — read my article on &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt;&lt;/strong&gt; where I talk about how judgements should usually be made.&lt;/p&gt;
+&lt;p&gt;But that’s not how judgements are supposed to be made — read my article on &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt;&lt;/strong&gt; where I talk about how judgements should usually be made.&lt;/p&gt;
 &lt;h2 id=&#34;so-how-to-avoid-falling-into-these-pitfalls&#34;&gt;So, how to avoid falling into these pitfalls?&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Try and avoid getting into ‘urgent’ situations.&lt;/strong&gt; Give your mind enough time and resources to take a calculated decision. This could be done by avoiding getting into ‘urgent’ situations as much as possible.&lt;/li&gt;
@@ -1450,16 +1425,16 @@ Hold on!&lt;/p&gt;
         </item>
         <item>
         <title>Hooked - book review</title>
-        <link>https://www.arjunuvacha.com/p/hooked-book-review/</link>
+        <link>https://arjunuvacha.com/p/hooked-book-review/</link>
         <pubDate>Thu, 04 Mar 2021 20:40:29 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/hooked-book-review/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/hooked-book-review/dice.jpg" alt="Featured image of post Hooked - book review" /&gt;&lt;p&gt;Hooked is one of those books which I would recommend to every aspiring Product Manager. In fact, anyone who is even sparsely connected with human psychology or behaviour should read this. It is a short, quick read and insightful with some clever real-world examples.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/hooked-book-review/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/hooked-book-review/dice.jpg" alt="Featured image of post Hooked - book review" /&gt;&lt;p&gt;Hooked is one of those books which I would recommend to every aspiring Product Manager. In fact, anyone who is even sparsely connected with human psychology or behaviour should read this. It is a short, quick read and insightful with some clever real-world examples.&lt;/p&gt;
 &lt;p&gt;While reading the book, I had collated some important and wow moments in my notepad. I wanted to share them with others and thus this article. Please note that this in no way is the gist of the book! These are just some cool observations I made while reading the book and there could be plenty other cool observations I would have missed. So, I strongly recommend you to read the book than reading this article (yes, I am trying to sabotage myself here! — anything for a good read, right?).&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/hooked-book-review/hooked.jpeg&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/hooked-book-review/hooked.jpeg&#34;
 	width=&#34;1920&#34;
 	height=&#34;811&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/hooked-book-review/hooked_hucf6db1edf0a21adf1f37daf378f596df_95450_480x0_resize_q75_box.jpeg 480w, https://www.arjunuvacha.com/p/hooked-book-review/hooked_hucf6db1edf0a21adf1f37daf378f596df_95450_1024x0_resize_q75_box.jpeg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/hooked-book-review/hooked_hucf6db1edf0a21adf1f37daf378f596df_95450_480x0_resize_q75_box.jpeg 480w, https://arjunuvacha.com/p/hooked-book-review/hooked_hucf6db1edf0a21adf1f37daf378f596df_95450_1024x0_resize_q75_box.jpeg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;A screengrab of the cover page of the original book&#34;
@@ -1473,10 +1448,10 @@ Hold on!&lt;/p&gt;
 &lt;p&gt;Now that you have decided to read this article, let’s do it…
 The title of the book ‘Hooked’ is indicative of the user behaviour while using some of the current digital products. Products like Facebook, Instagram, TikTok, Spotify, Netflix and plenty others have quite literally hooked their users to use the product again and again. The author, &lt;strong&gt;Nir Eyal&lt;/strong&gt;, explores the reason for this addictive behaviour and simply presents his findings with some cool real-life examples.&lt;/p&gt;
 &lt;p&gt;Nir Eyal analyses the user behaviour with the help of ‘The Hook Model’ — a habit-forming cycle of Trigger — Action — Variable Reward — Investment. It is this cycle that transforms behaviour into a routine and a habit. It is this cycle that helps us either make or break any habit. (This was described by &lt;strong&gt;James Clear&lt;/strong&gt; in his book ‘Atomic Habits’ as well. Atomic Habits is another fantastic read if you are interested.)&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/hooked-book-review/the-hook-model.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/hooked-book-review/the-hook-model.png&#34;
 	width=&#34;448&#34;
 	height=&#34;517&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/hooked-book-review/the-hook-model_hude045ea56e3619fbb6d744c7f83ba899_34555_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/hooked-book-review/the-hook-model_hude045ea56e3619fbb6d744c7f83ba899_34555_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/hooked-book-review/the-hook-model_hude045ea56e3619fbb6d744c7f83ba899_34555_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/hooked-book-review/the-hook-model_hude045ea56e3619fbb6d744c7f83ba899_34555_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;The hook model&#34;
@@ -1584,7 +1559,7 @@ People tend to put more effort to reach a goal if they believe that they have ma
 &lt;p&gt;&lt;strong&gt;The Framing Effect:&lt;/strong&gt;&lt;br&gt;
 The environment in which a product or value is delivered affects the way the value is perceived.&lt;/p&gt;
 &lt;h5 id=&#34;example-a-musician-playing-in-a-paid-concert-will-be-valued-more-compared-to-the-same-musician-playing-in-a-subway-for-free-another-example-the-same-wine-from-a-bottle-tagged-1000-will-taste-better-than-that-from-a-bottle-tagged-100&#34;&gt;Example: A musician playing in a paid concert will be valued more compared to the same musician playing in a subway for free. Another example, the same wine from a bottle tagged $1,000 will taste better than that from a bottle tagged $100!&lt;/h5&gt;
-&lt;p&gt;Read more about the &lt;strong&gt;Framing effect&lt;/strong&gt; &lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;here.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Read more about the &lt;strong&gt;Framing effect&lt;/strong&gt; &lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/framing-effect&#34; &gt;here.&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt; that some of the examples I mentioned above are not from the book but are my personal examples.&lt;/p&gt;
 &lt;p&gt;This brings to the end of the article. Hope you liked it!&lt;/p&gt;
 &lt;hr&gt;

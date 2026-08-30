@@ -1,0 +1,14 @@
+# tax-copilot-groq worker — Cloudflare config
+# Proxies Groq chat completions for the Tax Regime Copilot's "Ask the
+# Copilot" explainer, so the Groq key never ships to the browser.
+name = "tax-copilot-groq"
+main = "worker.js"
+compatibility_date = "2024-11-06"
+
+# Groq calls route through the same Cloudflare AI Gateway as arjun-rag and vani.
+[vars]
+AIG_ACCOUNT = "817ef4ab39edc6b855e3338a6903f3eb"
+AIG_GATEWAY = "vani"
+
+# Secret (set with `wrangler secret put GROQ_API_KEY`, do NOT put the value here):
+#   GROQ_API_KEY  -> your existing gsk_… key (same one arjun-rag / vani use)

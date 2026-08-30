@@ -1,0 +1,187 @@
+# Q&A bank for the "Ask Arjun" chat on /work/
+# Each entry: q (display question), keywords (words/phrases that trigger it), a (answer, HTML allowed)
+# Edit freely — the chat picks the best keyword match.
+
+- q: "What's his biggest AI win?"
+  keywords: ["ai", "biggest", "win", "achievement", "darwinbox", "helpdesk", "assistant", "impressive"]
+  a: >
+    Shipping AI-powered workflows at Darwinbox that are validated to save <b>40% of
+    human agent time</b> across 50,000+ enterprise users — 2 in 5 support interactions
+    eliminated entirely. The secret wasn't the model, it was the knowledge graph and
+    80 evaluation metrics underneath it. <a href="/work/darwinbox-helpdesk-ai/">Full case study →</a>
+
+- q: "Why should we hire him?"
+  keywords: ["hire", "why", "should", "pitch", "sell"]
+  a: >
+    Three reasons: he finds problems worth solving (found the ER whitespace, got $500K
+    ARR greenlit), he ships with measured outcomes (40% agent time saved, 6.5× retention,
+    10× revenue), and he builds AI things with his own hands — including me. You're
+    talking to his proof of work right now.
+
+- q: "Show me his 0→1 work"
+  keywords: ["0→1", "zero", "scratch", "founder", "startup", "new product", "0-1", "greenfield"]
+  a: >
+    Four times over: co-founded WhatsDplan (5,000+ installs, Zomato MoU), built Edureka's
+    enrollment product 0→1 (10× revenue in 6 months), built a construction SaaS from
+    scratch (digitised $11.5M/quarter), and discovered + greenlit Darwinbox's Employee
+    Relations module — prototype included.
+    <a href="/work/employee-relations-zero-to-one/">The ER story →</a>
+
+- q: "What's his biggest setback?"
+  keywords: ["failure", "setback", "mistake", "weakness", "wrong", "failed"]
+  a: >
+    His startup WhatsDplan wound down after two years — and he'd tell you it was his
+    best product education: real users, real revenue, real consequences. He even wrote
+    about resets: <a href="/p/every-setback-is-an-opportunity-to-reset/">Every setback
+    is an opportunity to reset →</a>. Ask him about it — he doesn't dodge this question.
+
+- q: "What is he building with AI right now?"
+  keywords: ["building", "side", "projects", "lab", "anvi", "career mantra", "tinkering", "weekend", "now"]
+  a: >
+    The AI Lab: <a href="https://testchat-169af.web.app/" target="_blank">Anvi Chatbot</a>
+    (a conversational assistant built end-to-end),
+    <a href="https://thecareermantra.com" target="_blank">Career Mantra</a> (AI career
+    guidance), and a private gift project he vibe-coded for someone special. All designed,
+    coded, and shipped by him — both are live, try them.
+
+- q: "Tell me the retention story"
+  keywords: ["retention", "phable", "health", "queue", "6.5", "churn", "consumer"]
+  a: >
+    At Phable, weekly retention was 10%. 40+ interviews revealed churn wasn't a feature
+    problem — it was uncertainty about waiting. He shipped a patient queue experience
+    that fixed it for both doctors and patients, and retention grew <b>6.5× to 65%</b>.
+    <a href="/work/phable-patient-queue/">Case study →</a>
+
+- q: "What's his leadership style?"
+  keywords: ["leadership", "team", "manage", "style", "lead", "people"]
+  a: >
+    Conviction without authority. He's led teams of 10 twice (Treebo, Vishwa Samudra —
+    reporting to the MD), runs cross-functional pods to 100% on-time zero-defect
+    releases, and navigated a CPO + sales + finance greenlight with no mandate —
+    just research and a working prototype.
+
+- q: "Enterprise or consumer?"
+  keywords: ["enterprise", "consumer", "b2b", "b2c", "saas", "domain"]
+  a: >
+    Both, deliberately. Consumer: ed-tech (Cuemath, Edureka), health-tech (Phable),
+    event-tech (his own startup). Enterprise: construction SaaS and now Darwinbox HR
+    tech at 700+ client scale. The common thread: making complex things effortless
+    for non-technical users.
+
+- q: "How does he work with engineers?"
+  keywords: ["engineers", "engineering", "technical", "code", "developers", "eng"]
+  a: >
+    Closer than most PMs: he ran a POC where structured PRDs directly generated working
+    code, vibe-codes his own prototypes, and led his pod to 100% on-time, zero-defect
+    releases. NIT Warangal ECE grad — the technical depth is real, not resume garnish.
+
+- q: "What's his education?"
+  keywords: ["education", "degree", "college", "nit", "mba", "study", "studied", "school", "university", "academics", "academic", "qualification", "qualifications", "rank", "ranks", "cgpa", "btech", "warangal"]
+  a: >
+    B.Tech in ECE from NIT Warangal (AIEEE AIR 488) and an MBA from SSSIHL, where he
+    was runner-up for the TATA Business Leader Award.
+
+- q: "How do I contact him?"
+  keywords: ["contact", "email", "reach", "call", "phone", "touch", "connect"]
+  a: >
+    <a href="mailto:k.harisharjun@gmail.com">k.harisharjun@gmail.com</a> or
+    <a href="https://linkedin.com/in/harisharjun" target="_blank">LinkedIn</a>.
+    He responds fast — the man once cut ops turnaround from 66s to 28s.
+
+- q: "Is he open to new roles?"
+  keywords: ["open", "roles", "available", "notice", "join", "opportunity", "looking", "hiring"]
+  a: >
+    If you're reading this on his portfolio, the conversation is welcome. Email
+    <a href="mailto:k.harisharjun@gmail.com">k.harisharjun@gmail.com</a> and he'll
+    take it from there.
+
+- q: "Where is he based?"
+  keywords: ["based", "location", "located", "city", "hyderabad", "remote", "relocate", "where", "live", "lives", "living", "stay", "stays", "place"]
+  a: >
+    Hyderabad, India — with past stints in Bengaluru. Logistics and location are best
+    discussed directly: <a href="mailto:k.harisharjun@gmail.com">drop him a line</a>.
+
+- q: "What does he do outside work?"
+  keywords: ["fun", "hobbies", "personal", "blog", "books", "reads", "outside", "life"]
+  a: >
+    He writes — this whole site is his blog, Arjun Uvacha ("Arjun said" in Sanskrit).
+    Book notes on <a href="/p/hooked/">Hooked</a> and
+    <a href="/p/the-7-habits/">The 7 Habits</a>, essays on cognitive biases, and a
+    running list of <a href="/p/things-that-made-me-smile/">things that made him smile</a>.
+
+- q: "What's the knowledge graph he built?"
+  keywords: ["knowledge", "graph", "context", "entities", "eval", "metrics", "grounding"]
+  a: >
+    The structured layer that makes Darwinbox's Helpdesk AI trustworthy: 16 entities
+    and 80 evaluation metrics that ground every AI-generated response in
+    client-specific context. Generic LLM answers in, context-aware ones out.
+    <a href="/work/darwinbox-helpdesk-ai/">How it works →</a>
+
+- q: "What's this vibe coding thing?"
+  keywords: ["vibe", "prototype", "coded", "prototyping"]
+  a: >
+    Building working software with AI tools instead of specs alone. He vibe-coded the
+    Employee Relations prototype that stakeholders clicked through in the greenlight
+    meeting — a deck describes a product; a prototype <i>is</i> one.
+    <a href="/work/employee-relations-zero-to-one/">The story →</a>
+
+- q: "Does he have sales experience?"
+  keywords: ["sales", "treebo", "sell", "gtm", "commercial"]
+  a: >
+    Two years leading regional sales at Treebo: team of 10, revenue ₹1.8M → ₹4.7M in
+    6 months, 150+ clients onboarded. It's why his product cases always come with a
+    business case attached.
+
+- q: "What are his strengths?"
+  keywords: ["strengths", "good", "superpower", "best", "skills"]
+  a: >
+    Finding the real problem (40+ interviews at Phable, 11 cities at Darwinbox),
+    building conviction without authority, and prototyping with his own hands.
+    His resume line: making complex tasks effortless for non-technical users.
+
+- q: "Tell me about the Employee Relations module"
+  keywords: ["employee", "relations", "whitespace", "greenlight", "arr", "discovery"]
+  a: >
+    He spotted a gap nobody owned, researched it across enterprise clients, built the
+    business case ($500K ARR potential), vibe-coded a prototype, and walked it through
+    CPO, sales, and finance to a formal greenlight. Engineering is building it now.
+    <a href="/work/employee-relations-zero-to-one/">Case study →</a>
+
+- q: "What did he build as a gift?"
+  keywords: ["wife", "gift", "birthday", "games", "letters", "romantic", "krishna", "stress"]
+  a: >
+    For his wife's birthday, he built her a stress-relief app: two games to play,
+    weekly letters he writes to her, and a conversation with "Krishna" — where every
+    reply is grounded in real Bhagavad Gita verses through retrieval, so nothing is
+    ever made up. Possibly his most demanding stakeholder yet.
+
+- q: "Salary expectations?"
+  keywords: ["salary", "compensation", "ctc", "pay", "package"]
+  a: >
+    That's one for the humans. <a href="mailto:k.harisharjun@gmail.com">Email him</a> —
+    he believes in fast, honest conversations.
+
+- q: "Notice period and logistics?"
+  keywords: ["notice", "period", "join", "joining", "relocation", "relocate", "hybrid", "wfh", "languages", "telugu", "tamil", "hindi"]
+  a: >
+    Notice period: <b>60 days</b>. Location: Hyderabad or Bengaluru, prefers remote or
+    hybrid (a few WFH days are a must). Staying in India. Speaks Telugu, Hindi, Tamil,
+    and English.
+
+- q: "Tell me a fun fact"
+  keywords: ["fun", "fact", "trivia", "interesting", "random", "surprise", "rank", "eamcet", "aieee", "jee"]
+  a: >
+    Pick one: EAMCET All India Rank 57, AIEEE AIR 488, IIT-JEE AIR 3,135 — and a
+    top-50 in the State Maths Olympiad. Or the softer side: his favourite things he's
+    written are <a href="/p/cognitivie-biases-ikea-effect/">The IKEA Effect</a>,
+    <a href="/p/cognitivie-biases-availability-heuristic/">The Availability Heuristic</a>,
+    and a two-part gratitude series,
+    <a href="/p/things-that-made-me-smile/">Things that made me smile</a>
+    (<a href="/p/things-that-made-me-smile-part-02/">part 2</a>).
+
+- q: "Can I get his resume?"
+  keywords: ["resume", "cv", "download", "pdf"]
+  a: >
+    Right here: <a href="/K-Harish-Arjun-Resume.pdf" target="_blank">K Harish Arjun —
+    Resume (PDF)</a>. The one-line version: 8+ years building AI, consumer, and
+    enterprise products with measured outcomes.

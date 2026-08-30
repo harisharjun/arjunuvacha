@@ -1,0 +1,210 @@
+{{ define "body-class" }}template-work{{ end }}
+
+{{ define "main" }}
+<div class="work-landing">
+
+    {{/* ---- Hero ---- */}}
+    {{ with .Params.hero }}
+    <section class="work-hero">
+        <p class="work-kicker">{{ .kicker }}</p>
+        <h1 class="work-title">{{ .title }}</h1>
+        <p class="work-sub">{{ .sub }}</p>
+        <div class="work-hero-actions">
+            <button id="work-90-toggle" class="work-btn work-btn--ghost" type="button">⚡ In a hurry? 90-second version</button>
+            <span class="work-kbd-hint">or press <kbd>⌘K</kbd></span>
+        </div>
+    </section>
+    {{ end }}
+
+    {{/* ---- Metrics (count-up animated) ---- */}}
+    {{ with .Params.metrics }}
+    <section class="work-metrics">
+        {{ range . }}
+        <div class="work-metric">
+            <span class="work-metric-value" data-countup>{{ .value }}</span>
+            <span class="work-metric-label">{{ .label }}</span>
+        </div>
+        {{ end }}
+    </section>
+    {{ end }}
+
+    {{/* ---- 90-second mode (hidden until toggled) ---- */}}
+    <section id="work-90" class="work-section work-90" hidden>
+        <h2 class="work-section-title">The 90-second version</h2>
+        <ul class="work-90-list">
+            {{ range .Pages.ByWeight }}
+            <li>
+                <a href="{{ .RelPermalink }}"><b>{{ .Params.company }}:</b> {{ .Description }}</a>
+                {{ with .Params.highlights }}<span class="work-chip">{{ index . 0 }}</span>{{ end }}
+            </li>
+            {{ end }}
+            <li><b>On the side:</b> builds AI products hands-on — a chatbot, a career tool, and the AI answering questions in the corner of this page.</li>
+        </ul>
+        {{ with .Params.cta }}
+        <div class="work-cta-actions" style="justify-content:flex-start">
+            <a class="work-btn" href="mailto:{{ .email }}">Email me</a>
+            <a class="work-btn work-btn--dark" href="{{ .resume }}" target="_blank">Resume (PDF)</a>
+        </div>
+        {{ end }}
+    </section>
+
+    {{/* ---- Career metro map ---- */}}
+    {{ with .Params.metro }}
+    <section class="work-section js-full" id="work-metro">
+        <h2 class="work-section-title">The journey, as a metro map</h2>
+        <p class="work-section-intro">{{ .intro }}</p>
+        <div class="work-metro-map">
+            <svg viewBox="0 0 760 320" role="img" aria-label="Career metro map: a builder line and a professional line from college to today">
+                <path class="work-line-pro" d="M65 240 L150 240 C190 240 195 205 235 205 C280 205 280 220 320 220 C360 220 360 200 400 200 C435 200 435 180 470 180 C503 180 502 160 535 160 C568 160 567 135 600 135 C640 135 638 100 675 100"
+                      fill="none" stroke="#1D9E75" stroke-width="6" stroke-linecap="round"/>
+                <path class="work-line-builder" d="M65 120 C150 120 160 205 235 205 C280 205 270 130 310 130 C350 130 352 110 390 110 C430 110 427 95 465 95 C510 95 512 80 555 80 C615 80 640 100 675 100 C700 100 706 76 718 66"
+                      fill="none" stroke="#7c6df0" stroke-width="6" stroke-linecap="round"/>
+                {{ range $i, $s := .stations }}
+                {{ $labelY := add (int $s.py) (int $s.ly) }}
+                <g class="work-station{{ if $s.xchg }} work-station--xchg{{ end }}" data-station="{{ $i }}" tabindex="0">
+                    <circle class="work-station-hit" cx="{{ $s.x }}" cy="{{ $s.py }}" r="20"/>
+                    <circle cx="{{ $s.x }}" cy="{{ $s.py }}" r="{{ if $s.xchg }}11{{ else }}8{{ end }}"/>
+                    <text x="{{ $s.x }}" y="{{ $labelY }}" text-anchor="{{ $s.anchor | default "middle" }}">{{ $s.label }}</text>
+                    <text x="{{ $s.x }}" y="{{ add $labelY 14 }}" text-anchor="{{ $s.anchor | default "middle" }}" class="work-station-yr">{{ $s.year }}</text>
+                </g>
+                {{ end }}
+                <g class="work-legend">
+                    <line x1="510" y1="272" x2="540" y2="272" stroke="#7c6df0" stroke-width="5" stroke-linecap="round"/>
+                    <text x="548" y="276">builder line — self-starter · tinkerer</text>
+                    <line x1="510" y1="294" x2="540" y2="294" stroke="#1D9E75" stroke-width="5" stroke-linecap="round"/>
+                    <text x="548" y="298">professional line — roles · outcomes</text>
+                </g>
+            </svg>
+        </div>
+        <div class="work-metro-detail" id="work-metro-detail" hidden>
+            <p class="work-metro-detail-role"></p>
+            <p class="work-metro-detail-note"></p>
+        </div>
+    </section>
+    {{ end }}
+
+    {{/* ---- Ask Arjun nudge ---- */}}
+    {{ with .Params.chat_nudge }}
+    <section class="work-section work-nudge js-full">
+        <div class="work-nudge-inner">
+            <div class="work-nudge-copy">
+                <h2 class="work-section-title">{{ .heading }} <span class="aa-badge aa-badge--dark">AI</span></h2>
+                <p class="work-section-intro">{{ .text }}</p>
+            </div>
+            <div class="work-nudge-examples">
+                {{ range .examples }}
+                <button type="button" class="work-nudge-q" data-aa-ask="{{ . }}">{{ . }} →</button>
+                {{ end }}
+            </div>
+        </div>
+    </section>
+    {{ end }}
+
+    {{/* ---- Deep-dive case studies ---- */}}
+    <section class="work-section js-full" id="work-dives">
+        <div class="work-sticky-head">
+            <h2 class="work-section-title">Deep dives</h2>
+            <div class="work-filters work-filterbar" data-target="#work-dives">
+                <button type="button" class="work-filter is-active" data-filter="all">All</button>
+                {{ $dtags := slice }}
+                {{ range .Pages.ByWeight }}{{ range .Params.themes }}{{ $dtags = $dtags | append . }}{{ end }}{{ end }}
+                {{ range ($dtags | uniq) }}
+                <button type="button" class="work-filter" data-filter="{{ . }}">{{ . }}</button>
+                {{ end }}
+            </div>
+        </div>
+        <div class="work-cards">
+            {{ range .Pages.ByWeight }}
+            <a class="work-card" href="{{ .RelPermalink }}" data-tags="{{ delimit (.Params.themes | default slice) "|" }}">
+                <p class="work-card-meta">{{ .Params.company }} · {{ .Params.role }}</p>
+                <h3 class="work-card-title">{{ .Title }}</h3>
+                <p class="work-card-desc">{{ .Description }}</p>
+                {{ with .Params.highlights }}
+                <div class="work-chips">
+                    {{ range first 3 . }}<span class="work-chip">{{ . }}</span>{{ end }}
+                </div>
+                {{ end }}
+                <span class="work-card-cta">Read the case study →</span>
+            </a>
+            {{ end }}
+        </div>
+    </section>
+
+    {{/* ---- Stories from the field ---- */}}
+    {{ with .Params.stories }}
+    <section class="work-section js-full" id="work-stories">
+        <div class="work-sticky-head">
+            <h2 class="work-section-title">Stories from the field</h2>
+            <div class="work-filters work-filterbar" data-target="#work-stories">
+                <button type="button" class="work-filter is-active" data-filter="all">All</button>
+                {{ $tags := slice }}
+                {{ range . }}{{ range .tags }}{{ $tags = $tags | append . }}{{ end }}{{ end }}
+                {{ range ($tags | uniq) }}
+                <button type="button" class="work-filter" data-filter="{{ . }}">{{ . }}</button>
+                {{ end }}
+            </div>
+        </div>
+        <p class="work-section-intro">
+            Shorter, honest snapshots — the decisions, conflicts, and lessons behind the numbers.
+            Filter by theme, tap a story to expand.
+        </p>
+        <div class="work-stories">
+            {{ range . }}
+            <details class="work-story" data-tags="{{ delimit .tags "|" }}" data-tag="{{ index .tags 0 }}">
+                <summary>
+                    <span class="work-story-meta">{{ .company }} · {{ .period }}</span>
+                    <span class="work-story-title">{{ .title }}</span>
+                    <span class="work-story-tags">{{ range .tags }}<span class="work-story-tag" data-tag="{{ . }}">{{ . }}</span>{{ end }}</span>
+                </summary>
+                <div class="work-story-body">{{ .body | markdownify }}</div>
+            </details>
+            {{ end }}
+        </div>
+    </section>
+    {{ end }}
+
+    {{/* ---- AI Lab ---- */}}
+    {{ with .Params.ailab }}
+    <section class="work-section js-full">
+        <h2 class="work-section-title">{{ .heading }}</h2>
+        <p class="work-section-intro">{{ .intro }}</p>
+        <div class="work-cards work-cards--lab">
+            {{ range .projects }}
+            <div class="work-card work-card--lab">
+                <h3 class="work-card-title">{{ .name }}</h3>
+                <p class="work-card-meta">{{ .tagline }}</p>
+                <p class="work-card-desc">{{ .description }}</p>
+                {{ if .link }}
+                <a class="work-btn work-btn--small" href="{{ .link }}" target="_blank" rel="noopener">{{ .link_label }}</a>
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+    </section>
+    {{ end }}
+
+    {{/* ---- CTA ---- */}}
+    {{ with .Params.cta }}
+    <section class="work-cta">
+        <h2>{{ .heading }}</h2>
+        <p>{{ .text }}</p>
+        <div class="work-cta-actions">
+            <a class="work-btn" href="mailto:{{ .email }}">Email me</a>
+            <a class="work-btn work-btn--outline" href="{{ .linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+            {{ with .resume }}<a class="work-btn work-btn--outline" href="{{ . }}" target="_blank">Resume (PDF)</a>{{ end }}
+        </div>
+    </section>
+    {{ end }}
+
+</div>
+
+<script>
+window.WORK_DATA = Object.assign(window.WORK_DATA || {}, {
+    stations: {{ .Params.metro.stations | jsonify | safeJS }}
+});
+</script>
+
+{{ partial "work-chat.html" . }}
+
+{{ partialCached "footer/footer" . }}
+{{ end }}

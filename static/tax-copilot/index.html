@@ -1,0 +1,4294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tax Regime Copilot</title>
+<link rel="icon" href="https://arjunuvacha.com/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Lato matches arjunuvacha.com's own font (see themes/hugo-theme-stack/assets/scss/variables.scss and .../custom-font.html) so the tax-copilot page reads as part of the same site, not a separate app. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#F5F5FA; --surface:#FFFFFF; --sunk:#ECEFEB; --raise:#FFFFFF;
+  --ink:#14201C; --muted:#5F6D68; --faint:#8A968F; --rule:#DDE3DE; --rule-2:#C9D2CC;
+  /* Accent matches arjunuvacha.com's own --accent-color (assets/scss/custom.scss,
+     themes/hugo-theme-stack/assets/scss/variables.scss) so this reads as part of
+     the same site, not a separate app with its own brand. */
+  --accent:#34495E; --accent-ink:#FFFFFF; --accent-soft:#E8ECF0;
+  --flag:#A6522C; --flag-soft:#F6E9E0;
+  --good:#00795F; --warn:#C1521A;
+  --yellow-soft:#FCF3D0; --yellow-border:#E8D27A;
+  --s-new:#00795F; --s-old:#C1521A; --s-band:rgba(0,121,95,.10);
+  --shadow:0 1px 2px rgba(20,32,28,.05),0 10px 30px -20px rgba(20,32,28,.35);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F1512; --surface:#161D1A; --sunk:#1B2320; --raise:#1D2622;
+  --ink:#E7ECE8; --muted:#97A49D; --faint:#75827B; --rule:#27312C; --rule-2:#35423C;
+  --accent:#8CA3BC; --accent-ink:#0F1512; --accent-soft:#1E2733;
+  --flag:#DB9468; --flag-soft:#31221A;
+  --good:#3FA98A; --warn:#D07A3A;
+  --yellow-soft:#2E2913; --yellow-border:#5C4F26;
+  --s-new:#3FA98A; --s-old:#D07A3A; --s-band:rgba(63,169,138,.13);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -20px rgba(0,0,0,.9);
+}}
+:root[data-theme="dark"]{
+  --paper:#0F1512; --surface:#161D1A; --sunk:#1B2320; --raise:#1D2622;
+  --ink:#E7ECE8; --muted:#97A49D; --faint:#75827B; --rule:#27312C; --rule-2:#35423C;
+  --accent:#8CA3BC; --accent-ink:#0F1512; --accent-soft:#1E2733;
+  --flag:#DB9468; --flag-soft:#31221A;
+  --good:#3FA98A; --warn:#D07A3A;
+  --yellow-soft:#2E2913; --yellow-border:#5C4F26;
+  --s-new:#3FA98A; --s-old:#D07A3A; --s-band:rgba(63,169,138,.13);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -20px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+/* class-based display rules outrank the UA sheet, so hidden needs teeth */
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Lato",-apple-system,BlinkMacSystemFont,"Segoe UI","Droid Sans","Helvetica Neue",sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;text-wrap:balance;font-family:inherit}
+h1{font-weight:700;font-size:clamp(30px,5.2vw,44px);line-height:1.1;letter-spacing:-.015em}
+h2{font-weight:700;font-size:clamp(22px,3.4vw,29px);line-height:1.18;letter-spacing:-.01em}
+h3{font-size:15px;font-weight:700}
+p{margin:0;max-width:66ch}
+a{color:var(--accent)}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.tiny{font-size:12.5px}
+
+/* ---------- chrome ---------- */
+.topbar{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--rule);
+  display:flex;flex-direction:column;gap:10px;padding:12px 22px}
+.topbar-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#btn-back{align-self:flex-start}
+.brand{display:flex;align-items:center;gap:9px;margin-right:auto}
+.brand-home{display:flex;align-self:center;flex:none;border-radius:50%;opacity:.92;transition:opacity .12s}
+.brand-home:hover{opacity:1}
+.brand-logo{width:42px;height:42px;border-radius:50%;object-fit:cover;display:block}
+.brand b{font-weight:700;font-size:19px;letter-spacing:-.01em}
+.pill{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;
+  padding:3px 9px;border-radius:20px;border:1px solid var(--rule-2);color:var(--muted);white-space:nowrap;
+  align-self:flex-start;flex:none;width:fit-content}
+.pill.on{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+.pill.off{background:var(--flag-soft);border-color:transparent;color:var(--flag)}
+main{max-width:880px;margin:0 auto;padding:34px 22px 130px}
+.screen{display:none;flex-direction:column;gap:26px}
+.screen.active{display:flex}
+
+/* ---------- controls ---------- */
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid transparent;transition:.12s}
+.btn{background:var(--accent);color:var(--accent-ink);padding:11px 20px;font-weight:600;font-size:15px}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule-2)}
+.btn.ghost:hover{background:var(--sunk)}
+.btn.small{padding:7px 14px;font-size:13.5px;font-weight:500}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.linkbtn{background:none;border:none;color:var(--accent);padding:0;font-size:14px;text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type=text],input[type=number],input[type=password],select,textarea{
+  font:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--rule-2);
+  border-radius:8px;padding:9px 11px;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+label{font-size:13.5px;color:var(--muted);display:block;margin-bottom:5px}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stackv{display:flex;flex-direction:column;gap:16px}
+.rowh{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- cards ---------- */
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:16px}
+.card.tight{padding:17px}
+.note{background:var(--accent-soft);border-radius:8px;padding:14px 16px;font-size:14.5px;color:var(--ink)}
+.note.warn{background:var(--flag-soft)}
+.note.yellow{background:var(--yellow-soft);border:1px solid var(--yellow-border)}
+.note b{font-weight:600}
+
+/* ---------- document type choice (tab strip) ---------- */
+.doctabs{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:0}
+.doctype{background:transparent;border:1px solid transparent;border-bottom:none;border-radius:6px 6px 0 0;
+  padding:11px 16px;text-align:center;color:var(--muted);font-weight:600;font-size:14.5px;margin-bottom:-1px}
+.doctype:hover{color:var(--ink);background:var(--sunk)}
+.doctype[aria-pressed=true]{color:var(--accent);background:var(--surface);border-color:var(--rule);
+  border-bottom:2px solid var(--surface)}
+.doctype-sub{font-size:13.5px;color:var(--muted);line-height:1.5;padding-top:2px}
+.doctype-select{display:none}
+.dt-name{font-weight:600;font-size:15px}
+.dt-sub{font-size:12.5px;color:var(--muted);line-height:1.45}
+
+/* ---------- upload ---------- */
+.drop{border:1.5px dashed var(--rule-2);border-radius:10px;padding:32px 22px;text-align:center;
+  display:flex;flex-direction:column;gap:10px;align-items:center;background:var(--surface)}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+
+/* ---------- confirm grid ---------- */
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field .lbl{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.flagchip{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;background:var(--flag-soft);color:var(--flag)}
+.flagchip.ok{background:var(--accent-soft);color:var(--accent)}
+
+/* ---------- meter ---------- */
+.meter{position:sticky;top:var(--topbar-h,53px);z-index:30;background:var(--surface);border:1px solid var(--rule);border-radius:10px;
+  padding:15px 18px;display:flex;flex-direction:column;gap:9px;box-shadow:var(--shadow)}
+.meter-headline{font-size:15.5px;font-weight:700;padding-bottom:2px;border-bottom:1px solid var(--rule)}
+.meter-headline .win{color:var(--good)}
+.meter-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.meter-row .k{font-size:13.5px;color:var(--muted)}
+.meter-row .v{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:15px;font-variant-numeric:tabular-nums}
+.bar{height:7px;border-radius:4px;background:var(--sunk);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .45s cubic-bezier(.4,0,.2,1)}
+
+/* ---------- chat ---------- */
+.chat{display:flex;flex-direction:column;gap:10px}
+.bub{padding:12px 16px;border-radius:14px;max-width:88%;font-size:15.5px;line-height:1.55;animation:rise .28s ease both}
+.bub.bot{background:var(--surface);border:1px solid var(--rule);border-bottom-left-radius:4px;align-self:flex-start}
+.bub.usr{background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px;align-self:flex-end}
+.bub .why{display:block;margin-top:7px;font-size:13px;color:var(--muted);border-left:2px solid var(--rule-2);padding-left:10px}
+.bub.usr .why{color:inherit;opacity:.85;border-color:currentColor}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.bub{animation:none}.bar>i{transition:none}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-self:flex-start;max-width:88%}
+.chip{font-size:14px;padding:8px 15px;border-radius:22px;border:1px solid var(--accent);color:var(--accent);background:transparent}
+.chip:hover{background:var(--accent);color:var(--accent-ink)}
+.amt{display:flex;flex-direction:column;gap:9px;align-self:flex-start;background:var(--surface);
+  border:1px solid var(--rule);border-radius:12px;border-bottom-left-radius:4px;padding:14px 16px;max-width:88%;min-width:min(340px,100%)}
+.sysline{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;color:var(--faint);align-self:flex-start;padding:2px 0}
+
+/* ---------- verdict ---------- */
+.verdict{border-radius:10px;padding:26px;display:flex;flex-direction:column;gap:14px;
+  background:var(--accent-soft);border:1px solid transparent}
+.verdict .big{font-size:clamp(26px,4.6vw,38px);line-height:1.12;font-weight:700}
+.statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule);
+  border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.stat{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:3px}
+.stat .k{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.stat .v{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.stat .s{font-size:12.5px;color:var(--muted)}
+
+/* ---------- sheet ---------- */
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface)}
+th,td{text-align:left;padding:10px 15px;border-bottom:1px solid var(--rule);font-size:14.5px;vertical-align:top}
+th{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--faint);font-weight:400;background:var(--sunk);white-space:nowrap}
+td.n,th.n{text-align:right;font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr.total td{font-weight:700;background:var(--sunk)}
+tr.sub td{color:var(--muted)}
+td .src{display:block;font-size:11.5px;color:var(--faint);margin-top:2px}
+td .rule{display:block;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--faint);margin-top:2px}
+.win{color:var(--good);font-weight:700}
+
+/* ---------- assumptions ---------- */
+.assume{display:flex;flex-direction:column;gap:8px}
+.assume .item{display:flex;gap:10px;align-items:baseline;font-size:14px;color:var(--muted)}
+.assume .item b{color:var(--ink);font-weight:500}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--flag);flex:none;transform:translateY(-2px)}
+.dot.ok{background:var(--good)}
+
+/* ---------- tests ---------- */
+.testrow{display:grid;grid-template-columns:22px 1fr auto;gap:12px;padding:9px 0;border-bottom:1px solid var(--rule);font-size:14px;align-items:baseline}
+.testrow:last-child{border-bottom:none}
+.tick{font-family:"IBM Plex Mono",monospace;font-size:13px}
+.tick.p{color:var(--good)}.tick.f{color:var(--warn)}
+
+details{border:1px solid var(--rule);border-radius:10px;background:var(--surface);padding:0}
+summary{cursor:pointer;padding:13px 17px;font-size:14.5px;font-weight:500;list-style:none;
+  display:flex;align-items:center;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"";flex:none;width:9px;height:9px;
+  border-right:2px solid var(--faint);border-bottom:2px solid var(--faint);
+  transform:rotate(-45deg);transition:transform .15s ease;margin-top:-2px}
+details[open] summary::before{transform:rotate(45deg);margin-top:2px}
+details .dbody{padding:0 17px 17px;display:flex;flex-direction:column;gap:12px}
+
+footer{max-width:880px;margin:0 auto;padding:0 22px 60px;font-size:13px;color:var(--faint);
+  border-top:1px solid var(--rule);padding-top:18px;display:flex;flex-direction:column;gap:7px}
+
+@media (max-width:640px){
+  main{padding:26px 16px 90px}
+  .topbar{padding:10px 16px}
+  .row-2{grid-template-columns:1fr}
+  .bub,.chips,.amt{max-width:100%}
+  /* the sheet is the most important thing on the page — make it fit rather
+     than hiding the amounts behind a sideways scroll */
+  table{min-width:0}
+  th,td{padding:9px 8px;font-size:13px}
+  td.n,th.n{font-size:12.5px}
+  td .rule{display:none}
+  td .src{font-size:11px}
+  th{font-size:9.5px;letter-spacing:.05em}
+  .stat .v{font-size:19px}
+}
+@media print{
+  .topbar,.noprint,.chips,.amt{display:none!important}
+  body{background:#fff}
+  .screen{display:flex!important}
+  #screen-start,#screen-confirm,#screen-triage,#screen-interview,#screen-tests{display:none!important}
+}
+
+/* ---------- what's-this / glossary ---------- */
+.whatsthis{font-size:12px;color:var(--faint);background:none;border:1px solid var(--rule-2);
+  border-radius:20px;padding:1px 9px;margin-left:6px;white-space:nowrap;font-weight:500}
+.whatsthis:hover{border-color:var(--accent);color:var(--accent)}
+.whatsthis-icon{display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;border:1px solid var(--rule-2);
+  color:var(--faint);font-size:10.5px;font-weight:700;margin-left:6px;
+  vertical-align:middle;background:none;padding:0;line-height:1}
+.whatsthis-icon:hover{border-color:var(--accent);color:var(--accent)}
+.glossary-backdrop{position:fixed;inset:0;background:rgba(15,21,18,.45);z-index:90}
+.glossary-modal{position:fixed;z-index:91;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:var(--surface);border:1px solid var(--rule);border-radius:8px;box-shadow:var(--shadow);
+  padding:22px;max-width:460px;width:calc(100% - 40px);max-height:76vh;overflow-y:auto}
+.glossary-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:10px}
+.glossary-head h3{font-size:18px}
+.glossary-modal p{max-width:none;font-size:14.5px;color:var(--ink);line-height:1.6;white-space:pre-line}
+
+.drawer-backdrop{position:fixed;inset:0;background:rgba(15,21,18,.4);z-index:60}
+.drawer{position:fixed;z-index:61;right:0;top:0;bottom:0;width:min(560px,100%);background:var(--paper);
+  box-shadow:-8px 0 30px -10px rgba(0,0,0,.4);padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.drawer-head{display:flex;justify-content:space-between;align-items:center}
+
+/* ---------- full-page overlay (review & edit) ---------- */
+.overlay-full{position:fixed;inset:0;z-index:65;background:var(--paper);overflow-y:auto;
+  padding:20px 20px calc(90px + 20px)}
+.overlay-full-inner{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.overlay-head{display:flex;justify-content:space-between;align-items:center;gap:14px;position:sticky;top:0;
+  background:var(--paper);padding:6px 0 12px;z-index:2}
+
+/* ---------- inline field errors ---------- */
+.inline-error{color:var(--warn);font-size:13.5px;margin-top:2px}
+.field-error input,.field-error select{border-color:var(--warn)}
+
+/* ---------- persistent AI bar (bottom, on every post-upload screen) ---------- */
+/* Centered and width-capped to match `main`, so it reads as part of the page
+   on a wide desktop window instead of a stray full-bleed strip. */
+.ai-bar-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:80;
+  width:100%;max-width:924px;background:var(--surface);
+  border:1px solid var(--rule);border-bottom:none;border-radius:14px 14px 0 0;
+  box-shadow:0 -6px 24px -14px rgba(0,0,0,.3)}
+.ai-log-head{display:flex;align-items:center;gap:8px;padding:8px 18px;font-size:12.5px;color:var(--muted);
+  background:none;border:none;width:100%;text-align:left}
+.ai-log-head::before{content:"";width:8px;height:8px;border-right:2px solid var(--faint);border-bottom:2px solid var(--faint);
+  transform:rotate(45deg);transition:transform .15s ease;flex:none}
+.ai-log-head.collapsed::before{transform:rotate(-135deg)}
+.ai-log{max-height:min(46vh,420px);overflow-y:auto;padding:4px 18px 14px;display:flex;flex-direction:column;gap:10px}
+.ai-log.collapsed{display:none}
+.ai-form{display:flex;gap:10px;padding:12px 18px;align-items:center}
+.ai-form input{flex:1;border-radius:24px;padding:11px 20px;background:var(--sunk);border-color:transparent}
+.ai-form input:focus{background:var(--surface)}
+.ai-form button{background:var(--accent);color:var(--accent-ink);border:none;border-radius:50%;
+  width:42px;height:42px;flex:none;font-size:16px;display:flex;align-items:center;justify-content:center}
+.ai-icon-btn{background:none!important;color:var(--muted)!important;font-size:19px}
+.ai-icon-btn:hover{color:var(--ink)!important}
+
+/* ---------- answered-so-far / review panel ---------- */
+.ans-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.ans-row:last-child{border-bottom:none}
+.ans-row .ans-editor{width:100%;margin-top:8px}
+
+/* ---------- triage checklist ---------- */
+/* Deliberately not .rowh — that class wraps, which on a narrow screen dropped
+   the whole text block onto its own line under the checkbox. */
+.triage-row{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:11px;cursor:pointer;margin:0;padding:2px 0}
+.triage-row input[type=checkbox]{width:auto;flex:none;margin-top:4px;accent-color:var(--accent)}
+.triage-row > div{flex:1;min-width:0}
+.triage-row-label{font-weight:600}
+
+@media (max-width:640px){
+  /* A vertical stack of tab buttons wastes a lot of scroll on a phone —
+     a single select does the same job in a fraction of the height. */
+  .doctabs{display:none}
+  .doctype-select{display:block}
+  .drawer{width:100%}
+  .ai-form{padding:10px 12px}
+  .ai-log{padding:4px 12px 12px}
+  .ai-log-head{padding:10px 14px}
+}
+</style>
+</head>
+<body>
+<div class="topbar noprint">
+  <div class="topbar-row">
+    <div class="brand">
+      <a href="https://arjunuvacha.com/" class="brand-home" aria-label="Back to Arjun Uvacha" title="Back to Arjun Uvacha">
+        <img src="https://arjunuvacha.com/au.png" alt="" class="brand-logo">
+      </a>
+      <b>Tax Regime Copilot</b>
+    </div>
+    <button class="btn ghost small" id="btn-restart">Start over</button>
+  </div>
+  <button class="btn ghost small" id="btn-back" hidden>&larr; Back</button>
+</div>
+
+<main>
+
+<!-- ================= START ================= -->
+<section class="screen active" id="screen-start">
+  <div class="stackv">
+    <span class="pill" id="pill-year">FY 2026-27</span>
+    <h1>Improve your tax savings</h1>
+    <p class="muted" style="font-size:18px">Upload your salary slip or offer letter to know how you can optimize your tax. Built for salaried people.</p>
+  </div>
+
+  <div class="note yellow">
+    <b>Nothing leaves this browser.</b> Your document is read locally and is never uploaded — not to a server, not to a model. There's no account, no database, and no analytics. Close the tab and it's gone.
+  </div>
+
+  <div class="card">
+    <div class="doctabs" id="doctypes">
+      <button class="doctype" data-type="monthly">One month&rsquo;s payslip</button>
+      <button class="doctype" data-type="annual">Annual / YTD statement</button>
+      <button class="doctype" data-type="offer">Offer letter</button>
+    </div>
+    <select class="doctype-select" id="sel-doctype-mobile">
+      <option value="monthly">One month&rsquo;s payslip</option>
+      <option value="annual">Annual / YTD statement</option>
+      <option value="offer">Offer letter</option>
+    </select>
+    <p class="doctype-sub" id="doctype-sub">Pick what you're starting from.</p>
+    <div class="drop" id="drop" hidden>
+      <div style="font-size:15px" id="drop-label">Drop the file here, or</div>
+      <div class="rowh" style="justify-content:center">
+        <button class="btn" id="btn-pick">Choose a file</button>
+        <button class="btn ghost" id="btn-paste">Paste the text instead</button>
+      </div>
+      <div class="tiny muted">PDF or plain text, read entirely in this browser. Scanned or password-protected PDFs can&rsquo;t be read &mdash; paste or type instead.</div>
+      <input type="file" id="file" accept=".pdf,.txt,text/plain,application/pdf" hidden>
+    </div>
+    <div class="rowh">
+      <button class="linkbtn" id="btn-manual">Enter manually</button>
+    </div>
+    <div id="paste-area" hidden class="stackv">
+      <div>
+        <label for="paste-text">Copy everything from the document and paste it here</label>
+        <textarea id="paste-text" rows="8" placeholder="BASIC                 170,834.00   PF              1,800.00&#10;HRA                    68,334.00   PROF TAX          200.00&#10;SPECIAL ALLOWANCE      69,699.00   INCOME TAX     53,773.00&#10;Total Earnings        331,650.00"></textarea>
+      </div>
+      <div class="rowh"><button class="btn" id="btn-paste-go">Read this</button><button class="linkbtn" id="btn-paste-demo">Use a sample</button></div>
+    </div>
+    <div id="parse-msg" class="tiny" hidden></div>
+  </div>
+
+  <details>
+    <summary>How this works, and what it deliberately won't do</summary>
+    <div class="dbody">
+      <p class="small muted">Every rupee on the result page is computed by a deterministic engine in this file, from a rulepack of current-year rates. No language model touches the arithmetic — a model is used only to answer follow-up questions in plain English, through a shared backend with no setup needed.</p>
+      <p class="small muted">The engine is checked against 21 hand-built salary profiles whose expected answers were computed by a second, independently written implementation — including the ₹12 lakh rebate cliff, marginal relief just past it, the ₹50 lakh surcharge boundary, and a profile that sits ten rupees from the break-even point.</p>
+      <div class="rowh">
+        <button class="btn ghost small" id="btn-tests">Run the test suite</button>
+        <button class="btn ghost small" id="btn-import">Import a saved session</button>
+        <input type="file" id="file-import" accept=".json,application/json" hidden>
+      </div>
+      <p class="tiny muted">Out of scope on purpose: business or freelance income, capital gains, foreign assets, non-resident status, more than two employers. You'll be asked about these up front and told plainly if you need a CA.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= CONFIRM ================= -->
+<section class="screen" id="screen-confirm">
+  <div class="stackv">
+    <div class="eyebrow">Step 1 of 3</div>
+    <h2>Here's what I read. Fix anything that's wrong.</h2>
+    <p class="muted" id="confirm-sub"></p>
+  </div>
+  <div id="confirm-msg"></div>
+  <div class="card tight" id="typeswitch-card">
+    <div class="rowh" style="justify-content:space-between;gap:14px">
+      <div>
+        <div class="tiny muted">Read as</div>
+        <div id="confirm-period" style="font-weight:600"></div>
+      </div>
+      <span class="tiny muted" id="doctype-lock">To read this as a different kind of document, start over.</span>
+    </div>
+    <div class="tiny muted" id="doctype-note"></div>
+  </div>
+  <div class="card">
+    <div class="rowh" style="justify-content:space-between">
+      <h3>Annual figures</h3>
+      <button class="linkbtn" id="btn-show-parts">What was read from the file</button>
+    </div>
+    <div class="fields" id="confirm-fields"></div>
+    <div class="rowh" style="justify-content:space-between;border-top:1px solid var(--rule);padding-top:14px">
+      <div><span class="tiny muted">Annual gross salary</span><div class="mono" style="font-size:21px;font-weight:600" id="confirm-gross">₹0</div></div>
+      <button class="btn" id="btn-confirm-go">This looks right</button>
+    </div>
+    <p class="inline-error" id="confirm-error" hidden></p>
+  </div>
+  <details id="confirm-raw" hidden>
+    <summary>Show the lines I read from the file</summary>
+    <div class="dbody"><pre class="mono tiny" style="white-space:pre-wrap;color:var(--muted);margin:0" id="raw-lines"></pre></div>
+  </details>
+</section>
+
+<!-- ================= TRIAGE ================= -->
+<section class="screen" id="screen-triage">
+  <div class="stackv">
+    <div class="eyebrow">Step 2 of 3</div>
+    <h2>Anything here apply to you this year?</h2>
+    <p class="muted">These push a return beyond what a payslip can answer. Better to say so now than twenty questions in.</p>
+  </div>
+  <div class="card" id="triage-list"></div>
+  <div class="rowh"><button class="btn" id="btn-triage-go">Continue</button></div>
+</section>
+
+<!-- ================= OUT OF SCOPE ================= -->
+<section class="screen" id="screen-scope">
+  <div class="stackv">
+    <h2>Good catch — this one's worth getting right</h2>
+    <p class="muted">What you ticked changes the computation in ways a payslip alone can't settle. Rather than guess, here's exactly what to hand your CA — plus a salary-only estimate you can use right now.</p>
+  </div>
+  <div class="card" id="scope-list"></div>
+  <div class="card">
+    <h3>Your salary-only numbers are ready</h3>
+    <p class="small muted">The salary side of the computation is done and correct — it's only the items you ticked above that need a professional. Your CA can start from these numbers.</p>
+    <div id="scope-summary"></div>
+    <div class="rowh">
+      <button class="btn" id="btn-scope-anyway">Proceed with salary-only estimate</button>
+      <button class="linkbtn" id="btn-scope-ca">I'll check with my CA</button>
+    </div>
+    <p class="tiny muted" id="scope-ca-msg" hidden>Good call — the numbers above are ready whenever your CA needs them.</p>
+  </div>
+</section>
+
+<!-- ================= INTERVIEW ================= -->
+<section class="screen" id="screen-interview">
+  <div class="stackv">
+    <div class="eyebrow">Step 3 of 3</div>
+    <h2>A few questions — only the ones that can change the answer</h2>
+  </div>
+  <div class="meter" id="meter">
+    <div class="meter-headline" id="meter-headline"></div>
+    <div class="meter-row"><span class="k" id="meter-k">Deductions needed for the old regime to win</span><span class="v" id="meter-target">—</span></div>
+    <div class="bar"><i id="meter-bar" style="width:0%"></i></div>
+    <div class="meter-row"><span class="k">Found so far</span><span class="v" id="meter-found">₹0</span></div>
+  </div>
+  <details id="answered-panel" hidden>
+    <summary>Your answers so far — tap any to change it</summary>
+    <div class="dbody" id="answered-list"></div>
+  </details>
+  <div class="chat" id="chat"></div>
+</section>
+
+<!-- ================= RESULT ================= -->
+<section class="screen" id="screen-result">
+  <div class="verdict" id="verdict">
+    <div class="eyebrow" id="verdict-eyebrow">The answer</div>
+    <div class="big" id="verdict-big"></div>
+    <p id="verdict-sub" class="small"></p>
+  </div>
+
+  <div class="statrow" id="statrow"></div>
+
+  <div class="card">
+    <h3>How confident this is</h3>
+    <p class="small muted" id="robust-text"></p>
+    <div id="robust-chart"></div>
+  </div>
+
+  <div class="card" id="tax-tips-card" hidden>
+    <h3>How to save more tax?</h3>
+    <p class="small muted">Ways to reduce this that most people never think to ask HR or their CA about.</p>
+    <div id="tax-tips" class="stackv"></div>
+  </div>
+
+  <div class="stackv">
+    <h2>The computation, line by line</h2>
+    <p class="muted small">Every row shows where the number came from and which rule shaped it. Check the ones marked as estimates.</p>
+    <div class="tablewrap"><table id="sheet"></table></div>
+  </div>
+
+  <div class="card noprint">
+    <div class="rowh" style="justify-content:space-between">
+      <div>
+        <h3>Review &amp; edit your answers</h3>
+        <p class="small muted" style="margin-top:4px">Change any value and the verdict above updates instantly.</p>
+      </div>
+      <button class="btn ghost small" id="btn-edit">Open</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What to do next</h3>
+    <div id="nextsteps" class="stackv"></div>
+  </div>
+
+  <details id="assumptions-details">
+    <summary>What this assumed</summary>
+    <div class="dbody">
+      <div class="assume" id="assumptions"></div>
+    </div>
+  </details>
+
+  <div class="card noprint">
+    <h3>Save this session</h3>
+    <p class="small muted">Nothing was stored anywhere. Download the session file and re-import it next February — the interview will pick up where it left off instead of starting from scratch.</p>
+    <div class="rowh">
+      <button class="btn ghost" id="btn-export">Download session file</button>
+      <button class="btn ghost" id="btn-print">Save as PDF</button>
+    </div>
+    <div id="export-fallback" hidden class="stackv">
+      <p class="small muted" id="export-note"></p>
+      <textarea id="export-text" rows="6" readonly class="mono" style="font-size:12px"></textarea>
+      <div class="rowh"><button class="btn small" id="btn-copy">Copy to clipboard</button><span class="tiny muted" id="copy-msg"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MANUAL ENTRY ================= -->
+<section class="screen" id="screen-manual">
+  <div class="stackv">
+    <h2>Enter your salary numbers</h2>
+    <p class="muted">Annual figures. If you only know monthly, multiply by twelve — or better, take them from your Form 16 Part B or your HR portal's tax sheet.</p>
+  </div>
+  <div class="card">
+    <div class="fields" id="manual-fields"></div>
+    <div class="rowh" style="justify-content:space-between;border-top:1px solid var(--rule);padding-top:14px">
+      <div><span class="tiny muted">Annual gross salary</span><div class="mono" style="font-size:21px;font-weight:600" id="manual-gross">₹0</div></div>
+      <button class="btn" id="btn-manual-go">Continue</button>
+    </div>
+    <p class="inline-error" id="manual-error" hidden></p>
+  </div>
+</section>
+
+<!-- ================= TESTS ================= -->
+<section class="screen" id="screen-tests">
+  <div class="stackv">
+    <h2>Golden test suite</h2>
+    <p class="muted">Twenty-one salary profiles. Expected values were produced by a second implementation written independently of the engine — if the two disagree, one of them is wrong and neither ships.</p>
+  </div>
+  <div class="card"><div id="test-summary"></div><div id="test-rows"></div></div>
+  <div class="rowh"><button class="btn ghost" id="btn-tests-back">Back</button></div>
+</section>
+
+</main>
+
+<footer>
+  <p>Rates from a versioned rulepack for the current tax year. This is an estimate to check, not tax advice, and not a filed return — verify against your Form 16 and AIS before you act on it.</p>
+  <p class="tiny">Built as a portfolio project. No account, no database, no analytics, no server.</p>
+</footer>
+
+<!-- ================= FLOATING: FULL BREAKDOWN ================= -->
+<div class="drawer-backdrop noprint" id="breakdown-backdrop" hidden></div>
+<div class="drawer noprint" id="breakdown-drawer" hidden>
+  <div class="drawer-head">
+    <h3>Component-wise breakdown</h3>
+    <button class="btn ghost small" id="btn-breakdown-close" aria-label="Close">Close</button>
+  </div>
+  <p class="tiny muted" id="breakdown-note">Based on what you've entered so far — this updates as you answer more questions.</p>
+  <div class="tablewrap"><table id="breakdown-sheet"></table></div>
+</div>
+
+<!-- ================= WHAT WAS READ (popover) ================= -->
+<div class="drawer-backdrop noprint" id="parts-backdrop" hidden></div>
+<div class="drawer noprint" id="parts-drawer" hidden>
+  <div class="drawer-head">
+    <h3>What was read from the file</h3>
+    <button class="btn ghost small" id="btn-parts-close" aria-label="Close">Close</button>
+  </div>
+  <div id="confirm-parts"></div>
+</div>
+
+<!-- ================= REVIEW & EDIT (full page) ================= -->
+<div class="overlay-full noprint" id="review-overlay" hidden>
+  <div class="overlay-full-inner">
+    <div class="overlay-head">
+      <h2>Review &amp; edit your answers</h2>
+      <button class="btn ghost small" id="btn-review-close">&larr; Back to verdict</button>
+    </div>
+    <p class="muted small">Change any value below — it's applied automatically and the verdict updates as you go. Or just tell the AI bar at the bottom what changed.</p>
+    <div id="review-overlay-list" class="stackv"></div>
+  </div>
+</div>
+
+<!-- ================= PERSISTENT AI BAR ================= -->
+<div class="ai-bar-wrap noprint" id="ai-bar" hidden>
+  <button class="ai-log-head collapsed" id="ai-log-toggle" type="button" hidden>Conversation</button>
+  <div class="ai-log collapsed" id="tc-log"></div>
+  <form class="ai-form" id="tc-form">
+    <button type="button" class="ai-icon-btn" id="btn-breakdown-inline" title="Full breakdown" aria-label="See the full component-wise breakdown">📊</button>
+    <input type="text" id="tc-input" placeholder="Use AI to fill/ask" autocomplete="off" maxlength="400">
+    <button type="submit" aria-label="Send">&#10148;</button>
+  </form>
+</div>
+
+<!-- ================= GLOSSARY MODAL ================= -->
+<div class="glossary-backdrop noprint" id="glossary-backdrop" hidden></div>
+<div class="glossary-modal noprint" id="glossary-modal" hidden>
+  <div class="glossary-head">
+    <h3 id="glossary-term"></h3>
+    <button class="btn ghost small" id="glossary-close" aria-label="Close">Close</button>
+  </div>
+  <p id="glossary-body"></p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>try{if(window["pdfjsLib"])pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";}catch(e){}</script>
+<script>
+/* ============================================================================
+   RULEPACK — rates as data, never in code.
+   One object per tax year. Budget changes should be a data edit + a test run.
+   ========================================================================== */
+const RULEPACKS = {
+  '2026-27': {
+    taxYear: '2026-27',
+    label: 'FY 2026-27 (Tax Year 2026-27)',
+    statute: 'Income-tax Act, 2025',
+    version: '1.0.0',
+    cess: 0.04,
+    cessLabel: 'Health & Education cess @ 4%',
+    roundingStep: 10,
+    regimes: {
+      neu: {
+        key: 'neu', name: 'New regime', isDefault: true,
+        slabs: [[0,400000,0],[400000,800000,.05],[800000,1200000,.10],
+                [1200000,1600000,.15],[1600000,2000000,.20],
+                [2000000,2400000,.25],[2400000,null,.30]],
+        standardDeduction: 75000, stdRule: 's.19 (was s.16(ia))',
+        rebate: { limit: 1200000, max: 60000, marginalRelief: true, rule: 's.156 (was 87A)' },
+        surcharge: [[5000000,.10],[10000000,.15],[20000000,.25]],
+        employerNpsCapPct: 0.14,
+        allows: ['employerNps']
+      },
+      old: {
+        key: 'old', name: 'Old regime', isDefault: false,
+        slabs: [[0,250000,0],[250000,500000,.05],[500000,1000000,.20],[1000000,null,.30]],
+        standardDeduction: 50000, stdRule: 's.19 (was s.16(ia))',
+        rebate: { limit: 500000, max: 12500, marginalRelief: false, rule: 's.156 (was 87A)' },
+        surcharge: [[5000000,.10],[10000000,.15],[20000000,.25],[50000000,.37]],
+        employerNpsCapPct: 0.10,
+        allows: ['employerNps','professionalTax','hra','s80C','s80CCD1B','s80D',
+                 'homeLoanInterest','s80E','s80G','s80TTA']
+      }
+    },
+    /* Deduction catalogue. The model may SELECT from this; it may never author it. */
+    catalogue: [
+      { id:'hra', label:'HRA exemption', rule:'s.14 read with Rule 2A (was s.10(13A))',
+        max:null, note:'Least of: HRA received · rent paid minus 10% of basic · 50% of basic (metro) or 40%' },
+      { id:'s80C', label:'80C — now Section 123', rule:'s.123', max:150000,
+        note:'EPF, ELSS, PPF, LIC, tuition fees, home-loan principal, SSY, 5-yr FD' },
+      { id:'s80CCD1B', label:'80CCD(1B) — self NPS', rule:'s.124(2)', max:50000,
+        note:'Over and above the 80C ceiling' },
+      { id:'s80D', label:'80D — now Section 126', rule:'s.126', max:100000,
+        note:'₹25,000 self & family (₹50,000 if senior) + ₹25,000 parents (₹50,000 if senior)' },
+      { id:'homeLoanInterest', label:'Home-loan interest, self-occupied', rule:'s.22 (was s.24(b))',
+        max:200000, note:'Self-occupied property only' },
+      { id:'s80E', label:'80E — education loan interest', rule:'s.127', max:null,
+        note:'No cap; 8 assessment years from first repayment' },
+      { id:'s80G', label:'80G — donations', rule:'s.133', max:null,
+        note:'100%-without-limit categories only in this version' },
+      { id:'s80TTA', label:'80TTA — savings-account interest', rule:'s.128', max:10000,
+        note:'Savings interest only, not fixed deposits' },
+      { id:'employerNps', label:"80CCD(2) — employer's NPS contribution", rule:'s.124(3)',
+        max:null, bothRegimes:true,
+        note:'Capped at 14% of basic in the new regime, 10% in the old' },
+      { id:'professionalTax', label:'Professional tax', rule:'s.19 (was s.16(iii))', max:null,
+        note:'Old regime only' }
+    ]
+  }
+};
+/* FY 2025-26 shares the rate structure but runs on the 1961 Act. */
+RULEPACKS['2025-26'] = JSON.parse(JSON.stringify(RULEPACKS['2026-27']));
+RULEPACKS['2025-26'].taxYear = '2025-26';
+RULEPACKS['2025-26'].label = 'FY 2025-26 (AY 2026-27)';
+RULEPACKS['2025-26'].statute = 'Income-tax Act, 1961';
+RULEPACKS['2025-26'].regimes.neu.stdRule = 's.16(ia)';
+RULEPACKS['2025-26'].regimes.old.stdRule = 's.16(ia)';
+RULEPACKS['2025-26'].regimes.neu.rebate.rule = 's.87A';
+RULEPACKS['2025-26'].regimes.old.rebate.rule = 's.87A';
+RULEPACKS['2025-26'].catalogue.forEach(function (c) {
+  const map = { s80C:'s.80C', s80CCD1B:'s.80CCD(1B)', s80D:'s.80D',
+                homeLoanInterest:'s.24(b)', s80E:'s.80E', s80G:'s.80G',
+                s80TTA:'s.80TTA', employerNps:'s.80CCD(2)',
+                professionalTax:'s.16(iii)', hra:'s.10(13A) + Rule 2A' };
+  if (map[c.id]) c.rule = map[c.id];
+  if (c.id === 's80C') c.label = '80C';
+  if (c.id === 's80D') c.label = '80D';
+});
+
+/* ============================================================================
+   ENGINE — pure functions. No DOM, no network, no model. Given a TaxProfile
+   and a rulepack it returns a computation sheet. Everything in the product
+   that produces a number goes through here.
+   ========================================================================== */
+
+function emptyProfile() {
+  return {
+    taxYear: '2026-27',
+    source: 'manual',
+    salary: {                 // annual rupee amounts
+      basic: 0, hra: 0, otherAllowances: 0, bonus: 0,
+      employerNps: 0, employeePf: 0, professionalTax: 0
+    },
+    otherIncome: { savingsInterest: 0, fdInterest: 0 },
+    deductions: {             // user-declared, old-regime relevant
+      rentPaid: 0, metro: false,
+      s80C_other: 0, s80CCD1B: 0, s80D: 0,
+      homeLoanInterest: 0, s80E: 0, s80G: 0
+    },
+    flags: { ownsHome: false, paysRent: null, hasHomeLoan: false },
+    estimates: {},            // fieldName -> true when the value was guessed
+    answered: {},             // questionId -> true
+    outOfScope: []
+  };
+}
+
+function grossSalary(p) {
+  const s = p.salary;
+  return s.basic + s.hra + s.otherAllowances + s.bonus + s.employerNps;
+}
+
+function slabTax(taxable, slabs) {
+  let t = 0;
+  for (const [lo, hi, rate] of slabs) {
+    if (taxable <= lo) break;
+    const top = hi === null ? taxable : Math.min(taxable, hi);
+    t += (top - lo) * rate;
+  }
+  return t;
+}
+
+function surchargeRate(income, bands) {
+  let r = 0;
+  for (const [threshold, rate] of bands) if (income > threshold) r = rate;
+  return r;
+}
+
+/* Surcharge with marginal relief: the extra tax+surcharge from crossing a
+   threshold can never exceed the income that crossed it. */
+function surchargeWithRelief(taxable, baseTax, bands, slabs) {
+  const rate = surchargeRate(taxable, bands);
+  if (rate === 0) return { amount: 0, rate: 0, relief: 0 };
+  let sc = baseTax * rate;
+  const crossed = bands.filter(b => taxable > b[0]).map(b => b[0]);
+  const threshold = Math.max.apply(null, crossed);
+  const taxAt = slabTax(threshold, slabs);
+  const totalAt = taxAt + taxAt * surchargeRate(threshold, bands);
+  const excess = taxable - threshold;
+  let relief = 0;
+  if ((baseTax + sc) - totalAt > excess) {
+    const capped = Math.max(0, totalAt + excess - baseTax);
+    relief = sc - capped;
+    sc = capped;
+  }
+  return { amount: sc, rate: rate, relief: relief };
+}
+
+function hraExemption(hraReceived, basic, annualRent, metro) {
+  if (!(annualRent > 0) || !(hraReceived > 0)) return 0;
+  return Math.max(0, Math.min(
+    hraReceived,
+    annualRent - 0.10 * basic,
+    (metro ? 0.50 : 0.40) * basic
+  ));
+}
+
+/* Returns every old-regime deduction with its cap applied and its provenance. */
+function deductionLines(p, regime, pack) {
+  const d = p.deductions, s = p.salary;
+  const cat = id => pack.catalogue.find(c => c.id === id);
+  const out = [];
+  const add = (id, claimed, sourceLabel) => {
+    const c = cat(id);
+    const allowed = c.max === null ? claimed : Math.min(claimed, c.max);
+    out.push({
+      id, label: c.label, rule: c.rule, claimed,
+      amount: allowed, capped: c.max !== null && claimed > c.max,
+      cap: c.max, source: sourceLabel,
+      estimated: !!p.estimates[id]
+    });
+  };
+
+  // 80CCD(2) — the one deduction that survives in both regimes
+  if (s.employerNps > 0) {
+    const cap = s.basic * regime.employerNpsCapPct;
+    const allowed = Math.min(s.employerNps, cap);
+    out.push({
+      id: 'employerNps', label: cat('employerNps').label, rule: cat('employerNps').rule,
+      claimed: s.employerNps, amount: allowed,
+      capped: s.employerNps > cap, cap: Math.round(cap),
+      source: 'Payslip', estimated: !!p.estimates.employerNps,
+      bothRegimes: true
+    });
+  }
+  if (regime.key === 'neu') return out;   // new regime stops here
+
+  if (s.professionalTax > 0) add('professionalTax', s.professionalTax, 'Payslip');
+
+  const hra = hraExemption(s.hra, s.basic, d.rentPaid, d.metro);
+  if (hra > 0) {
+    out.push({
+      id: 'hra', label: cat('hra').label, rule: cat('hra').rule,
+      // Not "capped" in the ceiling sense (cap is null) — it's the lowest of
+      // three figures, which `workings` below already explains; showing the
+      // generic "Capped at — you claimed more" line here is just confusing.
+      claimed: s.hra, amount: hra, capped: false, cap: null,
+      source: 'Payslip + rent you entered', estimated: !!p.estimates.rentPaid,
+      workings: [
+        ['HRA received', s.hra],
+        ['Rent paid minus 10% of basic', Math.max(0, d.rentPaid - 0.10 * s.basic)],
+        [(d.metro ? '50%' : '40%') + ' of basic', (d.metro ? 0.5 : 0.4) * s.basic]
+      ]
+    });
+  }
+  const c80 = s.employeePf + d.s80C_other;
+  if (c80 > 0) add('s80C', c80, s.employeePf > 0 ? 'EPF from payslip + your answer' : 'Your answer');
+  if (d.s80CCD1B > 0) add('s80CCD1B', d.s80CCD1B, 'Your answer');
+  if (d.s80D > 0) add('s80D', d.s80D, 'Your answer');
+  if (d.homeLoanInterest > 0) add('homeLoanInterest', d.homeLoanInterest, 'Your answer');
+  if (d.s80E > 0) add('s80E', d.s80E, 'Your answer');
+  if (d.s80G > 0) add('s80G', d.s80G, 'Your answer');
+  if (p.otherIncome.savingsInterest > 0)
+    add('s80TTA', p.otherIncome.savingsInterest, 'Your answer');
+  return out;
+}
+
+function computeRegime(p, regimeKey, pack) {
+  const regime = pack.regimes[regimeKey];
+  const gross = grossSalary(p);
+  const std = Math.min(regime.standardDeduction, gross);
+  const other = p.otherIncome.savingsInterest + p.otherIncome.fdInterest;
+  const netSalary = gross - std;
+  const gti = netSalary + other;
+
+  const deds = deductionLines(p, regime, pack);
+  const dedTotal = deds.reduce((a, x) => a + x.amount, 0);
+
+  const rawTaxable = Math.max(0, gti - dedTotal);
+  const taxable = Math.floor(rawTaxable / pack.roundingStep) * pack.roundingStep;
+
+  const base = slabTax(taxable, regime.slabs);
+
+  let rebate = 0, rebateNote = '';
+  if (taxable <= regime.rebate.limit) {
+    rebate = Math.min(base, regime.rebate.max);
+    if (rebate > 0) rebateNote = 'Full rebate — taxable income is within ' + fmt(regime.rebate.limit);
+  } else if (regime.rebate.marginalRelief) {
+    const excess = taxable - regime.rebate.limit;
+    if (base > excess) {
+      rebate = base - excess;
+      rebateNote = 'Marginal relief — tax capped at the income above ' + fmt(regime.rebate.limit);
+    }
+  }
+  const afterRebate = base - rebate;
+  const sc = afterRebate > 0
+    ? surchargeWithRelief(taxable, afterRebate, regime.surcharge, regime.slabs)
+    : { amount: 0, rate: 0, relief: 0 };
+  const cess = (afterRebate + sc.amount) * pack.cess;
+  const totalRaw = afterRebate + sc.amount + cess;
+  const total = Math.round(totalRaw / pack.roundingStep) * pack.roundingStep;
+
+  return {
+    regimeKey, regimeName: regime.name,
+    gross, standardDeduction: std, stdRule: regime.stdRule,
+    otherIncome: other, grossTotalIncome: gti,
+    deductions: deds, deductionTotal: dedTotal,
+    taxableIncome: taxable,
+    baseTax: base, rebate, rebateNote, rebateRule: regime.rebate.rule,
+    surcharge: sc.amount, surchargeRate: sc.rate, surchargeRelief: sc.relief,
+    cess, total, monthly: total / 12
+  };
+}
+
+function compareRegimes(p, pack) {
+  const neu = computeRegime(p, 'neu', pack);
+  const old = computeRegime(p, 'old', pack);
+  const winner = neu.total <= old.total ? 'neu' : 'old';
+  return {
+    neu, old, winner,
+    saving: Math.abs(neu.total - old.total),
+    monthlySaving: Math.abs(neu.total - old.total) / 12
+  };
+}
+
+/* ---------------------------------------------------------------------------
+   The gap: how much more old-regime deduction would it take to beat the new
+   regime? Solved by bisection on the actual engine, so it is always consistent
+   with the rules rather than an algebraic approximation that can drift.
+   ------------------------------------------------------------------------- */
+function breakEvenDeductions(p, pack) {
+  const target = computeRegime(p, 'neu', pack).total;
+  const probe = extra => {
+    const q = JSON.parse(JSON.stringify(p));
+    q.deductions.s80E += extra;          // 80E is uncapped — a clean probe lever
+    return computeRegime(q, 'old', pack).total;
+  };
+  if (probe(0) <= target) return { needed: 0, reachable: true, alreadyAhead: true };
+  let lo = 0, hi = grossSalary(p) + 100000;
+  if (probe(hi) > target) return { needed: null, reachable: false, alreadyAhead: false };
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    if (probe(mid) > target) lo = mid; else hi = mid;
+  }
+  return { needed: Math.ceil(hi / 10) * 10, reachable: true, alreadyAhead: false };
+}
+
+function currentOldDeductions(p, pack) {
+  return computeRegime(p, 'old', pack).deductionTotal;
+}
+
+/* Maximum additional deduction still theoretically available, used for the
+   early-exit rule: if this cannot close the gap, stop asking questions. */
+function headroom(p, pack) {
+  const q = JSON.parse(JSON.stringify(p));
+  const s = q.salary, d = q.deductions;
+  let room = 0;
+  const cap = id => pack.catalogue.find(c => c.id === id).max;
+  if (!q.answered.rent && s.hra > 0)
+    room += Math.min(s.hra, 0.5 * s.basic);
+  if (!q.answered.s80C) room += Math.max(0, cap('s80C') - s.employeePf - d.s80C_other);
+  if (!q.answered.s80CCD1B) room += cap('s80CCD1B') - d.s80CCD1B;
+  if (!q.answered.s80D) room += cap('s80D') - d.s80D;
+  if (!q.answered.homeLoan) room += cap('homeLoanInterest') - d.homeLoanInterest;
+  if (!q.answered.s80E) room += 200000;      // uncapped, but bounded for sanity
+  if (!q.answered.s80G) room += 100000;
+  return Math.max(0, room);
+}
+
+/* ---------------------------------------------------------------------------
+   Robustness: re-run the verdict across a plausible annual-income band so the
+   answer can be stated without knowing the bonus exactly.
+   ------------------------------------------------------------------------- */
+function robustness(p, pack, spreadDown, spreadUp) {
+  spreadDown = spreadDown === undefined ? 0.75 : spreadDown;
+  spreadUp = spreadUp === undefined ? 1.40 : spreadUp;
+  const baseGross = grossSalary(p);
+  const results = [];
+  const steps = 25;
+  for (let i = 0; i <= steps; i++) {
+    const f = spreadDown + (spreadUp - spreadDown) * (i / steps);
+    const q = JSON.parse(JSON.stringify(p));
+    const scale = f;
+    q.salary.basic *= scale; q.salary.hra *= scale;
+    q.salary.otherAllowances *= scale; q.salary.bonus *= scale;
+    q.salary.employerNps *= scale; q.salary.employeePf *= scale;
+    const c = compareRegimes(q, pack);
+    results.push({ factor: f, gross: baseGross * scale, winner: c.winner,
+                   neu: c.neu.total, old: c.old.total, saving: c.saving });
+  }
+  const winners = new Set(results.map(r => r.winner));
+  let flipAt = null;
+  if (winners.size > 1) {
+    for (let i = 1; i < results.length; i++)
+      if (results[i].winner !== results[i - 1].winner) { flipAt = results[i].gross; break; }
+  }
+  return {
+    stable: winners.size === 1,
+    winner: results[Math.floor(results.length / 2)].winner,
+    flipAt, low: results[0].gross, high: results[results.length - 1].gross, results
+  };
+}
+
+function fmt(n) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  const neg = n < 0; n = Math.round(Math.abs(n));
+  const s = n.toString();
+  let out;
+  if (s.length <= 3) out = s;
+  else {
+    const last3 = s.slice(-3);
+    let rest = s.slice(0, -3);
+    rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+    out = rest + ',' + last3;
+  }
+  return (neg ? '−₹' : '₹') + out;
+}
+function fmtLakh(n) {
+  const a = Math.abs(n);
+  if (a >= 10000000) return '₹' + (n / 10000000).toFixed(2).replace(/\.00$/, '') + ' cr';
+  if (a >= 100000) return '₹' + (n / 100000).toFixed(2).replace(/\.00$/, '') + ' L';
+  return fmt(n);
+}
+
+
+
+/* ============================================================================
+   GOLDEN SUITE — 21 hand-specified salary profiles with expected values from
+   an independently written reference implementation. If the engine and the
+   reference disagree, one of them is wrong and neither ships.
+   Run in the browser from the "Run the test suite" link on the front page.
+   ========================================================================== */
+const GOLDEN_CASES = [
+ {
+  "name": "Zero tax \u2014 7L gross, new regime rebate",
+  "profile": {
+   "basic": 350000,
+   "hra": 175000,
+   "other": 175000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 625000,
+    "base": 11250.0,
+    "rebate": 11250.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 650000,
+    "base": 42500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 1700.0,
+    "total": 44200
+   }
+  }
+ },
+ {
+  "name": "Rebate ceiling \u2014 12.75L gross, exactly nil under new",
+  "profile": {
+   "basic": 637500,
+   "hra": 318750,
+   "other": 318750,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1200000,
+    "base": 60000.0,
+    "rebate": 60000.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 1225000,
+    "base": 180000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7200.0,
+    "total": 187200
+   }
+  }
+ },
+ {
+  "name": "Marginal relief \u2014 12.80L gross, just past the cliff",
+  "profile": {
+   "basic": 640000,
+   "hra": 320000,
+   "other": 320000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1205000,
+    "base": 60750.0,
+    "rebate": 55750.0,
+    "surcharge": 0.0,
+    "cess": 200.0,
+    "total": 5200
+   },
+   "old": {
+    "taxable": 1230000,
+    "base": 181500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7260.0,
+    "total": 188760
+   }
+  }
+ },
+ {
+  "name": "Marginal relief \u2014 13.00L gross",
+  "profile": {
+   "basic": 650000,
+   "hra": 325000,
+   "other": 325000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1225000,
+    "base": 63750.0,
+    "rebate": 38750.0,
+    "surcharge": 0.0,
+    "cess": 1000.0,
+    "total": 26000
+   },
+   "old": {
+    "taxable": 1250000,
+    "base": 187500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7500.0,
+    "total": 195000
+   }
+  }
+ },
+ {
+  "name": "Old-regime rebate \u2014 5.5L gross, nil under old",
+  "profile": {
+   "basic": 275000,
+   "hra": 137500,
+   "other": 137500,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 475000,
+    "base": 3750.0,
+    "rebate": 3750.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 500000,
+    "base": 12500.0,
+    "rebate": 12500.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   }
+  }
+ },
+ {
+  "name": "The worked example \u2014 18L, HRA + 80C + employer NPS",
+  "profile": {
+   "basic": 750000,
+   "hra": 375000,
+   "other": 600000,
+   "bonus": 0,
+   "enps": 75000,
+   "epf": 90000,
+   "ptax": 0,
+   "rent": 360000,
+   "metro": true,
+   "c80": 60000,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1650000,
+    "base": 130000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.0,
+    "total": 135200
+   },
+   "old": {
+    "taxable": 1240000,
+    "base": 184500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7380.0,
+    "total": 191880
+   }
+  }
+ },
+ {
+  "name": "18L gross, no deductions at all",
+  "profile": {
+   "basic": 750000,
+   "hra": 375000,
+   "other": 600000,
+   "bonus": 0,
+   "enps": 75000,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1650000,
+    "base": 130000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.0,
+    "total": 135200
+   },
+   "old": {
+    "taxable": 1675000,
+    "base": 315000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 12600.0,
+    "total": 327600
+   }
+  }
+ },
+ {
+  "name": "Old regime wins \u2014 18L with metro rent and a home loan",
+  "profile": {
+   "basic": 900000,
+   "hra": 450000,
+   "other": 450000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 108000,
+   "ptax": 0,
+   "rent": 480000,
+   "metro": true,
+   "c80": 42000,
+   "ccd1b": 50000,
+   "d80": 50000,
+   "hli": 200000,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1725000,
+    "base": 145000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5800.0,
+    "total": 150800
+   },
+   "old": {
+    "taxable": 910000,
+    "base": 94500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 3780.0,
+    "total": 98280
+   }
+  }
+ },
+ {
+  "name": "Heavy deductions \u2014 18L, old regime just ahead",
+  "profile": {
+   "basic": 750000,
+   "hra": 0,
+   "other": 975000,
+   "bonus": 0,
+   "enps": 75000,
+   "epf": 90000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 60000,
+   "ccd1b": 50000,
+   "d80": 50000,
+   "hli": 200000,
+   "e80": 170000,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1650000,
+    "base": 130000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.0,
+    "total": 135200
+   },
+   "old": {
+    "taxable": 1055000,
+    "base": 129000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5160.0,
+    "total": 134160
+   }
+  }
+ },
+ {
+  "name": "Ten rupees from break-even \u2014 18L",
+  "profile": {
+   "basic": 750000,
+   "hra": 0,
+   "other": 975000,
+   "bonus": 0,
+   "enps": 75000,
+   "epf": 90000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 60000,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 466650,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1650000,
+    "base": 130000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.0,
+    "total": 135200
+   },
+   "old": {
+    "taxable": 1058350,
+    "base": 130005.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.2,
+    "total": 135210
+   }
+  }
+ },
+ {
+  "name": "No HRA component at all \u2014 15L",
+  "profile": {
+   "basic": 750000,
+   "hra": 0,
+   "other": 750000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 90000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 60000,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1425000,
+    "base": 93750.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 3750.0,
+    "total": 97500
+   },
+   "old": {
+    "taxable": 1300000,
+    "base": 202500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 8100.0,
+    "total": 210600
+   }
+  }
+ },
+ {
+  "name": "Non-metro HRA \u2014 12L",
+  "profile": {
+   "basic": 500000,
+   "hra": 200000,
+   "other": 500000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 60000,
+   "ptax": 0,
+   "rent": 240000,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1125000,
+    "base": 52500.0,
+    "rebate": 52500.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 900000,
+    "base": 92500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 3700.0,
+    "total": 96200
+   }
+  }
+ },
+ {
+  "name": "Rent below 10% of basic \u2014 HRA exemption nil",
+  "profile": {
+   "basic": 600000,
+   "hra": 240000,
+   "other": 360000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 50000,
+   "metro": true,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1125000,
+    "base": 52500.0,
+    "rebate": 52500.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 1150000,
+    "base": 157500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 6300.0,
+    "total": 163800
+   }
+  }
+ },
+ {
+  "name": "Employer NPS above the old-regime 10% cap",
+  "profile": {
+   "basic": 1000000,
+   "hra": 0,
+   "other": 800000,
+   "bonus": 0,
+   "enps": 140000,
+   "epf": 120000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1725000,
+    "base": 145000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5800.0,
+    "total": 150800
+   },
+   "old": {
+    "taxable": 1670000,
+    "base": 313500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 12540.0,
+    "total": 326040
+   }
+  }
+ },
+ {
+  "name": "Surcharge threshold \u2014 50.75L gross, no surcharge yet",
+  "profile": {
+   "basic": 2537500,
+   "hra": 0,
+   "other": 2537500,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 5000000,
+    "base": 1080000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 43200.0,
+    "total": 1123200
+   },
+   "old": {
+    "taxable": 5025000,
+    "base": 1320000.0,
+    "rebate": 0.0,
+    "surcharge": 17500.0,
+    "cess": 53500.0,
+    "total": 1391000
+   }
+  }
+ },
+ {
+  "name": "Surcharge marginal relief \u2014 51.75L gross",
+  "profile": {
+   "basic": 2587500,
+   "hra": 0,
+   "other": 2587500,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 5100000,
+    "base": 1110000.0,
+    "rebate": 0.0,
+    "surcharge": 70000.0,
+    "cess": 47200.0,
+    "total": 1227200
+   },
+   "old": {
+    "taxable": 5125000,
+    "base": 1350000.0,
+    "rebate": 0.0,
+    "surcharge": 87500.0,
+    "cess": 57500.0,
+    "total": 1495000
+   }
+  }
+ },
+ {
+  "name": "Surcharge 15% band \u2014 1.2cr gross",
+  "profile": {
+   "basic": 6000000,
+   "hra": 0,
+   "other": 6000000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 11925000,
+    "base": 3157500.0,
+    "rebate": 0.0,
+    "surcharge": 473625.0,
+    "cess": 145245.0,
+    "total": 3776370
+   },
+   "old": {
+    "taxable": 11950000,
+    "base": 3397500.0,
+    "rebate": 0.0,
+    "surcharge": 509625.0,
+    "cess": 156285.0,
+    "total": 4063410
+   }
+  }
+ },
+ {
+  "name": "Surcharge 25% band \u2014 2.5cr gross",
+  "profile": {
+   "basic": 12500000,
+   "hra": 0,
+   "other": 12500000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 24925000,
+    "base": 7057500.0,
+    "rebate": 0.0,
+    "surcharge": 1764375.0,
+    "cess": 352875.0,
+    "total": 9174750
+   },
+   "old": {
+    "taxable": 24950000,
+    "base": 7297500.0,
+    "rebate": 0.0,
+    "surcharge": 1824375.0,
+    "cess": 364875.0,
+    "total": 9486750
+   }
+  }
+ },
+ {
+  "name": "Old-regime 37% band \u2014 6cr gross",
+  "profile": {
+   "basic": 30000000,
+   "hra": 0,
+   "other": 30000000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 59925000,
+    "base": 17557500.0,
+    "rebate": 0.0,
+    "surcharge": 4389375.0,
+    "cess": 877875.0,
+    "total": 22824750
+   },
+   "old": {
+    "taxable": 59950000,
+    "base": 17797500.0,
+    "rebate": 0.0,
+    "surcharge": 6585075.0,
+    "cess": 975303.0,
+    "total": 25357880
+   }
+  }
+ },
+ {
+  "name": "Other income \u2014 savings + FD interest, 80TTA applies",
+  "profile": {
+   "basic": 500000,
+   "hra": 250000,
+   "other": 250000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 60000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 14000,
+   "fd": 45000
+  },
+  "expected": {
+   "neu": {
+    "taxable": 984000,
+    "base": 38400.0,
+    "rebate": 38400.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 939000,
+    "base": 100300.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 4012.0,
+    "total": 104310
+   }
+  }
+ },
+ {
+  "name": "Bonus-heavy \u2014 14L salary + 6L bonus",
+  "profile": {
+   "basic": 583000,
+   "hra": 291500,
+   "other": 525500,
+   "bonus": 600000,
+   "enps": 0,
+   "epf": 70000,
+   "ptax": 0,
+   "rent": 300000,
+   "metro": true,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1925000,
+    "base": 185000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7400.0,
+    "total": 192400
+   },
+   "old": {
+    "taxable": 1638300,
+    "base": 303990.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 12159.6,
+    "total": 316150
+   }
+  }
+ }
+];
+
+function caseToProfile(c) {
+  const p = emptyProfile();
+  p.taxYear = '2026-27';
+  p.salary.basic = c.basic;
+  p.salary.hra = c.hra;
+  p.salary.otherAllowances = c.other;
+  p.salary.bonus = c.bonus;
+  p.salary.employerNps = c.enps;
+  p.salary.employeePf = c.epf;
+  p.salary.professionalTax = c.ptax;
+  p.otherIncome.savingsInterest = c.savings;
+  p.otherIncome.fdInterest = c.fd;
+  p.deductions.rentPaid = c.rent;
+  p.deductions.metro = c.metro;
+  p.deductions.s80C_other = c.c80;
+  p.deductions.s80CCD1B = c.ccd1b;
+  p.deductions.s80D = c.d80;
+  p.deductions.homeLoanInterest = c.hli;
+  p.deductions.s80E = c.e80;
+  p.deductions.s80G = c.g80;
+  return p;
+}
+
+function runGoldenSuite() {
+  const pack = RULEPACKS['2026-27'];
+  const rows = [];
+  let pass = 0, fail = 0;
+  for (const gc of GOLDEN_CASES) {
+    const p = caseToProfile(gc.profile);
+    const checks = [];
+    for (const rk of ['neu', 'old']) {
+      const got = computeRegime(p, rk, pack);
+      const exp = gc.expected[rk];
+      const near = (a, b) => Math.abs(a - b) < 1;
+      checks.push({ regime: rk, field: 'taxable', exp: exp.taxable, got: got.taxableIncome, ok: near(exp.taxable, got.taxableIncome) });
+      checks.push({ regime: rk, field: 'baseTax',  exp: exp.base,    got: got.baseTax,      ok: near(exp.base, got.baseTax) });
+      checks.push({ regime: rk, field: 'rebate',   exp: exp.rebate,  got: got.rebate,       ok: near(exp.rebate, got.rebate) });
+      checks.push({ regime: rk, field: 'surcharge',exp: exp.surcharge, got: got.surcharge,  ok: near(exp.surcharge, got.surcharge) });
+      checks.push({ regime: rk, field: 'total',    exp: exp.total,   got: got.total,        ok: near(exp.total, got.total) });
+    }
+    const bad = checks.filter(c => !c.ok);
+    if (bad.length) fail++; else pass++;
+    rows.push({ name: gc.name, ok: !bad.length, failures: bad,
+                neu: gc.expected.neu.total, old: gc.expected.old.total });
+  }
+  return { pass, fail, total: GOLDEN_CASES.length, rows };
+}
+
+
+
+/* ============================================================================
+   DOCUMENT PARSER — deterministic, local, no model.
+
+   Rebuilt against fourteen real documents from four different payroll systems.
+   The three things that broke the first version, and what replaced them:
+
+   1. Indian payslips print EARNINGS and DEDUCTIONS as two columns on the same
+      physical line ("BASIC 170,834.00  PF  1,800.00"). Matching one label per
+      line silently dropped every deduction. Lines are now split into
+      label→numbers segments, so both halves are read.
+
+   2. Many payslips carry an annual TDS / Chapter VI-A section further down
+      that repeats every earnings label with YEARLY figures. Summing blindly
+      added the month and the year together. Sections are now tracked and the
+      annual block is read separately, never mixed into monthly earnings.
+
+   3. Amount columns differ per vendor — Rate|Earned|Arrear, Master|Actual,
+      twelve months + Grand Total, Monthly|Annual. The column to read is now
+      decided from the table's own header row.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- labels */
+const LABELS = [
+  // --- arrears must be tested BEFORE their base component ---
+  { f: '_arrear', w: .8, re: /\barrears?\b/i, side: 'earn' },
+
+  { f: 'basic',   w: 1,  re: /\bbasic(\s*(salary|pay|wage))?\b/i, side: 'earn' },
+  { f: 'hra',     w: 1,  re: /\b(h\.?\s?r\.?\s?a\.?\*?|house\s*rent\s*allow\w*)\b/i, side: 'earn' },
+
+  // employer contributions — part of CTC, not of taxable gross salary
+  { f: 'employerPf',  w: 1, re: /\b(employer'?s?\s*(p\.?f\.?|provident|contribution\s*to\s*(p\.?f|provident))|company\s*p\.?f\.?)\b/i, side: 'any' },
+  { f: 'gratuity',    w: 1, re: /\bgratuit(y|ies)\b/i, side: 'any' },
+  { f: 'employerNps', w: 1, re: /\b((employer|company|corporate)\s*)?(n\.?p\.?s\.?|national\s*pension)\b/i, side: 'any' },
+
+  { f: 'employeePf', w: .95, re: /\b(p\.?\s?f\.?(\s*(amount|employee\s*contribution|contribution|deduction))?|provident\s*fund|epf)\b/i,
+    not: /employer|company|voluntary|\b(no|number|uan|account|a\/c|id)\b/i, side: 'any' },
+  { f: 'professionalTax', w: 1, re: /\b(prof(essional)?\.?\s*tax|p\.?\s?tax\b|\bptax\b|prof\s*tax|professional\s*tax\s*\(pt\))/i, side: 'any' },
+  { f: 'medicalInsurance', w: .8, re: /\b((medical|parental|health)\s*insurance|mediclaim|parental\s*insurance\s*premium)/i, side: 'any' },
+  { f: 'incomeTax', w: .8, re: /\b(income\s*tax|t\.?d\.?s\.?|tax\s*deduct\w*(\s*amount)?)\b/i, side: 'ded' },
+
+  // totals — used to reconcile, never as components
+  { f: 'totalEarnings', w: 1, re: /\b(total\s*earn\w*|gross\s*(earnings?|salary|total|pay)\b|earnings?\s*total)\b/i, side: 'earn' },
+  { f: 'grossCtc',      w: 1, re: /\b(gross\s*ctc|gross\b(?!\s*(salary|earning|total|pay)))/i, side: 'earn' },
+  { f: 'totalCtc',      w: 1, re: /\b(total\s*(cost\s*to\s*company|ctc)|fixed\s*ctc|tctc|cost\s*to\s*company)\b/i, side: 'earn' },
+  { f: 'baseSalary',    w: 1, re: /\bbase\s*salary\b|\btotal\s*salary\b/i, side: 'earn' },
+  { f: 'totalDeduction',w: 1, re: /\btotal\s*deduct\w*/i, side: 'ded' },
+  { f: 'netPay',        w: .8, re: /\bnet\s*pay\b|\btake\s*home\b/i, side: 'any' },
+
+  // bonuses — taxable when paid, but not part of the monthly run-rate
+  { f: '_bonus', w: .9, re: /\b((joining|retention|referr?al|performance|annual|standard|statutory|variable|special)\s*)?(bonus|incentive|ex[\s-]?gratia)\b|\bperformance\s*pay\b|\bvariable\s*pay\b/i,
+    not: /deduction|eligible|payable\s+(only|subject)|policy|clause/i, side: 'earn' },
+
+  // everything else that is salary → allowances
+  { f: '_allow', w: .75, re: /\b(special\s*allow\w*(\s*\(sa\))?|conveyance|transport|medical\s*allow\w*|city\s*compensat\w*|education\s*allow\w*|children\s*education|food\s*(coupons?|allow\w*)|meal\s*(coupons?|voucher)|broadband|telephone|internet|mobile(\s*and\s*internet)?|fuel|driver|helper|attire|uniform|books?\s*(and|&)\s*(periodicals?|journals?)|professional\s*development|communication|flexible?\s*benefit|\bfbp\b|other\s*allow\w*|leave\s*travel(\s*allow\w*)?|\bl\.?t\.?a\.?\*?\b|shift\s*allow\w*|site\s*allow\w*|dearness|\bspl\.?\s*allow\w*|hold\s*salary|\bmedical\b|\bhousing\b|\bwashing\b)\b/i,
+    not: /deduction|recover|insurance|premium|\breimburse/i, side: 'earn' }
+];
+
+/* Components that belong to CTC but are NOT taxable salary income. */
+const NON_SALARY = ['employerPf', 'gratuity', 'medicalInsurance'];
+
+/* Section markers: everything after one of these is an annual/YTD block on a
+   monthly payslip, and must not be read as this month's earnings. */
+const ANNUAL_SECTION = /\b(tds\s*details|deduction\s*under\s*chapter|chapter\s*vi\s*-?\s*a|tax\s*paid\s*details|income\s*tax\s*deduction|projected\s*(income|tax)|annual\s*tax\s*(statement|computation)|perquisite)\b/i;
+const TABLE_HEADER   = /\b(earnings?|heads?|components?|particulars?|compensation\s*breakup|description)\b/i;
+
+/* ------------------------------------------------------- line segmenting */
+const NUMTOK = /(\d[\d,]*(?:\.\d{1,2})?)/;
+
+/* Split "BASIC 170,834.00 PF 1,800.00" into
+   [{label:'BASIC', nums:[170834]}, {label:'PF', nums:[1800]}]           */
+function segmentLine(line) {
+  const parts = line.split(/(\d[\d,]*(?:\.\d{1,2})?)/);
+  const segs = [];
+  let cur = null;
+  for (let i = 0; i < parts.length; i++) {
+    const p = parts[i];
+    if (p === '' || p === undefined) continue;
+    if (NUMTOK.test(p) && /^\d/.test(p)) {
+      const v = parseFloat(p.replace(/,/g, ''));
+      if (isNaN(v)) continue;
+      if (!cur) cur = { label: '', nums: [] };
+      cur.nums.push(v);
+    } else {
+      // a run of text with at least one letter starts a new segment
+      if (/[A-Za-z]{2}/.test(p)) {
+        if (cur && cur.nums.length) segs.push(cur);
+        cur = { label: p.trim(), nums: [] };
+      } else if (cur) {
+        // punctuation or spaces between numbers — keep the run together
+      }
+    }
+  }
+  if (cur && cur.nums.length) segs.push(cur);
+  return segs;
+}
+
+/* --------------------------------------------------- column policy ----- */
+function columnPolicy(text) {
+  const t = text.toLowerCase();
+  if (/grand\s*total/.test(t)) return { pick: 'last', name: 'Grand Total column' };
+  if (/\bper\s*annum\b|\bannual(ly)?\s*\(?inr\)?\b|monthly\s*annual/.test(t) && /monthly/.test(t))
+    return { pick: 'last', name: 'Annual column' };
+  if (/\bper\s*annum\b/.test(t) && !/monthly/.test(t)) return { pick: 'first', name: 'Per Annum column' };
+  if (/\bmaster\b.*\bactual\b/.test(t)) return { pick: 'first', name: 'Master (full-month) column' };
+  if (/\brate\b.*\bearned\b/.test(t)) return { pick: 'first', name: 'Rate column' };
+  return { pick: 'first', name: 'first amount column' };
+}
+
+/* ---------------------------------------------------- document typing -- */
+function detectDocType(text) {
+  const t = text.toLowerCase();
+  if (/ytd\s*summary|year\s*to\s*date|grand\s*total/.test(t)) return 'annual';
+  if (/ctc\s*break\s*-?\s*up|cost\s*to\s*company|annual\s*compensation|total\s*annual\s*ctc|salary\s*structure|compensation\s*breakup|letter\s*of\s*(offer|appointment)|offer\s*letter/.test(t))
+    return 'offer';
+  if (/pay\s*-?\s*slip|payslip|salary\s*slip|salary\s*advice/.test(t)) return 'monthly';
+  return 'monthly';
+}
+
+const DOC_TYPES = {
+  monthly: { key: 'monthly', label: 'One month\'s payslip', multiplier: 12,
+             note: 'Monthly figures multiplied by twelve.' },
+  annual:  { key: 'annual',  label: 'Annual / YTD salary statement', multiplier: 1,
+             note: 'Figures taken as they are — already for the year.' },
+  offer:   { key: 'offer',   label: 'Offer letter or CTC breakup', multiplier: 1,
+             note: 'Annual column of the CTC table.' }
+};
+
+/* A table row label is short and name-like. Prose sentences in an offer
+   letter contain numbers too ("the retention bonus ... in 2026"), and header
+   blocks carry account numbers, UANs and dates — neither is an amount. */
+function isTableLabel(label) {
+  const t = label.trim();
+  if (!t || t.length > 48) return false;
+  if (t.split(/\s+/).length > 6) return false;
+  if (/[.;:]\s+[a-z]/.test(t)) return false;              // mid-sentence prose
+  if (/\b(no|number|account|a\/c|pan|uan|gir|esi|ifsc|code|id|date|days|dob|month\s*days|paid\s*days)\b\.?\s*:?\s*$/i.test(t)) return false;
+  if (/\b(pan|uan|ifsc|esi)\b/i.test(t)) return false;
+  return true;
+}
+
+/* ------------------------------------------------------------- parsing - */
+function sum0(a) { return a.reduce(function (x, y) { return x + y.value; }, 0); }
+
+function parsePayslipText(text, forcedType) {
+  const rawLines = text.split(/\r?\n/).map(l => l.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  const detectedType = detectDocType(text);
+  const docType = forcedType || detectedType;
+  const policy = columnPolicy(text);
+
+  const hits = {};
+  const parts = { allow: [], bonus: [], arrear: [] };
+  let section = 'head';
+  let annualBlock = false;
+  const warnings = [];
+
+  const record = (f, value, conf, line) => {
+    if (!(value > 0)) return;
+    if (f === '_allow' || f === '_bonus' || f === '_arrear') {
+      const bucket = f === '_allow' ? 'allow' : f === '_bonus' ? 'bonus' : 'arrear';
+      parts[bucket].push({ label: line.slice(0, 46), value });
+      return;
+    }
+    if (!hits[f] || hits[f].confidence < conf) hits[f] = { value, confidence: conf, line };
+  };
+
+  /* Wrapped rows: a label with no amounts followed by amounts with no label
+     is one row the PDF happened to draw in two passes. Rejoin them. */
+  const lines = [];
+  for (let i = 0; i < rawLines.length; i++) {
+    const a = rawLines[i], b = rawLines[i + 1];
+    const labelOnly = /[A-Za-z]{3}/.test(a) && !NUMTOK.test(a);
+    const numsOnly = b && !/[A-Za-z]{3}/.test(b) && NUMTOK.test(b);
+    if (labelOnly && numsOnly && isTableLabel(a)) { lines.push(a + ' ' + b); i++; }
+    else lines.push(a);
+  }
+
+  let monthsCovered = null;
+  const cutAtAnnual = docType === 'monthly';
+  for (const line of lines) {
+    if (cutAtAnnual && ANNUAL_SECTION.test(line)) { annualBlock = true; continue; }
+    if (annualBlock) continue;                 // fix #2: never mix year into month
+    if (section === 'head' && TABLE_HEADER.test(line) && !NUMTOK.test(line)) section = 'table';
+
+    const segs = segmentLine(line);
+    for (const seg of segs) {
+      if (!seg.label || !seg.nums.length) continue;
+      const label = seg.label;
+      if (!isTableLabel(label)) continue;
+
+      for (const def of LABELS) {
+        if (!def.re.test(label)) continue;
+        if (def.not && def.not.test(label)) continue;
+        // account numbers, UANs, PAN digits and dates are not amounts
+        const nums = seg.nums.filter(n => n >= 1 && n < 1e10 &&
+                                     String(Math.round(n)).length <= 9);
+        if (!nums.length) break;
+        let v = policy.pick === 'last' ? nums[nums.length - 1] : nums[0];
+        // a zero/blank leading column means the value sits further right
+        if (!(v > 0)) v = nums.find(n => n > 0) || 0;
+        if (def.f === 'totalEarnings' && policy.pick === 'last' && nums.length > 2)
+          monthsCovered = nums.length - 1;      // twelve month columns + a total
+        record(def.f, v, def.w, label);
+        break;                                  // one label per SEGMENT, not per line
+      }
+    }
+  }
+
+  /* Period sanity — three ways one document misleads about a full year. */
+  const flat = lines.join(' \n ');
+  const lop = /\blop\b\s*(days)?\s*:?\s*(\d+)/i.exec(flat);
+  if (lop && parseInt(lop[2], 10) > 0)
+    warnings.push('This payslip shows ' + lop[2] + ' days of loss of pay, so the month is short. ' +
+      'Multiplying it by twelve understates your year — correct the figures below.');
+  const wd = /effective\s*work\s*days\s*:?\s*(\d+)/i.exec(flat);
+  const dm = /days\s*in\s*month\s*:?\s*(\d+)/i.exec(flat);
+  if (docType === 'monthly' && wd && dm && parseInt(wd[1], 10) < parseInt(dm[1], 10) && policy.pick !== 'first')
+    warnings.push('Only ' + wd[1] + ' of ' + dm[1] + ' days were worked in this month.');
+  if (parts.arrear.length)
+    warnings.push('This month includes arrears (' + fmt(sum0(parts.arrear)) +
+      '). Arrears are a one-off catch-up, so multiplying this month by twelve overstates your year.');
+  if (forcedType && detectedType !== forcedType)
+    warnings.push('You said this is ' + DOC_TYPES[forcedType].label.toLowerCase() +
+      ', but it reads like ' + DOC_TYPES[detectedType].label.toLowerCase() +
+      '. If the total below looks wrong by roughly twelve times, that is why — switch it above.');
+  if (monthsCovered && monthsCovered < 12)
+    warnings.push('This statement covers ' + monthsCovered + ' months, not twelve. ' +
+      'If you were paid for the whole year elsewhere too, the annual figure below is understated.');
+
+  const sum = arr => arr.reduce((a, x) => a + x.value, 0);
+  return {
+    docType, detectedType, policy, hits, parts, rawLines: lines, warnings, monthsCovered,
+    allowances: sum(parts.allow) + sum(parts.arrear),
+    bonuses: sum(parts.bonus)
+  };
+}
+
+/* --------------------------------------------------- parsed → profile -- */
+function parsedToProfile(parsed, taxYear) {
+  const p = emptyProfile();
+  p.taxYear = taxYear;
+  p.source = parsed.docType;
+  const mult = DOC_TYPES[parsed.docType].multiplier;
+  const g = f => (parsed.hits[f] ? parsed.hits[f].value : 0);
+
+  p.salary.basic = g('basic') * mult;
+  p.salary.hra = g('hra') * mult;
+  p.salary.otherAllowances = parsed.allowances * mult;
+  p.salary.employerNps = g('employerNps') * mult;
+  p.salary.employeePf = g('employeePf') * mult;
+  p.salary.professionalTax = g('professionalTax') * mult;
+  // Bonuses on an offer letter or a YTD statement are already annual amounts;
+  // a bonus that lands in one month's payslip must not be multiplied by twelve.
+  p.salary.bonus = parsed.bonuses * (parsed.docType === 'monthly' ? 1 : 1);
+
+  p.meta = {
+    docType: parsed.docType,
+    column: parsed.policy.name,
+    employerPf: g('employerPf') * mult,
+    gratuity: g('gratuity') * mult,
+    medicalInsurance: g('medicalInsurance') * mult,
+    incomeTaxDeducted: g('incomeTax') * mult,
+    netPay: g('netPay') * mult
+  };
+
+  const notes = [];
+
+  /* Offer letters state employer PF but rarely the employee's own share, which
+     is the one that fills part of the 80C ceiling. They are equal in almost
+     every Indian structure, so seed it and flag it rather than losing it. */
+  if (parsed.docType === 'offer' && !p.salary.employeePf && p.meta.employerPf) {
+    p.salary.employeePf = p.meta.employerPf;
+    p.estimates.employeePf = true;
+    notes.push('Your own PF contribution was assumed equal to the employer\'s (' +
+      fmt(p.meta.employerPf) + ') — that is how nearly every Indian structure works, but check it.');
+  }
+  if (p.meta.medicalInsurance > 0) {
+    p.hints = p.hints || {};
+    p.hints.s80D = p.meta.medicalInsurance;
+    notes.push('A health-insurance deduction of ' + fmt(p.meta.medicalInsurance) +
+      ' appears on the document — it will be offered as your 80D figure later.');
+  }
+
+  /* Reconcile against a printed total, but only against a like-for-like one.
+     A payslip's "Total Earnings" IS the gross. An offer letter's "Total CTC"
+     is NOT — it includes employer PF and gratuity, which are not your income. */
+  const printedGross = g('totalEarnings') * mult;
+  const summed = p.salary.basic + p.salary.hra + p.salary.otherAllowances +
+                 p.salary.bonus + p.salary.employerNps;
+  if (printedGross > 0) {
+    const diff = printedGross - summed;
+    if (Math.abs(diff) > Math.max(1000, printedGross * 0.005)) {
+      if (diff > 0) {
+        p.salary.otherAllowances += diff;
+        notes.push('The components read came to ' + fmt(summed) + ' but the document prints ' +
+          fmt(printedGross) + '. The difference was added to other allowances so nothing is lost.');
+      } else {
+        notes.push('The components read (' + fmt(summed) + ') exceed the printed total of ' +
+          fmt(printedGross) + '. Something was probably counted twice — check the fields below.');
+      }
+    }
+  } else if (parsed.docType === 'offer' && g('grossCtc')) {
+    const grossCtc = g('grossCtc') * mult;
+    const diff = grossCtc - summed;
+    if (diff > Math.max(1000, grossCtc * 0.005)) {
+      p.salary.otherAllowances += diff;
+      notes.push('Balanced to the "Gross" line on the offer (' + fmt(grossCtc) + ').');
+    }
+  }
+  if (parsed.docType === 'offer' && g('totalCtc')) {
+    const ctc = g('totalCtc') * mult;
+    notes.push('Your CTC of ' + fmt(ctc) + ' includes employer PF' +
+      (p.meta.gratuity ? ', gratuity' : '') + ' and other costs that are not taxable income to you. ' +
+      'This works from the salary you are actually paid, which is why the figure below is lower.');
+  }
+
+  p.parserNotes = notes;
+  p.parsed = parsed;
+  p.confidence = {};
+  ['basic','hra','employerNps','employeePf','professionalTax'].forEach(f => {
+    p.confidence[f] = parsed.hits[f] ? parsed.hits[f].confidence : 0;
+  });
+  p.confidence.otherAllowances = parsed.parts.allow.length ? 0.75 : 0;
+  p.confidence.bonus = parsed.parts.bonus.length ? 0.9 : 0;
+  return p;
+}
+
+/* ------------------------------------------------------------ pdf text - */
+async function extractPdfText(file, password) {
+  if (typeof pdfjsLib === 'undefined') throw new Error('PDF reader unavailable');
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: buf, password: password || '' }).promise;
+  const lines = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const items = [];
+    content.items.forEach(it => {
+      if (!it.str || !it.str.trim()) return;
+      items.push({ x: it.transform[4], y: it.transform[5],
+                   w: it.width || it.str.length * 4.5, h: it.height || 9, s: it.str });
+    });
+    lines.push.apply(lines, assembleLines(items));
+  }
+  return lines.join('\n');
+}
+
+/* Group text items into visual rows and rebuild each row as a string.
+
+   Two things break naive grouping, and both showed up in every real payslip:
+   items in one row differ in baseline by a pixel or two, so a fixed rounding
+   grid splits a row in half (the label on one line, its amounts on the next);
+   and a single number is sometimes drawn as several runs ("7" + "3,000.00"),
+   so a space between them corrupts the value. Cluster by baseline with a
+   tolerance derived from the text height, then join by the real horizontal
+   gap: touching runs concatenate, a normal gap is a space, a wide gap is a
+   column break. */
+function assembleLines(items) {
+  if (!items.length) return [];
+  const heights = items.map(i => i.h).sort((a, b) => a - b);
+  const medianH = heights[Math.floor(heights.length / 2)] || 9;
+  const tol = Math.max(2.5, medianH * 0.55);
+
+  const sorted = items.slice().sort((a, b) => b.y - a.y || a.x - b.x);
+  const rows = [];
+  let cur = null;
+  sorted.forEach(it => {
+    if (cur && Math.abs(cur.y - it.y) <= tol) {
+      cur.items.push(it);
+      cur.y = (cur.y * (cur.items.length - 1) + it.y) / cur.items.length;
+    } else {
+      cur = { y: it.y, items: [it] };
+      rows.push(cur);
+    }
+  });
+
+  return rows.map(r => {
+    const its = r.items.sort((a, b) => a.x - b.x);
+    let line = '', end = null;
+    its.forEach(it => {
+      if (end !== null) {
+        const gap = it.x - end;
+        if (gap < 1.5) line += '';          // same number split across runs
+        else if (gap < 10) line += ' ';
+        else line += '   ';                  // column break
+      }
+      line += it.s;
+      end = it.x + it.w;
+    });
+    return line.replace(/[ \t]+/g, ' ').trim();
+  }).filter(Boolean);
+}
+
+
+
+/* ============================================================================
+   INTERVIEW — a declarative decision tree, not a model. Fifteen nodes, ordered
+   by expected rupee impact, with a numeric stopping rule: as soon as every
+   remaining question added together cannot close the gap to the new regime,
+   the interview ends. That is what keeps it four to six questions instead of
+   thirty, and it is why the chat can be scripted without feeling like a form.
+   ========================================================================== */
+
+const TRIAGE = [
+  { id: 'business',  label: 'Business, freelance or professional income',
+    note: 'This tool only handles salary. Freelance or business income is reported on different forms (ITR-3 or ITR-4) with their own rules — a CA needs to be involved.' },
+  { id: 'capgains',  label: 'Sold shares, mutual funds or property this year',
+    note: 'Profit from selling an investment is called a "capital gain" — for example, buying a stock for ₹1,00,000 and selling it for ₹1,30,000 is a ₹30,000 gain. Unlike salary, it is not added to your slab and taxed at 5%/20%/30% — it gets its own flat rate depending on how long you held it, and that calculation needs its own schedule this tool doesn\'t cover.' },
+  { id: 'foreign',   label: 'Foreign assets, or ESOPs of a company listed abroad',
+    note: 'Owning a foreign bank account, stock, or ESOPs from a company listed outside India means you must file "Schedule FA" — missing it carries steep penalties, so this needs a CA.' },
+  { id: 'nri',       label: 'Non-resident or RNOR for this year',
+    note: 'Your residency status (how many days you spent in India) changes which of your income is even taxable here — this tool assumes a normal Indian resident.' },
+  { id: 'employers', label: 'More than two employers this year',
+    note: 'If you switched jobs more than once, your salary and TDS from every employer has to be added together correctly first — this tool only reads one document at a time.' }
+];
+
+const QUESTIONS = [
+  {
+    id: 'bonus',
+    when: p => p.source === 'monthly' && p.salary.bonus === 0,
+    always: true,   // moves BOTH regimes, so never skipped by the stopping rule
+    tier: 2,
+    topic: 'bonus',
+    ask: 'Does your annual pay include a bonus or variable component that is not on this payslip?',
+    why: 'One payslip can only see one month. This is the single biggest reason a projection goes wrong.',
+    type: 'chips-then-amount',
+    chips: [
+      { label: 'No, my pay is fixed', value: 0 },
+      { label: 'Yes — I know roughly', value: 'ask' },
+      { label: "I'm not sure yet", value: 'unknown' }
+    ],
+    amountLabel: 'Roughly how much for the full year?',
+    apply: (p, v) => {
+      if (v === 'unknown') { p.estimates.bonus = true; p.bonusUnknown = true; }
+      else { p.salary.bonus = v; if (v > 0) p.estimates.bonus = true; }
+    }
+  },
+  {
+    id: 'rent',
+    when: p => p.salary.hra > 0 && !p.flags.ownsHome,
+    impact: p => Math.min(p.salary.hra, 0.5 * p.salary.basic),
+    topic: 'hra',
+    ask: 'Your payslip has an HRA component, so this one is worth checking. Do you pay rent?',
+    why: 'HRA exemption is usually the largest single deduction available to a salaried renter.',
+    type: 'chips-then-rent',
+    chips: [
+      { label: 'Yes, I rent', value: 'yes' },
+      { label: 'No', value: 'no' },
+      { label: 'I own the home I live in', value: 'own' }
+    ],
+    apply: (p, v) => {
+      if (v === 'own') p.flags.ownsHome = true;
+      if (v !== 'yes') p.deductions.rentPaid = 0;
+    }
+  },
+  {
+    id: 'homeLoan',
+    impact: () => 200000,
+    topic: 'homeLoanInterest',
+    ask: 'Are you paying interest on a home loan for a property you live in?',
+    why: 'Up to ₹2,00,000 of interest is deductible under the old regime — Section 22, formerly 24(b).',
+    type: 'chips-then-amount',
+    chips: [
+      { label: 'No', value: 0 },
+      { label: 'Yes — I know the interest', value: 'ask' },
+      { label: "Yes, but I don't know the figure", value: 'estimate' }
+    ],
+    amountLabel: 'Interest paid this year (not the full EMI — your bank\'s provisional certificate shows it separately)',
+    estimateValue: 200000,
+    apply: (p, v) => {
+      p.deductions.homeLoanInterest = v;
+      if (v === 200000) p.estimates.homeLoanInterest = true;
+      if (v > 0) p.flags.hasHomeLoan = true;
+    }
+  },
+  {
+    id: 's80C',
+    impact: p => Math.max(0, 150000 - p.salary.employeePf - p.deductions.s80C_other),
+    topic: 's80C',
+    ask: p => {
+      const pf = p.salary.employeePf;
+      const left = Math.max(0, 150000 - pf);
+      return pf > 0
+        ? 'Your EPF of ' + fmt(pf) + ' already counts towards the ₹1,50,000 Section 123 ceiling — most people don\'t realise that. Do you have anything else in there? ' +
+          (left > 0 ? 'You have ' + fmt(left) + ' of room left.' : 'The ceiling is already full, so this one can\'t grow.')
+        : 'Do you have any Section 123 investments — ELSS, PPF, LIC premiums, children\'s tuition fees, home-loan principal?';
+    },
+    why: 'Section 123 is what used to be 80C. The ceiling is ₹1,50,000 across everything in it — added together, not each on its own.',
+    type: 'chips-then-multi-amount',
+    chips: [
+      { label: 'Nothing else', value: 0 },
+      { label: 'Yes, let me enter it', value: 'ask' }
+    ],
+    fields: [
+      { key: 'elss', label: 'ELSS mutual funds' },
+      { key: 'ppf', label: 'PPF' },
+      { key: 'lic', label: 'LIC / life insurance premiums' },
+      { key: 'tuition', label: "Children's tuition fees" },
+      { key: 'homeLoanPrincipal', label: 'Home loan principal repaid' },
+      { key: 'other', label: 'Anything else under Section 123' }
+    ],
+    apply: (p, v) => {
+      const sum = typeof v === 'object'
+        ? Object.keys(v).reduce((a, k) => a + (parseFloat(v[k]) || 0), 0)
+        : v;
+      p.deductions.s80C_other = sum;
+      p.deductions.s80C_breakdown = typeof v === 'object' ? v : null;
+    }
+  },
+  {
+    id: 's80CCD1B',
+    impact: () => 50000,
+    topic: 's80CCD1B',
+    ask: 'Do you put money into NPS yourself, separate from anything your employer contributes?',
+    why: 'Your own NPS contribution gets ₹50,000 on top of the Section 123 ceiling — 80CCD(1B).',
+    type: 'chips-then-amount',
+    chips: [
+      { label: 'No', value: 0 },
+      { label: 'Yes — ₹50,000 or more', value: 50000 },
+      { label: 'Yes, a smaller amount', value: 'ask' }
+    ],
+    amountLabel: 'How much for the year?',
+    apply: (p, v) => { p.deductions.s80CCD1B = v; }
+  },
+  {
+    id: 's80D',
+    impact: () => 100000,
+    topic: 's80D',
+    ask: 'Do you pay health insurance premiums for yourself, your family or your parents?',
+    why: 'Section 126 (was 80D): ₹25,000 for yourself and family, plus another ₹25,000 for parents — each becomes ₹50,000 if the person insured is a senior citizen.',
+    type: 'chips-then-amount',
+    chips: [
+      { label: 'No', value: 0 },
+      { label: 'Yes, let me enter it', value: 'ask' }
+    ],
+    amountLabel: 'Total premiums for the year (a company group policy you don\'t pay for doesn\'t count)',
+    apply: (p, v) => { p.deductions.s80D = v; }
+  },
+  {
+    id: 's80E',
+    impact: () => 150000,
+    topic: 's80E',
+    ask: 'Are you repaying an education loan for yourself, your spouse or your children?',
+    why: 'The interest is fully deductible with no ceiling for eight years — Section 127, was 80E.',
+    type: 'chips-then-amount',
+    chips: [{ label: 'No', value: 0 }, { label: 'Yes', value: 'ask' }],
+    amountLabel: 'Interest paid this year',
+    apply: (p, v) => { p.deductions.s80E = v; }
+  },
+  {
+    id: 's80G',
+    impact: () => 50000,
+    topic: 's80G',
+    ask: 'Did you make any donations that qualify for 100% deduction — a PM relief fund, or a notified fund?',
+    why: 'Only the 100%-without-limit categories are handled here; the percentage-limited ones need your CA.',
+    type: 'chips-then-amount',
+    chips: [{ label: 'No', value: 0 }, { label: 'Yes', value: 'ask' }],
+    amountLabel: 'Total donated (only 100%-deduction categories)',
+    apply: (p, v) => { p.deductions.s80G = v; }
+  },
+  {
+    id: 'otherIncome',
+    always: true,          // affects both regimes, so it is never skipped
+    topic: 'otherIncome',
+    ask: 'Last one. Roughly how much interest did you earn from savings accounts and fixed deposits this year?',
+    why: 'This is taxable under both regimes and it is the single most commonly forgotten head — the tax department already has it from your AIS.',
+    type: 'two-amounts',
+    fields: [
+      { key: 'savingsInterest', label: 'Savings account interest' },
+      { key: 'fdInterest', label: 'Fixed deposit interest' }
+    ],
+    apply: (p, v) => {
+      p.otherIncome.savingsInterest = v.savingsInterest || 0;
+      p.otherIncome.fdInterest = v.fdInterest || 0;
+    }
+  }
+];
+
+/* The stopping rule. Returns the next question, or null when the remaining
+   catalogue provably cannot change the verdict. */
+function nextQuestion(p, pack) {
+  const asked = p.answered;
+  const remaining = QUESTIONS.filter(q => !asked[q.id] && (!q.when || q.when(p)));
+  if (!remaining.length) return null;
+
+  const cmp = compareRegimes(p, pack);
+  const be = breakEvenDeductions(p, pack);
+
+  // Once the old regime is already ahead, every further deduction only widens
+  // it — but "always" questions still run because they move both regimes.
+  const alwaysLeft = remaining.filter(q => q.always);
+  if (be.alreadyAhead) return alwaysLeft[0] || null;
+
+  // be.needed is already "how much MORE deduction, on top of what's found
+  // right now, would close the gap" — breakEvenDeductions() bisects from the
+  // current profile, so it's self-relative already. Subtracting the current
+  // total again here would double-count it and understate the real gap,
+  // making the early-exit rule below fire sooner than it honestly should.
+  const gap = be.needed === null ? Infinity : be.needed;
+  const roomLeft = remaining.filter(q => !q.always)
+    .reduce((a, q) => a + (q.impact ? q.impact(p) : 0), 0);
+
+  if (roomLeft < gap) {
+    p.earlyExit = { gap: gap, roomLeft: roomLeft };
+    return alwaysLeft[0] || null;
+  }
+  return remaining[0];
+}
+
+function outOfScopeNote(ids) {
+  return TRIAGE.filter(t => ids.indexOf(t.id) >= 0);
+}
+
+
+
+/* ============================================================================
+   EXPLANATION + EDIT LAYER — the only part that touches a network, and the
+   only part that may be switched off without breaking anything.
+
+   What it never receives: the payslip, the uploaded file, any name, PAN, UAN,
+   employee code or bank detail. The parser runs locally and those fields are
+   never even extracted. What it does receive: the computed numbers and the
+   current value of every editable input — the same numbers already on screen.
+
+   What the model may never do: arithmetic. It classifies what the person
+   wants (a question vs. an instruction to change something) and, for a
+   change, extracts the field and the amount they stated — but the amount is
+   copied verbatim, and applying it (set vs. add to the current value) is
+   done by this app's own code in 70_ui.js, never by the model. See
+   applyActions() there and ALLOWED_FIELDS in the worker for the shared
+   contract.
+   ========================================================================== */
+
+/* A small Cloudflare Worker holds the real Groq key server-side (see
+   /worker/tax-copilot-groq in the arjunuvacha repo) so a visitor gets a
+   working chat with zero setup, and the key is never shipped to the browser.
+   The system prompt and response schema live there, not here, so most
+   behaviour tweaks are a worker deploy, not a rebuild of this file. */
+const TAXCOPILOT_WORKER = 'https://tax-copilot-groq.harisharjun127.workers.dev';
+
+/* Every editable figure this person has entered so far, at its current
+   value — sent alongside the computed numbers so the model can both answer
+   "what's my declared ELSS" accurately and reason about edits without ever
+   being asked to invent or recall a number itself. */
+function editableInputs(p) {
+  const b = p.deductions.s80C_breakdown || {};
+  const s80cOther = b.other != null ? b.other : (p.deductions.s80C_other || 0);
+  return {
+    bonus: p.salary.bonus,
+    homeLoanInterest: p.deductions.homeLoanInterest,
+    s80D: p.deductions.s80D,
+    s80CCD1B: p.deductions.s80CCD1B,
+    s80E: p.deductions.s80E,
+    s80G: p.deductions.s80G,
+    s80C: {
+      elss: b.elss || 0, ppf: b.ppf || 0, lic: b.lic || 0,
+      tuition: b.tuition || 0, homeLoanPrincipal: b.homeLoanPrincipal || 0,
+      other: s80cOther
+    },
+    savingsInterest: p.otherIncome.savingsInterest,
+    fdInterest: p.otherIncome.fdInterest,
+    rentPaid: p.deductions.rentPaid,
+    rentMonthly: Math.round((p.deductions.rentPaid || 0) / 12),
+    metro: !!p.deductions.metro
+  };
+}
+
+/* A PII-free snapshot: numbers only, nothing that identifies a person. */
+function explainContext(state) {
+  const c = state.comparison, pack = state.pack;
+  const line = r => ({
+    regime: r.regimeName,
+    grossSalary: r.gross,
+    standardDeduction: r.standardDeduction,
+    otherIncome: r.otherIncome,
+    deductions: r.deductions.map(d => ({ name: d.label, rule: d.rule, allowed: d.amount, claimed: d.claimed, capped: d.capped })),
+    totalDeductions: r.deductionTotal,
+    taxableIncome: r.taxableIncome,
+    taxBeforeRebate: r.baseTax,
+    rebate: r.rebate,
+    surcharge: r.surcharge,
+    cess: r.cess,
+    totalTax: r.total
+  });
+  return {
+    taxYear: pack.taxYear,
+    statute: pack.statute,
+    verdict: c.winner === 'neu' ? 'New regime' : 'Old regime',
+    annualSaving: c.saving,
+    monthlySaving: Math.round(c.monthlySaving),
+    breakEvenDeductionsNeeded: state.breakEven ? state.breakEven.needed : null,
+    deductionsFound: c.old.deductionTotal,
+    robustness: state.robust ? {
+      verdictHoldsAcrossIncomeBand: state.robust.stable,
+      bandLow: Math.round(state.robust.low),
+      bandHigh: Math.round(state.robust.high),
+      flipsAtGrossIncome: state.robust.flipAt ? Math.round(state.robust.flipAt) : null
+    } : null,
+    newRegime: line(c.neu),
+    oldRegime: line(c.old),
+    outOfScope: state.profile.outOfScope,
+    inputs: editableInputs(state.profile)
+  };
+}
+
+/* Returns { ok, text, actions } on success — actions is always an array
+   (empty for a plain question), never trusted further than "a candidate
+   the caller must still validate" (see applyActions() in 70_ui.js).
+   Returns { ok:false, reason, ... } on any failure so the caller can fall
+   back to the offline regex parser and canned reference text. */
+async function askExplainer(state, userQuestion, history) {
+  try {
+    const res = await fetch(TAXCOPILOT_WORKER, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: userQuestion,
+        history: history || [],
+        context: explainContext(state)
+      })
+    });
+    if (!res.ok) {
+      const t = await res.text();
+      return { ok: false, reason: 'http', status: res.status, detail: t.slice(0, 400) };
+    }
+    const j = await res.json();
+    if (!j.reply) return { ok: false, reason: 'empty' };
+    return { ok: true, text: j.reply.trim(), actions: Array.isArray(j.actions) ? j.actions : [] };
+  } catch (e) {
+    return { ok: false, reason: 'network', detail: String(e.message || e) };
+  }
+}
+
+/* Pre-written fallbacks. The product must read correctly with the model off. */
+function fallbackExplain(topicId, pack) {
+  const c = (pack.catalogue || []).find(x => x.id === topicId);
+  if (c) return c.label + ' — ' + c.rule + '. ' + c.note;
+  return 'The explanation layer needs the backend reachable. Everything else on this page is computed locally and is unaffected.';
+}
+
+/* ============================================================================
+   UI — screens, the scripted chat, and rendering. Every number it displays
+   comes from the engine; this file never computes tax.
+   ========================================================================== */
+
+/* Only one tax year is offered right now, so there's nothing for a user to
+   pick — this is the single source of truth instead of a one-option dropdown. */
+const CURRENT_TAX_YEAR = '2026-27';
+
+const S = { profile: null, pack: null, comparison: null, breakEven: null,
+            robust: null, pendingQ: null, baselineGap: null, chatHistory: [] };
+
+const $ = id => document.getElementById(id);
+const el = (tag, cls, txt) => { const n = document.createElement(tag);
+  if (cls) n.className = cls; if (txt !== undefined) n.textContent = txt; return n; };
+
+/* ---------------------------------------------------------- glossary ---- */
+/* Plain-English, example-led explanations for anyone who has never filed a
+   return before. Keyed by the same ids used as `topic` on interview
+   QUESTIONS and as salary field keys. */
+const GLOSSARY = {
+  basic: { term: 'Basic salary', body:
+    'The fixed core of your pay before any allowances. It usually doesn\'t change month to month, and it is the number several other things are calculated from — like how much of your HRA is tax-free, or how much your employer can put into NPS.' },
+  hra: { term: 'HRA (House Rent Allowance)', body:
+    'An allowance your employer pays you towards rent, shown as a separate line on your payslip. If you actually pay rent, part of it can be tax-free — but the tax-free part is often less than the full HRA on your payslip, because the rule takes the smallest of three numbers: the HRA you receive, your rent minus 10% of basic, and 40% (or 50% in a metro) of basic.\n\nExample: HRA ₹10,000/month, rent ₹12,000/month, basic ₹20,000/month, non-metro. The three numbers are ₹10,000, ₹10,000 (12,000 − 2,000), and ₹8,000 (40% of 20,000). The smallest is ₹8,000 — so only ₹8,000/month is tax-free, not the full ₹10,000.' },
+  otherAllowances: { term: 'Other allowances', body:
+    'Everything else on your payslip that isn\'t basic, HRA or bonus — special allowance, conveyance, LTA, food coupons, internet/phone reimbursement and similar. Almost all of it is fully taxable in both regimes, so it just adds to your gross income.' },
+  bonus: { term: 'Bonus / variable pay', body:
+    'Money paid on top of your regular monthly salary — a yearly bonus, a performance payout, or a sales incentive. It is taxed exactly like salary, just usually paid once or twice a year instead of monthly. A single payslip can\'t see it, which is why this tool asks separately.' },
+  employerNps: { term: "Employer's NPS contribution", body:
+    'Money your company puts into your National Pension System account on your behalf — separate from what you might put in yourself. Unusually, this is one of the very few deductions that survives in the New regime too (capped at 14% of your basic salary), while most old-regime deductions don\'t.' },
+  employeePf: { term: 'Your PF (Provident Fund) contribution', body:
+    'The slice of your own salary that goes into your retirement PF account every month — usually 12% of basic. It\'s a deduction you never see as take-home pay, but it counts towards the ₹1,50,000 Section 123 (old 80C) limit automatically, often filling a large part of it before you invest anything else.' },
+  professionalTax: { term: 'Professional tax', body:
+    'A small state-government tax on your employment, usually ₹200/month or less, deducted straight from your payslip. It\'s fully deductible, but only under the Old regime.' },
+  s80C: { term: 'Section 123 (old name: 80C)', body:
+    'A basket of common long-term investments and payments that together reduce your taxable income by up to ₹1,50,000 a year, only under the Old regime. Your own PF contribution usually already sits inside this basket without you doing anything.\n\nExample: PF of ₹90,000 (from your payslip) + PPF of ₹40,000 + LIC premium of ₹20,000 = ₹1,50,000 — the ceiling is full, so any more in this basket earns you nothing extra.' },
+  s80CCD1B: { term: '80CCD(1B) — your own NPS contribution', body:
+    'If you personally invest in NPS (not what your employer contributes), up to ₹50,000 of it is deductible — and this is on top of, not inside, the ₹1,50,000 Section 123 basket. It only applies under the Old regime.' },
+  s80D: { term: 'Section 126 (old name: 80D) — health insurance premiums', body:
+    'Premiums you pay for health insurance. Up to ₹25,000 for yourself and your family, plus another ₹25,000 for your parents\' policy — and each of those becomes ₹50,000 if the person insured is a senior citizen (60+). A company-paid group policy you don\'t pay for doesn\'t count. Old regime only.' },
+  homeLoanInterest: { term: 'Home loan interest (Section 22, old name: 24(b))', body:
+    'If you have a home loan on the house you actually live in, the interest portion of your EMI (not the principal, and not the full EMI) is deductible up to ₹2,00,000 a year. Your bank\'s provisional interest certificate shows the interest and principal split separately. Old regime only.' },
+  s80E: { term: '80E — education loan interest', body:
+    'Interest on an education loan for yourself, your spouse or your children is fully deductible with no upper limit, for up to 8 years from when you start repaying. Only the interest counts, not the principal. Old regime only.' },
+  s80G: { term: '80G — donations', body:
+    'Donations to certain funds (like the PM relief fund or other notified funds) can be 100% deductible with no cap. This tool only handles that "100%, no limit" category — donations to other charities are often only partly deductible up to a percentage of your income, and need a CA to work out. Old regime only.' },
+  otherIncome: { term: 'Savings & FD interest', body:
+    'Interest your bank pays you on your savings account or fixed deposits. It\'s ordinary taxable income under both regimes — not a deduction — and it\'s one of the most commonly forgotten items, because the tax department already sees it via your AIS (Annual Information Statement) even if you don\'t declare it yourself.' },
+  oldRegime: { term: 'Old regime', body:
+    'The original tax system with more deductions (HRA, 80C, home loan interest, and more) but higher effective rates before those deductions. It tends to win for people with large deductions — typically renters with a home loan, or big investors in tax-saving schemes.' },
+  newRegime: { term: 'New regime', body:
+    'The default, simpler system: lower rates, but almost no deductions to claim (only the standard deduction and employer NPS survive). No paperwork, no proofs to submit. It tends to win for people with few deductions.' },
+  grossSalary: { term: 'Gross salary', body:
+    'Everything your employer pays you as salary, added up — basic, HRA, allowances, bonus, and employer NPS — before any deductions are taken out. It is not the same as CTC: employer PF and gratuity are part of your CTC but are not counted here because they are not paid to you as salary.' },
+  standardDeduction: { term: 'Standard deduction (Section 19, old name: 16(ia))', body:
+    'A flat amount every salaried person can subtract from their salary before tax, no bills or proof needed. It is bigger under the New regime (₹75,000) than the Old regime (₹50,000) this year — one of the few things that actually favours the New regime.' },
+  grossTotalIncome: { term: 'Gross total income', body:
+    'Your salary after the standard deduction, plus any other income like bank interest. This is the number deductions (HRA, 80C, 80D and the rest) are subtracted from next, under the Old regime.' },
+  taxableIncome: { term: 'Taxable income', body:
+    'What is actually left to be taxed — gross total income minus every deduction you are allowed. This is the figure the tax slabs are applied to, and it is usually very different between the two regimes since the Old regime allows far more deductions.' },
+  taxOnSlabs: { term: 'Tax on slabs', body:
+    'India taxes income in slices, not as one flat rate on everything — for example, under the New regime the first ₹4,00,000 is taxed at 0%, the next ₹4,00,000 at 5%, and so on upward. This row is what those slices add up to before any rebate is applied.' },
+  rebate: { term: 'Rebate (Section 156, old name: 87A)', body:
+    'A discount that can wipe out your tax completely if your taxable income is low enough — up to ₹12,00,000 under the New regime, or ₹5,00,000 under the Old regime. Just above that threshold, "marginal relief" softens the jump so a few thousand rupees of extra income does not suddenly cost you the whole rebate.' },
+  surcharge: { term: 'Surcharge', body:
+    'An extra charge on top of your tax, but only once your taxable income crosses a high threshold — starting at ₹50,00,000. Most salaried people never see this row at all; it only appears here because it might apply to you.' },
+  cess: { term: 'Health & education cess', body:
+    'A flat 4% add-on charged on your tax itself (tax + surcharge), not on your income — it funds health and education spending. Everyone pays it, in both regimes, with no exemption.' },
+  totalTax: { term: 'Total tax payable', body:
+    'The final amount: tax on slabs, minus any rebate, plus surcharge (if it applies) and the 4% cess. This is what actually gets deducted from your salary across the year via TDS.' },
+  s80TTA: { term: '80TTA — savings account interest', body:
+    'Up to ₹10,000 of the interest your savings account (not a fixed deposit) earns in a year is deductible under the Old regime. Anything above ₹10,000, and all fixed-deposit interest, is fully taxable regardless.' }
+};
+
+function openGlossary(topic) {
+  const g = GLOSSARY[topic];
+  if (!g) return;
+  $('glossary-term').textContent = g.term;
+  $('glossary-body').textContent = g.body;
+  $('glossary-backdrop').hidden = false;
+  $('glossary-modal').hidden = false;
+}
+function closeGlossary() {
+  $('glossary-backdrop').hidden = true;
+  $('glossary-modal').hidden = true;
+}
+/* A small inline "what's this?" button wired to the glossary modal. */
+function whatsThisBtn(topic) {
+  if (!GLOSSARY[topic]) return null;
+  const b = el('button', 'whatsthis', 'What\'s this?');
+  b.type = 'button';
+  b.addEventListener('click', e => { e.preventDefault(); openGlossary(topic); });
+  return b;
+}
+/* Same thing, compact — a "(?)" circle rather than a full pill, for dense
+   contexts like the computation table where a labelled button on every
+   row would overwhelm the row itself. */
+function whatsThisIcon(topic) {
+  if (!GLOSSARY[topic]) return null;
+  const b = el('button', 'whatsthis-icon', '?');
+  b.type = 'button';
+  b.setAttribute('aria-label', 'What is ' + GLOSSARY[topic].term + '?');
+  b.addEventListener('click', e => { e.preventDefault(); openGlossary(topic); });
+  return b;
+}
+
+const PREV_SCREEN = {
+  'screen-confirm': 'screen-start',
+  'screen-triage': 'screen-confirm',
+  'screen-scope': 'screen-triage',
+  'screen-interview': 'screen-triage',
+  'screen-result': 'screen-interview',
+  'screen-manual': 'screen-start'
+};
+/* Screens where the persistent AI bar makes sense — anything after a document
+   or manual entry is underway. Hidden on the very first screen (nothing to
+   ask about yet) and on the standalone tests screen. */
+const AI_BAR_SCREENS = ['screen-confirm', 'screen-triage', 'screen-scope', 'screen-interview', 'screen-result'];
+/* The topbar is now two rows (brand+restart, then Back on its own line when
+   present) so its real height varies — the sticky meter below it needs to
+   know that height exactly, or it either overlaps or leaves a gap. */
+function syncTopbarHeight() {
+  const tb = document.querySelector('.topbar');
+  if (tb) document.documentElement.style.setProperty('--topbar-h', tb.offsetHeight + 'px');
+}
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+  window.scrollTo({ top: 0, behavior: 'auto' });
+  const back = $('btn-back');
+  if (back) back.hidden = !PREV_SCREEN[id];
+  const bar = $('ai-bar');
+  if (bar) bar.hidden = AI_BAR_SCREENS.indexOf(id) < 0;
+  syncTopbarHeight();
+}
+function currentScreenId() {
+  const s = document.querySelector('.screen.active');
+  return s ? s.id : null;
+}
+/* Back retains every value already entered — it just re-renders the previous
+   step from the same S.profile / S state, rather than resetting anything. */
+function goBack() {
+  const cur = currentScreenId();
+  const prev = PREV_SCREEN[cur];
+  if (!prev) return;
+  if (prev === 'screen-confirm') return goConfirm(S.profile, S.parsed);
+  if (prev === 'screen-triage') return renderTriage();
+  if (prev === 'screen-interview') return show('screen-interview'); // chat log stays exactly as it was
+  if (prev === 'screen-start') return show('screen-start');
+}
+function pack() { return RULEPACKS[S.profile.taxYear]; }
+
+/* ---------------------------------------------------------- salary fields */
+const SALARY_FIELDS = [
+  { k: 'basic', label: 'Basic salary', hint: 'Drives HRA and the NPS caps' },
+  { k: 'hra', label: 'House rent allowance', hint: 'What your payslip pays you, not what you claim' },
+  { k: 'otherAllowances', label: 'All other allowances', hint: 'Special, conveyance, LTA, flexible benefits' },
+  { k: 'bonus', label: 'Bonus / variable pay', hint: 'Annual, if any' },
+  { k: 'employerNps', label: "Employer's NPS contribution", hint: 'Counts in both regimes' },
+  { k: 'employeePf', label: 'Your PF contribution', hint: 'Already counts inside the ₹1.5L ceiling' },
+  { k: 'professionalTax', label: 'Professional tax', hint: 'Old regime only' }
+];
+
+function renderFieldGrid(container, profile, onChange, showConfidence) {
+  container.innerHTML = '';
+  SALARY_FIELDS.forEach(f => {
+    const wrap = el('div', 'field');
+    const lbl = el('div', 'lbl');
+    lbl.appendChild(el('label', null, f.label));
+    const wt = whatsThisBtn(f.k);
+    if (wt) lbl.appendChild(wt);
+    if (showConfidence) {
+      const c = (profile.confidence || {})[f.k];
+      if (c === undefined) { /* nothing */ }
+      else if (c >= 0.8 && profile.salary[f.k] > 0) lbl.appendChild(el('span', 'flagchip ok', 'read'));
+      else if (profile.salary[f.k] > 0) lbl.appendChild(el('span', 'flagchip', 'check'));
+      else lbl.appendChild(el('span', 'flagchip', 'not found'));
+    }
+    wrap.appendChild(lbl);
+    const inp = el('input'); inp.type = 'number'; inp.min = '0'; inp.step = '1';
+    inp.value = Math.round(profile.salary[f.k]) || '';
+    inp.setAttribute('aria-label', f.label);
+    inp.addEventListener('input', () => {
+      profile.salary[f.k] = parseFloat(inp.value) || 0;
+      profile.confidence = profile.confidence || {}; profile.confidence[f.k] = 1;
+      onChange();
+    });
+    wrap.appendChild(inp);
+    wrap.appendChild(el('div', 'tiny muted', f.hint));
+    container.appendChild(wrap);
+  });
+}
+
+/* ------------------------------------------------------------- confirm */
+function goConfirm(profile, parsed) {
+  S.profile = profile; S.pack = pack(); S.parsed = parsed;
+  $('pill-year').textContent = 'FY ' + profile.taxYear;
+
+  const type = parsed ? parsed.docType : null;
+  $('typeswitch-card').hidden = !parsed;
+  if (parsed) {
+    $('confirm-period').textContent = DOC_TYPES[type].label;
+    $('doctype-note').textContent = DOC_TYPES[type].note +
+      ' Amounts taken from the ' + parsed.policy.name + '.';
+  }
+  $('confirm-sub').textContent = parsed
+    ? (type === 'monthly'
+        ? 'Anything marked “check” was found but is worth a glance; “not found” means it was not on the document at all.'
+        : 'These are annual figures taken straight from the document. Correct anything that looks off.')
+    : 'Enter or adjust anything below.';
+
+  const msg = $('confirm-msg'); msg.innerHTML = '';
+  const addNote = (html, warn) => {
+    const n = el('div', 'note' + (warn ? ' warn' : '')); n.innerHTML = html; msg.appendChild(n);
+  };
+  (parsed ? parsed.warnings : []).forEach(w => addNote('<b>Worth a look.</b> ' + w, true));
+  (profile.parserNotes || []).forEach(n => addNote(n, false));
+  if (parsed && type === 'monthly' && !parsed.warnings.length)
+    addNote('<b>One month can\'t see a year.</b> Bonus, appraisals and arrears are invisible here — ' +
+            'you\'ll be asked about the bonus next, and the result will say whether the answer even depends on it.');
+  if (parsed && type === 'offer')
+    addNote('<b>Offer letters are the best input.</b> These are real annual figures, so the projection ' +
+            'below does not depend on guessing a bonus.');
+
+  const redraw = () => $('confirm-gross').textContent = fmt(grossSalary(profile));
+  renderFieldGrid($('confirm-fields'), profile, redraw, !!parsed);
+  redraw();
+  $('confirm-error').hidden = true;
+  const hadParts = renderParts(parsed);
+  $('btn-show-parts').hidden = !hadParts;
+  if (parsed) {
+    $('confirm-raw').hidden = false;
+    $('raw-lines').textContent = parsed.rawLines.slice(0, 80).join('\n');
+  } else $('confirm-raw').hidden = true;
+  show('screen-confirm');
+}
+
+/* Show the individual lines the parser actually recognised. The confirm card
+   is the trust moment; "here is every line I read and what I did with it"
+   is what makes a wrong number findable instead of mysterious. */
+function renderParts(parsed) {
+  const box = $('confirm-parts');
+  if (!parsed) { box.innerHTML = ''; return false; }
+  const rows = [];
+  const push = (group, items) => items.forEach(i =>
+    rows.push([group, i.label.replace(/\s+/g, ' ').trim(), i.value, 1]));
+  push('Allowance', parsed.parts.allow);
+  push('Arrears', parsed.parts.arrear);
+  push('Bonus', parsed.parts.bonus);
+  const KIND = {
+    basic: ['Basic', 1], hra: ['HRA', 1],
+    employeePf: ['Your PF → 80C', 1],
+    professionalTax: ['Prof. tax → deduction', 1],
+    employerNps: ['Employer NPS → both regimes', 1],
+    employerPf: ['Employer PF — not your income', 0],
+    gratuity: ['Gratuity — not your income', 0],
+    medicalInsurance: ['Health premium → 80D', 0],
+    incomeTax: ['Tax already deducted — not income', 0],
+    totalEarnings: ['Printed total — used to cross-check', 0]
+  };
+  Object.keys(parsed.hits).forEach(k => {
+    if (['totalDeduction','netPay','grossCtc','totalCtc','baseSalary'].indexOf(k) >= 0) return;
+    const kind = KIND[k] || ['Read', 1];
+    rows.push([kind[0], parsed.hits[k].line.replace(/\s+/g, ' ').trim(),
+               parsed.hits[k].value, kind[1]]);
+  });
+  if (!rows.length) { box.innerHTML = ''; return false; }
+  const mult = DOC_TYPES[parsed.docType].multiplier;
+  rows.sort((a, b) => b[3] - a[3]);
+  let html = '<div class="tablewrap"><table><thead><tr><th>What it is</th><th>Line on the document</th>' +
+             '<th class="n">As read</th><th class="n">Counted as</th></tr></thead><tbody>';
+  rows.forEach(r => {
+    html += '<tr' + (r[3] ? '' : ' class="sub"') + '><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) +
+            '</td><td class="n">' + fmt(r[2]) + '</td><td class="n">' +
+            (r[3] ? fmt(r[2] * mult) : '—') + '</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  box.innerHTML = html;
+  return true;
+}
+function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+/* ------------------------------------------------- "what was read" popover */
+function openPartsDrawer() {
+  $('parts-backdrop').hidden = false;
+  $('parts-drawer').hidden = false;
+}
+function closePartsDrawer() {
+  $('parts-backdrop').hidden = true;
+  $('parts-drawer').hidden = true;
+}
+
+/* -------------------------------------------------------------- triage */
+function renderTriage() {
+  const box = $('triage-list'); box.innerHTML = '';
+  const already = (S.profile && S.profile.outOfScope) || [];
+  TRIAGE.forEach(t => {
+    const row = el('label', 'triage-row');
+    const cb = el('input'); cb.type = 'checkbox'; cb.value = t.id;
+    cb.checked = already.indexOf(t.id) >= 0;
+    cb.className = 'triage-cb';
+    const txt = el('div');
+    txt.appendChild(el('div', 'triage-row-label', t.label));
+    txt.appendChild(el('div', 'tiny muted', t.note));
+    row.appendChild(cb); row.appendChild(txt);
+    box.appendChild(row);
+  });
+  const none = el('div', 'tiny muted', 'Tick nothing if none apply — that is the common case.');
+  none.style.marginTop = '4px';
+  box.appendChild(none);
+  show('screen-triage');
+}
+
+/* ----------------------------------------------------------- interview */
+function botSay(html, why) {
+  const b = el('div', 'bub bot'); b.innerHTML = html;
+  if (why) { const w = el('span', 'why', why); b.appendChild(w); }
+  $('chat').appendChild(b); scrollChat(); return b;
+}
+function userSay(text) {
+  const b = el('div', 'bub usr', text); $('chat').appendChild(b); scrollChat(); return b;
+}
+function sysSay(text) {
+  const b = el('div', 'sysline', text); $('chat').appendChild(b); scrollChat(); return b;
+}
+function scrollChat() {
+  requestAnimationFrame(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }));
+}
+function clearInputs() {
+  $('chat').querySelectorAll('.chips,.amt').forEach(n => n.remove());
+}
+
+/* ------------------------------------------------ full breakdown, on demand */
+/* A floating button that opens the same line-by-line sheet from anywhere —
+   mid-interview (based on what's answered so far) or on the result screen —
+   so nobody has to scroll to the verdict page to see it. */
+function renderBreakdownDrawer() {
+  if (!S.profile || !S.pack) return;
+  const c = compareRegimes(S.profile, S.pack);
+  renderSheet(c, 'breakdown-sheet');
+  const onResult = currentScreenId() === 'screen-result';
+  $('breakdown-note').textContent = onResult
+    ? 'This is the same table as below, for quick reference.'
+    : 'Based on what you\'ve entered so far — this updates as you answer more questions.';
+}
+function openBreakdown() {
+  renderBreakdownDrawer();
+  $('breakdown-backdrop').hidden = false;
+  $('breakdown-drawer').hidden = false;
+}
+function closeBreakdown() {
+  $('breakdown-backdrop').hidden = true;
+  $('breakdown-drawer').hidden = true;
+}
+
+function updateMeter() {
+  const c = compareRegimes(S.profile, S.pack);
+  const be = breakEvenDeductions(S.profile, S.pack);
+  S.comparison = c; S.breakEven = be;
+  const found = c.old.deductionTotal;
+
+  // The one thing to know before anything else on this screen: which regime
+  // is ahead right now, given everything answered so far — updates live as
+  // the interview goes, since an answer can flip it.
+  const winName = c.winner === 'neu' ? 'New Regime' : 'Old Regime';
+  const loseName = c.winner === 'neu' ? 'Old Regime' : 'New Regime';
+  $('meter-headline').innerHTML = c.saving === 0
+    ? 'Both regimes cost the same right now'
+    : '<span class="win">' + winName + '</span> is better than ' + loseName + ' — by ' + fmt(c.saving) + ' a year';
+
+  if (be.alreadyAhead) {
+    $('meter-k').textContent = 'Old regime is already ahead by';
+    $('meter-target').textContent = fmt(c.saving) + ' a year';
+    $('meter-bar').style.width = '100%';
+  } else if (be.needed === null) {
+    $('meter-k').textContent = 'The old regime cannot catch up at this income';
+    $('meter-target').textContent = '—';
+    $('meter-bar').style.width = '0%';
+  } else {
+    // be.needed is the EXTRA deduction still required from here, not the
+    // total — breakEvenDeductions() bisects starting from what's already
+    // found, so it's already net of it. The total target for the label and
+    // the bar is found + be.needed; dividing found by be.needed alone (the
+    // old code) compared two different baselines and could show 100% full
+    // well before the gap was actually closed.
+    const total = found + be.needed;
+    $('meter-k').textContent = 'Deductions needed for the old regime to win';
+    $('meter-target').textContent = fmt(total);
+    $('meter-bar').style.width = Math.min(100, (found / total) * 100).toFixed(1) + '%';
+  }
+  $('meter-found').textContent = fmt(found);
+}
+
+function askNext() {
+  clearInputs();
+  updateMeter();
+  const q = nextQuestion(S.profile, S.pack);
+  if (!q) return finishInterview();
+  S.pendingQ = q;
+
+  if (S.profile.earlyExit && !S.profile.earlyExitShown) {
+    S.profile.earlyExitShown = true;
+    sysSay('Stopping the deduction questions here — everything still unasked adds up to at most ' +
+      fmt(S.profile.earlyExit.roomLeft) + ', and the gap is ' + fmt(S.profile.earlyExit.gap) + '. It cannot close.');
+  }
+
+  const text = typeof q.ask === 'function' ? q.ask(S.profile) : q.ask;
+  const bub = botSay(text, q.why);
+  const wt = whatsThisBtn(q.topic);
+  if (wt) { wt.style.marginLeft = '0'; wt.style.marginTop = '8px'; wt.style.display = 'inline-block'; bub.appendChild(document.createElement('br')); bub.appendChild(wt); }
+
+  renderAnsweredPanel();
+  if (q.type === 'two-amounts') return renderTwoAmounts(q);
+  renderChips(q);
+}
+
+function renderChips(q) {
+  const box = el('div', 'chips');
+  q.chips.forEach(ch => {
+    const b = el('button', 'chip', ch.label);
+    b.addEventListener('click', () => {
+      userSay(ch.label);
+      clearInputs();
+      if (ch.value === 'ask') {
+        if (q.type === 'chips-then-multi-amount') return renderMultiAmounts(q);
+        return renderAmount(q);
+      }
+      if (ch.value === 'estimate') { answer(q, q.estimateValue, true); return; }
+      if (ch.value === 'yes' && q.id === 'rent') return renderRent(q);
+      answer(q, ch.value);
+    });
+    box.appendChild(b);
+  });
+  $('chat').appendChild(box); scrollChat();
+}
+
+/* Section 123 etc. as separate itemised fields rather than one clubbed
+   amount — each investment type gets its own box, summed on submit. */
+function renderMultiAmounts(q) {
+  const box = el('div', 'amt');
+  const inputs = {};
+  q.fields.forEach(f => {
+    box.appendChild(el('label', null, f.label));
+    const i = el('input'); i.type = 'number'; i.min = '0'; i.placeholder = '0';
+    box.appendChild(i); inputs[f.key] = i;
+  });
+  const btn = el('button', 'btn small', 'That\'s it');
+  btn.addEventListener('click', () => {
+    const v = {}; let sum = 0;
+    q.fields.forEach(f => { v[f.key] = parseFloat(inputs[f.key].value) || 0; sum += v[f.key]; });
+    userSay(sum > 0 ? fmt(sum) + ' in total' : 'None');
+    clearInputs(); answer(q, v);
+  });
+  box.appendChild(btn);
+  $('chat').appendChild(box); scrollChat();
+}
+
+function renderAmount(q) {
+  const box = el('div', 'amt');
+  box.appendChild(el('label', null, q.amountLabel || 'Amount for the year'));
+  const inp = el('input'); inp.type = 'number'; inp.min = '0'; inp.placeholder = '0';
+  box.appendChild(inp);
+  const btn = el('button', 'btn small', 'That\'s it');
+  btn.addEventListener('click', () => {
+    const v = parseFloat(inp.value) || 0;
+    userSay(fmt(v)); clearInputs(); answer(q, v);
+  });
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') btn.click(); });
+  box.appendChild(btn);
+  $('chat').appendChild(box); inp.focus(); scrollChat();
+}
+
+function renderRent(q) {
+  const box = el('div', 'amt');
+  box.appendChild(el('label', null, 'Roughly how much rent per month? A ballpark is fine — it gets flagged as an estimate.'));
+  const inp = el('input'); inp.type = 'number'; inp.min = '0'; inp.placeholder = 'e.g. 30000';
+  box.appendChild(inp);
+  const lbl = el('label', null, 'Which city?'); lbl.style.marginTop = '4px';
+  box.appendChild(lbl);
+  const sel = el('select');
+  [['1', 'Delhi, Mumbai, Kolkata or Chennai — 50% of basic'],
+   ['0', 'Anywhere else — 40% of basic']].forEach(o => {
+    const op = el('option', null, o[1]); op.value = o[0]; sel.appendChild(op);
+  });
+  box.appendChild(sel);
+  const btn = el('button', 'btn small', 'Done');
+  btn.addEventListener('click', () => {
+    const m = parseFloat(inp.value) || 0;
+    S.profile.deductions.rentPaid = m * 12;
+    S.profile.deductions.metro = sel.value === '1';
+    S.profile.estimates.rentPaid = true;
+    userSay(fmt(m) + ' a month, ' + (sel.value === '1' ? 'metro' : 'non-metro'));
+    clearInputs();
+    const ex = hraExemption(S.profile.salary.hra, S.profile.salary.basic,
+                            S.profile.deductions.rentPaid, S.profile.deductions.metro);
+    if (ex <= 0) {
+      sysSay('That rent works out below 10% of your basic, so the HRA exemption comes to nothing.');
+    } else if (ex < S.profile.salary.hra) {
+      sysSay('HRA exemption: ' + fmt(ex) + ' of the ' + fmt(S.profile.salary.hra) +
+             ' you receive — the formula takes the lowest of three figures, and it is rarely the full amount.');
+    }
+    answer(q, 'yes', false, true);
+  });
+  box.appendChild(btn);
+  $('chat').appendChild(box); inp.focus(); scrollChat();
+}
+
+function renderTwoAmounts(q) {
+  const box = el('div', 'amt');
+  const inputs = {};
+  q.fields.forEach(f => {
+    box.appendChild(el('label', null, f.label));
+    const i = el('input'); i.type = 'number'; i.min = '0'; i.placeholder = '0';
+    box.appendChild(i); inputs[f.key] = i;
+  });
+  const btn = el('button', 'btn small', 'Finish');
+  btn.addEventListener('click', () => {
+    const v = {}; let sum = 0;
+    q.fields.forEach(f => { v[f.key] = parseFloat(inputs[f.key].value) || 0; sum += v[f.key]; });
+    userSay(sum > 0 ? fmt(sum) + ' in total' : 'None');
+    clearInputs(); answer(q, v);
+  });
+  box.appendChild(btn);
+  $('chat').appendChild(box); scrollChat();
+}
+
+function answer(q, value, isEstimate, alreadyApplied) {
+  if (!alreadyApplied) q.apply(S.profile, value);
+  if (isEstimate) S.profile.estimates[q.id] = true;
+  S.profile.answered[q.id] = true;
+  const before = S.comparison ? S.comparison.old.deductionTotal : 0;
+  updateMeter();
+  const after = S.comparison.old.deductionTotal;
+  if (after > before) sysSay('+' + fmt(after - before) + ' towards the old regime.');
+  renderAnsweredPanel();
+  setTimeout(askNext, 260);
+}
+
+/* ------------------------------------------------- edit a given answer -- */
+/* Lets someone correct an earlier answer without restarting the interview —
+   from the "answers so far" panel mid-interview, or from the "review & edit"
+   panel after the verdict, where it recomputes and redraws in place. */
+function currentAmountFor(q) {
+  const d = S.profile.deductions, s = S.profile.salary;
+  if (q.id === 'bonus') return s.bonus;
+  if (q.id === 'homeLoan') return d.homeLoanInterest;
+  if (q.id === 's80CCD1B') return d.s80CCD1B;
+  if (q.id === 's80D') return d.s80D;
+  if (q.id === 's80E') return d.s80E;
+  if (q.id === 's80G') return d.s80G;
+  return 0;
+}
+
+function describeAnswer(q) {
+  const p = S.profile;
+  if (q.id === 'bonus') return p.bonusUnknown ? 'Unknown for now — flagged as an estimate' : fmt(p.salary.bonus) + ' a year';
+  if (q.id === 'rent') return p.flags.ownsHome ? 'Owns the home' :
+    (p.deductions.rentPaid > 0 ? fmt(p.deductions.rentPaid) + '/yr (' + (p.deductions.metro ? 'metro' : 'non-metro') + ')' : 'No rent paid');
+  if (q.id === 'homeLoan') return p.deductions.homeLoanInterest > 0 ? fmt(p.deductions.homeLoanInterest) : 'None';
+  if (q.id === 's80C') return p.deductions.s80C_other > 0 ? fmt(p.deductions.s80C_other) + ' total' : 'Nothing else';
+  if (q.id === 's80CCD1B') return p.deductions.s80CCD1B > 0 ? fmt(p.deductions.s80CCD1B) : 'None';
+  if (q.id === 's80D') return p.deductions.s80D > 0 ? fmt(p.deductions.s80D) : 'None';
+  if (q.id === 's80E') return p.deductions.s80E > 0 ? fmt(p.deductions.s80E) : 'None';
+  if (q.id === 's80G') return p.deductions.s80G > 0 ? fmt(p.deductions.s80G) : 'None';
+  if (q.id === 'otherIncome') return fmt((p.otherIncome.savingsInterest || 0) + (p.otherIncome.fdInterest || 0)) + ' interest';
+  return '—';
+}
+
+/* opts.autoApply: no Save button — each field applies itself (debounced) as
+   the user types, for the full-page review overlay where nothing should
+   need a click to "commit". Without it, a Save button is used instead (the
+   compact mid-interview "answers so far" panel). */
+function renderInlineEditor(q, box, opts) {
+  opts = opts || {};
+  box.innerHTML = '';
+  const commit = (mutate) => { mutate(); afterEdit(q); };
+  const debounced = (inputs, mutate) => {
+    let t;
+    inputs.forEach(i => i.addEventListener('input', () => {
+      clearTimeout(t); t = setTimeout(() => commit(mutate), 450);
+    }));
+  };
+  const saveButton = (mutate) => {
+    const btn = el('button', 'btn small', 'Save');
+    btn.addEventListener('click', () => commit(mutate));
+    box.appendChild(btn);
+  };
+
+  if (q.type === 'two-amounts') {
+    const inputs = {};
+    q.fields.forEach(f => {
+      box.appendChild(el('label', null, f.label));
+      const i = el('input'); i.type = 'number'; i.min = '0';
+      i.value = S.profile.otherIncome[f.key] || '';
+      box.appendChild(i); inputs[f.key] = i;
+    });
+    const mutate = () => q.apply(S.profile, Object.fromEntries(
+      q.fields.map(f => [f.key, parseFloat(inputs[f.key].value) || 0])));
+    opts.autoApply ? debounced(Object.values(inputs), mutate) : saveButton(mutate);
+  } else if (q.type === 'chips-then-multi-amount') {
+    const inputs = {};
+    // No itemised breakdown on file (e.g. it arrived as one chat-edited
+    // total) — seed the catch-all field with the existing total rather than
+    // showing blank fields that would zero it out the moment one is touched.
+    const cur = S.profile.deductions.s80C_breakdown ||
+      (S.profile.deductions.s80C_other > 0 ? { other: S.profile.deductions.s80C_other } : {});
+    q.fields.forEach(f => {
+      box.appendChild(el('label', null, f.label));
+      const i = el('input'); i.type = 'number'; i.min = '0';
+      i.value = cur[f.key] || '';
+      box.appendChild(i); inputs[f.key] = i;
+    });
+    const mutate = () => q.apply(S.profile, Object.fromEntries(
+      q.fields.map(f => [f.key, parseFloat(inputs[f.key].value) || 0])));
+    opts.autoApply ? debounced(Object.values(inputs), mutate) : saveButton(mutate);
+  } else if (q.id === 'rent') {
+    box.appendChild(el('label', null, 'Monthly rent'));
+    const i = el('input'); i.type = 'number'; i.min = '0';
+    i.value = S.profile.deductions.rentPaid ? Math.round(S.profile.deductions.rentPaid / 12) : '';
+    box.appendChild(i);
+    box.appendChild(el('label', null, 'City'));
+    const sel = el('select');
+    [['1', 'Metro — 50% of basic'], ['0', 'Non-metro — 40% of basic']].forEach(o => {
+      const op = el('option', null, o[1]); op.value = o[0]; sel.appendChild(op);
+    });
+    sel.value = S.profile.deductions.metro ? '1' : '0';
+    box.appendChild(sel);
+    const mutate = () => {
+      const m = parseFloat(i.value) || 0;
+      S.profile.deductions.rentPaid = m * 12;
+      S.profile.deductions.metro = sel.value === '1';
+      if (m > 0) S.profile.flags.ownsHome = false;
+    };
+    if (opts.autoApply) { debounced([i], mutate); sel.addEventListener('change', () => commit(mutate)); }
+    else saveButton(mutate);
+  } else {
+    box.appendChild(el('label', null, q.amountLabel || 'Amount for the year'));
+    const i = el('input'); i.type = 'number'; i.min = '0';
+    i.value = currentAmountFor(q) || '';
+    box.appendChild(i);
+    const mutate = () => q.apply(S.profile, parseFloat(i.value) || 0);
+    opts.autoApply ? debounced([i], mutate) : saveButton(mutate);
+  }
+}
+
+function afterEdit(q) {
+  S.profile.answered[q.id] = true;
+  updateMeter();
+  renderAnsweredPanel();
+  if (currentScreenId() === 'screen-result') renderResult();
+}
+
+/* Every deduction that could plausibly apply to this profile, whether or not
+   the interview actually got around to asking it — the early-exit stopping
+   rule skips questions that can't change the verdict, but "review & edit"
+   should still offer them, since someone may want to add one anyway. */
+function reviewableQuestions() {
+  return QUESTIONS.filter(q => !q.when || q.when(S.profile));
+}
+
+/* Builds one "question / current value [/ Edit]" list into any container —
+   used by the compact mid-interview panel (click Edit, then Save; answered
+   questions only) and the full-page review overlay (every applicable
+   question, fields always open, apply as you type). */
+function renderQuestionRows(container, questions, opts) {
+  opts = opts || {};
+  container.innerHTML = '';
+  questions.forEach(q => {
+    const row = el('div', 'ans-row');
+    const info = el('div');
+    const qtext = typeof q.ask === 'function' ? q.ask(S.profile) : q.ask;
+    info.appendChild(el('div', 'small', qtext));
+    row.appendChild(info);
+    if (opts.autoApply) {
+      row.style.flexDirection = 'column'; row.style.alignItems = 'stretch';
+      const editorBox = el('div', 'ans-editor');
+      renderInlineEditor(q, editorBox, { autoApply: true });
+      row.appendChild(editorBox);
+      container.appendChild(row);
+    } else {
+      info.appendChild(el('div', 'tiny muted mono', describeAnswer(q)));
+      const editBtn = el('button', 'linkbtn', 'Edit');
+      row.appendChild(editBtn);
+      const editorBox = el('div', 'ans-editor'); editorBox.hidden = true;
+      editBtn.addEventListener('click', () => {
+        editorBox.hidden = !editorBox.hidden;
+        editBtn.textContent = editorBox.hidden ? 'Edit' : 'Cancel';
+        if (!editorBox.hidden) renderInlineEditor(q, editorBox);
+      });
+      container.appendChild(row);
+      container.appendChild(editorBox);
+    }
+  });
+}
+function renderAnsweredPanel() {
+  const panel = $('answered-panel'); if (!panel) return;
+  const answeredQs = QUESTIONS.filter(q => S.profile.answered[q.id]);
+  panel.hidden = !answeredQs.length;
+  if (answeredQs.length) renderQuestionRows($('answered-list'), answeredQs);
+}
+
+/* Full-page "review & edit" overlay — opened from the result screen. Every
+   applicable deduction is listed, answered or not, with fields always
+   editable and applying themselves; there is deliberately no Save button.
+   The persistent AI bar stays on top (higher z-index) so chat-driven edits
+   work from here too. */
+function openReviewOverlay() {
+  renderQuestionRows($('review-overlay-list'), reviewableQuestions(), { autoApply: true });
+  $('review-overlay').hidden = false;
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+function closeReviewOverlay() {
+  $('review-overlay').hidden = true;
+}
+
+function finishInterview() {
+  clearInputs();
+  sysSay('That\'s everything that could change the answer.');
+  setTimeout(() => renderResult(), 420);
+}
+
+function startInterview() {
+  $('chat').innerHTML = '';
+  S.pack = pack();
+  updateMeter();
+  renderAnsweredPanel();
+  const c = S.comparison, be = S.breakEven;
+  botSay('Before any questions about deductions — here is where you stand with none at all.');
+  const gross = grossSalary(S.profile);
+  const cheaper = c.winner === 'neu' ? 'New' : 'Old', costlier = c.winner === 'neu' ? 'Old' : 'New';
+  if (c.saving === 0) {
+    botSay('With zero deductions, on a gross of <b>' + fmt(gross) + '</b>, both regimes cost exactly the same: <b>' + fmt(c.neu.total) + '</b>.');
+  } else {
+    botSay('With zero deductions, on a gross of <b>' + fmt(gross) + '</b>: you\'d pay <b>' + fmt(c.saving) +
+      ' more tax</b> in the ' + costlier + ' regime compared to the ' + cheaper + ' regime. <b>The ' + cheaper +
+      ' regime is the best option for you</b> right now.');
+  }
+  if (be.alreadyAhead) {
+    botSay('The old regime is already ahead before we start, which is unusual. Let\'s see how far ahead it gets.');
+  } else if (be.needed === null) {
+    botSay('At this income the old regime cannot catch up whatever you claim. I\'ll still ask about other income, since that affects both.');
+  } else {
+    // be.needed is the extra still required from here, not the grand total —
+    // add what's already found so this matches the meter's own total exactly.
+    const total = c.old.deductionTotal + be.needed;
+    S.baselineGap = total;
+    botSay('So the whole question is one number: <b>you would need ' + fmt(total) +
+      ' of deductions</b> for the old regime to be worth choosing. Everything I ask now is about getting there — and I\'ll stop the moment it becomes impossible.',
+      'The meter above tracks it. Most people are asked four to six questions, not thirty.');
+  }
+  setTimeout(askNext, 500);
+  show('screen-interview');
+}
+
+/* -------------------------------------------------------------- result */
+function renderResult() {
+  const c = compareRegimes(S.profile, S.pack);
+  const be = breakEvenDeductions(S.profile, S.pack);
+  const rb = robustness(S.profile, S.pack);
+  S.comparison = c; S.breakEven = be; S.robust = rb;
+
+  const winNew = c.winner === 'neu';
+  const winName = winNew ? 'New regime' : 'Old regime';
+  const loseName = winNew ? 'Old regime' : 'New regime';
+  if (c.saving === 0) {
+    $('verdict-big').innerHTML = 'Choose the <b>New regime</b>.';
+    $('verdict-sub').textContent = 'Both regimes cost exactly the same here, so pick the new regime — it needs no proofs and no paperwork.';
+  } else {
+    $('verdict-big').innerHTML = 'You pay <b>' + fmt(c.saving) + ' more tax</b> in the ' + loseName + '.';
+    $('verdict-sub').innerHTML = 'Selecting the <b>' + winName + '</b> is the best option for you — that\'s ' +
+      fmt(c.monthlySaving) + ' more in hand every month.';
+  }
+
+  // Old regime always on the left, new regime always on the right — regardless
+  // of which one wins — so the pairing stays legible instead of swapping sides.
+  const stats = [
+    { k: 'Tax under old', v: fmt(c.old.total), s: winNew ? 'The one to avoid' : 'Including 4% cess' },
+    { k: 'Tax under new', v: fmt(c.neu.total), s: winNew ? 'Including 4% cess' : 'The one to avoid' },
+    { k: 'Monthly difference', v: fmt(c.monthlySaving), s: 'In your hand' },
+    { k: 'Deductions found', v: fmt(c.old.deductionTotal), s: be.needed ? 'Break-even was ' + fmt(c.old.deductionTotal + be.needed) : 'Old regime already ahead' }
+  ];
+  const sr = $('statrow'); sr.innerHTML = '';
+  stats.forEach(s => {
+    const d = el('div', 'stat');
+    d.appendChild(el('div', 'k', s.k));
+    d.appendChild(el('div', 'v', s.v));
+    d.appendChild(el('div', 's', s.s));
+    sr.appendChild(d);
+  });
+
+  renderRobust(rb, c);
+  renderTaxTips(c);
+  renderSheet(c);
+  renderAssumptions(c, be);
+  renderNextSteps(c, be, rb);
+  renderBreakdownDrawer();
+  show('screen-result');
+}
+
+function renderRobust(rb, c) {
+  const gross = grossSalary(S.profile);
+  const txt = $('robust-text');
+  if (rb.stable) {
+    txt.innerHTML = 'This verdict does not depend on getting your income exactly right. ' +
+      '<b>' + (rb.winner === 'neu' ? 'The new regime wins' : 'The old regime wins') +
+      ' anywhere between ' + fmtLakh(rb.low) + ' and ' + fmtLakh(rb.high) + ' of annual gross</b> — ' +
+      'so even if your bonus lands very differently from what we assumed, the answer holds.';
+  } else {
+    txt.innerHTML = '<b>This one is close.</b> The verdict flips at roughly ' + fmtLakh(rb.flipAt) +
+      ' of annual gross. Below that, ' + (rb.results[0].winner === 'neu' ? 'the new regime' : 'the old regime') +
+      ' wins; above it, the other one does. Your projection is ' + fmtLakh(gross) +
+      ' — worth pinning down your bonus before you declare, or re-running this once you know it.';
+  }
+  // band strip: which regime wins across the plausible income range
+  const w = 700, h = 74, x0 = 8, x1 = w - 8;
+  const px = g => x0 + (g - rb.low) / (rb.high - rb.low) * (x1 - x0);
+  let segs = '', prev = rb.results[0], start = rb.results[0].gross;
+  const parts = [];
+  rb.results.forEach((r, i) => {
+    if (r.winner !== prev.winner || i === rb.results.length - 1) {
+      parts.push({ from: start, to: r.gross, winner: prev.winner });
+      start = r.gross; prev = r;
+    }
+  });
+  parts.forEach(p => {
+    segs += '<rect x="' + px(p.from).toFixed(1) + '" y="20" width="' +
+      Math.max(1, px(p.to) - px(p.from)).toFixed(1) + '" height="18" rx="3" fill="' +
+      (p.winner === 'neu' ? 'var(--s-new)' : 'var(--s-old)') + '"/>';
+    const mid = (px(p.from) + px(p.to)) / 2;
+    if (px(p.to) - px(p.from) > 150)
+      segs += '<text x="' + mid.toFixed(1) + '" y="14" text-anchor="middle" font-size="11.5" font-weight="600" fill="' +
+        (p.winner === 'neu' ? 'var(--s-new)' : 'var(--s-old)') + '" font-family="Public Sans,sans-serif">' +
+        (p.winner === 'neu' ? 'New regime wins' : 'Old regime wins') + '</text>';
+  });
+  const mx = px(gross);
+  const marker = '<line x1="' + mx.toFixed(1) + '" y1="14" x2="' + mx.toFixed(1) +
+    '" y2="44" stroke="var(--ink)" stroke-width="2"/>' +
+    '<text x="' + Math.min(x1 - 60, Math.max(x0 + 60, mx)).toFixed(1) + '" y="60" text-anchor="middle" font-size="11.5" fill="var(--ink)" font-family="IBM Plex Mono,monospace">your projection ' + fmtLakh(gross) + '</text>';
+  const axis = '<text x="' + x0 + '" y="60" font-size="11" fill="var(--faint)" font-family="IBM Plex Mono,monospace">' + fmtLakh(rb.low) + '</text>' +
+    '<text x="' + x1 + '" y="60" text-anchor="end" font-size="11" fill="var(--faint)" font-family="IBM Plex Mono,monospace">' + fmtLakh(rb.high) + '</text>';
+  const legend = '<div class="rowh" style="gap:16px;margin-top:6px">' +
+    '<span class="tiny" style="display:flex;align-items:center;gap:6px"><span style="width:11px;height:11px;border-radius:3px;background:var(--s-new);display:inline-block"></span>New regime wins</span>' +
+    '<span class="tiny" style="display:flex;align-items:center;gap:6px"><span style="width:11px;height:11px;border-radius:3px;background:var(--s-old);display:inline-block"></span>Old regime wins</span></div>';
+  $('robust-chart').innerHTML =
+    '<div style="overflow-x:auto"><svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;min-width:300px;height:auto;display:block" role="img" aria-label="Which regime wins across a plausible range of annual income">' +
+    segs + marker + axis + '</svg></div>' + legend;
+}
+
+/* ------------------------------------------------------- tax-saving tips */
+/* Rule-based, not a model call — every rupee figure comes from cloning the
+   profile and re-running the real engine (or, for perquisites the engine has
+   no field for, from the engine's own marginal-rate function), so a tip can
+   never promise a saving the arithmetic doesn't back up. */
+function marginalRate(taxable, regime, pack) {
+  const step = 10000;
+  const a = slabTax(taxable, regime.slabs);
+  const b = slabTax(taxable + step, regime.slabs);
+  return Math.max(0, (b - a) / step) * (1 + pack.cess);
+}
+function taxDelta(profile, pack, regimeKey, mutate) {
+  const before = computeRegime(profile, regimeKey, pack).total;
+  const q = JSON.parse(JSON.stringify(profile));
+  mutate(q);
+  const after = computeRegime(q, regimeKey, pack).total;
+  return before - after;
+}
+function renderTaxTips(c) {
+  const card = $('tax-tips-card'), box = $('tax-tips');
+  const p = S.profile, pack = S.pack;
+  const winner = c.winner; // 'neu' or 'old'
+  const regime = pack.regimes[winner];
+  const tips = [];
+
+  // Employer NPS top-up — 80CCD(2) survives in both regimes; ask HR.
+  // Modelled as restructuring existing (fully-taxable) allowance into employer
+  // NPS, not conjuring new money — adding straight to employerNps alone would
+  // inflate gross salary by the same amount it deducts back out and net to
+  // zero, which understates the real saving from an actual CTC restructure.
+  const npsCap = p.salary.basic * regime.employerNpsCapPct;
+  const npsRoomCap = Math.max(0, npsCap - p.salary.employerNps);
+  const npsShiftable = Math.min(npsRoomCap, p.salary.otherAllowances);
+  if (npsShiftable > 10000) {
+    const saved = taxDelta(p, pack, winner, q => {
+      q.salary.otherAllowances -= npsShiftable;
+      q.salary.employerNps += npsShiftable;
+    });
+    if (saved > 500) tips.push({
+      title: 'Ask HR to route more of your CTC through employer NPS',
+      detail: 'Employer contributions to NPS (80CCD(2)) are tax-free up to ' +
+        Math.round(regime.employerNpsCapPct * 100) + '% of your basic — in both regimes — but most companies only do this if you specifically ask for it in your CTC structure. Shifting ' + fmt(npsShiftable) + ' of your existing taxable allowances there is realistic given your current pay structure.',
+      saved
+    });
+  }
+
+  // Tax-free meal card (Sodexo/Pluxee) — a perquisite valuation rule, not a
+  // Chapter VI-A deduction, so the new regime doesn't knock it out.
+  const hasMealCard = S.parsed && S.parsed.parts && S.parsed.parts.allow &&
+    S.parsed.parts.allow.some(a => /food|meal|coupon|sodexo|pluxee/i.test(a.label));
+  if (!hasMealCard) {
+    const mealAnnual = 26400; // ~₹2,200/month — a common employer meal-card ceiling
+    const rate = marginalRate(computeRegime(p, winner, pack).taxableIncome, regime, pack);
+    const saved = Math.round(mealAnnual * rate);
+    if (saved > 500) tips.push({
+      title: 'Ask HR for a meal card (Sodexo / Pluxee) in your CTC',
+      detail: 'Up to about ' + fmt(mealAnnual) + ' a year routed through a meal card is tax-free as a perquisite — a valuation rule, not a Chapter VI-A deduction, so it works under both regimes. It didn\'t show up on your payslip, so you may not have this yet.',
+      saved
+    });
+  }
+
+  // Old-regime-only levers (80C, 80CCD(1B), 80D) reduce nothing if the New
+  // regime is what's actually being paid — they only count when Old is the
+  // regime in force. Suggesting them otherwise would be honest-sounding but
+  // wrong: filling them wouldn't change what this person actually owes.
+  if (winner === 'old') {
+    const cat = id => pack.catalogue.find(x => x.id === id);
+    const s80cRoom = Math.max(0, cat('s80C').max - p.salary.employeePf - p.deductions.s80C_other);
+    if (s80cRoom > 5000) {
+      const saved = taxDelta(p, pack, 'old', q => { q.deductions.s80C_other += s80cRoom; });
+      if (saved > 500) tips.push({
+        title: 'Top up ELSS, PPF or another Section 123 investment',
+        detail: 'You have ' + fmt(s80cRoom) + ' of room left in the ₹1,50,000 Section 123 (old 80C) ceiling. ELSS has the shortest lock-in — 3 years — of the options that qualify.',
+        saved
+      });
+    }
+    const nps1bRoom = Math.max(0, cat('s80CCD1B').max - p.deductions.s80CCD1B);
+    if (nps1bRoom > 5000) {
+      const saved = taxDelta(p, pack, 'old', q => { q.deductions.s80CCD1B += nps1bRoom; });
+      if (saved > 500) tips.push({
+        title: 'Put ' + fmt(nps1bRoom) + ' into NPS yourself',
+        detail: '80CCD(1B) gives up to ₹50,000 of deduction for your own NPS contribution — on top of, not inside, the Section 123 ceiling.',
+        saved
+      });
+    }
+    const d80Room = Math.max(0, cat('s80D').max - p.deductions.s80D);
+    if (d80Room > 5000) {
+      const saved = taxDelta(p, pack, 'old', q => { q.deductions.s80D += d80Room; });
+      if (saved > 500) tips.push({
+        title: 'Check your health insurance premium is fully claimed',
+        detail: 'Up to ' + fmt(cat('s80D').max) + ' is deductible for health insurance for yourself, family and parents (more if a parent is a senior citizen). You still have ' + fmt(d80Room) + ' of headroom here.',
+        saved
+      });
+    }
+  }
+
+  tips.sort((a, b) => b.saved - a.saved);
+  const top = tips.slice(0, 5);
+  card.hidden = !top.length;
+  box.innerHTML = '';
+  top.forEach(t => {
+    const d = el('div');
+    const h = el('div', 'rowh'); h.style.justifyContent = 'space-between';
+    h.appendChild(el('h3', null, t.title));
+    h.appendChild(el('span', 'mono', '+' + fmt(t.saved) + '/yr'));
+    d.appendChild(h);
+    d.appendChild(el('p', 'small muted', t.detail));
+    box.appendChild(d);
+  });
+}
+
+function sheetRows(c) {
+  const rows = [];
+  const R = (label, oldV, newV, opts) => rows.push(Object.assign({ label, oldV, newV }, opts || {}));
+  R('Gross salary', c.old.gross, c.neu.gross, { src: S.profile.source === 'payslip' ? 'From your payslip' : 'You entered it', topic: 'grossSalary' });
+  R('Standard deduction', -c.old.standardDeduction, -c.neu.standardDeduction, { rule: c.neu.stdRule, sub: true, topic: 'standardDeduction' });
+  if (c.old.otherIncome > 0) R('Other income (interest)', c.old.otherIncome, c.neu.otherIncome, { src: 'Your answer', sub: true, topic: 'otherIncome' });
+  R('Gross total income', c.old.grossTotalIncome, c.neu.grossTotalIncome, { strongish: true, topic: 'grossTotalIncome' });
+
+  const ids = new Set();
+  c.old.deductions.forEach(d => ids.add(d.id));
+  c.neu.deductions.forEach(d => ids.add(d.id));
+  ids.forEach(id => {
+    const o = c.old.deductions.find(d => d.id === id);
+    const n = c.neu.deductions.find(d => d.id === id);
+    const any = o || n;
+    R(any.label, o ? -o.amount : null, n ? -n.amount : null, {
+      rule: any.rule, src: any.source, sub: true,
+      capped: (o && o.capped) || (n && n.capped),
+      cap: (o && o.cap) || (n && n.cap),
+      estimated: any.estimated,
+      workings: o && o.workings,
+      topic: id
+    });
+  });
+  R('Taxable income', c.old.taxableIncome, c.neu.taxableIncome, { strongish: true, topic: 'taxableIncome' });
+  R('Tax on slabs', c.old.baseTax, c.neu.baseTax, { sub: true, topic: 'taxOnSlabs' });
+  if (c.old.rebate > 0 || c.neu.rebate > 0)
+    R('Rebate', -c.old.rebate, -c.neu.rebate, { sub: true, rule: c.neu.rebateRule,
+      src: c.neu.rebateNote || c.old.rebateNote, topic: 'rebate' });
+  if (c.old.surcharge > 0 || c.neu.surcharge > 0)
+    R('Surcharge', c.old.surcharge, c.neu.surcharge, { sub: true,
+      src: (c.neu.surchargeRelief > 0 || c.old.surchargeRelief > 0) ? 'Marginal relief applied' : '', topic: 'surcharge' });
+  R('Health & education cess @ 4%', c.old.cess, c.neu.cess, { sub: true, topic: 'cess' });
+  R('Total tax payable', c.old.total, c.neu.total, { total: true, topic: 'totalTax' });
+  R('Per month', c.old.total / 12, c.neu.total / 12, { sub: true });
+  return rows;
+}
+
+function renderSheet(c, targetId) {
+  const t = $(targetId || 'sheet'); t.innerHTML = '';
+  const thead = el('thead');
+  const tr = el('tr');
+  ['Line', 'Old regime', 'New regime'].forEach((h, i) => {
+    const th = el('th', i ? 'n' : null, h); tr.appendChild(th);
+  });
+  thead.appendChild(tr); t.appendChild(thead);
+  const tb = el('tbody');
+  sheetRows(c).forEach(r => {
+    const row = el('tr', (r.total ? 'total' : '') + (r.sub ? ' sub' : ''));
+    const td = el('td');
+    td.appendChild(document.createTextNode(r.label));
+    const wt = whatsThisIcon(r.topic);
+    if (wt) td.appendChild(wt);
+    if (r.capped) {
+      const s = el('span', 'src', 'Capped at ' + fmt(r.cap) + ' — you claimed more');
+      td.appendChild(s);
+    }
+    if (r.estimated) td.appendChild(el('span', 'src', 'Estimated, not confirmed'));
+    if (r.src) td.appendChild(el('span', 'src', r.src));
+    if (r.workings) {
+      const w = el('span', 'src', 'Lowest of: ' + r.workings.map(x => x[0] + ' ' + fmt(x[1])).join(' · '));
+      td.appendChild(w);
+    }
+    if (r.rule) td.appendChild(el('span', 'rule', r.rule));
+    row.appendChild(td);
+    [r.oldV, r.newV].forEach((v, i) => {
+      const c2 = el('td', 'n', v === null || v === undefined ? '—' : fmt(v));
+      if (r.total) {
+        const winnerIsOld = c.winner === 'old';
+        if ((i === 0 && winnerIsOld) || (i === 1 && !winnerIsOld)) c2.className = 'n win';
+      }
+      row.appendChild(c2);
+    });
+    tb.appendChild(row);
+  });
+  t.appendChild(tb);
+}
+
+function renderAssumptions(c, be) {
+  const box = $('assumptions'); box.innerHTML = '';
+  const items = [];
+  const est = Object.keys(S.profile.estimates || {});
+  if (S.profile.source === 'monthly')
+    items.push({ ok: false, b: 'Annualised from one payslip.',
+      t: 'Bonus, appraisals, arrears and any earlier employer are not in this unless you entered them.' });
+  if (est.indexOf('rentPaid') >= 0)
+    items.push({ ok: false, b: 'Rent was a ballpark.', t: 'The HRA exemption moves rupee-for-rupee with it above 10% of basic.' });
+  if (est.indexOf('homeLoanInterest') >= 0)
+    items.push({ ok: false, b: 'Home-loan interest assumed at the ₹2,00,000 ceiling.',
+      t: 'Your bank\'s provisional certificate has the real split between principal and interest.' });
+  if (S.profile.bonusUnknown)
+    items.push({ ok: false, b: 'Bonus unknown.', t: 'Which is why the confidence band above matters more than the exact figure.' });
+  if (c.old.otherIncome === 0)
+    items.push({ ok: false, b: 'No interest income entered.',
+      t: 'Savings and FD interest is taxable under both regimes and the department already has it from your AIS.' });
+  items.push({ ok: true, b: 'Rates from the FY ' + S.pack.taxYear + ' rulepack.',
+    t: S.pack.statute + ', version ' + S.pack.version + '. Slabs, cess, surcharge, rebate and every cap come from data, not code.' });
+  items.push({ ok: true, b: 'Arithmetic checked against 21 golden profiles.',
+    t: 'Expected values from a second, independently written implementation.' });
+  if (!items.some(i => !i.ok))
+    items.unshift({ ok: true, b: 'Nothing here was guessed.', t: 'Every figure came from your payslip or your own answers.' });
+  items.forEach(i => {
+    const d = el('div', 'item');
+    d.appendChild(el('span', 'dot' + (i.ok ? ' ok' : '')));
+    const s = el('span'); s.innerHTML = '<b>' + i.b + '</b> ' + i.t;
+    d.appendChild(s); box.appendChild(d);
+  });
+}
+
+function renderNextSteps(c, be, rb) {
+  const box = $('nextsteps'); box.innerHTML = '';
+  const winNew = c.winner === 'neu';
+  const add = (title, body) => {
+    const d = el('div');
+    d.appendChild(el('h3', null, title));
+    const p = el('p', 'small muted'); p.innerHTML = body; d.appendChild(p);
+    box.appendChild(d);
+  };
+
+  add('On your company\'s declaration portal',
+    winNew
+      ? 'Select <b>New regime</b>. There is nothing to declare and no proofs to submit — the ' +
+        fmt(c.neu.standardDeduction) + ' standard deduction is automatic, and your employer\'s NPS contribution is already in their records. That is the whole task.'
+      : 'Select <b>Old regime</b> and declare these, which are the figures this computation used:<br>' +
+        c.old.deductions.filter(d => ['professionalTax','employerNps','s80TTA'].indexOf(d.id) < 0)
+          .map(d => '&nbsp;&nbsp;• ' + d.label + ' — <b>' + fmt(d.amount) + '</b>' +
+               (d.capped ? ' <span style="color:var(--muted)">(you claimed ' + fmt(d.claimed) + '; the ceiling caps it here)</span>' : '')).join('<br>') +
+        '<br>Your employer will ask for proofs around January, so keep rent receipts, premium receipts and the bank\'s interest certificate.');
+
+  if (winNew && !be.alreadyAhead && be.needed !== null) {
+    // be.needed is already the shortfall from here (bisected from the
+    // current profile) — subtracting deductionTotal again would double-count
+    // it and could understate how far away break-even really is.
+    const shortfall = be.needed;
+    if (shortfall > 0) {
+      const room80c = Math.max(0, 150000 - S.profile.salary.employeePf - S.profile.deductions.s80C_other);
+      const roomNps = Math.max(0, 50000 - S.profile.deductions.s80CCD1B);
+      const closable = room80c + roomNps;
+      add('Could more investment flip this?',
+        closable >= shortfall
+          ? 'Yes, but only just. You are ' + fmt(shortfall) + ' short, and you still have ' + fmt(room80c) +
+            ' of Section 123 room plus ' + fmt(roomNps) + ' of 80CCD(1B). Filling both would flip the verdict — worth it only if you wanted to make those investments anyway. <b>Never buy an investment purely to save tax that is smaller than the investment.</b>'
+          : 'No. You are ' + fmt(shortfall) + ' short and only ' + fmt(closable) +
+            ' of investment room remains, so it cannot close. <b>Stay on the new regime and don\'t buy anything for tax reasons this year</b> — that is a real answer, and it saves you the paperwork as well as the money.');
+    }
+  }
+
+  add('When you file', 'Salaried filers with no business income choose the regime <b>afresh every year, at filing</b>. ' +
+    'If the declaration you give your employer turns out wrong, it only changes how much TDS comes out monthly — you correct it in the return and get the difference back. ' +
+    'File by 31 July though: a belated return can cost you the old-regime option.');
+
+  add('Before you rely on this', 'Check the figures above against your Form 16 Part B when it arrives in June, and against your AIS on the e-filing portal — ' +
+    'that is where interest income and anything you forgot will show up. This is an estimate to check, not tax advice, and not a filed return.');
+}
+
+
+function localAnswer(q) {
+  const s = q.toLowerCase();
+  const c = S.comparison;
+  if (/hra/.test(s)) {
+    const d = c.old.deductions.find(x => x.id === 'hra');
+    return d
+      ? 'HRA exemption is the <em>lowest</em> of three figures, not the HRA on your payslip: ' +
+        d.workings.map(w => w[0] + ' (' + fmt(w[1]) + ')').join(', ') + '. The lowest is ' + fmt(d.amount) + ', so that is what was allowed.'
+      : 'No HRA exemption applied here — either your payslip has no HRA component, or no rent was entered.';
+  }
+  if (/80ccd|nps/.test(s))
+    return 'There are two separate NPS deductions. 80CCD(1B) is your own contribution, up to ₹50,000, and it sits on top of the ₹1,50,000 Section 123 ceiling. 80CCD(2) is your employer\'s contribution — that one survives in the new regime too, capped at 14% of basic.';
+  if (/why.*(new|old|this)\s*regime|which regime|why.*win|winner/.test(s))
+    return (c.winner === 'neu' ? 'The new regime' : 'The old regime') + ' won by ' + fmt(c.saving) +
+      '. Its taxable income came to ' + fmt(c.winner === 'neu' ? c.neu.taxableIncome : c.old.taxableIncome) +
+      ' against ' + fmt(c.winner === 'neu' ? c.old.taxableIncome : c.neu.taxableIncome) +
+      ' on the other side, and the slab rates did the rest. The line-by-line table above shows every step.';
+  if (/80c|123/.test(s))
+    return 'Section 123 is what used to be 80C — a ₹1,50,000 ceiling covering EPF, ELSS, PPF, LIC premiums, tuition fees and home-loan principal together. Your own EPF usually fills a large part of it before you invest anything extra.';
+  if (/rebate|87a|156|12 lakh/.test(s))
+    return 'The rebate (Section 156, formerly 87A) wipes out tax entirely if taxable income is ₹12,00,000 or less under the new regime. Just above that, marginal relief caps the tax at the amount by which you crossed — so earning ₹12,05,000 costs ₹5,000 of tax, not the full slab amount.';
+  return 'That one needs the explainer — check the line-by-line table, which shows the source and the rule behind every number.';
+}
+
+/* ------------------------------------------------- floating chat widget */
+/* "Ask the Copilot" — discoverable by default (bottom-right, on the result
+   screen), and can apply edits to any input on request ("add ELSS of
+   50,000"). The model classifies intent and extracts the field + amount;
+   this file is the only thing that ever actually changes a number, and it
+   always does so by adding to or replacing the CURRENT stored value — the
+   model's job is understanding what the person meant, never arithmetic. */
+
+/* Primary path: the shared worker (see /worker/tax-copilot-groq) decides
+   whether a message is a question or an edit, and for an edit returns
+   { field, op, amount } — amount copied verbatim from what the person typed.
+   applyActions() re-validates every action against this exact whitelist
+   before touching the profile; anything else is silently dropped. */
+const FIELD_SETTERS = {
+  bonus:            { get: p => p.salary.bonus,               set: (p, v) => { p.salary.bonus = v; p.bonusUnknown = false; },        qid: 'bonus' },
+  homeLoanInterest: { get: p => p.deductions.homeLoanInterest,set: (p, v) => { p.deductions.homeLoanInterest = v; p.flags.hasHomeLoan = v > 0; }, qid: 'homeLoan' },
+  s80D:             { get: p => p.deductions.s80D,            set: (p, v) => { p.deductions.s80D = v; },            qid: 's80D' },
+  s80CCD1B:         { get: p => p.deductions.s80CCD1B,        set: (p, v) => { p.deductions.s80CCD1B = v; },        qid: 's80CCD1B' },
+  s80E:             { get: p => p.deductions.s80E,            set: (p, v) => { p.deductions.s80E = v; },            qid: 's80E' },
+  s80G:             { get: p => p.deductions.s80G,            set: (p, v) => { p.deductions.s80G = v; },            qid: 's80G' },
+  savingsInterest:  { get: p => p.otherIncome.savingsInterest,set: (p, v) => { p.otherIncome.savingsInterest = v; }, qid: 'otherIncome' },
+  fdInterest:       { get: p => p.otherIncome.fdInterest,     set: (p, v) => { p.otherIncome.fdInterest = v; },     qid: 'otherIncome' },
+  rentPaid:         { get: p => p.deductions.rentPaid,        set: (p, v) => { p.deductions.rentPaid = v; if (v > 0) p.flags.ownsHome = false; }, qid: 'rent' },
+  // Monthly, not annual — the ×12 happens here, deterministically, never in
+  // the model's head. See ALLOWED_FIELDS comment in the worker for why both exist.
+  rentMonthly:      { get: p => Math.round((p.deductions.rentPaid || 0) / 12), set: (p, v) => { p.deductions.rentPaid = v * 12; if (v > 0) p.flags.ownsHome = false; }, qid: 'rent' },
+  's80C.elss':               s80cFieldSetter('elss'),
+  's80C.ppf':                s80cFieldSetter('ppf'),
+  's80C.lic':                s80cFieldSetter('lic'),
+  's80C.tuition':            s80cFieldSetter('tuition'),
+  's80C.homeLoanPrincipal':  s80cFieldSetter('homeLoanPrincipal'),
+  's80C.other':              s80cFieldSetter('other')
+};
+function s80cFieldSetter(key) {
+  return {
+    get: p => (p.deductions.s80C_breakdown || {})[key] || (key === 'other' ? (p.deductions.s80C_other || 0) : 0),
+    set: (p, v) => {
+      const base = { elss: 0, ppf: 0, lic: 0, tuition: 0, homeLoanPrincipal: 0, other: 0 };
+      const prior = p.deductions.s80C_breakdown ||
+        (p.deductions.s80C_other > 0 ? { other: p.deductions.s80C_other } : {});
+      const b = Object.assign(base, prior);
+      b[key] = v;
+      p.deductions.s80C_breakdown = b;
+      p.deductions.s80C_other = Object.keys(b).reduce((a, k) => a + (b[k] || 0), 0);
+    },
+    qid: 's80C'
+  };
+}
+/* Re-validates independently of the worker's own sanitising — field must be
+   on the whitelist, amount must be a finite non-negative number. The model
+   never supplies the resulting total; this always computes it from what's
+   already stored. */
+function applyActions(actions) {
+  const applied = [];
+  (actions || []).forEach(a => {
+    if (!a || typeof a.field !== 'string') return;
+    const f = FIELD_SETTERS[a.field];
+    if (!f) return;
+    const amount = Number(a.amount);
+    if (!isFinite(amount) || amount < 0) return;
+    const current = f.get(S.profile) || 0;
+    f.set(S.profile, a.op === 'add' ? current + amount : amount);
+    if (S.profile.answered) S.profile.answered[f.qid] = true;
+    applied.push(a.field);
+  });
+  return applied;
+}
+
+/* Offline fallback only — used when the worker can't be reached at all, so
+   the bar still does something useful with no model reachable. Deliberately
+   narrower than the LLM path (fixed verbs, one field per message). */
+const EDIT_KEYWORDS = [
+  { field: 'bonus',   re: /\bbonus\b/i },
+  { field: 'homeLoanInterest', re: /\bhome[\s-]?loan|housing\s*loan\b/i },
+  { field: 's80D',    re: /\b(80\s?d|health\s*insurance|mediclaim|medical\s*insurance)\b/i },
+  { field: 's80CCD1B',re: /\b(nps|80\s?ccd)\b/i },
+  { field: 's80E',    re: /\beducation\s*loan|80\s?e\b/i },
+  { field: 's80G',    re: /\bdonation|80\s?g\b/i },
+  { field: 's80C.elss', re: /\belss\b/i },
+  { field: 's80C.ppf',  re: /\bppf\b/i },
+  { field: 's80C.lic',  re: /\blic\b|life\s*insurance/i },
+  { field: 's80C.other',re: /\b(80\s?c|section\s*123)\b/i },
+  { field: 'savingsInterest', re: /\b(savings|fixed\s*deposit|\bfd\b)\s*interest\b/i }
+];
+const EDIT_SET_VERBS = /\b(change|update|set|make|edit)\b/i;
+const EDIT_ADD_VERBS = /\b(add|put|invest|top\s*-?\s*up|increase|contribute)\b/i;
+function parseRupeeAmount(text) {
+  const m = text.match(/₹?\s?([\d][\d,]*(?:\.\d+)?)\s*(lakh|lakhs|lac|l|crore|cr|k)?/i);
+  if (!m) return null;
+  let v = parseFloat(m[1].replace(/,/g, ''));
+  const unit = (m[2] || '').toLowerCase();
+  if (/^(lakh|lakhs|lac|l)$/.test(unit)) v *= 100000;
+  else if (/^(crore|cr)$/.test(unit)) v *= 10000000;
+  else if (unit === 'k') v *= 1000;
+  return isNaN(v) ? null : v;
+}
+/* Only fires on an explicit change/add-style verb, so an ordinary question
+   like "what is my bonus" is never misread as an edit. */
+function tryApplyEdit(text) {
+  const isAdd = EDIT_ADD_VERBS.test(text);
+  const isSet = EDIT_SET_VERBS.test(text);
+  if (!isAdd && !isSet) return null;
+  const v = parseRupeeAmount(text);
+  if (v === null) return null;
+  const hit = EDIT_KEYWORDS.find(k => k.re.test(text));
+  if (!hit) return null;
+  const applied = applyActions([{ field: hit.field, op: isAdd ? 'add' : 'set', amount: v }]);
+  return applied.length ? hit : null;
+}
+
+const AI_BAR_EXAMPLE = 'Update my ELSS Mutual Fund amount to 50,000';
+let _tcMsgCount = 0;
+
+function tcExpandLog() {
+  $('tc-log').classList.remove('collapsed');
+  const t = $('ai-log-toggle'); t.hidden = false; t.classList.remove('collapsed');
+}
+function tcBubble(cls, html) {
+  const b = el('div', 'bub ' + cls); b.innerHTML = html;
+  $('tc-log').appendChild(b);
+  _tcMsgCount++;
+  $('ai-log-toggle').textContent = _tcMsgCount + (_tcMsgCount === 1 ? ' message' : ' messages');
+  tcExpandLog();
+  requestAnimationFrame(() => { const l = $('tc-log'); l.scrollTop = l.scrollHeight; });
+  return b;
+}
+/* Recompute + redraw everything downstream of a profile change, wherever
+   the edit came from (chat action or offline fallback). */
+function refreshAfterEdit() {
+  updateMeter();
+  renderAnsweredPanel();
+  if (currentScreenId() === 'screen-result') {
+    renderResult();
+    if (!$('review-overlay').hidden) renderQuestionRows($('review-overlay-list'), reviewableQuestions(), { autoApply: true });
+  }
+}
+
+/* Kept short on purpose — this account's Groq tier is rate-limited (see the
+   worker), and history tokens compete with everything else in that budget.
+   A handful of recent turns is plenty to resolve "those"/"it"/a short reply
+   like "I don't have those" against what was just discussed. */
+const CHAT_HISTORY_LIMIT = 8;
+function rememberChatTurn(userText, replyText) {
+  S.chatHistory.push({ role: 'user', content: userText }, { role: 'assistant', content: replyText });
+  S.chatHistory = S.chatHistory.slice(-CHAT_HISTORY_LIMIT);
+}
+
+async function tcSend() {
+  const text = $('tc-input').value.trim();
+  if (!text || !S.profile || !S.pack) return;
+  if (!S.comparison) S.comparison = compareRegimes(S.profile, S.pack);
+  tcBubble('usr', esc(text));
+  $('tc-input').value = '';
+
+  const wait = tcBubble('bot', 'Thinking…');
+  const res = await askExplainer(S, text, S.chatHistory);
+
+  if (res.ok) {
+    const applied = applyActions(res.actions);
+    if (applied.length) refreshAfterEdit();
+    wait.innerHTML = res.text;
+    rememberChatTurn(text, res.text);
+    return;
+  }
+
+  // Worker unreachable or erroring — degrade to the deterministic offline
+  // parser (narrower: one field per message, fixed verbs) so the bar still
+  // does something useful, per the "works with the model off" rule.
+  const edit = tryApplyEdit(text);
+  if (edit) {
+    refreshAfterEdit();
+    const msg = 'Done — updated and recalculated (offline mode). <b>' +
+      (S.comparison.winner === 'neu' ? 'New regime' : 'Old regime') + '</b> now wins by ' + fmt(S.comparison.saving) + '.';
+    wait.innerHTML = msg;
+    rememberChatTurn(text, 'Updated ' + edit.field + '.');
+    return;
+  }
+  // Not recorded into history below — this reply is our canned local text,
+  // never something the model actually said, so it shouldn't be fed back
+  // to it as if it were.
+  if (res.reason === 'network') {
+    wait.innerHTML = localAnswer(text) +
+      '<span class="why">The backend could not be reached (offline, or this page is running as a sandboxed Artifact). Everything else here is computed locally and unaffected.</span>';
+  } else if (isRateLimitError(res.detail)) {
+    wait.innerHTML = localAnswer(text) +
+      '<span class="why">The free model reached its limit — try again in a minute or two. Everything else here is computed locally and unaffected.</span>';
+  } else {
+    wait.innerHTML = localAnswer(text) +
+      '<span class="why">The explainer backend replied ' + (res.status || 'with an error') + ', so here\'s the built-in reference instead.</span>';
+  }
+}
+/* The worker forwards Groq's own error body verbatim in `detail` — sniff it
+   for the rate-limit case so people see "try again shortly", the true and
+   actionable reason, rather than a bare, alarming HTTP status code. */
+function isRateLimitError(detail) {
+  if (!detail) return false;
+  return /groq_http_429|rate limit/i.test(detail);
+}
+function wireChatWidget() {
+  $('tc-form').addEventListener('submit', e => { e.preventDefault(); tcSend(); });
+  $('ai-log-toggle').addEventListener('click', () => {
+    const collapsed = $('tc-log').classList.toggle('collapsed');
+    $('ai-log-toggle').classList.toggle('collapsed', collapsed);
+  });
+  // On focus with nothing typed yet, show a worked example as the placeholder
+  // rather than a static hint — reverts once the field is empty and blurred.
+  const input = $('tc-input');
+  input.addEventListener('focus', () => { if (!input.value) input.placeholder = 'e.g. ' + AI_BAR_EXAMPLE; });
+  input.addEventListener('blur', () => { if (!input.value) input.placeholder = 'Use AI to fill/ask'; });
+}
+
+/* ------------------------------------------------------- export/import */
+function exportSession() {
+  const json = JSON.stringify({
+    app: 'tax-regime-copilot', version: 1, savedAt: new Date().toISOString(),
+    profile: S.profile
+  }, null, 2);
+  let downloaded = false;
+  try {
+    const blob = new Blob([json], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'tax-session-' + S.profile.taxYear + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    downloaded = true;
+  } catch (e) { downloaded = false; }
+  // Some sandboxes (a hosted Artifact, for one) refuse page-initiated downloads
+  // silently, so always offer the text as well rather than appearing to work.
+  $('export-fallback').hidden = false;
+  $('export-text').value = json;
+  $('export-note').textContent = downloaded
+    ? 'If no file appeared, this page is running somewhere that blocks downloads — copy the text below and save it as a .json file yourself.'
+    : 'Downloads are blocked here. Copy the text below and save it as a .json file.';
+}
+
+function importSession(text) {
+  try {
+    const j = JSON.parse(text);
+    if (!j.profile) throw new Error('not a session file');
+    S.profile = Object.assign(emptyProfile(), j.profile);
+    S.pack = pack();
+    $('pill-year').textContent = 'FY ' + S.profile.taxYear;
+    if (Object.keys(S.profile.answered || {}).length) { renderResult(); }
+    else goConfirm(S.profile, null);
+  } catch (e) {
+    const msg = $('parse-msg');
+    msg.hidden = false; msg.style.color = 'var(--flag)';
+    msg.textContent = 'That file could not be read as a saved session.';
+  }
+}
+
+/* ---------------------------------------------------------------- tests */
+function showTests() {
+  const r = runGoldenSuite();
+  const sum = $('test-summary'); sum.innerHTML = '';
+  const d = el('div', 'note' + (r.fail ? ' warn' : ''));
+  d.innerHTML = '<b>' + r.pass + ' of ' + r.total + ' passed' + (r.fail ? ', ' + r.fail + ' FAILED' : '') +
+    '.</b> Each case checks taxable income, slab tax, rebate, surcharge and the total, under both regimes.';
+  sum.appendChild(d);
+  const rows = $('test-rows'); rows.innerHTML = '';
+  r.rows.forEach(row => {
+    const el2 = el('div', 'testrow');
+    el2.appendChild(el('span', 'tick ' + (row.ok ? 'p' : 'f'), row.ok ? 'OK' : 'XX'));
+    const nm = el('span');
+    nm.appendChild(document.createTextNode(row.name));
+    if (!row.ok) row.failures.forEach(f =>
+      nm.appendChild(el('div', 'tiny', f.regime + '.' + f.field + ': expected ' + f.exp + ', got ' + f.got)));
+    el2.appendChild(nm);
+    el2.appendChild(el('span', 'mono tiny muted', 'new ' + fmt(row.neu) + ' · old ' + fmt(row.old)));
+    rows.appendChild(el2);
+  });
+  show('screen-tests');
+}
+
+/* ----------------------------------------------------------------- wire */
+/* Two-column earnings|deductions, the layout every Indian payroll system uses. */
+const SAMPLE = `Payslip for the month of July 2026
+Earnings                        Amount   Deductions              Amount
+BASIC                       100,000.00   PF                    1,800.00
+HRA                          50,000.00   PROF TAX                200.00
+FOOD COUPONS                  2,200.00   INCOME TAX           24,500.00
+BROADBAND ALLOWANCE           2,000.00
+LTA                           8,300.00
+SPECIAL ALLOWANCE            42,500.00
+Total Earnings              205,000.00   Total Deduction      26,500.00
+Net Pay for the month : 178,500.00`;
+
+const SAMPLE_OFFER = `Annexure A - Salary Structure
+Your total annual CTC will be INR 30,00,000.
+CTC BREAK-UP
+Components                              Monthly        Per Annum
+Basic                                 100,000.00      12,00,000
+HRA                                    50,000.00       6,00,000
+LTA                                     8,300.00         99,600
+Professional Development Allowance      4,000.00         48,000
+Special Allowance                      42,500.00       5,10,000
+Gross Salary                          204,800.00      24,57,600
+Employer PF                             1,800.00         21,600
+Gratuity                                4,808.00         57,700
+Fixed CTC                                            25,36,900
+Performance Bonus                                     2,50,000
+Total CTC                                            27,86,900`;
+
+function ingestText(text, forcedType) {
+  const parsed = parsePayslipText(text, forcedType || S.forcedType || undefined);
+  const found = Object.keys(parsed.hits).length + parsed.parts.allow.length;
+  const msg = $('parse-msg'); msg.hidden = false;
+  if (found < 2) {
+    msg.style.color = 'var(--flag)';
+    msg.textContent = 'Only ' + found + ' line(s) recognised — not enough to work from. ' +
+      'Type the numbers instead; it takes a minute.';
+    return false;
+  }
+  msg.style.color = 'var(--muted)';
+  msg.textContent = found + ' lines recognised.';
+  S.lastText = text;
+  goConfirm(parsedToProfile(parsed, CURRENT_TAX_YEAR), parsed);
+  return true;
+}
+
+/* Plain-language line shown under the doc-type tabs for whichever is picked. */
+const DOCTYPE_TAB_INFO = {
+  monthly: 'Any month. Figures get multiplied by twelve, and you\'ll be warned if that month was unusual — arrears, loss of pay, a bonus.',
+  annual: 'A year-to-date summary or annual salary breakup. Read as-is, and checked for whether it covers all twelve months.',
+  offer: 'The most accurate start. Annual figures straight from the salary structure, with employer PF and gratuity correctly left out.'
+};
+
+function showFieldError(id, msg) {
+  const n = $(id); n.textContent = msg; n.hidden = false;
+}
+function clearFieldError(id) { const n = $(id); n.hidden = true; n.textContent = ''; }
+
+/* Shared by the desktop tab strip and the mobile <select> — picking a
+   document type either way does exactly the same thing. */
+function selectDocType(type, opts) {
+  S.forcedType = type;
+  document.querySelectorAll('.doctype').forEach(o =>
+    o.setAttribute('aria-pressed', String(o.dataset.type === type)));
+  $('sel-doctype-mobile').value = type;
+  $('doctype-sub').textContent = DOCTYPE_TAB_INFO[type] || '';
+  $('drop').hidden = false;
+  $('drop-label').textContent = 'Drop your ' +
+    (type === 'monthly' ? 'payslip' : type === 'offer' ? 'offer letter' : 'statement') +
+    ' here, or';
+  if (!opts || !opts.silent) $('drop').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+function wire() {
+  document.querySelectorAll('.doctype').forEach(b => {
+    b.addEventListener('click', () => selectDocType(b.dataset.type));
+  });
+  $('sel-doctype-mobile').addEventListener('change', e => selectDocType(e.target.value));
+  // Pre-pick monthly payslip by default (desktop and mobile alike) rather
+  // than making everyone pick a tab just to reach the upload step — it's
+  // the most common starting document, and changing it is one click away.
+  selectDocType('monthly', { silent: true });
+
+  $('btn-pick').addEventListener('click', () => $('file').click());
+  $('btn-paste').addEventListener('click', () => {
+    const a = $('paste-area'); a.hidden = !a.hidden; if (!a.hidden) $('paste-text').focus();
+  });
+  // Clicking anywhere outside the open paste box (and not its own toggle
+  // button) hides it again, so it doesn't sit open once someone's moved on.
+  document.addEventListener('click', e => {
+    const a = $('paste-area');
+    if (a.hidden) return;
+    if (a.contains(e.target) || e.target === $('btn-paste')) return;
+    a.hidden = true;
+  });
+  $('btn-paste-demo').addEventListener('click', () => {
+    $('paste-text').value = S.forcedType === 'offer' ? SAMPLE_OFFER : SAMPLE;
+  });
+  $('btn-show-parts').addEventListener('click', openPartsDrawer);
+  $('btn-parts-close').addEventListener('click', closePartsDrawer);
+  $('parts-backdrop').addEventListener('click', closePartsDrawer);
+  $('btn-paste-go').addEventListener('click', () => {
+    const t = $('paste-text').value.trim();
+    if (t) ingestText(t);
+  });
+  $('file').addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+    e.target.value = ''; // reset so choosing the same file again still fires 'change'
+  });
+
+  const drop = $('drop');
+  ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.classList.add('over');
+  }));
+  ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.classList.remove('over');
+  }));
+  drop.addEventListener('drop', e => { if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+  $('btn-manual').addEventListener('click', () => {
+    S.profile = emptyProfile(); S.profile.taxYear = CURRENT_TAX_YEAR; S.pack = pack();
+    S.parsed = null; S.forcedType = null;
+    const redraw = () => $('manual-gross').textContent = fmt(grossSalary(S.profile));
+    renderFieldGrid($('manual-fields'), S.profile, redraw, false);
+    redraw(); clearFieldError('manual-error'); show('screen-manual');
+  });
+  $('btn-manual-go').addEventListener('click', () => {
+    if (grossSalary(S.profile) <= 0) return showFieldError('manual-error', 'Enter at least a basic salary before continuing.');
+    clearFieldError('manual-error');
+    renderTriage();
+  });
+  $('btn-confirm-go').addEventListener('click', () => {
+    if (grossSalary(S.profile) <= 0) return showFieldError('confirm-error', 'Gross salary reads as zero — fix the fields above first.');
+    clearFieldError('confirm-error');
+    renderTriage();
+  });
+  $('btn-triage-go').addEventListener('click', () => {
+    const ticked = Array.from(document.querySelectorAll('.triage-cb:checked')).map(c => c.value);
+    S.profile.outOfScope = ticked;
+    if (ticked.length) return renderScope(ticked);
+    startInterview();
+  });
+  $('btn-scope-anyway').addEventListener('click', startInterview);
+  $('btn-scope-ca').addEventListener('click', () => { $('scope-ca-msg').hidden = false; });
+  $('btn-back').addEventListener('click', goBack);
+  $('btn-tests').addEventListener('click', showTests);
+  $('btn-tests-back').addEventListener('click', () => show('screen-start'));
+  $('btn-restart').addEventListener('click', () => {
+    if (S.profile && !confirm('Start over? Everything you\'ve entered will be cleared.')) return;
+    S.profile = null; S.parsed = null; S.forcedType = null; S.lastText = null;
+    S.chatHistory = []; $('tc-log').innerHTML = ''; _tcMsgCount = 0;
+    $('chat').innerHTML = ''; $('parse-msg').hidden = true;
+    $('paste-area').hidden = true; $('paste-text').value = ''; $('drop').hidden = true;
+    $('file').value = ''; // otherwise re-picking the same file after restart silently does nothing
+    $('scope-ca-msg').hidden = true;
+    selectDocType('monthly', { silent: true });
+    show('screen-start');
+  });
+  $('btn-export').addEventListener('click', exportSession);
+  $('btn-copy').addEventListener('click', async () => {
+    const t = $('export-text');
+    try { await navigator.clipboard.writeText(t.value); }
+    catch (e) { t.select(); try { document.execCommand('copy'); } catch (e2) {} }
+    $('copy-msg').textContent = 'Copied.';
+    setTimeout(() => $('copy-msg').textContent = '', 2500);
+  });
+  $('btn-print').addEventListener('click', () => window.print());
+  $('btn-edit').addEventListener('click', openReviewOverlay);
+  $('btn-review-close').addEventListener('click', closeReviewOverlay);
+  $('btn-import').addEventListener('click', () => $('file-import').click());
+  $('file-import').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader(); r.onload = () => importSession(r.result); r.readAsText(f);
+  });
+
+  $('glossary-close').addEventListener('click', closeGlossary);
+  $('glossary-backdrop').addEventListener('click', closeGlossary);
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    closeGlossary(); closeBreakdown(); closePartsDrawer();
+    if (!$('review-overlay').hidden) closeReviewOverlay();
+  });
+
+  $('btn-breakdown-inline').addEventListener('click', openBreakdown);
+  $('btn-breakdown-close').addEventListener('click', closeBreakdown);
+  $('breakdown-backdrop').addEventListener('click', closeBreakdown);
+
+  wireChatWidget();
+  window.addEventListener('resize', syncTopbarHeight);
+  syncTopbarHeight();
+}
+
+function renderScope(ids) {
+  const box = $('scope-list'); box.innerHTML = '';
+  outOfScopeNote(ids).forEach(t => {
+    const d = el('div');
+    d.appendChild(el('h3', null, t.label));
+    d.appendChild(el('p', 'small muted', t.note));
+    box.appendChild(d);
+  });
+  const c = compareRegimes(S.profile, S.pack);
+  $('scope-summary').innerHTML =
+    '<div class="small muted" style="margin-top:8px">Gross salary <b class="mono">' + fmt(grossSalary(S.profile)) +
+    '</b> · salary-only tax under the old regime <b class="mono">' + fmt(c.old.total) +
+    '</b>, under the new regime <b class="mono">' + fmt(c.neu.total) + '</b>, before anything you ticked above.</div>';
+  show('screen-scope');
+}
+
+async function handleFile(file) {
+  const msg = $('parse-msg'); msg.hidden = false; msg.style.color = 'var(--muted)';
+  msg.textContent = 'Reading ' + file.name + '…';
+  try {
+    let text;
+    if (/\.pdf$/i.test(file.name) || file.type === 'application/pdf') text = await extractPdfText(file);
+    else text = await file.text();
+    if (!text || text.replace(/\s/g, '').length < 30) throw new Error('No text layer found');
+    ingestText(text);
+  } catch (e) {
+    msg.style.color = 'var(--flag)';
+    msg.textContent = 'Could not read that file — it is probably a scan or password-protected. ' +
+      'Paste the text instead, or enter the numbers manually. (' + (e.message || e) + ')';
+    $('paste-area').hidden = false;
+  }
+}
+
+let _wired = false;
+function bootOnce() { if (_wired) return; _wired = true; wire(); show(currentScreenId() || 'screen-start'); }
+document.addEventListener('DOMContentLoaded', bootOnce);
+if (document.readyState !== 'loading') bootOnce();
+
+</script>
+</body>
+</html>

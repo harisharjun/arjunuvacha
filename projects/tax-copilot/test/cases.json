@@ -1,0 +1,842 @@
+[
+ {
+  "name": "Zero tax \u2014 7L gross, new regime rebate",
+  "profile": {
+   "basic": 350000,
+   "hra": 175000,
+   "other": 175000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 625000,
+    "base": 11250.0,
+    "rebate": 11250.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 650000,
+    "base": 42500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 1700.0,
+    "total": 44200
+   }
+  }
+ },
+ {
+  "name": "Rebate ceiling \u2014 12.75L gross, exactly nil under new",
+  "profile": {
+   "basic": 637500,
+   "hra": 318750,
+   "other": 318750,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1200000,
+    "base": 60000.0,
+    "rebate": 60000.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 1225000,
+    "base": 180000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7200.0,
+    "total": 187200
+   }
+  }
+ },
+ {
+  "name": "Marginal relief \u2014 12.80L gross, just past the cliff",
+  "profile": {
+   "basic": 640000,
+   "hra": 320000,
+   "other": 320000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1205000,
+    "base": 60750.0,
+    "rebate": 55750.0,
+    "surcharge": 0.0,
+    "cess": 200.0,
+    "total": 5200
+   },
+   "old": {
+    "taxable": 1230000,
+    "base": 181500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7260.0,
+    "total": 188760
+   }
+  }
+ },
+ {
+  "name": "Marginal relief \u2014 13.00L gross",
+  "profile": {
+   "basic": 650000,
+   "hra": 325000,
+   "other": 325000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1225000,
+    "base": 63750.0,
+    "rebate": 38750.0,
+    "surcharge": 0.0,
+    "cess": 1000.0,
+    "total": 26000
+   },
+   "old": {
+    "taxable": 1250000,
+    "base": 187500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7500.0,
+    "total": 195000
+   }
+  }
+ },
+ {
+  "name": "Old-regime rebate \u2014 5.5L gross, nil under old",
+  "profile": {
+   "basic": 275000,
+   "hra": 137500,
+   "other": 137500,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 475000,
+    "base": 3750.0,
+    "rebate": 3750.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 500000,
+    "base": 12500.0,
+    "rebate": 12500.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   }
+  }
+ },
+ {
+  "name": "The worked example \u2014 18L, HRA + 80C + employer NPS",
+  "profile": {
+   "basic": 750000,
+   "hra": 375000,
+   "other": 600000,
+   "bonus": 0,
+   "enps": 75000,
+   "epf": 90000,
+   "ptax": 0,
+   "rent": 360000,
+   "metro": true,
+   "c80": 60000,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1650000,
+    "base": 130000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.0,
+    "total": 135200
+   },
+   "old": {
+    "taxable": 1240000,
+    "base": 184500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7380.0,
+    "total": 191880
+   }
+  }
+ },
+ {
+  "name": "18L gross, no deductions at all",
+  "profile": {
+   "basic": 750000,
+   "hra": 375000,
+   "other": 600000,
+   "bonus": 0,
+   "enps": 75000,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1650000,
+    "base": 130000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.0,
+    "total": 135200
+   },
+   "old": {
+    "taxable": 1675000,
+    "base": 315000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 12600.0,
+    "total": 327600
+   }
+  }
+ },
+ {
+  "name": "Old regime wins \u2014 18L with metro rent and a home loan",
+  "profile": {
+   "basic": 900000,
+   "hra": 450000,
+   "other": 450000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 108000,
+   "ptax": 0,
+   "rent": 480000,
+   "metro": true,
+   "c80": 42000,
+   "ccd1b": 50000,
+   "d80": 50000,
+   "hli": 200000,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1725000,
+    "base": 145000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5800.0,
+    "total": 150800
+   },
+   "old": {
+    "taxable": 910000,
+    "base": 94500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 3780.0,
+    "total": 98280
+   }
+  }
+ },
+ {
+  "name": "Heavy deductions \u2014 18L, old regime just ahead",
+  "profile": {
+   "basic": 750000,
+   "hra": 0,
+   "other": 975000,
+   "bonus": 0,
+   "enps": 75000,
+   "epf": 90000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 60000,
+   "ccd1b": 50000,
+   "d80": 50000,
+   "hli": 200000,
+   "e80": 170000,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1650000,
+    "base": 130000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.0,
+    "total": 135200
+   },
+   "old": {
+    "taxable": 1055000,
+    "base": 129000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5160.0,
+    "total": 134160
+   }
+  }
+ },
+ {
+  "name": "Ten rupees from break-even \u2014 18L",
+  "profile": {
+   "basic": 750000,
+   "hra": 0,
+   "other": 975000,
+   "bonus": 0,
+   "enps": 75000,
+   "epf": 90000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 60000,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 466650,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1650000,
+    "base": 130000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.0,
+    "total": 135200
+   },
+   "old": {
+    "taxable": 1058350,
+    "base": 130005.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5200.2,
+    "total": 135210
+   }
+  }
+ },
+ {
+  "name": "No HRA component at all \u2014 15L",
+  "profile": {
+   "basic": 750000,
+   "hra": 0,
+   "other": 750000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 90000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 60000,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1425000,
+    "base": 93750.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 3750.0,
+    "total": 97500
+   },
+   "old": {
+    "taxable": 1300000,
+    "base": 202500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 8100.0,
+    "total": 210600
+   }
+  }
+ },
+ {
+  "name": "Non-metro HRA \u2014 12L",
+  "profile": {
+   "basic": 500000,
+   "hra": 200000,
+   "other": 500000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 60000,
+   "ptax": 0,
+   "rent": 240000,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1125000,
+    "base": 52500.0,
+    "rebate": 52500.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 900000,
+    "base": 92500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 3700.0,
+    "total": 96200
+   }
+  }
+ },
+ {
+  "name": "Rent below 10% of basic \u2014 HRA exemption nil",
+  "profile": {
+   "basic": 600000,
+   "hra": 240000,
+   "other": 360000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 50000,
+   "metro": true,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1125000,
+    "base": 52500.0,
+    "rebate": 52500.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 1150000,
+    "base": 157500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 6300.0,
+    "total": 163800
+   }
+  }
+ },
+ {
+  "name": "Employer NPS above the old-regime 10% cap",
+  "profile": {
+   "basic": 1000000,
+   "hra": 0,
+   "other": 800000,
+   "bonus": 0,
+   "enps": 140000,
+   "epf": 120000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1725000,
+    "base": 145000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 5800.0,
+    "total": 150800
+   },
+   "old": {
+    "taxable": 1670000,
+    "base": 313500.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 12540.0,
+    "total": 326040
+   }
+  }
+ },
+ {
+  "name": "Surcharge threshold \u2014 50.75L gross, no surcharge yet",
+  "profile": {
+   "basic": 2537500,
+   "hra": 0,
+   "other": 2537500,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 5000000,
+    "base": 1080000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 43200.0,
+    "total": 1123200
+   },
+   "old": {
+    "taxable": 5025000,
+    "base": 1320000.0,
+    "rebate": 0.0,
+    "surcharge": 17500.0,
+    "cess": 53500.0,
+    "total": 1391000
+   }
+  }
+ },
+ {
+  "name": "Surcharge marginal relief \u2014 51.75L gross",
+  "profile": {
+   "basic": 2587500,
+   "hra": 0,
+   "other": 2587500,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 5100000,
+    "base": 1110000.0,
+    "rebate": 0.0,
+    "surcharge": 70000.0,
+    "cess": 47200.0,
+    "total": 1227200
+   },
+   "old": {
+    "taxable": 5125000,
+    "base": 1350000.0,
+    "rebate": 0.0,
+    "surcharge": 87500.0,
+    "cess": 57500.0,
+    "total": 1495000
+   }
+  }
+ },
+ {
+  "name": "Surcharge 15% band \u2014 1.2cr gross",
+  "profile": {
+   "basic": 6000000,
+   "hra": 0,
+   "other": 6000000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 11925000,
+    "base": 3157500.0,
+    "rebate": 0.0,
+    "surcharge": 473625.0,
+    "cess": 145245.0,
+    "total": 3776370
+   },
+   "old": {
+    "taxable": 11950000,
+    "base": 3397500.0,
+    "rebate": 0.0,
+    "surcharge": 509625.0,
+    "cess": 156285.0,
+    "total": 4063410
+   }
+  }
+ },
+ {
+  "name": "Surcharge 25% band \u2014 2.5cr gross",
+  "profile": {
+   "basic": 12500000,
+   "hra": 0,
+   "other": 12500000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 24925000,
+    "base": 7057500.0,
+    "rebate": 0.0,
+    "surcharge": 1764375.0,
+    "cess": 352875.0,
+    "total": 9174750
+   },
+   "old": {
+    "taxable": 24950000,
+    "base": 7297500.0,
+    "rebate": 0.0,
+    "surcharge": 1824375.0,
+    "cess": 364875.0,
+    "total": 9486750
+   }
+  }
+ },
+ {
+  "name": "Old-regime 37% band \u2014 6cr gross",
+  "profile": {
+   "basic": 30000000,
+   "hra": 0,
+   "other": 30000000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 0,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 59925000,
+    "base": 17557500.0,
+    "rebate": 0.0,
+    "surcharge": 4389375.0,
+    "cess": 877875.0,
+    "total": 22824750
+   },
+   "old": {
+    "taxable": 59950000,
+    "base": 17797500.0,
+    "rebate": 0.0,
+    "surcharge": 6585075.0,
+    "cess": 975303.0,
+    "total": 25357880
+   }
+  }
+ },
+ {
+  "name": "Other income \u2014 savings + FD interest, 80TTA applies",
+  "profile": {
+   "basic": 500000,
+   "hra": 250000,
+   "other": 250000,
+   "bonus": 0,
+   "enps": 0,
+   "epf": 60000,
+   "ptax": 0,
+   "rent": 0,
+   "metro": false,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 14000,
+   "fd": 45000
+  },
+  "expected": {
+   "neu": {
+    "taxable": 984000,
+    "base": 38400.0,
+    "rebate": 38400.0,
+    "surcharge": 0.0,
+    "cess": 0.0,
+    "total": 0
+   },
+   "old": {
+    "taxable": 939000,
+    "base": 100300.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 4012.0,
+    "total": 104310
+   }
+  }
+ },
+ {
+  "name": "Bonus-heavy \u2014 14L salary + 6L bonus",
+  "profile": {
+   "basic": 583000,
+   "hra": 291500,
+   "other": 525500,
+   "bonus": 600000,
+   "enps": 0,
+   "epf": 70000,
+   "ptax": 0,
+   "rent": 300000,
+   "metro": true,
+   "c80": 0,
+   "ccd1b": 0,
+   "d80": 0,
+   "hli": 0,
+   "e80": 0,
+   "g80": 0,
+   "savings": 0,
+   "fd": 0
+  },
+  "expected": {
+   "neu": {
+    "taxable": 1925000,
+    "base": 185000.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 7400.0,
+    "total": 192400
+   },
+   "old": {
+    "taxable": 1638300,
+    "base": 303990.0,
+    "rebate": 0.0,
+    "surcharge": 0.0,
+    "cess": 12159.6,
+    "total": 316150
+   }
+  }
+ }
+]

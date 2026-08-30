@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>psychology on Arjun Uvacha</title>
-        <link>https://www.arjunuvacha.com/tags/psychology/</link>
+        <link>https://arjunuvacha.com/tags/psychology/</link>
         <description>Recent content in psychology on Arjun Uvacha</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en</language>
-        <lastBuildDate>Mon, 14 Oct 2024 17:30:42 +0530</lastBuildDate><atom:link href="https://www.arjunuvacha.com/tags/psychology/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 14 Oct 2024 17:30:42 +0530</lastBuildDate><atom:link href="https://arjunuvacha.com/tags/psychology/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Cognitive Biases - Part 08: Hyperbolic Discounting</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</link>
         <pubDate>Mon, 14 Oct 2024 17:30:42 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/hyperbolic-discounting.jpg" alt="Featured image of post Cognitive Biases - Part 08: Hyperbolic Discounting" /&gt;&lt;p&gt;👋🏼 Hey there! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/hyperbolic-discounting.jpg" alt="Featured image of post Cognitive Biases - Part 08: Hyperbolic Discounting" /&gt;&lt;p&gt;👋🏼 Hey there! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the eighth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other seven yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/cognitive-bias-belief-bias/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Belief Bias&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
@@ -34,6 +34,7 @@
 &lt;hr&gt;
 &lt;h2 id=&#34;hyperbolic-discounting-the-brains-short-term-bias&#34;&gt;&lt;strong&gt;Hyperbolic Discounting: The Brain’s Short-Term Bias&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Hyperbolic discounting is our tendency to prefer smaller, immediate rewards over larger, delayed ones. It’s why we procrastinate, struggle with long-term goals, and make impulsive decisions. Our brain naturally prioritizes NOW over LATER, even when later is objectively better.&lt;/p&gt;
+&lt;img src=&#34;hyperbolic.webp&#34; alt=&#34;Hyperbolic Discounting&#34; style=&#34;display: block; margin-left: auto; margin-right: auto; max-width: 400px; height: auto;&#34;&gt;
 &lt;h3 id=&#34;why-do-we-fall-for-it&#34;&gt;&lt;strong&gt;Why Do We Fall for It?&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;Here are the top 5 reasons why I think this happens.&lt;/p&gt;
 &lt;h3 id=&#34;-1-evolutionary-instincts&#34;&gt;🧠 &lt;strong&gt;1. Evolutionary Instincts&lt;/strong&gt;&lt;/h3&gt;

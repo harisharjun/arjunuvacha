@@ -1,0 +1,16 @@
+{
+  "name": "tax-regime-copilot",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Client-local old-vs-new tax regime calculator for salaried Indians",
+  "scripts": {
+    "build": "python3 build.py",
+    "test": "python3 build.py && node test/e2e.js && node test/e2e2.js && node test/mob.js",
+    "test:pdf": "node test/e2e-pdf.js",
+    "cases": "python3 test/gen_cases.py > test/cases.json"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0",
+    "pdfjs-dist": "3.11.174"
+  }
+}

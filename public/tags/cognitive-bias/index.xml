@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>cognitive bias on Arjun Uvacha</title>
-        <link>https://www.arjunuvacha.com/tags/cognitive-bias/</link>
+        <link>https://arjunuvacha.com/tags/cognitive-bias/</link>
         <description>Recent content in cognitive bias on Arjun Uvacha</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en</language>
-        <lastBuildDate>Mon, 14 Oct 2024 17:30:42 +0530</lastBuildDate><atom:link href="https://www.arjunuvacha.com/tags/cognitive-bias/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 14 Oct 2024 17:30:42 +0530</lastBuildDate><atom:link href="https://arjunuvacha.com/tags/cognitive-bias/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Cognitive Biases - Part 08: Hyperbolic Discounting</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</link>
         <pubDate>Mon, 14 Oct 2024 17:30:42 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/hyperbolic-discounting.jpg" alt="Featured image of post Cognitive Biases - Part 08: Hyperbolic Discounting" /&gt;&lt;p&gt;👋🏼 Hey there! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-hyperbolic-discounting/hyperbolic-discounting.jpg" alt="Featured image of post Cognitive Biases - Part 08: Hyperbolic Discounting" /&gt;&lt;p&gt;👋🏼 Hey there! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the eighth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other seven yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/cognitive-bias-belief-bias/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Belief Bias&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
@@ -34,6 +34,7 @@
 &lt;hr&gt;
 &lt;h2 id=&#34;hyperbolic-discounting-the-brains-short-term-bias&#34;&gt;&lt;strong&gt;Hyperbolic Discounting: The Brain’s Short-Term Bias&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Hyperbolic discounting is our tendency to prefer smaller, immediate rewards over larger, delayed ones. It’s why we procrastinate, struggle with long-term goals, and make impulsive decisions. Our brain naturally prioritizes NOW over LATER, even when later is objectively better.&lt;/p&gt;
+&lt;img src=&#34;hyperbolic.webp&#34; alt=&#34;Hyperbolic Discounting&#34; style=&#34;display: block; margin-left: auto; margin-right: auto; max-width: 400px; height: auto;&#34;&gt;
 &lt;h3 id=&#34;why-do-we-fall-for-it&#34;&gt;&lt;strong&gt;Why Do We Fall for It?&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;Here are the top 5 reasons why I think this happens.&lt;/p&gt;
 &lt;h3 id=&#34;-1-evolutionary-instincts&#34;&gt;🧠 &lt;strong&gt;1. Evolutionary Instincts&lt;/strong&gt;&lt;/h3&gt;
@@ -100,19 +101,19 @@ When faced with a choice between immediate rewards and long-term benefits, we in
         </item>
         <item>
         <title>Cognitive Biases - Part 07: Belief Bias</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-belief-bias/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-belief-bias/</link>
         <pubDate>Sun, 11 Jul 2021 21:03:07 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-belief-bias/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-belief-bias/belief-bias.png" alt="Featured image of post Cognitive Biases - Part 07: Belief Bias" /&gt;&lt;p&gt;👋🏼👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-belief-bias/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-belief-bias/belief-bias.png" alt="Featured image of post Cognitive Biases - Part 07: Belief Bias" /&gt;&lt;p&gt;👋🏼👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the seventh in a series of articles I am writing on Cognitive Biases. If you haven’t read the other six yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/forer-effect&#34; &gt;Forer effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;p&gt;Let&amp;rsquo;s get started with this one!&lt;/p&gt;
@@ -144,7 +145,7 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
 &lt;p&gt;Let&amp;rsquo;s look at a couple of my personal experiences around this.&lt;/p&gt;
 &lt;h2 id=&#34;the-belief-dilemma&#34;&gt;The belief dilemma&lt;/h2&gt;
 &lt;h3 id=&#34;lesson-from-my-first-startup&#34;&gt;Lesson from my first startup&lt;/h3&gt;
-&lt;p&gt;My first startup was WhatsDplan (more details about this in my earlier article &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;IKEA effect&lt;/a&gt;&lt;/strong&gt;). We started WhatsDdplan because we believed in the idea. And frankly, this belief is good. Without any belief, you wouldn’t achieve anything great. Belief is needed to do something which otherwise would not have been possible. If you want to conquer the moon you need to first believe it and then only will you be able to experience it. But even for that, you need to have a very good grasp of reality and not be drown in a false sense of belief.&lt;/p&gt;
+&lt;p&gt;My first startup was WhatsDplan (more details about this in my earlier article &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;IKEA effect&lt;/a&gt;&lt;/strong&gt;). We started WhatsDdplan because we believed in the idea. And frankly, this belief is good. Without any belief, you wouldn’t achieve anything great. Belief is needed to do something which otherwise would not have been possible. If you want to conquer the moon you need to first believe it and then only will you be able to experience it. But even for that, you need to have a very good grasp of reality and not be drown in a false sense of belief.&lt;/p&gt;
 &lt;p&gt;My assessment about ‘WhatsDplan’, if I recollect some of the discussions I have had with a few investors and also with a few of my friends and colleagues, was riveted around belief and belief alone! Rather than a strong argument on ‘why’ exactly would it work, I thought it will work because ‘WE’ were building it and we were good. We were invested in the idea since the beginning and did not want to doubt it even for a little while. We carried on with a lot of vigour and purpose, and did not want to give up.&lt;/p&gt;
 &lt;p&gt;Unfortunately, the startup ended in a tragedy. We had to shut it down after a year-long effort to make it work. We missed a lot of critical observations and assessments which could have helped us pivot and survive. Well, let&amp;rsquo;s save that story for another day!&lt;/p&gt;
 &lt;h3 id=&#34;skewed-beliefs-of-my-friend&#34;&gt;Skewed beliefs of my friend&lt;/h3&gt;
@@ -207,18 +208,18 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
         </item>
         <item>
         <title>Cognitive Biases - Part 06: Forer Effect</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-forer-effect/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-forer-effect/</link>
         <pubDate>Tue, 22 Jun 2021 00:04:18 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-forer-effect/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-forer-effect/forer-effect.png" alt="Featured image of post Cognitive Biases - Part 06: Forer Effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-forer-effect/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-forer-effect/forer-effect.png" alt="Featured image of post Cognitive Biases - Part 06: Forer Effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the sixth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other five yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/framing-effect&#34; &gt;Framing effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;what-is-the-forer-effect&#34;&gt;What is the Forer effect?&lt;/h2&gt;
@@ -277,17 +278,17 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
         </item>
         <item>
         <title>Cognitive Biases - Part 05: Framing Effect</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-framing-effect/</link>
         <pubDate>Mon, 21 Jun 2021 23:41:24 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect.jpg" alt="Featured image of post Cognitive Biases - Part 05: Framing Effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-framing-effect/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect.jpg" alt="Featured image of post Cognitive Biases - Part 05: Framing Effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the fifth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other four yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/availability-heuristic&#34; &gt;Availability Heuristic&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;p&gt;Ok, let’s get started with this one.&lt;/p&gt;
@@ -326,10 +327,10 @@ These two anecdotes are only to convey that our beliefs and belief systems are v
 &lt;p&gt;Interesting examples, but sound too far-fetched. How do they relate to me, hmmm?&lt;br&gt;
 Hold on!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Do you go well with memes?&lt;/strong&gt;
-&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme.jpeg&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme.jpeg&#34;
 	width=&#34;1400&#34;
 	height=&#34;787&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme_huaf3960c9a10ac7c0ef797621d0e58110_95224_480x0_resize_q75_box.jpeg 480w, https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme_huaf3960c9a10ac7c0ef797621d0e58110_95224_1024x0_resize_q75_box.jpeg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme_huaf3960c9a10ac7c0ef797621d0e58110_95224_480x0_resize_q75_box.jpeg 480w, https://arjunuvacha.com/p/cognitive-bias-framing-effect/framing-effect-meme_huaf3960c9a10ac7c0ef797621d0e58110_95224_1024x0_resize_q75_box.jpeg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Framing Effect&#34;
@@ -344,10 +345,10 @@ Hold on!&lt;/p&gt;
 &lt;h2 id=&#34;the-classic-tale-of-discount-marketing&#34;&gt;The classic tale of discount marketing&lt;/h2&gt;
 &lt;p&gt;You are drawn to the discount ‘%’ more than the price itself. The discount % is perceived as saving, as a benefit. And the mind is tricked into believing that you are actually in for a good deal. &lt;strong&gt;A 50% off deal cannot be bad, right?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;This trick is used in a myriad number of ways. Let’s see.
-&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store.jpeg&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store.jpeg&#34;
 	width=&#34;400&#34;
 	height=&#34;300&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store_huf4a072f37926aa75d784996d03e14611_16431_480x0_resize_q75_box.jpeg 480w, https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store_huf4a072f37926aa75d784996d03e14611_16431_1024x0_resize_q75_box.jpeg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store_huf4a072f37926aa75d784996d03e14611_16431_480x0_resize_q75_box.jpeg 480w, https://arjunuvacha.com/p/cognitive-bias-framing-effect/shoe-store_huf4a072f37926aa75d784996d03e14611_16431_1024x0_resize_q75_box.jpeg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shoe Store Discount&#34;
@@ -360,10 +361,10 @@ Hold on!&lt;/p&gt;
 &gt;&lt;/p&gt;
 &lt;p&gt;A shoe store displays 40% off. You get lured, you enter the store and try different shoes. However, you notice that the 40% off is only on a few shoes displayed at the corner, as part of the clearance sale, not on all the shoes. But having entered the store already you are reluctant to leave now. And inside the store, the sales agents are ready to entice you more, serve you more and make you feel like their hero. And you try more shoes. The chances are you end up buying a different shoe than what you anticipated when you entered. Happened with you?&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Another example&lt;/strong&gt;
-&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream.jpeg&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream.jpeg&#34;
 	width=&#34;400&#34;
 	height=&#34;300&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream_hu009182573146785f7be216a616894523_18620_480x0_resize_q75_box.jpeg 480w, https://www.arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream_hu009182573146785f7be216a616894523_18620_1024x0_resize_q75_box.jpeg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream_hu009182573146785f7be216a616894523_18620_480x0_resize_q75_box.jpeg 480w, https://arjunuvacha.com/p/cognitive-bias-framing-effect/fat-free-ice-cream_hu009182573146785f7be216a616894523_18620_1024x0_resize_q75_box.jpeg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Fat Free Ice-cream&#34;
@@ -404,16 +405,16 @@ Hold on!&lt;/p&gt;
         </item>
         <item>
         <title>Cognitive Biases - Part 04: Availability Heuristic</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-availability-heuristic/</link>
         <pubDate>Mon, 21 Jun 2021 23:22:49 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-availability-heuristic/availability-heuristic.png" alt="Featured image of post Cognitive Biases - Part 04: Availability Heuristic" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by!&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-availability-heuristic/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-availability-heuristic/availability-heuristic.png" alt="Featured image of post Cognitive Biases - Part 04: Availability Heuristic" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by!&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the fourth in a series of articles I am writing on Cognitive Biases. If you haven’t read the other three yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;Ikea effect&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;p&gt;Let’s get started with this one.&lt;/p&gt;
@@ -461,9 +462,9 @@ Hold on!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Hmm. Gotcha.&lt;/strong&gt;&lt;/p&gt;
 &lt;h2 id=&#34;why-do-we-have-this-bias-anyway&#34;&gt;Why do we have this bias, anyway?&lt;/h2&gt;
 &lt;p&gt;All cognitive biases are based on the fact that our brain is lazy and doesn’t want to do any work unless necessary. That it wants to waste as few resources as possible and consume lesser and lesser energy. And use it only when needed, in the best possible way. However, for the brain to take the best possible way and use the resources in an efficient way we have to train it! But we don’t do that very often, do we?&lt;/p&gt;
-&lt;p&gt;Whenever there is a need to process information, the mind looks for the easiest possible way to do it. Of the many ways and shortcuts which the mind takes — I discussed a few of these in my previous articles &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/ikea-effect&#34; &gt;IKEA effect&lt;/a&gt;&lt;/strong&gt; — finding a similar example for comparison is probably more qualified yet an easier option.&lt;/p&gt;
+&lt;p&gt;Whenever there is a need to process information, the mind looks for the easiest possible way to do it. Of the many ways and shortcuts which the mind takes — I discussed a few of these in my previous articles &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/ikea-effect&#34; &gt;IKEA effect&lt;/a&gt;&lt;/strong&gt; — finding a similar example for comparison is probably more qualified yet an easier option.&lt;/p&gt;
 &lt;p&gt;When you judge someone or something, you automatically scan for a benchmark — a benchmark in that category or in that field or in that country or in that region or the community or in that era. Anything that could be used to form some notion about whether this someone or something is good in comparison with the immediate examples that occur to you, that you could recollect.&lt;/p&gt;
-&lt;p&gt;But that’s not how judgements are supposed to be made — read my article on &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt;&lt;/strong&gt; where I talk about how judgements should usually be made.&lt;/p&gt;
+&lt;p&gt;But that’s not how judgements are supposed to be made — read my article on &lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt;&lt;/strong&gt; where I talk about how judgements should usually be made.&lt;/p&gt;
 &lt;h2 id=&#34;so-how-to-avoid-falling-into-these-pitfalls&#34;&gt;So, how to avoid falling into these pitfalls?&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Try and avoid getting into ‘urgent’ situations.&lt;/strong&gt; Give your mind enough time and resources to take a calculated decision. This could be done by avoiding getting into ‘urgent’ situations as much as possible.&lt;/li&gt;
@@ -480,15 +481,15 @@ Hold on!&lt;/p&gt;
         </item>
         <item>
         <title>Cognitive Biases - Part 03: Ikea effect</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-ikea-effect/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-ikea-effect/</link>
         <pubDate>Mon, 21 Jun 2021 22:54:56 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-ikea-effect/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-ikea-effect/ikea-effect.png" alt="Featured image of post Cognitive Biases - Part 03: Ikea effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-ikea-effect/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-ikea-effect/ikea-effect.png" alt="Featured image of post Cognitive Biases - Part 03: Ikea effect" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;😀 Please note that this is the third in a series of articles I am writing on Cognitive Biases. If you haven’t read the other two yet, I’d recommend you read them first. &lt;strong&gt;Links below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/fundamental-attribution-error&#34; &gt;Fundamental Attribution Error&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;p&gt;Ok, let’s get started with this one.&lt;/p&gt;
@@ -550,14 +551,14 @@ All your efforts won’t be fruitful. All your creations won’t be great. You m
         </item>
         <item>
         <title>Cognitive Biases - Part 02: Fundamental Attribution Error</title>
-        <link>https://www.arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/</link>
+        <link>https://arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/</link>
         <pubDate>Mon, 21 Jun 2021 19:55:13 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/fundamental-attribution-error.png" alt="Featured image of post Cognitive Biases - Part 02: Fundamental Attribution Error" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/fundamental-attribution-error.png" alt="Featured image of post Cognitive Biases - Part 02: Fundamental Attribution Error" /&gt;&lt;p&gt;👋🏼 Hello! Thank you for stopping by.&lt;/p&gt;
 &lt;p&gt;Please note that this is the second in a series of articles I am writing on Cognitive Biases. If you haven’t read the first article yet, I’d recommend you read that first 😀. &lt;strong&gt;Link below:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/confirmation-bias&#34; &gt;Confirmation Bias&lt;/a&gt; ✅&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;fundamental-attribution-error&#34;&gt;Fundamental Attribution Error&lt;/h2&gt;
@@ -621,10 +622,10 @@ All your efforts won’t be fruitful. All your creations won’t be great. You m
 &lt;p&gt;I am not sure about you, but I certainly did. In one of my previous companies, I did not get the hike I expected, I blamed my poor performance on the market and my manager for not recognizing my efforts. I, in fact, was convinced that only those who are in the close network of the manager got the benefits, not all! I blamed my inability to perform on my circumstances and my manager.&lt;/p&gt;
 &lt;p&gt;Fast forward a few years, I now know that I was wrong! I know that I was naive. That growth requires effort and it can’t just merely be circumstantial. Now I don’t take others’ growth for granted just like mine!&lt;/p&gt;
 &lt;p&gt;I mean, we wear different lens when we judge others and different (self-fulfilling) lens when we judge ourselves.
-&lt;img src=&#34;https://www.arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/tuhada-kutta-tommy.jpeg&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/tuhada-kutta-tommy.jpeg&#34;
 	width=&#34;1024&#34;
 	height=&#34;576&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/tuhada-kutta-tommy_hu84506561a7d672aafd642a5e4b3aeee0_87834_480x0_resize_q75_box.jpeg 480w, https://www.arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/tuhada-kutta-tommy_hu84506561a7d672aafd642a5e4b3aeee0_87834_1024x0_resize_q75_box.jpeg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/tuhada-kutta-tommy_hu84506561a7d672aafd642a5e4b3aeee0_87834_480x0_resize_q75_box.jpeg 480w, https://arjunuvacha.com/p/congnitive-bias-fundamental-attribution-error/tuhada-kutta-tommy_hu84506561a7d672aafd642a5e4b3aeee0_87834_1024x0_resize_q75_box.jpeg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Tuhada Kutta Tommy, Sada Kutta Kutta?&#34;
@@ -667,11 +668,11 @@ All your efforts won’t be fruitful. All your creations won’t be great. You m
         </item>
         <item>
         <title>Cognitive Biases - Part  01: Confirmation Bias</title>
-        <link>https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/</link>
+        <link>https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/</link>
         <pubDate>Sun, 20 Jun 2021 23:10:47 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/confirmation-bias.png" alt="Featured image of post Cognitive Biases - Part  01: Confirmation Bias" /&gt;&lt;h2 id=&#34;cognitive-biases&#34;&gt;Cognitive Biases&lt;/h2&gt;
+        <guid>https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/confirmation-bias.png" alt="Featured image of post Cognitive Biases - Part  01: Confirmation Bias" /&gt;&lt;h2 id=&#34;cognitive-biases&#34;&gt;Cognitive Biases&lt;/h2&gt;
 &lt;p&gt;Cognitive Biases are a set of unwritten guidelines that nudge us to make decisions and take actions. They reduce our mental or intellectual effort to process information and make rational choices. We generally follow them without our awareness and in total submission. We follow them as they reduce our cognitive overload.&lt;/p&gt;
 &lt;p&gt;We, very commonly, fall into the trap of these biases as they are easy to follow, reduce the stress and efforts to decide and take an action. Our brain is wired to process information only when necessary. It wants to off-load as much of its work as possible and go into the ‘chill zone’ as soon and as often as possible. It doesn’t want to be disturbed. It wants to be left alone!&lt;/p&gt;
 &lt;p&gt;Hence, we form some heuristics with which we process information without troubling the brain very much and very often.&lt;/p&gt;
@@ -681,10 +682,10 @@ All your efforts won’t be fruitful. All your creations won’t be great. You m
 &lt;p&gt;Ok, let’s see.&lt;/p&gt;
 &lt;p&gt;You are part of your school WhatsApp group. The group, which was formed 4 years ago, is moderately active. Members generally post birthday or anniversary wishes, news on current affairs, some memes and jokes.&lt;/p&gt;
 &lt;p&gt;One fine day, a discussion starts on Football. You don’t watch much Football and are just aware of only a few famous leagues and players. The discussion picks up heat, and some of your friends are madly debating about who is the best: &lt;strong&gt;Messi or Ronaldo!&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/ronaldo-messi.jpg&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/ronaldo-messi.jpg&#34;
 	width=&#34;1759&#34;
 	height=&#34;764&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/ronaldo-messi_hu234a2dc7b77a7b17cfd34bb1c0e1ab36_751221_480x0_resize_q75_box.jpg 480w, https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/ronaldo-messi_hu234a2dc7b77a7b17cfd34bb1c0e1ab36_751221_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/ronaldo-messi_hu234a2dc7b77a7b17cfd34bb1c0e1ab36_751221_480x0_resize_q75_box.jpg 480w, https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/ronaldo-messi_hu234a2dc7b77a7b17cfd34bb1c0e1ab36_751221_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Ronaldo vs Messi&#34;
@@ -719,10 +720,10 @@ Fine.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Based on the order in which you read those articles, you form some initial opinion about Messi and Ronaldo.&lt;/strong&gt; You start to subscribe to what you read. And as each subsequent fact reinforces the previously read facts, your belief in it strengthens. Once you read a good number of articles (could just be 2 or 3), you will form a very strong opinion about each player.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Options 1, 2, 3, 4:&lt;/strong&gt;&lt;br&gt;
 Please go through the below Google results carefully…
-&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/options1234.png&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/options1234.png&#34;
 	width=&#34;1400&#34;
 	height=&#34;1281&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/options1234_hu47ef9f3d5c17ddbbf2b6c3a033681907_516293_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/options1234_hu47ef9f3d5c17ddbbf2b6c3a033681907_516293_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/options1234_hu47ef9f3d5c17ddbbf2b6c3a033681907_516293_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/options1234_hu47ef9f3d5c17ddbbf2b6c3a033681907_516293_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;is one better than the other&#34;
@@ -739,10 +740,10 @@ Please go through the below Google results carefully…
 &lt;p&gt;Similar will be the search results for options 2, 3, and 4 — and you tend to form a strong opinion on either Messi or Ronaldo based on those articles.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Options 5, 6:&lt;/strong&gt;&lt;br&gt;
 Please read these results carefully now…
-&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/options56.png&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/options56.png&#34;
 	width=&#34;1400&#34;
 	height=&#34;1311&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/options56_huf4a70772533d05c02a0c97c238681c6c_545362_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/options56_huf4a70772533d05c02a0c97c238681c6c_545362_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/options56_huf4a70772533d05c02a0c97c238681c6c_545362_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/options56_huf4a70772533d05c02a0c97c238681c6c_545362_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;who is better&#34;
@@ -755,10 +756,10 @@ Please read these results carefully now…
 &gt;&lt;/p&gt;
 &lt;p&gt;On the other hand, searches 5 and 6 are not targeted to either Messi or Ronaldo and they give a set of partially unbiased results. Yet, these results are someone’s opinions about both the players. So, if the author of those articles is partially biased towards any player, that would reflect in the article as well.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Option 7:&lt;/strong&gt;&lt;br&gt;
-&lt;img src=&#34;https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/option7.png&#34;
+&lt;img src=&#34;https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/option7.png&#34;
 	width=&#34;1400&#34;
 	height=&#34;1316&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/option7_hu328ee8703b158fd8b20289370e06b912_512340_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/cognitive-bias-confirmation-bias/option7_hu328ee8703b158fd8b20289370e06b912_512340_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/option7_hu328ee8703b158fd8b20289370e06b912_512340_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/cognitive-bias-confirmation-bias/option7_hu328ee8703b158fd8b20289370e06b912_512340_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;player statistics&#34;
@@ -802,16 +803,16 @@ Please read these results carefully now…
         </item>
         <item>
         <title>Hooked - book review</title>
-        <link>https://www.arjunuvacha.com/p/hooked-book-review/</link>
+        <link>https://arjunuvacha.com/p/hooked-book-review/</link>
         <pubDate>Thu, 04 Mar 2021 20:40:29 +0530</pubDate>
         
-        <guid>https://www.arjunuvacha.com/p/hooked-book-review/</guid>
-        <description>&lt;img src="https://www.arjunuvacha.com/p/hooked-book-review/dice.jpg" alt="Featured image of post Hooked - book review" /&gt;&lt;p&gt;Hooked is one of those books which I would recommend to every aspiring Product Manager. In fact, anyone who is even sparsely connected with human psychology or behaviour should read this. It is a short, quick read and insightful with some clever real-world examples.&lt;/p&gt;
+        <guid>https://arjunuvacha.com/p/hooked-book-review/</guid>
+        <description>&lt;img src="https://arjunuvacha.com/p/hooked-book-review/dice.jpg" alt="Featured image of post Hooked - book review" /&gt;&lt;p&gt;Hooked is one of those books which I would recommend to every aspiring Product Manager. In fact, anyone who is even sparsely connected with human psychology or behaviour should read this. It is a short, quick read and insightful with some clever real-world examples.&lt;/p&gt;
 &lt;p&gt;While reading the book, I had collated some important and wow moments in my notepad. I wanted to share them with others and thus this article. Please note that this in no way is the gist of the book! These are just some cool observations I made while reading the book and there could be plenty other cool observations I would have missed. So, I strongly recommend you to read the book than reading this article (yes, I am trying to sabotage myself here! — anything for a good read, right?).&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/hooked-book-review/hooked.jpeg&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/hooked-book-review/hooked.jpeg&#34;
 	width=&#34;1920&#34;
 	height=&#34;811&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/hooked-book-review/hooked_hucf6db1edf0a21adf1f37daf378f596df_95450_480x0_resize_q75_box.jpeg 480w, https://www.arjunuvacha.com/p/hooked-book-review/hooked_hucf6db1edf0a21adf1f37daf378f596df_95450_1024x0_resize_q75_box.jpeg 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/hooked-book-review/hooked_hucf6db1edf0a21adf1f37daf378f596df_95450_480x0_resize_q75_box.jpeg 480w, https://arjunuvacha.com/p/hooked-book-review/hooked_hucf6db1edf0a21adf1f37daf378f596df_95450_1024x0_resize_q75_box.jpeg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;A screengrab of the cover page of the original book&#34;
@@ -825,10 +826,10 @@ Please read these results carefully now…
 &lt;p&gt;Now that you have decided to read this article, let’s do it…
 The title of the book ‘Hooked’ is indicative of the user behaviour while using some of the current digital products. Products like Facebook, Instagram, TikTok, Spotify, Netflix and plenty others have quite literally hooked their users to use the product again and again. The author, &lt;strong&gt;Nir Eyal&lt;/strong&gt;, explores the reason for this addictive behaviour and simply presents his findings with some cool real-life examples.&lt;/p&gt;
 &lt;p&gt;Nir Eyal analyses the user behaviour with the help of ‘The Hook Model’ — a habit-forming cycle of Trigger — Action — Variable Reward — Investment. It is this cycle that transforms behaviour into a routine and a habit. It is this cycle that helps us either make or break any habit. (This was described by &lt;strong&gt;James Clear&lt;/strong&gt; in his book ‘Atomic Habits’ as well. Atomic Habits is another fantastic read if you are interested.)&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://www.arjunuvacha.com/p/hooked-book-review/the-hook-model.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://arjunuvacha.com/p/hooked-book-review/the-hook-model.png&#34;
 	width=&#34;448&#34;
 	height=&#34;517&#34;
-	srcset=&#34;https://www.arjunuvacha.com/p/hooked-book-review/the-hook-model_hude045ea56e3619fbb6d744c7f83ba899_34555_480x0_resize_box_3.png 480w, https://www.arjunuvacha.com/p/hooked-book-review/the-hook-model_hude045ea56e3619fbb6d744c7f83ba899_34555_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;https://arjunuvacha.com/p/hooked-book-review/the-hook-model_hude045ea56e3619fbb6d744c7f83ba899_34555_480x0_resize_box_3.png 480w, https://arjunuvacha.com/p/hooked-book-review/the-hook-model_hude045ea56e3619fbb6d744c7f83ba899_34555_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;The hook model&#34;
@@ -936,7 +937,7 @@ People tend to put more effort to reach a goal if they believe that they have ma
 &lt;p&gt;&lt;strong&gt;The Framing Effect:&lt;/strong&gt;&lt;br&gt;
 The environment in which a product or value is delivered affects the way the value is perceived.&lt;/p&gt;
 &lt;h5 id=&#34;example-a-musician-playing-in-a-paid-concert-will-be-valued-more-compared-to-the-same-musician-playing-in-a-subway-for-free-another-example-the-same-wine-from-a-bottle-tagged-1000-will-taste-better-than-that-from-a-bottle-tagged-100&#34;&gt;Example: A musician playing in a paid concert will be valued more compared to the same musician playing in a subway for free. Another example, the same wine from a bottle tagged $1,000 will taste better than that from a bottle tagged $100!&lt;/h5&gt;
-&lt;p&gt;Read more about the &lt;strong&gt;Framing effect&lt;/strong&gt; &lt;a class=&#34;link&#34; href=&#34;https://www.arjunuvacha.com/p/framing-effect&#34; &gt;here.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Read more about the &lt;strong&gt;Framing effect&lt;/strong&gt; &lt;a class=&#34;link&#34; href=&#34;https://arjunuvacha.com/p/framing-effect&#34; &gt;here.&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt; that some of the examples I mentioned above are not from the book but are my personal examples.&lt;/p&gt;
 &lt;p&gt;This brings to the end of the article. Hope you liked it!&lt;/p&gt;
 &lt;hr&gt;

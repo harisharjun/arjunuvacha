@@ -1,0 +1,312 @@
+<div class="topbar noprint">
+  <div class="topbar-row">
+    <div class="brand">
+      <a href="https://arjunuvacha.com/" class="brand-home" aria-label="Back to Arjun Uvacha" title="Back to Arjun Uvacha">
+        <img src="https://arjunuvacha.com/au.png" alt="" class="brand-logo">
+      </a>
+      <b>Tax Regime Copilot</b>
+    </div>
+    <button class="btn ghost small" id="btn-restart">Start over</button>
+  </div>
+  <button class="btn ghost small" id="btn-back" hidden>&larr; Back</button>
+</div>
+
+<main>
+
+<!-- ================= START ================= -->
+<section class="screen active" id="screen-start">
+  <div class="stackv">
+    <span class="pill" id="pill-year">FY 2026-27</span>
+    <h1>Improve your tax savings</h1>
+    <p class="muted" style="font-size:18px">Upload your salary slip or offer letter to know how you can optimize your tax. Built for salaried people.</p>
+  </div>
+
+  <div class="note yellow">
+    <b>Nothing leaves this browser.</b> Your document is read locally and is never uploaded — not to a server, not to a model. There's no account, no database, and no analytics. Close the tab and it's gone.
+  </div>
+
+  <div class="card">
+    <div class="doctabs" id="doctypes">
+      <button class="doctype" data-type="monthly">One month&rsquo;s payslip</button>
+      <button class="doctype" data-type="annual">Annual / YTD statement</button>
+      <button class="doctype" data-type="offer">Offer letter</button>
+    </div>
+    <select class="doctype-select" id="sel-doctype-mobile">
+      <option value="monthly">One month&rsquo;s payslip</option>
+      <option value="annual">Annual / YTD statement</option>
+      <option value="offer">Offer letter</option>
+    </select>
+    <p class="doctype-sub" id="doctype-sub">Pick what you're starting from.</p>
+    <div class="drop" id="drop" hidden>
+      <div style="font-size:15px" id="drop-label">Drop the file here, or</div>
+      <div class="rowh" style="justify-content:center">
+        <button class="btn" id="btn-pick">Choose a file</button>
+        <button class="btn ghost" id="btn-paste">Paste the text instead</button>
+      </div>
+      <div class="tiny muted">PDF or plain text, read entirely in this browser. Scanned or password-protected PDFs can&rsquo;t be read &mdash; paste or type instead.</div>
+      <input type="file" id="file" accept=".pdf,.txt,text/plain,application/pdf" hidden>
+    </div>
+    <div class="rowh">
+      <button class="linkbtn" id="btn-manual">Enter manually</button>
+    </div>
+    <div id="paste-area" hidden class="stackv">
+      <div>
+        <label for="paste-text">Copy everything from the document and paste it here</label>
+        <textarea id="paste-text" rows="8" placeholder="BASIC                 170,834.00   PF              1,800.00&#10;HRA                    68,334.00   PROF TAX          200.00&#10;SPECIAL ALLOWANCE      69,699.00   INCOME TAX     53,773.00&#10;Total Earnings        331,650.00"></textarea>
+      </div>
+      <div class="rowh"><button class="btn" id="btn-paste-go">Read this</button><button class="linkbtn" id="btn-paste-demo">Use a sample</button></div>
+    </div>
+    <div id="parse-msg" class="tiny" hidden></div>
+  </div>
+
+  <details>
+    <summary>How this works, and what it deliberately won't do</summary>
+    <div class="dbody">
+      <p class="small muted">Every rupee on the result page is computed by a deterministic engine in this file, from a rulepack of current-year rates. No language model touches the arithmetic — a model is used only to answer follow-up questions in plain English, through a shared backend with no setup needed.</p>
+      <p class="small muted">The engine is checked against 21 hand-built salary profiles whose expected answers were computed by a second, independently written implementation — including the ₹12 lakh rebate cliff, marginal relief just past it, the ₹50 lakh surcharge boundary, and a profile that sits ten rupees from the break-even point.</p>
+      <div class="rowh">
+        <button class="btn ghost small" id="btn-tests">Run the test suite</button>
+        <button class="btn ghost small" id="btn-import">Import a saved session</button>
+        <input type="file" id="file-import" accept=".json,application/json" hidden>
+      </div>
+      <p class="tiny muted">Out of scope on purpose: business or freelance income, capital gains, foreign assets, non-resident status, more than two employers. You'll be asked about these up front and told plainly if you need a CA.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= CONFIRM ================= -->
+<section class="screen" id="screen-confirm">
+  <div class="stackv">
+    <div class="eyebrow">Step 1 of 3</div>
+    <h2>Here's what I read. Fix anything that's wrong.</h2>
+    <p class="muted" id="confirm-sub"></p>
+  </div>
+  <div id="confirm-msg"></div>
+  <div class="card tight" id="typeswitch-card">
+    <div class="rowh" style="justify-content:space-between;gap:14px">
+      <div>
+        <div class="tiny muted">Read as</div>
+        <div id="confirm-period" style="font-weight:600"></div>
+      </div>
+      <span class="tiny muted" id="doctype-lock">To read this as a different kind of document, start over.</span>
+    </div>
+    <div class="tiny muted" id="doctype-note"></div>
+  </div>
+  <div class="card">
+    <div class="rowh" style="justify-content:space-between">
+      <h3>Annual figures</h3>
+      <button class="linkbtn" id="btn-show-parts">What was read from the file</button>
+    </div>
+    <div class="fields" id="confirm-fields"></div>
+    <div class="rowh" style="justify-content:space-between;border-top:1px solid var(--rule);padding-top:14px">
+      <div><span class="tiny muted">Annual gross salary</span><div class="mono" style="font-size:21px;font-weight:600" id="confirm-gross">₹0</div></div>
+      <button class="btn" id="btn-confirm-go">This looks right</button>
+    </div>
+    <p class="inline-error" id="confirm-error" hidden></p>
+  </div>
+  <details id="confirm-raw" hidden>
+    <summary>Show the lines I read from the file</summary>
+    <div class="dbody"><pre class="mono tiny" style="white-space:pre-wrap;color:var(--muted);margin:0" id="raw-lines"></pre></div>
+  </details>
+</section>
+
+<!-- ================= TRIAGE ================= -->
+<section class="screen" id="screen-triage">
+  <div class="stackv">
+    <div class="eyebrow">Step 2 of 3</div>
+    <h2>Anything here apply to you this year?</h2>
+    <p class="muted">These push a return beyond what a payslip can answer. Better to say so now than twenty questions in.</p>
+  </div>
+  <div class="card" id="triage-list"></div>
+  <div class="rowh"><button class="btn" id="btn-triage-go">Continue</button></div>
+</section>
+
+<!-- ================= OUT OF SCOPE ================= -->
+<section class="screen" id="screen-scope">
+  <div class="stackv">
+    <h2>Good catch — this one's worth getting right</h2>
+    <p class="muted">What you ticked changes the computation in ways a payslip alone can't settle. Rather than guess, here's exactly what to hand your CA — plus a salary-only estimate you can use right now.</p>
+  </div>
+  <div class="card" id="scope-list"></div>
+  <div class="card">
+    <h3>Your salary-only numbers are ready</h3>
+    <p class="small muted">The salary side of the computation is done and correct — it's only the items you ticked above that need a professional. Your CA can start from these numbers.</p>
+    <div id="scope-summary"></div>
+    <div class="rowh">
+      <button class="btn" id="btn-scope-anyway">Proceed with salary-only estimate</button>
+      <button class="linkbtn" id="btn-scope-ca">I'll check with my CA</button>
+    </div>
+    <p class="tiny muted" id="scope-ca-msg" hidden>Good call — the numbers above are ready whenever your CA needs them.</p>
+  </div>
+</section>
+
+<!-- ================= INTERVIEW ================= -->
+<section class="screen" id="screen-interview">
+  <div class="stackv">
+    <div class="eyebrow">Step 3 of 3</div>
+    <h2>A few questions — only the ones that can change the answer</h2>
+  </div>
+  <div class="meter" id="meter">
+    <div class="meter-headline" id="meter-headline"></div>
+    <div class="meter-row"><span class="k" id="meter-k">Deductions needed for the old regime to win</span><span class="v" id="meter-target">—</span></div>
+    <div class="bar"><i id="meter-bar" style="width:0%"></i></div>
+    <div class="meter-row"><span class="k">Found so far</span><span class="v" id="meter-found">₹0</span></div>
+  </div>
+  <details id="answered-panel" hidden>
+    <summary>Your answers so far — tap any to change it</summary>
+    <div class="dbody" id="answered-list"></div>
+  </details>
+  <div class="chat" id="chat"></div>
+</section>
+
+<!-- ================= RESULT ================= -->
+<section class="screen" id="screen-result">
+  <div class="verdict" id="verdict">
+    <div class="eyebrow" id="verdict-eyebrow">The answer</div>
+    <div class="big" id="verdict-big"></div>
+    <p id="verdict-sub" class="small"></p>
+  </div>
+
+  <div class="statrow" id="statrow"></div>
+
+  <div class="card">
+    <h3>How confident this is</h3>
+    <p class="small muted" id="robust-text"></p>
+    <div id="robust-chart"></div>
+  </div>
+
+  <div class="card" id="tax-tips-card" hidden>
+    <h3>How to save more tax?</h3>
+    <p class="small muted">Ways to reduce this that most people never think to ask HR or their CA about.</p>
+    <div id="tax-tips" class="stackv"></div>
+  </div>
+
+  <div class="stackv">
+    <h2>The computation, line by line</h2>
+    <p class="muted small">Every row shows where the number came from and which rule shaped it. Check the ones marked as estimates.</p>
+    <div class="tablewrap"><table id="sheet"></table></div>
+  </div>
+
+  <div class="card noprint">
+    <div class="rowh" style="justify-content:space-between">
+      <div>
+        <h3>Review &amp; edit your answers</h3>
+        <p class="small muted" style="margin-top:4px">Change any value and the verdict above updates instantly.</p>
+      </div>
+      <button class="btn ghost small" id="btn-edit">Open</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What to do next</h3>
+    <div id="nextsteps" class="stackv"></div>
+  </div>
+
+  <details id="assumptions-details">
+    <summary>What this assumed</summary>
+    <div class="dbody">
+      <div class="assume" id="assumptions"></div>
+    </div>
+  </details>
+
+  <div class="card noprint">
+    <h3>Save this session</h3>
+    <p class="small muted">Nothing was stored anywhere. Download the session file and re-import it next February — the interview will pick up where it left off instead of starting from scratch.</p>
+    <div class="rowh">
+      <button class="btn ghost" id="btn-export">Download session file</button>
+      <button class="btn ghost" id="btn-print">Save as PDF</button>
+    </div>
+    <div id="export-fallback" hidden class="stackv">
+      <p class="small muted" id="export-note"></p>
+      <textarea id="export-text" rows="6" readonly class="mono" style="font-size:12px"></textarea>
+      <div class="rowh"><button class="btn small" id="btn-copy">Copy to clipboard</button><span class="tiny muted" id="copy-msg"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MANUAL ENTRY ================= -->
+<section class="screen" id="screen-manual">
+  <div class="stackv">
+    <h2>Enter your salary numbers</h2>
+    <p class="muted">Annual figures. If you only know monthly, multiply by twelve — or better, take them from your Form 16 Part B or your HR portal's tax sheet.</p>
+  </div>
+  <div class="card">
+    <div class="fields" id="manual-fields"></div>
+    <div class="rowh" style="justify-content:space-between;border-top:1px solid var(--rule);padding-top:14px">
+      <div><span class="tiny muted">Annual gross salary</span><div class="mono" style="font-size:21px;font-weight:600" id="manual-gross">₹0</div></div>
+      <button class="btn" id="btn-manual-go">Continue</button>
+    </div>
+    <p class="inline-error" id="manual-error" hidden></p>
+  </div>
+</section>
+
+<!-- ================= TESTS ================= -->
+<section class="screen" id="screen-tests">
+  <div class="stackv">
+    <h2>Golden test suite</h2>
+    <p class="muted">Twenty-one salary profiles. Expected values were produced by a second implementation written independently of the engine — if the two disagree, one of them is wrong and neither ships.</p>
+  </div>
+  <div class="card"><div id="test-summary"></div><div id="test-rows"></div></div>
+  <div class="rowh"><button class="btn ghost" id="btn-tests-back">Back</button></div>
+</section>
+
+</main>
+
+<footer>
+  <p>Rates from a versioned rulepack for the current tax year. This is an estimate to check, not tax advice, and not a filed return — verify against your Form 16 and AIS before you act on it.</p>
+  <p class="tiny">Built as a portfolio project. No account, no database, no analytics, no server.</p>
+</footer>
+
+<!-- ================= FLOATING: FULL BREAKDOWN ================= -->
+<div class="drawer-backdrop noprint" id="breakdown-backdrop" hidden></div>
+<div class="drawer noprint" id="breakdown-drawer" hidden>
+  <div class="drawer-head">
+    <h3>Component-wise breakdown</h3>
+    <button class="btn ghost small" id="btn-breakdown-close" aria-label="Close">Close</button>
+  </div>
+  <p class="tiny muted" id="breakdown-note">Based on what you've entered so far — this updates as you answer more questions.</p>
+  <div class="tablewrap"><table id="breakdown-sheet"></table></div>
+</div>
+
+<!-- ================= WHAT WAS READ (popover) ================= -->
+<div class="drawer-backdrop noprint" id="parts-backdrop" hidden></div>
+<div class="drawer noprint" id="parts-drawer" hidden>
+  <div class="drawer-head">
+    <h3>What was read from the file</h3>
+    <button class="btn ghost small" id="btn-parts-close" aria-label="Close">Close</button>
+  </div>
+  <div id="confirm-parts"></div>
+</div>
+
+<!-- ================= REVIEW & EDIT (full page) ================= -->
+<div class="overlay-full noprint" id="review-overlay" hidden>
+  <div class="overlay-full-inner">
+    <div class="overlay-head">
+      <h2>Review &amp; edit your answers</h2>
+      <button class="btn ghost small" id="btn-review-close">&larr; Back to verdict</button>
+    </div>
+    <p class="muted small">Change any value below — it's applied automatically and the verdict updates as you go. Or just tell the AI bar at the bottom what changed.</p>
+    <div id="review-overlay-list" class="stackv"></div>
+  </div>
+</div>
+
+<!-- ================= PERSISTENT AI BAR ================= -->
+<div class="ai-bar-wrap noprint" id="ai-bar" hidden>
+  <button class="ai-log-head collapsed" id="ai-log-toggle" type="button" hidden>Conversation</button>
+  <div class="ai-log collapsed" id="tc-log"></div>
+  <form class="ai-form" id="tc-form">
+    <button type="button" class="ai-icon-btn" id="btn-breakdown-inline" title="Full breakdown" aria-label="See the full component-wise breakdown">📊</button>
+    <input type="text" id="tc-input" placeholder="Use AI to fill/ask" autocomplete="off" maxlength="400">
+    <button type="submit" aria-label="Send">&#10148;</button>
+  </form>
+</div>
+
+<!-- ================= GLOSSARY MODAL ================= -->
+<div class="glossary-backdrop noprint" id="glossary-backdrop" hidden></div>
+<div class="glossary-modal noprint" id="glossary-modal" hidden>
+  <div class="glossary-head">
+    <h3 id="glossary-term"></h3>
+    <button class="btn ghost small" id="glossary-close" aria-label="Close">Close</button>
+  </div>
+  <p id="glossary-body"></p>
+</div>

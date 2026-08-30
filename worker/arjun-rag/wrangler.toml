@@ -1,0 +1,21 @@
+# arjun-rag worker — Cloudflare config
+# Bindings: Workers AI (embeddings) + Vectorize (vector DB). Both free-tier.
+name = "arjun-rag"
+main = "worker.js"
+compatibility_date = "2024-11-06"
+
+[ai]
+binding = "AI"
+
+[[vectorize]]
+binding = "VEC"
+index_name = "arjun-index"
+
+# Groq calls route through your existing Cloudflare AI Gateway (same as vani).
+[vars]
+AIG_ACCOUNT = "817ef4ab39edc6b855e3338a6903f3eb"
+AIG_GATEWAY = "vani"
+
+# Secrets (set with `wrangler secret put ...`, do NOT put values here):
+#   GROQ_API_KEY  -> your existing gsk_… key (same one vani uses)
+#   SEED_TOKEN    -> any random string; protects the /seed route

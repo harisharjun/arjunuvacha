@@ -1,0 +1,48 @@
+{{ define "body-class" }}template-ailab{{ end }}
+
+{{ define "main" }}
+{{ $data := .Params.ailab }}
+<div class="ailab-landing">
+
+  <section class="ailab-hero">
+    <span class="ailab-kicker">{{ $data.kicker }}</span>
+    <h1 class="ailab-title">{{ $data.title | safeHTML }}</h1>
+    <p class="ailab-sub">{{ $data.sub }}</p>
+
+    {{ with $data.stats }}
+    <div class="ailab-stats">
+      {{ range . }}
+      <div class="ailab-stat">
+        <span class="ailab-stat-value">{{ .value }}</span>
+        <span class="ailab-stat-label">{{ .label }}</span>
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </section>
+
+  <section class="ailab-grid">
+    {{ range $i, $p := $data.projects }}
+    {{ if $p.link }}
+    <a class="ailab-card" href="{{ $p.link }}"{{ if hasPrefix $p.link "http" }} target="_blank" rel="noopener"{{ end }}>
+      {{ partial "ailab-card-inner.html" $p }}
+    </a>
+    {{ else }}
+    <div class="ailab-card">
+      {{ partial "ailab-card-inner.html" $p }}
+    </div>
+    {{ end }}
+    {{ end }}
+
+    <div class="ailab-card ailab-card--soon">
+      <span class="ailab-card-icon ailab-card-icon--soon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4Z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9Z"/></svg>
+      </span>
+      <p class="ailab-card-tagline">Next up</p>
+      <h3 class="ailab-card-title">More landing here</h3>
+      <p class="ailab-card-desc">This lab doesn't stay still — new builds get added as I ship them.</p>
+    </div>
+  </section>
+
+</div>
+{{ end }}

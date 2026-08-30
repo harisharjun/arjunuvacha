@@ -1,4 +1,4 @@
-baseURL = 'https://www.arjunuvacha.com/'
+baseURL = 'https://arjunuvacha.com/'
 languageCode = 'en-us'
 title = 'Arjun Uvacha'
 theme = 'hugo-theme-stack'
@@ -22,6 +22,9 @@ post = "/p/:slug/"
 page = "/:slug/"
 
 [params]
+# Ask Arjun chat: set to your deployed arjun-rag worker URL (see worker/arjun-rag/README.md).
+# Leave empty to use the built-in curated Q&A fallback.
+askArjunWorker = "https://arjun-rag.harisharjun127.workers.dev"
 description = "🔍 a product manager's perspective of everyday things."
 mainSections = [ "post"]
 featuredImageField = "image"
@@ -111,7 +114,7 @@ type = "categories"
 type = "tag-cloud"
 
   [params.widgets.homepage.params]
-  limit = 10
+  limit = 8
 
 [[params.widgets.homepage]]
 type = "archives"
@@ -148,6 +151,20 @@ name = "Home"
 url = "/"
 weight = -100
 pre = "home"
+
+  [[menu.main]]
+identifier = "work"
+name = "Product Work"
+url = "/work/"
+weight = -90
+pre = "briefcase"
+
+  [[menu.main]]
+identifier = "ailab"
+name = "AI Lab"
+url = "/ai-lab/"
+weight = -80
+pre = "sparkles"
 
   [[menu.social]]
     identifier = "linkedin"
