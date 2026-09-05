@@ -15,7 +15,7 @@ hero:
 
 metrics:
   - value: "40%"
-    label: "agent time saved by AI workflows I shipped, validated across 50,000+ users"
+    label: "agent time saved by AI workflows I shipped, now live across ~60% of Darwinbox's 1,400+ clients"
   - value: "6.5×"
     label: "weekly retention growth (10% → 65%) on a consumer health product"
   - value: "10×"
@@ -147,7 +147,7 @@ metro:
       line: both
       role: "Product Manager II"
       org: "Darwinbox · Hyderabad"
-      note: "The lines meet again: owns the AI-powered Helpdesk (50,000+ users, 40% agent time saved), designed its knowledge graph, and vibe-coded the prototype that greenlit a new $500K-potential product line."
+      note: "The lines meet again: owns the AI-powered Helpdesk (1,400+ clients, 40% agent time saved), designed its knowledge graph, and vibe-coded the prototype that greenlit a new $500K-potential product line."
     - label: "AI Lab"
       year: "now"
       x: 712
@@ -227,7 +227,7 @@ stories:
       - He came back with whitelisting, rate limits, and **credit-based pricing**
 
       **The result:** approved, shipped, now one of the module's most-used features — and a new revenue channel.
-  - title: "Redesigning a tool 700+ companies use daily"
+  - title: "Redesigning a tool 1,000+ companies use daily"
     company: "Darwinbox"
     period: "2025"
     tags: ["Data"]

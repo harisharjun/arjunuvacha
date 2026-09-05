@@ -6,9 +6,9 @@
   keywords: ["ai", "biggest", "win", "achievement", "darwinbox", "helpdesk", "assistant", "impressive"]
   a: >
     Shipping AI-powered workflows at Darwinbox that are validated to save <b>40% of
-    human agent time</b> across 50,000+ enterprise users — 2 in 5 support interactions
-    eliminated entirely. The secret wasn't the model, it was the knowledge graph and
-    80 evaluation metrics underneath it. <a href="/work/darwinbox-helpdesk-ai/">Full case study →</a>
+    human agent time</b> — now live across ~60% of Darwinbox's 1,400+ global clients,
+    2 in 5 support interactions eliminated entirely. The secret wasn't the model, it
+    was the knowledge graph and 100+ Evals underneath it. <a href="/work/darwinbox-helpdesk-ai/">Full case study →</a>
 
 - q: "Why should we hire him?"
   keywords: ["hire", "why", "should", "pitch", "sell"]
@@ -65,7 +65,7 @@
   a: >
     Both, deliberately. Consumer: ed-tech (Cuemath, Edureka), health-tech (Phable),
     event-tech (his own startup). Enterprise: construction SaaS and now Darwinbox HR
-    tech at 700+ client scale. The common thread: making complex things effortless
+    tech at 1,400+ client scale. The common thread: making complex things effortless
     for non-technical users.
 
 - q: "How does he work with engineers?"
@@ -112,8 +112,8 @@
 - q: "What's the knowledge graph he built?"
   keywords: ["knowledge", "graph", "context", "entities", "eval", "metrics", "grounding"]
   a: >
-    The structured layer that makes Darwinbox's Helpdesk AI trustworthy: 16 entities
-    and 80 evaluation metrics that ground every AI-generated response in
+    The structured layer that makes Darwinbox's Helpdesk AI trustworthy: a 20-entity
+    knowledge graph plus 100+ Evals that ground every AI-generated response in
     client-specific context. Generic LLM answers in, context-aware ones out.
     <a href="/work/darwinbox-helpdesk-ai/">How it works →</a>
 

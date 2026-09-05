@@ -5,8 +5,7 @@
         <link>https://arjunuvacha.com/work/</link>
         <description>Recent content in Product Work on Arjun Uvacha</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>en</language>
-        <lastBuildDate>Wed, 01 Jul 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://arjunuvacha.com/work/index.xml" rel="self" type="application/rss+xml" /><item>
+        <language>en</language><atom:link href="https://arjunuvacha.com/work/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Shipping AI that gives support agents 40% of their time back</title>
         <link>https://arjunuvacha.com/work/darwinbox-helpdesk-ai/</link>
         <pubDate>Wed, 01 Jul 2026 00:00:00 +0000</pubDate>
@@ -15,18 +14,21 @@
         <description>&lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;
 &lt;p&gt;Enterprise helpdesks drown in repetition. Agents spend most of their day re-answering
 questions that have been answered before, and employees wait on tickets that never
-needed to exist. With 700+ client organisations varying wildly in size, industry,
-and HR maturity, &amp;ldquo;just add AI&amp;rdquo; wasn&amp;rsquo;t a strategy — the AI had to produce outputs
-agents could actually trust and send.&lt;/p&gt;
+needed to exist. With 1,400+ global clients varying wildly in size, industry, and
+HR maturity, &amp;ldquo;just add AI&amp;rdquo; wasn&amp;rsquo;t a strategy — the AI had to produce outputs agents
+could actually trust and send.&lt;/p&gt;
 &lt;h2 id=&#34;what-i-did&#34;&gt;What I did&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Shipped AI-powered creation workflows.&lt;/strong&gt; I designed and shipped the AI Assistant —
 it auto-drafts contextual responses, generates structured diagnoses, and surfaces
 resolution suggestions — and the Super Agent, which resolves employee queries before
 they ever become tickets.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Built the knowledge layer that makes the AI trustworthy.&lt;/strong&gt; I designed Helpdesk&amp;rsquo;s
-knowledge/context graph — 16 entities and 80 evaluation metrics — the structured
-context layer that grounds every AI-generated output. Generic LLM answers become
-context-aware, client-specific ones.&lt;/p&gt;
+knowledge/context graph — 20 entities spanning the service catalog, routing logic,
+SLA contracts, access tiers, and context retrieval — the structured context layer
+that grounds every AI-generated output. Separately, I built a suite of 100+ Evals
+as the pre-launch pass/fail quality bar for the AI features, covering resolution
+accuracy, failure modes, and SLA compliance. Generic LLM answers become
+context-aware, client-specific, and pre-validated ones.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Earned the right to ship by listening first.&lt;/strong&gt; I ran the module&amp;rsquo;s largest-ever
 client engagement: 11 city visits and 100+ product gaps surfaced, then used usage
 metrics and feedback loops to drive prioritisation. That research also powered a UX
@@ -40,12 +42,13 @@ to 100% on-time, zero-defect releases, balancing CPO/CTO direction against
 enterprise client needs and engineering velocity.&lt;/p&gt;
 &lt;h2 id=&#34;the-impact&#34;&gt;The impact&lt;/h2&gt;
 &lt;p&gt;The AI workflows are validated to save &lt;strong&gt;40% of human agent time&lt;/strong&gt; — 2 in 5 support
-interactions eliminated entirely, at the scale of 50,000+ end users. Adoption is
-tracked and iterated continuously across 700+ clients.&lt;/p&gt;
+interactions eliminated entirely. Helpdesk is now adopted by &lt;strong&gt;~60% of Darwinbox&amp;rsquo;s
+1,400+ global clients&lt;/strong&gt;, including large enterprises with 50,000+ employees, and
+adoption is tracked and iterated continuously.&lt;/p&gt;
 &lt;h2 id=&#34;what-this-says-about-how-i-work&#34;&gt;What this says about how I work&lt;/h2&gt;
 &lt;p&gt;I don&amp;rsquo;t treat AI as a feature checkbox. The 40% number exists because of the
-unglamorous parts — the knowledge graph, the 80 evaluation metrics, the 11 city
-visits — not despite them. I build the trust layer first, then the magic.&lt;/p&gt;
+unglamorous parts — the knowledge graph, the 100+ Evals, the 11 city visits — not
+despite them. I build the trust layer first, then the magic.&lt;/p&gt;
 </description>
         </item>
         <item>
