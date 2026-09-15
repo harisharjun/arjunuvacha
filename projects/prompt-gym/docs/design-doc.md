@@ -172,6 +172,10 @@ The leaderboard is a single query over `best_scores`: `COUNT(*) FILTER (WHERE pa
 
 Every call runs at temperature 0. Execution output is capped at **192 tokens** (256 for challenges whose correct answer is genuinely longer — set per challenge, not globally). Submitted prompts are capped at **2,000 characters**, enforced both in the editor and again in the Worker.
 
+**Every call also sets `reasoning_effort: "low"`** (added 15 Sep 2026 at M2, after hitting this against the live API). The GPT-OSS models reason before answering and bill that reasoning against the same `max_tokens` as the answer. At the default effort, a vague prompt spent **190 of its 192 tokens reasoning and returned an empty answer** with `finish_reason: "length"` — which the grading engine would have scored as a failing prompt when it was really our own cap. Low effort also cut the reference prompt's reasoning from 77 tokens to 13, so it is a material saving against the 8K-tokens-per-minute ceiling as well as a correctness fix.
+
+Truncation is reported separately from a wrong answer for the same reason: a user whose output was cut off at the cap should be told that, not left to infer it from a zero.
+
 If `qwen/qwen3.8-27b` disappears — it is a preview model and may — the picker falls back to `gpt-oss-20b` and says so rather than erroring.
 
 Pinning the judge is the leaderboard's integrity story. Letting the user pick the execution model is the teaching feature. Those two decisions pull in opposite directions and it is worth being explicit about why each one goes the way it does.

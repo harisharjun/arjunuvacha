@@ -10,8 +10,11 @@ import {
 
 /** Builds a fake Groq response. The suite never touches the network: the live
  *  budget is small and the deployed site needs it. */
-const ok = (content: string, usage = { prompt_tokens: 10, completion_tokens: 5 }) =>
-  new Response(JSON.stringify({ choices: [{ message: { content } }], usage }), { status: 200 });
+const ok = (content: string, usage = { prompt_tokens: 10, completion_tokens: 5 }, finish = 'stop') =>
+  new Response(
+    JSON.stringify({ choices: [{ message: { content }, finish_reason: finish }], usage }),
+    { status: 200 },
+  );
 
 const status = (code: number, headers: Record<string, string> = {}) =>
   new Response('{"error":{"message":"nope","key":"gsk_SECRET_SHOULD_NOT_LEAK"}}', {
@@ -65,6 +68,32 @@ describe('execute', () => {
     const fetchImpl = vi.fn().mockImplementation(async () => ok('x'));
     await execute({ ...base, fetchImpl, prompt: 'p', input: 'i', maxOutputTokens: 256 });
     expect(JSON.parse(fetchImpl.mock.calls[0][1].body).max_tokens).toBe(256);
+  });
+
+  // Verified against the live API: at default effort a vague prompt spent 190 of
+  // 192 tokens reasoning and returned an empty answer with finish_reason "length",
+  // which the engine would have scored as a failing prompt rather than our cap.
+  it('asks for low reasoning effort by default, so reasoning cannot eat the answer', async () => {
+    const fetchImpl = vi.fn().mockImplementation(async () => ok('x'));
+    await execute({ ...base, fetchImpl, prompt: 'p', input: 'i' });
+    expect(JSON.parse(fetchImpl.mock.calls[0][1].body).reasoning_effort).toBe('low');
+  });
+
+  it('allows the effort to be raised deliberately', async () => {
+    const fetchImpl = vi.fn().mockImplementation(async () => ok('x'));
+    await execute({ ...base, fetchImpl, prompt: 'p', input: 'i', reasoningEffort: 'high' });
+    expect(JSON.parse(fetchImpl.mock.calls[0][1].body).reasoning_effort).toBe('high');
+  });
+
+  it('reports truncation, which is not the same as a wrong answer', async () => {
+    const cut = vi.fn().mockImplementation(async () =>
+      ok('', { prompt_tokens: 1, completion_tokens: 192 }, 'length'),
+    );
+    const r = await execute({ ...base, fetchImpl: cut, prompt: 'p', input: 'i' });
+    expect(r.truncated).toBe(true);
+
+    const fine = vi.fn().mockImplementation(async () => ok('billing'));
+    expect((await execute({ ...base, fetchImpl: fine, prompt: 'p', input: 'i' })).truncated).toBe(false);
   });
 
   it('rejects an over-long prompt without making any call at all', async () => {

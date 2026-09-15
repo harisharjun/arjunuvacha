@@ -96,6 +96,7 @@ console.log(`model: ${model}   cases: ${challenge.tests.length}   prompt: ${prom
 console.log('─'.repeat(72));
 
 const started = Date.now();
+const truncated = new Set<string>();
 const outcomes = await mapWithLimit(
   challenge.tests,
   EXEC_CONCURRENCY,
@@ -109,6 +110,7 @@ const outcomes = await mapWithLimit(
         template: challenge.harness?.template,
         maxOutputTokens: challenge.harness?.maxOutputTokens,
       });
+      if (r.truncated) truncated.add(test.id);
       return {
         id: test.id,
         outcome: {
@@ -153,6 +155,10 @@ for (const testCase of result.cases) {
   }
   const output = outputs[testCase.id] ?? '';
   console.log(`    output: ${JSON.stringify(output.slice(0, 160))}${output.length > 160 ? '…' : ''}`);
+  if (truncated.has(testCase.id)) {
+    console.log(`    TRUNCATED at the ${challenge.harness?.maxOutputTokens ?? 192}-token cap —` +
+      ' the output was cut off, not merely wrong');
+  }
   for (const a of testCase.assertions) {
     if (a.passed) continue;
     const why = a.error ? `ERRORED (${a.error})` : 'failed';

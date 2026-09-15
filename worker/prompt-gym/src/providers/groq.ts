@@ -22,6 +22,12 @@ export interface GroqCallOptions {
   apiKey: string;
   model: string;
   maxOutputTokens?: number;
+  /** The GPT-OSS models reason before answering, and reasoning is billed against
+   *  the same `max_tokens` as the answer. At the default effort a 192-token cap can
+   *  be consumed entirely by reasoning, returning an empty answer with
+   *  `finish_reason: "length"` — which would be scored as a failing prompt when it
+   *  is really our cap. Low effort keeps the budget for the answer. */
+  reasoningEffort?: 'low' | 'medium' | 'high';
   gateway?: GatewayConfig;
   /** Injected in tests. Unit tests must never reach the real API. */
   fetchImpl?: typeof fetch;
@@ -53,6 +59,10 @@ interface ChatResult {
   content: string;
   promptTokens: number;
   completionTokens: number;
+  /** The model hit the output cap. Distinct from a wrong answer, and worth telling
+   *  the user: their prompt produced more output than the challenge allows. */
+  truncated: boolean;
+  reasoningTokens: number;
 }
 
 /** One chat-completions call, with the timeout and the single 429 retry.
@@ -90,6 +100,7 @@ async function chat(
         messages,
         temperature: 0,
         max_tokens: options.maxOutputTokens ?? 192,
+        reasoning_effort: options.reasoningEffort ?? 'low',
       }),
     });
   } catch (err) {
@@ -119,8 +130,12 @@ async function chat(
   }
 
   let body: {
-    choices?: { message?: { content?: string } }[];
-    usage?: { prompt_tokens?: number; completion_tokens?: number };
+    choices?: { message?: { content?: string }; finish_reason?: string }[];
+    usage?: {
+      prompt_tokens?: number;
+      completion_tokens?: number;
+      completion_tokens_details?: { reasoning_tokens?: number };
+    };
   };
   try {
     body = (await response.json()) as typeof body;
@@ -137,6 +152,8 @@ async function chat(
     content,
     promptTokens: body.usage?.prompt_tokens ?? 0,
     completionTokens: body.usage?.completion_tokens ?? 0,
+    truncated: body.choices?.[0]?.finish_reason === 'length',
+    reasoningTokens: body.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
   };
 }
 
