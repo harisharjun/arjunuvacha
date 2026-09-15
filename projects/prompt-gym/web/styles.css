@@ -1,0 +1,134 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fdfdfc;
+  --fg: #1c1c1a;
+  --muted: #6b6b66;
+  --line: #e2e2dd;
+  --card: #ffffff;
+  --pass: #1a7f4b;
+  --fail: #b4342a;
+  --err: #8a6d1f;
+  --accent: #2b5fd9;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17171a; --fg: #e9e9e4; --muted: #9a9a93; --line: #303036;
+    --card: #1f1f23; --pass: #4ec98a; --fail: #ef8178;
+    --err: #d9b45c; --accent: #7fa4ff;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+header {
+  border-bottom: 1px solid var(--line);
+  padding: 1.75rem 1.5rem 1.25rem;
+}
+h1 { margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
+.tagline { margin: .3rem 0 0; color: var(--muted); }
+
+main { max-width: 46rem; margin: 0 auto; padding: 1.5rem; }
+h2 { font-size: 1.1rem; margin: 0 0 .75rem; }
+.muted { color: var(--muted); font-size: .875rem; }
+.spacer { flex: 1; }
+
+/* Challenge list */
+#challenge-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+.challenge {
+  border: 1px solid var(--line);
+  border-radius: .5rem;
+  background: var(--card);
+  padding: .85rem 1rem;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+}
+.challenge:hover { border-color: var(--accent); }
+.challenge-title { font-weight: 600; }
+.challenge-meta { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .3rem; }
+
+.badge {
+  font-size: .72rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .05rem .5rem;
+  color: var(--muted);
+}
+
+/* Editor */
+.link {
+  background: none; border: 0; color: var(--accent);
+  cursor: pointer; padding: 0; font: inherit; margin-bottom: 1rem;
+}
+label { display: block; font-size: .875rem; margin: 1.25rem 0 .35rem; }
+textarea {
+  width: 100%;
+  font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  padding: .75rem;
+  border: 1px solid var(--line);
+  border-radius: .5rem;
+  background: var(--card);
+  color: var(--fg);
+  resize: vertical;
+}
+textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.editor-foot { display: flex; align-items: center; gap: .6rem; margin-top: .6rem; flex-wrap: wrap; }
+.editor-foot label { margin: 0; }
+select {
+  font: inherit; padding: .3rem .4rem; border-radius: .4rem;
+  border: 1px solid var(--line); background: var(--card); color: var(--fg);
+}
+.primary {
+  font: inherit; font-weight: 600; cursor: pointer;
+  background: var(--accent); color: #fff;
+  border: 0; border-radius: .4rem; padding: .45rem 1.1rem;
+}
+.primary:disabled { opacity: .55; cursor: progress; }
+.over-limit { color: var(--fail); font-weight: 600; }
+
+#run-status { margin: 1rem 0; min-height: 1.4rem; }
+
+/* Scorecard */
+.total {
+  border: 1px solid var(--line); border-radius: .5rem; background: var(--card);
+  padding: 1rem; display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap;
+}
+.total .score { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+.verdict-pass { color: var(--pass); font-weight: 600; }
+.verdict-fail { color: var(--fail); font-weight: 600; }
+
+.bars { margin: 1rem 0; display: grid; gap: .35rem; }
+.bar-row { display: grid; grid-template-columns: 8rem 1fr 3rem; gap: .5rem; align-items: center; font-size: .85rem; }
+.bar { height: .5rem; background: var(--line); border-radius: 999px; overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--pass); }
+
+.case {
+  border: 1px solid var(--line); border-left-width: 3px;
+  border-radius: .4rem; background: var(--card);
+  padding: .75rem .9rem; margin-top: .6rem;
+}
+.case.passed { border-left-color: var(--pass); }
+.case.failed { border-left-color: var(--fail); }
+.case.errored { border-left-color: var(--err); }
+.case h4 { margin: 0 0 .4rem; font-size: .9rem; display: flex; gap: .5rem; align-items: center; }
+.case pre {
+  margin: .35rem 0 0; padding: .5rem; overflow-x: auto;
+  background: var(--bg); border: 1px solid var(--line); border-radius: .3rem;
+  font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap;
+}
+.case ul { margin: .5rem 0 0; padding-left: 1.1rem; font-size: .85rem; }
+.notice {
+  margin-top: 1rem; padding: .7rem .9rem; font-size: .875rem;
+  border: 1px solid var(--err); border-radius: .4rem; color: var(--err);
+}
+.error-box { border-color: var(--fail); color: var(--fail); }

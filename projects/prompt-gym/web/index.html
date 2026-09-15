@@ -4,40 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PromptGym</title>
-<style>
-  :root { color-scheme: light dark; }
-  body {
-    font: 16px/1.5 system-ui, -apple-system, sans-serif;
-    max-width: 40rem; margin: 4rem auto; padding: 0 1.5rem;
-  }
-  h1 { font-size: 1.5rem; margin-bottom: .25rem; }
-  p.sub { margin-top: 0; opacity: .7; }
-  #status { padding: .75rem 1rem; border-radius: .5rem; border: 1px solid; }
-  .pending { border-color: #9993; }
-  .ok { border-color: #2a7; }
-  .fail { border-color: #c44; }
-  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-</style>
+<meta name="description" content="Practise prompt engineering against real test suites and get graded, structured feedback on where your prompt breaks.">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>PromptGym</h1>
-  <p class="sub">M0 shell — checking the worker is reachable across origins.</p>
-  <div id="status" class="pending">Checking…</div>
+  <header>
+    <h1>PromptGym</h1>
+    <p class="tagline">Write a prompt. Run it against hidden test cases. Find out where it breaks.</p>
+  </header>
 
-<script>
-  const API = 'https://prompt-gym.harisharjun127.workers.dev';
+  <main>
+    <section id="list-view">
+      <h2>Challenges</h2>
+      <p id="list-status" class="muted">Loading…</p>
+      <ul id="challenge-list"></ul>
+    </section>
 
-  const el = document.getElementById('status');
-  fetch(API + '/api/health')
-    .then(r => r.json())
-    .then(data => {
-      el.className = data.ok ? 'ok' : 'fail';
-      el.textContent = JSON.stringify(data);
-    })
-    .catch(err => {
-      el.className = 'fail';
-      el.textContent = 'Failed to reach ' + API + ' — ' + err.message;
-    });
-</script>
+    <section id="play-view" hidden>
+      <button id="back" class="link">← All challenges</button>
+
+      <h2 id="play-title"></h2>
+      <div id="play-meta" class="muted"></div>
+
+      <p id="play-goal"></p>
+
+      <details id="play-detail">
+        <summary>What this is graded on</summary>
+        <div id="play-constraints"></div>
+      </details>
+
+      <label for="prompt">Your prompt</label>
+      <textarea id="prompt" rows="10" spellcheck="false"
+        placeholder="Write the prompt that solves the task above…"></textarea>
+      <div class="editor-foot">
+        <span id="charcount" class="muted"></span>
+        <span class="spacer"></span>
+        <label for="model" class="muted">Model</label>
+        <select id="model"></select>
+        <button id="run" class="primary">Run</button>
+      </div>
+
+      <div id="run-status" role="status" aria-live="polite"></div>
+      <div id="scorecard"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
 </body>
 </html>

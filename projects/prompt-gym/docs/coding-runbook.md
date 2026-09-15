@@ -306,7 +306,28 @@ npx wrangler kv namespace create BUDGET
 
 > Milestone M8. Add a KV-backed shared-budget counter keyed by day and by minute, decremented by each run's `estimatedTokensPerRun`. When exhausted, return a typed `BudgetExhausted` response and have the SPA switch to BYO-key mode. Add per-IP rate limits (per minute and per hour). Requests carrying `X-Groq-Key` bypass the shared budget but not the IP limits. Write the BYO-key explanation into the landing page copy per the design doc. Verify the user's key is never written to D1, never logged, and never echoed in any error.
 
-**Launch checklist:** all 14 challenges loaded · reference and strawman verified for each · secrets set via `wrangler secret put` and absent from git · an unknown challenge id returns a clean 400 · anonymous play works in a private window · reveal filter confirmed in the network tab.
+**Launch checklist:** all 14 challenges loaded · **reference and strawman verified for each — see the parked validation pass below** · secrets set via `wrangler secret put` and absent from git · an unknown challenge id returns a clean 400 · anonymous play works in a private window · reveal filter confirmed in the network tab.
+
+---
+
+## Session 11 · The parked challenge-validation pass
+**Deferred deliberately on 15 Sep 2026 — do this once M8 is done, before launch**
+
+Only **pg-a2** has ever been run against a real model (reference 100/100, strawman 3/100, on `gpt-oss-20b` at M2). The other eleven are unproven: no test can tell you whether a challenge is impossible, trivially passable, or simply not discriminating, because that needs real model calls and a human reading the result.
+
+For each of the remaining eleven, per the authoring loop in `challenge-format.md` §1:
+
+```bash
+cd worker/prompt-gym
+npm run try -- <challengeId> --prompt-file <reference.txt>   # expect a high score
+npm run try -- <challengeId> --prompt "<the strawman>"        # expect a low score
+```
+
+If the two scores are close, the graders are not discriminating and the challenge is not ready. Also run the reference on `gpt-oss-20b` and not only `120b` — a challenge only the big model can pass makes the default look broken.
+
+**Decide during this pass:** the reference and strawman prompts currently live only as comments at the bottom of each `challenges/*.promptfoo.yaml`, which means nothing can check them and the golf par values rest on them. Worth promoting them to real files.
+
+Budget: this runs against your own key, roughly 10 runs per challenge.
 
 ---
 
