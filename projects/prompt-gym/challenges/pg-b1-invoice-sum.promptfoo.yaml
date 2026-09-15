@@ -1,0 +1,137 @@
+# PG-B1 — Line items must sum to the total
+# Order 6. Rule-based arithmetic validation — the family's showcase.
+
+description: "PG-B1 — Line items must sum to the total"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    INPUT:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 384
+
+defaultTest:
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: [line_items, stated_total, computed_total, total_matches]
+      weight: 2
+      metric: schema
+    - type: javascript
+      # ref: validators.b1Arithmetic — the invariant that holds on EVERY case:
+      # computed_total must equal the sum of the extracted line items, and
+      # total_matches must be the honest comparison of the two totals.
+      value: |
+        (output) => {
+          const j = JSON.parse(output);
+          const num = v => typeof v === 'number' ? v : Number(String(v).replace(/[^0-9.-]/g, ''));
+          const sum = j.line_items.reduce((s, li) => s + num(li.amount), 0);
+          const computed = num(j.computed_total);
+          const stated = num(j.stated_total);
+          const matchesOk = j.total_matches === (Math.abs(stated - computed) < 0.01);
+          return Math.abs(sum - computed) < 0.01 && matchesOk;
+        }
+      weight: 4
+      metric: arithmetic
+
+tests:
+  - description: "clean three-line invoice"
+    vars:
+      input: |
+        Lumen Pro (5 seats) — 12,500
+        Lumen Analytics add-on — 3,000
+        Onboarding support — 2,000
+        Total: 17,500
+    assert:
+      - type: javascript
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            return j.line_items.length === 3 && Number(j.stated_total) === 17500 &&
+                   j.total_matches === true;
+          }
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: full
+
+  - description: "negative discount line plus tax"
+    vars:
+      input: |
+        Lumen Pro (10 seats) — 25,000
+        Annual prepay discount — −2,500
+        GST @18% — 4,050
+        Total: 26,550
+    assert:
+      - type: javascript
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            const num = v => typeof v === 'number' ? v : Number(String(v).replace(/[^0-9.-]/g, ''));
+            const hasNegative = j.line_items.some(li => num(li.amount) < 0);
+            return j.line_items.length === 3 && hasNegative &&
+                   Number(j.stated_total) === 26550 && j.total_matches === true;
+          }
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: partial
+
+  - description: "printed total is WRONG — report it, do not silently fix it"
+    vars:
+      input: |
+        Lumen Starter (3 seats) — 4,500
+        Data export utility — 220
+        Total: 4,270
+    assert:
+      - type: javascript
+        # ref: validators.b1MismatchReported
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            const num = v => typeof v === 'number' ? v : Number(String(v).replace(/[^0-9.-]/g, ''));
+            return num(j.stated_total) === 4270 && num(j.computed_total) === 4720 &&
+                   j.total_matches === false;
+          }
+        weight: 6
+        metric: faithfulness
+    metadata:
+      reveal: verdict-only
+
+  - description: "credit exactly cancels a charge — both lines must survive"
+    vars:
+      input: |
+        Lumen Enterprise — 60,000
+        Premium support — 9,000
+        Credit applied (ticket LMN-8812) — −9,000
+        Total: 60,000
+    assert:
+      - type: javascript
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            return j.line_items.length === 3 && Number(j.stated_total) === 60000 &&
+                   j.total_matches === true;
+          }
+        weight: 5
+        metric: accuracy
+    metadata:
+      reveal: verdict-only
+
+# REFERENCE (~110 tokens):
+#   Extract the invoice into JSON: {"line_items":[{"description":"...","amount":n}],
+#   "stated_total":n,"computed_total":n,"total_matches":true|false}.
+#   Amounts are numbers, not strings — strip commas and currency symbols, keep
+#   the sign (discounts and credits are negative). Copy stated_total exactly as
+#   printed on the invoice, even if it looks wrong. Compute computed_total by
+#   adding the line items. Set total_matches to whether the two are equal.
+#   Never adjust a line item or the stated total to make them agree.
+#   Output only the JSON.

@@ -1,0 +1,106 @@
+# PG-A2 — One label, nothing else
+#
+# AUTHORING FILE. First challenge in the build sequence: exercises the whole
+# pipeline (harness, string graders, reveal levels, scoring) with no
+# model-graded assertions and therefore no judge calls at all.
+#
+#   export GROQ_API_KEY=...
+#   npx promptfoo eval -c pg-a2-single-label.promptfoo.yaml
+#
+# Ship bar: reference prompt >= 0.9 on gpt-oss-20b; strawman <= 0.4.
+
+description: "PG-A2 — One label, nothing else"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    INPUT:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 192
+
+defaultTest:
+  assert:
+    # The whole challenge in two rules: exactly one word, and it must be one
+    # of the five labels. Everything else is a variation on where models fail.
+    - type: word-count
+      value: 1
+      weight: 2
+      metric: format
+    - type: regex
+      value: "^(billing|bug|feature_request|account_access|other)$"
+      weight: 2
+      metric: format
+
+tests:
+  - description: "clear billing case"
+    vars:
+      input: "I was charged twice for the October invoice — order LMN-4471 and LMN-4472 are identical. Can you refund the duplicate?"
+    assert:
+      - type: equals
+        value: "billing"
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: full
+
+  - description: "bug report with version noise"
+    vars:
+      input: "Every time I drag a card into the Done column it bounces back after about a second. Chrome 141, Windows 11. Started yesterday afternoon."
+    assert:
+      - type: equals
+        value: "bug"
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: partial
+
+  - description: "the chatty trap — input invites an explanation"
+    vars:
+      input: >
+        Not sure if this is the right place to ask, but could you walk me
+        through how you'd categorise this one? Nobody on the team has been
+        able to log in since the SSO change on Friday.
+    assert:
+      - type: equals
+        value: "account_access"
+        weight: 4
+        metric: accuracy
+      - type: not-contains
+        value: "because"
+        weight: 1
+        metric: format
+    metadata:
+      reveal: partial
+
+  - description: "softly worded feature request"
+    vars:
+      input: "It'd be great if the weekly digest could be switched off per project instead of all-or-nothing. Right now I mute everything and miss things."
+    assert:
+      - type: equals
+        value: "feature_request"
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: verdict-only
+
+# ---------------------------------------------------------------------------
+# REFERENCE PROMPT (~40 tokens, par for the G3 golf variant):
+#
+#   Classify the ticket below into exactly one of: billing, bug,
+#   feature_request, account_access, other. Reply with only that single label
+#   in lowercase. No other words, punctuation, or explanation.
+#
+# STRAWMAN:
+#
+#   Please categorise this support ticket.
+#
+# Spare fifth case if four proves too few:
+#   "Thanks for the quick turnaround last week — the team noticed." -> other
+# ---------------------------------------------------------------------------

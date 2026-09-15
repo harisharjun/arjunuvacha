@@ -1,0 +1,116 @@
+# PG-E4 — Ask the right question
+# Order 11. Score-model family. The rubric reasoning here is the most
+# instructive output the app produces, so this challenge reveals it in full.
+
+description: "PG-E4 — Ask the right question"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    REQUEST:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 256
+
+defaultTest:
+  options:
+    provider: groq:openai/gpt-oss-120b
+  assert:
+    - type: word-count
+      value: { max: 80 }
+      weight: 1
+      metric: format
+
+tests:
+  - description: "ambiguous — needs exactly one question"
+    vars:
+      input: "Can you write a welcome email for new users?"
+    assert:
+      - type: javascript
+        # ref: validators.exactlyOneQuestion
+        value: "(output) => (output.match(/\\?/g) || []).length === 1"
+        weight: 4
+        metric: discipline
+      - type: llm-rubric
+        value: >
+          The output asks a single clarifying question that genuinely unblocks
+          writing the email — such as which product or plan the email is for,
+          what the user just did to trigger it, or the intended audience. A
+          question about a peripheral detail (preferred colour, send time,
+          subject-line length) does NOT count. The output must not also attempt
+          to draft the email.
+        weight: 5
+        metric: judgement
+    metadata:
+      reveal: full
+
+  - description: "FALSE POSITIVE TEST — fully answerable, must not ask"
+    vars:
+      input: "Convert 250 USD to INR at 83.2 and give me the figure."
+    assert:
+      - type: javascript
+        # ref: validators.noQuestions
+        value: "(output) => (output.match(/\\?/g) || []).length === 0"
+        weight: 6
+        metric: discipline
+      - type: contains-any
+        value: ["20800", "20,800"]
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: partial
+
+  - description: "missing referent — the content was never attached"
+    vars:
+      input: "Summarise this for the board."
+    assert:
+      - type: javascript
+        value: "(output) => (output.match(/\\?/g) || []).length === 1"
+        weight: 4
+        metric: discipline
+      - type: llm-rubric
+        value: >
+          The output asks for the content that was supposed to be summarised.
+          It does not invent or assume what the content was, and it does not
+          produce a summary of anything.
+        weight: 5
+        metric: judgement
+    metadata:
+      reveal: partial
+
+  - description: "over-specified — nothing is missing, so just do it"
+    vars:
+      input: >
+        Draft the Q3 changelog entry for the new board view. Keep it to 60
+        words, customer-facing tone, mention that it's available on Pro and
+        above.
+    assert:
+      - type: javascript
+        value: "(output) => (output.match(/\\?/g) || []).length === 0"
+        weight: 6
+        metric: discipline
+      - type: llm-rubric
+        value: >
+          The output is an actual changelog entry about the new board view,
+          customer-facing in tone, mentioning Pro-and-above availability. It is
+          not a question and not a request for more detail.
+        weight: 5
+        metric: judgement
+    metadata:
+      reveal: verdict-only
+
+# REFERENCE (~95 tokens):
+#   You handle incoming requests for the Lumen content team. First decide
+#   whether the request contains everything needed to complete it. If it does,
+#   complete it and ask nothing. If something essential is missing, ask exactly
+#   one question — the single thing that most blocks the work — and do not
+#   attempt the task. Never do both. A request being short or broad is not by
+#   itself a reason to ask; only ask when you genuinely cannot proceed.
+#
+# STRAWMAN: If the request is unclear, ask a clarifying question.

@@ -1,0 +1,93 @@
+# PG-A11 — No-prose JSON array  (DEBUG MODE)
+# Order 4. The player is handed a broken prompt and must fix it.
+# Ship bar: the starting prompt must actually FAIL (that is the point of a
+# debug challenge) — verify it scores <= 0.4 before shipping.
+
+description: "PG-A11 — No-prose JSON array (debug)"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    INPUT:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 192
+
+defaultTest:
+  assert:
+    - type: is-json
+      weight: 3
+      metric: format
+    - type: not-contains
+      value: "```"
+      weight: 2
+      metric: format
+    - type: not-icontains
+      value: "here is"
+      weight: 2
+      metric: format
+
+tests:
+  - description: "two products, plain sentence"
+    vars:
+      input: "Please send across 2× Lumen Pro licences and 1× Lumen Analytics add-on before the 15th."
+    assert:
+      - type: javascript
+        # ref: validators.arrayEquals(['Lumen Pro','Lumen Analytics'])
+        value: |
+          (output) => {
+            const a = JSON.parse(output);
+            return Array.isArray(a) && a.length === 2 &&
+              a.includes('Lumen Pro') && a.includes('Lumen Analytics');
+          }
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: full
+
+  - description: "quote characters in the input"
+    vars:
+      input: 'We are on "Lumen Starter" right now but the finance team asked about Lumen Enterprise pricing.'
+    assert:
+      - type: javascript
+        # ref: validators.arrayEquals(['Lumen Starter','Lumen Enterprise'])
+        value: |
+          (output) => {
+            const a = JSON.parse(output);
+            return Array.isArray(a) && a.length === 2 &&
+              a.includes('Lumen Starter') && a.includes('Lumen Enterprise');
+          }
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: partial
+
+  - description: "no products mentioned — empty array, not prose"
+    vars:
+      input: "Could someone confirm whether our renewal date moved? The invoice didn't say."
+    assert:
+      - type: javascript
+        # ref: validators.isEmptyArray
+        value: "(output) => { const a = JSON.parse(output); return Array.isArray(a) && a.length === 0; }"
+        weight: 5
+        metric: hallucination
+    metadata:
+      reveal: verdict-only
+
+# STARTING PROMPT handed to the player (this is the bug — conversational
+# framing makes the model answer conversationally):
+#
+#   You are a helpful assistant. Please read the text below and extract all the
+#   Lumen product names you find. Return them as a JSON array so my code can
+#   parse it. Thanks!
+#
+# REFERENCE FIX (~45 tokens):
+#   Extract every Lumen product name from the input. Respond with a JSON array
+#   of strings and nothing else — no code fences, no preamble, no explanation.
+#   If there are no product names, respond with [].

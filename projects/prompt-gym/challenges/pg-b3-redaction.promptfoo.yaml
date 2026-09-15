@@ -1,0 +1,114 @@
+# PG-B3 — Redaction with zero leakage
+# Order 7. Two-sided validation: nothing sensitive may survive, and nothing
+# harmless may be destroyed. That second direction is what makes it hard to game.
+
+description: "PG-B3 — Redaction with zero leakage"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    INPUT:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 384
+
+tests:
+  - description: "one phone, one email, one ticket reference"
+    vars:
+      input: "Customer Arun M (arun.m@example.com, 98765 43210) reported the sync failure on ticket LMN-3391."
+    assert:
+      - type: javascript
+        # ref: validators.b3NoLeak
+        value: |
+          (output) => {
+            const leaked = ['98765', '43210', 'arun.m@example.com'];
+            return !leaked.some(s => output.includes(s));
+          }
+        weight: 4
+        metric: leakage
+      - type: contains
+        value: "LMN-3391"
+        weight: 2
+        metric: preservation
+      - type: contains-all
+        value: ["[PHONE]", "[EMAIL]"]
+        weight: 2
+        metric: format
+    metadata:
+      reveal: full
+
+  - description: "obfuscated formats — spaced digits, plus-addressing, spelled-out email"
+    vars:
+      input: "Reachable on +91 98 7654 3210 or at a.menon+lumen@example.co.in — he's also tried arun dot m at example dot com."
+    assert:
+      - type: javascript
+        # ref: validators.b3NoLeakObfuscated
+        value: |
+          (output) => {
+            const digits = output.replace(/\D/g, '');
+            const leakedEmail = output.includes('a.menon+lumen@example.co.in');
+            // no run of 4+ digits from the phone may survive in any spacing
+            const runs = digits.match(/\d{4,}/g) || [];
+            return !leakedEmail && runs.length === 0;
+          }
+        weight: 5
+        metric: leakage
+      - type: contains
+        value: "[EMAIL]"
+        weight: 2
+        metric: format
+    metadata:
+      reveal: partial
+
+  - description: "nothing here is PII — over-redaction fails"
+    vars:
+      input: "Refund of 4,500 processed to the account ending 3344. Office at 14 MG Road, Bengaluru 560001. Invoice LMN-4471 dated 12/09/25."
+    assert:
+      - type: javascript
+        # ref: validators.b3NoOverRedaction
+        value: |
+          (output) => {
+            const mustSurvive = ['4,500', '3344', '560001', 'LMN-4471', '12/09/25'];
+            const survived = mustSurvive.every(s => output.includes(s));
+            const overRedacted = /\[(PHONE|EMAIL|ID)\]/.test(output);
+            return survived && !overRedacted;
+          }
+        weight: 6
+        metric: over-redaction
+    metadata:
+      reveal: verdict-only
+
+  - description: "phone split across a newline, plus a differently-shaped ID"
+    vars:
+      input: "Best number is 98765-\n43210 (he's on leave till Monday). PAN ABCDE1234F on file."
+    assert:
+      - type: javascript
+        # ref: validators.b3SplitAndId
+        value: |
+          (output) => {
+            const noPhone = !output.includes('98765') && !output.includes('43210');
+            const noPan = !output.includes('ABCDE1234F');
+            const hasId = output.includes('[ID]');
+            return noPhone && noPan && hasId;
+          }
+        weight: 6
+        metric: leakage
+    metadata:
+      reveal: verdict-only
+
+# REFERENCE (~95 tokens):
+#   Rewrite the transcript with personal contact details masked. Replace phone
+#   numbers with [PHONE], email addresses with [EMAIL], and government ID
+#   numbers (such as PAN) with [ID]. Phone numbers may be spaced, hyphenated,
+#   split across lines, or carry a country code; emails may be written out in
+#   words. Leave everything else byte-for-byte unchanged — amounts, partial
+#   account digits, postcodes, invoice numbers and dates are NOT personal
+#   contact details. Output only the rewritten transcript.
+#
+# STRAWMAN: Remove any personal information from this text.

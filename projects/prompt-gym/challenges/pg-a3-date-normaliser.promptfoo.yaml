@@ -1,0 +1,90 @@
+# PG-A3 — ISO 8601 date normaliser
+# Order 3 in the build sequence. String-check family, no judge calls.
+# Ship bar: reference >= 0.9 on gpt-oss-20b, strawman <= 0.4.
+
+description: "PG-A3 — ISO 8601 date normaliser"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    INPUT:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 192
+
+defaultTest:
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: [date]
+      weight: 2
+      metric: format
+    - type: not-contains
+      value: "```"
+      weight: 1
+      metric: format
+
+tests:
+  - description: "ordinal suffix, two-digit year"
+    vars:
+      input: "Your onboarding slot is confirmed for 14th Aug '25."
+    assert:
+      - type: javascript
+        # ref: validators.dateEquals('2025-08-14')
+        value: "(output) => JSON.parse(output).date === '2025-08-14'"
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: full
+
+  - description: "ambiguous numeric — day-first convention"
+    vars:
+      input: "Delivery scheduled 03/04/25."
+    assert:
+      - type: javascript
+        # ref: validators.dateEquals('2025-04-03')
+        value: "(output) => JSON.parse(output).date === '2025-04-03'"
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: partial
+
+  - description: "relative date — no absolute date exists"
+    vars:
+      input: "Let's push it to next Monday."
+    assert:
+      - type: javascript
+        # ref: validators.dateIsNull
+        value: "(output) => JSON.parse(output).date === null"
+        weight: 5
+        metric: hallucination
+    metadata:
+      reveal: verdict-only
+
+  - description: "impossible date — 31 February"
+    vars:
+      input: "Invoice dated 31/02/25."
+    assert:
+      - type: javascript
+        # ref: validators.dateIsNull
+        value: "(output) => JSON.parse(output).date === null"
+        weight: 5
+        metric: hallucination
+    metadata:
+      reveal: verdict-only
+
+# REFERENCE (~70 tokens):
+#   Find the calendar date in the message and return exactly {"date":"YYYY-MM-DD"}.
+#   Rules: numeric dates are day-first (DD/MM/YY). If the message gives only a
+#   relative date, or a date that does not exist on the calendar, return
+#   {"date":null}. Never infer a date that is not explicitly stated. Output only
+#   the JSON object.
+#
+# STRAWMAN: Convert the date to ISO format.

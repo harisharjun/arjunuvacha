@@ -1,0 +1,82 @@
+{
+  "$comment": "RUNTIME FILE. Generated from pg-a2-single-label.promptfoo.yaml. Ships inside the Worker bundle. Only the `public` block reaches the browser.",
+
+  "id": "pg-a2",
+  "title": "One label, nothing else",
+  "mode": "goal",
+  "difficulty": 1,
+  "tags": ["classification", "format-control"],
+  "graderFamilies": ["string-check"],
+
+  "public": {
+    "goal": "Write a prompt that classifies a Lumen support ticket into exactly one of five labels: billing, bug, feature_request, account_access, other. Output only the label — lowercase, no punctuation, no explanation, no preamble.",
+    "startingPrompt": null,
+    "exampleInput": "I was charged twice for the October invoice — order LMN-4471 and LMN-4472 are identical. Can you refund the duplicate?",
+    "constraintsShown": [
+      "Exactly one word of output",
+      "Must be one of the five labels, lowercase",
+      "No explanation, even if the ticket asks for one"
+    ],
+    "gradedOn": [
+      "Output is a single word",
+      "Word is one of the five valid labels",
+      "The label is correct for the ticket"
+    ]
+  },
+
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 1400,
+    "requiresJudge": false
+  },
+
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.75,
+    "golfVariant": { "id": "pg-g3", "parTokens": 40, "maxBonus": 20 }
+  },
+
+  "defaultAssert": [
+    { "type": "word-count", "value": 1, "weight": 2, "metric": "format" },
+    { "type": "regex", "value": "^(billing|bug|feature_request|account_access|other)$", "weight": 2, "metric": "format" }
+  ],
+
+  "tests": [
+    {
+      "id": "t1",
+      "input": "I was charged twice for the October invoice — order LMN-4471 and LMN-4472 are identical. Can you refund the duplicate?",
+      "reveal": "full",
+      "assert": [{ "type": "equals", "value": "billing", "weight": 4, "metric": "accuracy" }]
+    },
+    {
+      "id": "t2",
+      "input": "Every time I drag a card into the Done column it bounces back after about a second. Chrome 141, Windows 11. Started yesterday afternoon.",
+      "reveal": "partial",
+      "assert": [{ "type": "equals", "value": "bug", "weight": 4, "metric": "accuracy" }]
+    },
+    {
+      "id": "t3",
+      "input": "Not sure if this is the right place to ask, but could you walk me through how you'd categorise this one? Nobody on the team has been able to log in since the SSO change on Friday.",
+      "reveal": "partial",
+      "hint": "One hidden ticket asks you to explain your reasoning. Your prompt took the bait.",
+      "assert": [
+        { "type": "equals", "value": "account_access", "weight": 4, "metric": "accuracy" },
+        { "type": "not-contains", "value": "because", "weight": 1, "metric": "format" }
+      ]
+    },
+    {
+      "id": "t4",
+      "input": "It'd be great if the weekly digest could be switched off per project instead of all-or-nothing. Right now I mute everything and miss things.",
+      "reveal": "verdict-only",
+      "hint": "One hidden ticket reads like a complaint but is asking for something new.",
+      "assert": [{ "type": "equals", "value": "feature_request", "weight": 4, "metric": "accuracy" }]
+    }
+  ]
+}

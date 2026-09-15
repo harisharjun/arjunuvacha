@@ -1,0 +1,173 @@
+# PG-A1 — Strict JSON address extractor
+#
+# AUTHORING FILE. Run locally with your own Groq key to validate the challenge
+# before exporting to runtime JSON:
+#
+#   export GROQ_API_KEY=...
+#   npx promptfoo eval -c pg-a1-address-extractor.promptfoo.yaml
+#   npx promptfoo view
+#
+# Validation bar before this challenge ships:
+#   - reference prompt (below) scores >= 0.9
+#   - strawman prompt (below) scores <= 0.4
+#   - reference prompt passes on gpt-oss-20b, not just 120b
+#
+# Swap the `prompts:` entry between reference and strawman to check both.
+# At runtime {{userPrompt}} is replaced by whatever the player submitted.
+
+description: "PG-A1 — Strict JSON address extractor"
+
+prompts:
+  # ---- The harness template. Identical across all PromptGym challenges. ----
+  # For local validation, paste the reference or strawman prompt in place of
+  # {{userPrompt}}, or pass it as a var.
+  - |
+    {{userPrompt}}
+
+    ---
+    INPUT:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 256
+
+defaultTest:
+  options:
+    # The pinned judge. Not user-selectable in the product — see design doc.
+    provider: groq:openai/gpt-oss-120b
+  assert:
+    # Applies to every test case: output must be parseable JSON and must not
+    # wrap the JSON in conversational prose.
+    - type: is-json
+      weight: 2
+      metric: format
+    - type: not-contains
+      value: "Here is"
+      weight: 1
+      metric: format
+
+tests:
+  # ---------------------------------------------------------------- t1 (full)
+  # Worked example. Revealed in full to the player — this is the case they
+  # learn the shape of the task from.
+  - description: "clean single address"
+    vars:
+      input: "Ship to Priya Raman, 14 MG Road, Bengaluru 560001, Karnataka"
+    assert:
+      - type: is-json
+        value:
+          type: object
+          required: [name, line1, city, pincode, state]
+          properties:
+            name: { type: string }
+            line1: { type: string }
+            city: { type: string }
+            pincode: { type: string, pattern: "^[0-9]{6}$" }
+            state: { type: string }
+          additionalProperties: false
+        weight: 3
+        metric: schema
+      - type: contains
+        value: "560001"
+        weight: 1
+        metric: accuracy
+    metadata:
+      reveal: full
+
+  # ------------------------------------------------------------- t2 (partial)
+  # Noise around the address. Tests that the prompt extracts rather than echoes.
+  - description: "address buried in conversational text"
+    vars:
+      input: >
+        Hi! Thanks for the quick turnaround last week. Could you send the
+        replacement unit over to Arun Kumar, Flat 3B Sunrise Apartments,
+        Jubilee Hills, Hyderabad 500033, Telangana. Let me know the tracking
+        number when you have it.
+    assert:
+      - type: is-json
+        value:
+          type: object
+          required: [name, line1, city, pincode, state]
+        weight: 3
+        metric: schema
+      - type: contains
+        value: "500033"
+        weight: 1
+        metric: accuracy
+      - type: javascript
+        # No stray commentary smuggled into a JSON field.
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            const bad = /tracking|thanks|let me know/i;
+            return !Object.values(j).some(v => typeof v === 'string' && bad.test(v));
+          }
+        weight: 2
+        metric: accuracy
+    metadata:
+      reveal: partial
+
+  # -------------------------------------------------------- t3 (verdict-only)
+  # The anti-hallucination case. Knowing this input is most of the answer, so
+  # the player is told only that a hidden case failed on `hallucination`.
+  - description: "no address present — must return empty object, not invent one"
+    vars:
+      input: "Thanks for the update, I'll get back to you next week."
+    assert:
+      - type: javascript
+        value: |
+          (output) => {
+            let j;
+            try { j = JSON.parse(output); } catch { return false; }
+            if (Array.isArray(j)) return j.length === 0;
+            if (j && typeof j === 'object') return Object.keys(j).length === 0;
+            return false;
+          }
+        weight: 4
+        metric: hallucination
+    metadata:
+      reveal: verdict-only
+
+  # -------------------------------------------------------- t4 (verdict-only)
+  # Partial address. Tests whether the prompt fabricates the missing state
+  # field or correctly leaves it empty.
+  - description: "partial address — missing state must not be invented"
+    vars:
+      input: "Courier it to Meera S, 22 Residency Road, Pune 411001"
+    assert:
+      - type: is-json
+        weight: 1
+        metric: schema
+      - type: javascript
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            const state = (j.state ?? '').toString().trim().toLowerCase();
+            // Empty, null or "unknown" is correct. Guessing "Maharashtra" is not.
+            return state === '' || state === 'unknown' || state === 'null';
+          }
+        weight: 4
+        metric: hallucination
+    metadata:
+      reveal: verdict-only
+
+# ---------------------------------------------------------------------------
+# REFERENCE PROMPT (should score >= 0.9) — keep out of the shipped JSON.
+#
+#   Extract the postal address from the INPUT into JSON with exactly these
+#   keys: name, line1, city, pincode, state.
+#   Rules:
+#   - Output only the JSON object. No prose, no code fences, no preamble.
+#   - Copy values verbatim from the INPUT. Never infer or guess a value.
+#   - If a field is not present in the INPUT, use an empty string.
+#   - If the INPUT contains no postal address at all, output exactly {}
+#
+# STRAWMAN PROMPT (should score <= 0.4) — the naive attempt:
+#
+#   Extract the address from this text and give me the JSON.
+#
+# Par token count for the golf variant (G1): 84 tokens (the reference above).
+# ---------------------------------------------------------------------------

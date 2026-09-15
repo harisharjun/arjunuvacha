@@ -1,0 +1,44 @@
+{
+  "$comment": "Golf variants reuse a parent challenge's test cases and assertions verbatim. They are configuration, not authoring — the build script expands each entry by cloning the parent's `tests` and `defaultAssert`, swapping mode to 'golf', and attaching the efficiency bonus. Nothing here needs its own promptfoo YAML.",
+
+  "variants": [
+    {
+      "id": "pg-g1",
+      "parent": "pg-a1",
+      "title": "Shortest strict-JSON extractor",
+      "mode": "golf",
+      "difficulty": 3,
+      "tags": ["golf", "extraction", "json"],
+      "public": {
+        "goal": "Same task as 'Strict JSON address extractor' — but now the prompt has to be short. Pass every test case first; only then does brevity earn points. Par is 84 tokens.",
+        "constraintsShown": [
+          "Correctness is scored exactly as in the original challenge",
+          "The efficiency bonus applies only once you pass",
+          "Par: 84 tokens"
+        ]
+      },
+      "scoring": { "parTokens": 84, "maxBonus": 20, "passThreshold": 0.7 }
+    },
+    {
+      "id": "pg-g3",
+      "parent": "pg-a2",
+      "title": "Minimal one-label classifier",
+      "mode": "golf",
+      "difficulty": 2,
+      "tags": ["golf", "classification"],
+      "public": {
+        "goal": "Same task as 'One label, nothing else' — now in as few tokens as possible. Pass every test case first; only then does brevity earn points. Par is 40 tokens.",
+        "constraintsShown": [
+          "Correctness is scored exactly as in the original challenge",
+          "The efficiency bonus applies only once you pass",
+          "Par: 40 tokens"
+        ]
+      },
+      "scoring": { "parTokens": 40, "maxBonus": 20, "passThreshold": 0.75 }
+    }
+  ],
+
+  "bonusFormula": "efficiencyBonus = round(20 * max(0, 1 - promptTokens / parTokens)), applied only when meanCaseScore >= passThreshold, and capped so total <= 100",
+
+  "$note": "Par values are the token counts of the reference prompts in the parent YAML files. Re-measure them with the same tokeniser the Worker uses before shipping — a par that is wrong by 20% makes the bonus either trivial or unreachable."
+}

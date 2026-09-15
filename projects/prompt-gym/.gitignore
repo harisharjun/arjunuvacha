@@ -1,0 +1,4 @@
+node_modules/
+web/dist/
+.wrangler/
+.DS_Store

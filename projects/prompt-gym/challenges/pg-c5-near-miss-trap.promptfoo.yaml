@@ -1,0 +1,142 @@
+# PG-C5 — The near-miss trap
+# Order 9. THE SHOWCASE CHALLENGE.
+#
+# The point: on t2 a fluent, on-topic, completely wrong answer scores ~0.9 on
+# semantic similarity and still fails, because a rule-based check catches the
+# flipped condition. That is the lesson — similarity is not correctness, which
+# is why production evals never rely on embeddings alone.
+#
+# Post-run feedback should say this explicitly, quoting the player's own
+# similarity score back at them.
+
+description: "PG-C5 — The near-miss trap"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    POLICY:
+    Lumen refunds are available within 30 days of purchase. Annual plans are the
+    exception: they are refundable within 14 days of purchase only. Refunds are
+    not available on add-ons once activated.
+
+    CUSTOMER:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 192
+
+defaultTest:
+  assert:
+    - type: word-count
+      value: { max: 40 }
+      weight: 2
+      metric: format
+
+tests:
+  - description: "monthly, 12 days — yes, 30-day rule"
+    vars:
+      input: "I bought Lumen Pro monthly 12 days ago and it's not for me. Can I get a refund?"
+    assert:
+      - type: similar
+        value: "Yes — monthly plans are refundable within 30 days, and your purchase was 12 days ago."
+        threshold: 0.7
+        weight: 2
+        metric: relevance
+      - type: javascript
+        # ref: validators.c5Affirmative30
+        value: |
+          (output) => {
+            const t = output.toLowerCase();
+            const affirmative = /\b(yes|you can|eligible|we can refund|happy to refund)\b/.test(t);
+            const negative = /\b(no,|not eligible|unfortunately|can't|cannot|unable)\b/.test(t);
+            return affirmative && !negative && t.includes('30');
+          }
+        weight: 6
+        metric: correctness
+    metadata:
+      reveal: full
+
+  - description: "THE TRAP — annual, 20 days: 14-day rule applies, so NO"
+    vars:
+      input: "I'm on the annual plan, bought 20 days ago. Refund please?"
+    assert:
+      - type: similar
+        value: "No — annual plans are refundable only within 14 days, and your purchase was 20 days ago."
+        threshold: 0.7
+        weight: 2
+        metric: relevance
+      - type: javascript
+        # ref: validators.c5Negative14
+        # A wrong-but-fluent "Yes, you're inside the 30-day window" passes the
+        # similarity assert above and fails here. That is the whole challenge.
+        value: |
+          (output) => {
+            const t = output.toLowerCase();
+            const negative = /\b(no|not eligible|unfortunately|can't|cannot|unable|outside)\b/.test(t);
+            const citesRightRule = t.includes('14');
+            const citesWrongRule = t.includes('30');
+            return negative && citesRightRule && !citesWrongRule;
+          }
+        weight: 8
+        metric: correctness
+    metadata:
+      reveal: partial
+
+  - description: "activated add-on — a third rule most prompts never surface"
+    vars:
+      input: "Bought the analytics add-on last week and activated it. Can I return it?"
+    assert:
+      - type: similar
+        value: "No — add-ons are not refundable once activated."
+        threshold: 0.7
+        weight: 2
+        metric: relevance
+      - type: javascript
+        # ref: validators.c5AddOnRefused
+        value: |
+          (output) => {
+            const t = output.toLowerCase();
+            const negative = /\b(no|not eligible|unfortunately|can't|cannot|unable|non-refundable)\b/.test(t);
+            return negative && /activat/.test(t);
+          }
+        weight: 7
+        metric: correctness
+    metadata:
+      reveal: verdict-only
+
+  - description: "annual, 9 days — inside the 14-day window, so YES (catches overcorrection)"
+    vars:
+      input: "Annual plan, bought 9 days ago — refund?"
+    assert:
+      - type: similar
+        value: "Yes — annual plans are refundable within 14 days, and your purchase was 9 days ago."
+        threshold: 0.7
+        weight: 2
+        metric: relevance
+      - type: javascript
+        # ref: validators.c5Affirmative14
+        value: |
+          (output) => {
+            const t = output.toLowerCase();
+            const affirmative = /\b(yes|you can|eligible|we can refund|happy to refund)\b/.test(t);
+            const negative = /\b(no,|not eligible|unfortunately|can't|cannot|unable)\b/.test(t);
+            return affirmative && !negative && t.includes('14');
+          }
+        weight: 7
+        metric: correctness
+    metadata:
+      reveal: verdict-only
+
+# REFERENCE (~80 tokens):
+#   Answer the customer using only the POLICY above. Work out which rule applies
+#   before answering: annual plans use the 14-day rule, not the 30-day rule, and
+#   activated add-ons are never refundable. Start with a direct Yes or No, then
+#   give the reason and cite the number of days that actually applies. Under 40
+#   words. Do not cite a rule that does not apply to this customer.
+#
+# STRAWMAN: Answer the customer's refund question based on the policy.

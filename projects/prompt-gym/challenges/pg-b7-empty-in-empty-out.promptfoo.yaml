@@ -1,0 +1,113 @@
+# PG-B7 — Empty input, empty output
+# Order 5. Introduces the rule-based validator mechanism.
+
+description: "PG-B7 — Empty input, empty output"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    INPUT:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 256
+
+defaultTest:
+  assert:
+    - type: is-json
+      weight: 2
+      metric: format
+    - type: javascript
+      # ref: validators.isArrayOfOwnerAction
+      value: |
+        (output) => {
+          const a = JSON.parse(output);
+          return Array.isArray(a) && a.every(
+            x => x && typeof x === 'object' && 'owner' in x && 'action' in x
+          );
+        }
+      weight: 2
+      metric: schema
+
+tests:
+  - description: "two owned action items, plus a schedule change that is not one"
+    vars:
+      input: >
+        Standup, 3 Sep. Ravi to push the auth fix to staging by Thursday.
+        Nisha will draft the release note once that's in. Backlog grooming
+        moved to Friday.
+    assert:
+      - type: javascript
+        # ref: validators.b7TwoOwnedItems
+        value: |
+          (output) => {
+            const a = JSON.parse(output);
+            if (a.length !== 2) return false;
+            const owners = a.map(x => String(x.owner || '').toLowerCase()).sort();
+            return owners[0].includes('nisha') && owners[1].includes('ravi');
+          }
+        weight: 4
+        metric: accuracy
+    metadata:
+      reveal: full
+
+  - description: "unowned action — owner must be null, not guessed"
+    vars:
+      input: >
+        Design review, 5 Sep. Long discussion about the empty-state
+        illustration. Team split on whether it needs copy. Someone should test
+        it with the onboarding cohort before we decide.
+    assert:
+      - type: javascript
+        # ref: validators.b7SingleUnownedItem
+        value: |
+          (output) => {
+            const a = JSON.parse(output);
+            if (a.length !== 1) return false;
+            const o = a[0].owner;
+            return o === null || o === '' || o === undefined;
+          }
+        weight: 5
+        metric: hallucination
+    metadata:
+      reveal: partial
+
+  - description: "retro with no actions at all"
+    vars:
+      input: >
+        Retro, 8 Sep. Good sprint overall. The deploy freeze helped. Morale
+        seems better than last month. Nothing blocking.
+    assert:
+      - type: javascript
+        # ref: validators.isEmptyArray
+        value: "(output) => { const a = JSON.parse(output); return Array.isArray(a) && a.length === 0; }"
+        weight: 5
+        metric: hallucination
+    metadata:
+      reveal: verdict-only
+
+  - description: "problems raised but nothing committed to"
+    vars:
+      input: >
+        Sync, 9 Sep. Ravi mentioned the migration script is still flaky. Priya
+        asked whether we'd decided on the rollback window. No decisions taken.
+    assert:
+      - type: javascript
+        # ref: validators.isEmptyArray
+        value: "(output) => { const a = JSON.parse(output); return Array.isArray(a) && a.length === 0; }"
+        weight: 5
+        metric: hallucination
+    metadata:
+      reveal: verdict-only
+
+# REFERENCE (~85 tokens):
+#   Extract action items from the meeting notes as a JSON array of objects with
+#   keys "owner" and "action". An action item is something a person committed to
+#   doing. Discussion, observations, questions and schedule changes are not
+#   action items. If an action has no named owner, set "owner" to null. If there
+#   are no action items, return []. Never infer an owner. Output only the JSON.

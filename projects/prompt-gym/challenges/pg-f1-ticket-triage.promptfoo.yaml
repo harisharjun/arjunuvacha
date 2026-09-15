@@ -1,0 +1,136 @@
+# PG-F1 — Support ticket triage (composite showcase)
+# Order 12. Four grader families on one output, weighted.
+#
+# Cheap-first gating matters here: is-json and the priority validator are free,
+# so a malformed output costs zero model calls. Build the Worker to skip the
+# label and rubric calls when the free checks have already failed.
+
+description: "PG-F1 — Support ticket triage"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    TICKET:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 256
+
+defaultTest:
+  options:
+    provider: groq:openai/gpt-oss-120b
+  assert:
+    # --- free, runs first ---
+    - type: is-json
+      value:
+        type: object
+        required: [category, priority, summary]
+        properties:
+          category:
+            type: string
+            enum: [billing, bug, feature_request, account_access, other]
+          priority: { type: string, pattern: "^P[1-4]$" }
+          summary: { type: string }
+        additionalProperties: false
+      weight: 3
+      metric: schema
+    - type: javascript
+      # ref: validators.f1SummaryLength
+      value: |
+        (output) => {
+          const s = JSON.parse(output).summary || '';
+          const words = s.trim().split(/\s+/).filter(Boolean).length;
+          return words > 0 && words <= 15;
+        }
+      weight: 2
+      metric: format
+    # --- model-graded, gated behind the above ---
+    - type: llm-rubric
+      value: >
+        The "summary" field states what the customer's actual problem is, in
+        neutral language. It is not a restatement of the customer's emotional
+        tone, and not a generic label like "customer issue".
+      weight: 2
+      metric: summary-quality
+
+tests:
+  - description: "total outage — P1"
+    vars:
+      input: "Nobody in the workspace can load any board since about 09:40. Blank screen, spinner forever. Whole team is stopped."
+    assert:
+      - type: javascript
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            return j.category === 'bug' && j.priority === 'P1';
+          }
+        weight: 5
+        metric: triage
+    metadata:
+      reveal: full
+
+  - description: "low-urgency plan question"
+    vars:
+      input: "Which plan includes the audit log? Considering upgrading next quarter."
+    assert:
+      - type: javascript
+        # category may reasonably be billing or other; priority must be low
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            return ['billing', 'other'].includes(j.category) &&
+                   ['P3', 'P4'].includes(j.priority);
+          }
+        weight: 4
+        metric: triage
+    metadata:
+      reveal: partial
+
+  - description: "FURIOUS but cosmetic — tone is not severity"
+    vars:
+      input: "This is COMPLETELY unacceptable. Third time I've asked. The board background colour is still wrong on dark mode and it looks terrible. Fix it NOW."
+    assert:
+      - type: javascript
+        # ref: validators.f1ToneNotSeverity
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            return j.category === 'bug' && ['P3', 'P4'].includes(j.priority);
+          }
+        weight: 6
+        metric: triage
+    metadata:
+      reveal: partial
+
+  - description: "politely understated DATA LEAK — P1"
+    vars:
+      input: "Small thing — when I export a project CSV I'm also getting rows from a workspace I was removed from last month."
+    assert:
+      - type: javascript
+        # ref: validators.f1UnderstatedSeverity
+        value: |
+          (output) => {
+            const j = JSON.parse(output);
+            return j.category === 'bug' && j.priority === 'P1';
+          }
+        weight: 7
+        metric: triage
+    metadata:
+      reveal: verdict-only
+
+# REFERENCE (~120 tokens):
+#   Triage the Lumen ticket into JSON: {"category":"billing|bug|feature_request|
+#   account_access|other","priority":"P1|P2|P3|P4","summary":"..."}.
+#   Set priority by impact, not by how the customer sounds. P1 = production is
+#   broken for many users, or data is exposed to the wrong people. P2 = a core
+#   workflow is blocked for someone with no workaround. P3 = degraded but
+#   workable. P4 = cosmetic or a nice-to-have. Angry language does not raise
+#   priority; calm language does not lower it. Summary: 15 words or fewer,
+#   neutral, describing the problem. Output only the JSON.
+#
+# STRAWMAN: Categorise this ticket and assign a priority, returning JSON.

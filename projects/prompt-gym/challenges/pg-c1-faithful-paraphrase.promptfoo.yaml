@@ -1,0 +1,121 @@
+# PG-C1 — Faithful paraphrase
+# Order 8. Introduces the embedding hop (`similar`). Two graders pulling in
+# opposite directions define "paraphrase" better than either alone.
+#
+# NOTE: `similar` needs an embedding provider. Locally promptfoo defaults to
+# OpenAI embeddings — set a local embedding provider or expect this one
+# assertion to be skipped. At runtime the Worker uses Cloudflare Workers AI
+# (@cf/baai/bge-m3), which is the free path.
+
+description: "PG-C1 — Faithful paraphrase"
+
+prompts:
+  - |
+    {{userPrompt}}
+
+    ---
+    INPUT:
+    {{input}}
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    config:
+      temperature: 0
+      max_tokens: 192
+
+defaultTest:
+  assert:
+    # Must not be a copy. Normalised Levenshtein distance from the original.
+    - type: javascript
+      # ref: validators.c1NotACopy
+      value: |
+        (output, context) => {
+          const a = output.trim(), b = String(context.vars.input).trim();
+          const m = a.length, n = b.length;
+          let prev = Array.from({ length: n + 1 }, (_, j) => j);
+          let cur = new Array(n + 1);
+          for (let i = 1; i <= m; i++) {
+            cur[0] = i;
+            for (let j = 1; j <= n; j++) {
+              cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1,
+                                prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+            }
+            [prev, cur] = [cur, prev];
+          }
+          return prev[n] / Math.max(m, n) >= 0.4;
+        }
+      weight: 3
+      metric: novelty
+    - type: word-count
+      value: { min: 6, max: 45 }
+      weight: 1
+      metric: format
+
+tests:
+  - description: "plain factual sentence"
+    vars:
+      input: "Lumen's free plan supports up to three active projects and one collaborator per project."
+    assert:
+      - type: similar
+        value: "Lumen's free plan supports up to three active projects and one collaborator per project."
+        threshold: 0.85
+        weight: 4
+        metric: faithfulness
+      - type: not-icontains-any
+        value: ["supports up to", "collaborator per project"]
+        weight: 2
+        metric: novelty
+    metadata:
+      reveal: full
+
+  - description: "conditional logic that paraphrase tends to soften"
+    vars:
+      input: "If a workspace exceeds its seat limit, new invitations are blocked until a seat is freed or added."
+    assert:
+      - type: similar
+        value: "If a workspace exceeds its seat limit, new invitations are blocked until a seat is freed or added."
+        threshold: 0.85
+        weight: 4
+        metric: faithfulness
+    metadata:
+      reveal: partial
+
+  - description: "two facts a loose paraphrase merges into one"
+    vars:
+      input: "Data exported from Lumen is retained on our servers for seven days, after which the download link expires."
+    assert:
+      - type: similar
+        value: "Data exported from Lumen is retained on our servers for seven days, after which the download link expires."
+        threshold: 0.85
+        weight: 4
+        metric: faithfulness
+      - type: contains-any
+        value: ["seven", "7"]
+        weight: 2
+        metric: faithfulness
+    metadata:
+      reveal: partial
+
+  - description: "negation — paraphrases drop the 'not'"
+    vars:
+      input: "Annual plans are billed upfront and are not prorated if you downgrade mid-term."
+    assert:
+      - type: similar
+        value: "Annual plans are billed upfront and are not prorated if you downgrade mid-term."
+        threshold: 0.85
+        weight: 4
+        metric: faithfulness
+      - type: javascript
+        # ref: validators.c1NegationHeld — the negation must survive in some form
+        value: |
+          (output) => /\b(not|no|never|without|isn't|aren't|non-)\b/i.test(output)
+        weight: 4
+        metric: faithfulness
+    metadata:
+      reveal: verdict-only
+
+# REFERENCE (~55 tokens):
+#   Rewrite the sentence so it means exactly the same thing but shares as little
+#   wording as possible with the original. Preserve every fact, number,
+#   condition and negation precisely. Do not add or remove information. Output
+#   only the rewritten sentence.
