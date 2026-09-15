@@ -1,0 +1,19 @@
+# prompt-gym worker — Cloudflare config
+# The API and grading engine for PromptGym. Unlike arjun-rag and
+# tax-copilot-groq this one is TypeScript with a src/ tree, because it holds
+# the grading engine whose correctness decides whether every leaderboard score
+# means anything. See docs/repo-layout.md §5.
+name = "prompt-gym"
+main = "src/index.ts"
+compatibility_date = "2024-11-06"
+
+# Groq calls route through the same Cloudflare AI Gateway as the other workers.
+[vars]
+AIG_ACCOUNT = "817ef4ab39edc6b855e3338a6903f3eb"
+AIG_GATEWAY = "vani"
+
+# Secret (set with `wrangler secret put GROQ_API_KEY`, do NOT put the value here):
+#   GROQ_API_KEY  -> the existing gsk_… key (same one arjun-rag / vani use)
+#
+# Bindings added later: D1 (M4), KV for the budget counter (M8), Workers AI for
+# embeddings (M1/M3). Nothing is bound yet — M0 is the health route only.

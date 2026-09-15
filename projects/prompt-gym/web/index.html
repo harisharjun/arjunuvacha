@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PromptGym</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font: 16px/1.5 system-ui, -apple-system, sans-serif;
+    max-width: 40rem; margin: 4rem auto; padding: 0 1.5rem;
+  }
+  h1 { font-size: 1.5rem; margin-bottom: .25rem; }
+  p.sub { margin-top: 0; opacity: .7; }
+  #status { padding: .75rem 1rem; border-radius: .5rem; border: 1px solid; }
+  .pending { border-color: #9993; }
+  .ok { border-color: #2a7; }
+  .fail { border-color: #c44; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+</style>
+</head>
+<body>
+  <h1>PromptGym</h1>
+  <p class="sub">M0 shell — checking the worker is reachable across origins.</p>
+  <div id="status" class="pending">Checking…</div>
+
+<script>
+  const API = 'https://prompt-gym.harisharjun127.workers.dev';
+
+  const el = document.getElementById('status');
+  fetch(API + '/api/health')
+    .then(r => r.json())
+    .then(data => {
+      el.className = data.ok ? 'ok' : 'fail';
+      el.textContent = JSON.stringify(data);
+    })
+    .catch(err => {
+      el.className = 'fail';
+      el.textContent = 'Failed to reach ' + API + ' — ' + err.message;
+    });
+</script>
+</body>
+</html>
