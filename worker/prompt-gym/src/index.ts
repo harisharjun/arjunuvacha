@@ -1,4 +1,10 @@
-const ALLOWED_ORIGINS = ['https://arjunuvacha.com', 'https://www.arjunuvacha.com'];
+const ALLOWED_ORIGINS = [
+  'https://arjunuvacha.com',
+  'https://www.arjunuvacha.com',
+  // Firebase staging project (arjunuvacha-test), serving on both of its domains.
+  'https://arjunuvacha-test.web.app',
+  'https://arjunuvacha-test.firebaseapp.com',
+];
 const ALLOWED_DEV_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
 function resolveOrigin(origin: string | null): string | null {
