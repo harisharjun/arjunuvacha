@@ -1,0 +1,99 @@
+{
+  "id": "pg-b7",
+  "title": "Empty input, empty output",
+  "mode": "goal",
+  "difficulty": 3,
+  "tags": [],
+  "graderFamilies": [
+    "rule-based"
+  ],
+  "public": {
+    "goal": "Write a prompt that pulls action items out of Lumen meeting notes into [{\"owner\": \"...\", \"action\": \"...\"}]. If an action has no named owner, owner must be null. If there are no action items, return [].",
+    "startingPrompt": null,
+    "exampleInput": "Standup, 3 Sep. Ravi to push the auth fix to staging by Thursday. Nisha will draft the release note once that's in. Backlog grooming moved to Friday.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2624,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  },
+  "defaultAssert": [
+    {
+      "type": "is-json",
+      "weight": 2,
+      "metric": "format"
+    },
+    {
+      "type": "javascript",
+      "weight": 2,
+      "metric": "schema",
+      "ref": "validators.isArrayOfOwnerAction"
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "input": "Standup, 3 Sep. Ravi to push the auth fix to staging by Thursday. Nisha will draft the release note once that's in. Backlog grooming moved to Friday.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "accuracy",
+          "ref": "validators.b7TwoOwnedItems"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "input": "Design review, 5 Sep. Long discussion about the empty-state illustration. Team split on whether it needs copy. Someone should test it with the onboarding cohort before we decide.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 5,
+          "metric": "hallucination",
+          "ref": "validators.b7SingleUnownedItem"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "input": "Retro, 8 Sep. Good sprint overall. The deploy freeze helped. Morale seems better than last month. Nothing blocking.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 5,
+          "metric": "hallucination",
+          "ref": "validators.isEmptyArray"
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "input": "Sync, 9 Sep. Ravi mentioned the migration script is still flaky. Priya asked whether we'd decided on the rollback window. No decisions taken.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 5,
+          "metric": "hallucination",
+          "ref": "validators.isEmptyArray"
+        }
+      ]
+    }
+  ]
+}

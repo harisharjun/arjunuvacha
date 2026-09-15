@@ -1,0 +1,132 @@
+{
+  "id": "pg-c1",
+  "title": "Faithful paraphrase",
+  "mode": "goal",
+  "difficulty": 3,
+  "tags": [],
+  "graderFamilies": [
+    "text-similarity",
+    "rule-based"
+  ],
+  "public": {
+    "goal": "Rewrite the sentence so it means the same thing but shares as little wording as possible with the original. Keep every factual claim intact. Output only the rewritten sentence.",
+    "startingPrompt": null,
+    "exampleInput": "Lumen's free plan supports up to three active projects and one collaborator per project.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2368,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  },
+  "defaultAssert": [
+    {
+      "type": "javascript",
+      "weight": 3,
+      "metric": "novelty",
+      "ref": "validators.c1NotACopy"
+    },
+    {
+      "type": "word-count",
+      "value": {
+        "min": 6,
+        "max": 45
+      },
+      "weight": 1,
+      "metric": "format"
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "input": "Lumen's free plan supports up to three active projects and one collaborator per project.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "similar",
+          "value": "Lumen's free plan supports up to three active projects and one collaborator per project.",
+          "threshold": 0.85,
+          "weight": 4,
+          "metric": "faithfulness"
+        },
+        {
+          "type": "not-icontains-any",
+          "value": [
+            "supports up to",
+            "collaborator per project"
+          ],
+          "weight": 2,
+          "metric": "novelty"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "input": "If a workspace exceeds its seat limit, new invitations are blocked until a seat is freed or added.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "similar",
+          "value": "If a workspace exceeds its seat limit, new invitations are blocked until a seat is freed or added.",
+          "threshold": 0.85,
+          "weight": 4,
+          "metric": "faithfulness"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "input": "Data exported from Lumen is retained on our servers for seven days, after which the download link expires.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "similar",
+          "value": "Data exported from Lumen is retained on our servers for seven days, after which the download link expires.",
+          "threshold": 0.85,
+          "weight": 4,
+          "metric": "faithfulness"
+        },
+        {
+          "type": "contains-any",
+          "value": [
+            "seven",
+            "7"
+          ],
+          "weight": 2,
+          "metric": "faithfulness"
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "input": "Annual plans are billed upfront and are not prorated if you downgrade mid-term.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "similar",
+          "value": "Annual plans are billed upfront and are not prorated if you downgrade mid-term.",
+          "threshold": 0.85,
+          "weight": 4,
+          "metric": "faithfulness"
+        },
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "faithfulness",
+          "ref": "validators.c1NegationHeld"
+        }
+      ]
+    }
+  ]
+}

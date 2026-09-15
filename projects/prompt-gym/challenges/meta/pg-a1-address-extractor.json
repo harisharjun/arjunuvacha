@@ -1,0 +1,54 @@
+{
+  "id": "pg-a1",
+  "title": "Strict JSON address extractor",
+  "mode": "goal",
+  "difficulty": 2,
+  "tags": [
+    "extraction",
+    "json",
+    "hallucination"
+  ],
+  "graderFamilies": [
+    "string-check",
+    "rule-based"
+  ],
+  "public": {
+    "goal": "Write a prompt that extracts a postal address from free text into strict JSON with exactly these keys: name, line1, city, pincode, state. If a field is missing from the input, leave it empty. If the input contains no address at all, return an empty object.",
+    "startingPrompt": null,
+    "exampleInput": "Ship to Priya Raman, 14 MG Road, Bengaluru 560001, Karnataka",
+    "constraintsShown": [
+      "Output must be valid JSON and nothing else",
+      "No prose, preamble or code fences",
+      "Values must come from the input — never guess a missing one"
+    ],
+    "gradedOn": [
+      "Valid JSON matching the required schema",
+      "Accuracy of the extracted values",
+      "Not inventing values that are absent from the input"
+    ]
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2200,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7,
+    "golfVariant": {
+      "id": "pg-g1",
+      "parTokens": 84,
+      "maxBonus": 20
+    }
+  },
+  "hints": {
+    "t3": "One hidden input contains no address at all. Your prompt invented one.",
+    "t4": "One hidden input is missing a field. Your prompt filled it in with a guess."
+  }
+}

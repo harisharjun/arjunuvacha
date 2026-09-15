@@ -42,7 +42,7 @@ export function gradeChallenge(
   const cases: CaseResult[] = challenge.tests.map((testCase) => {
     const output = outputs[testCase.id] ?? '';
     const assertions = [...(challenge.defaultAssert ?? []), ...(testCase.assert ?? [])].map(
-      (assertion) => evaluateAssertion(assertion, output, registry),
+      (assertion) => evaluateAssertion(assertion, output, registry, testCase.input),
     );
     const { score, passed } = aggregateCase(assertions, testCase.threshold);
     return { id: testCase.id, score, passed, assertions };

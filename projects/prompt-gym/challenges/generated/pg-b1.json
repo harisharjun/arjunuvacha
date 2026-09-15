@@ -1,0 +1,109 @@
+{
+  "id": "pg-b1",
+  "title": "Line items must sum to the total",
+  "mode": "goal",
+  "difficulty": 3,
+  "tags": [],
+  "graderFamilies": [
+    "rule-based",
+    "string-check"
+  ],
+  "public": {
+    "goal": "Extract a Lumen invoice into {\"line_items\":[{\"description\",\"amount\"}], \"stated_total\": n, \"computed_total\": n, \"total_matches\": true|false}. Copy stated_total exactly as printed on the invoice. Compute computed_total yourself from the line items. Amounts are numbers, not strings.",
+    "startingPrompt": null,
+    "exampleInput": "Lumen Pro (5 seats) — 12,500\nLumen Analytics add-on — 3,000\nOnboarding support — 2,000\nTotal: 17,500",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2624,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  },
+  "defaultAssert": [
+    {
+      "type": "is-json",
+      "value": {
+        "type": "object",
+        "required": [
+          "line_items",
+          "stated_total",
+          "computed_total",
+          "total_matches"
+        ]
+      },
+      "weight": 2,
+      "metric": "schema"
+    },
+    {
+      "type": "javascript",
+      "weight": 4,
+      "metric": "arithmetic",
+      "ref": "validators.b1Arithmetic"
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "input": "Lumen Pro (5 seats) — 12,500\nLumen Analytics add-on — 3,000\nOnboarding support — 2,000\nTotal: 17,500",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "accuracy",
+          "ref": "validators.b1CleanThreeLine"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "input": "Lumen Pro (10 seats) — 25,000\nAnnual prepay discount — −2,500\nGST @18% — 4,050\nTotal: 26,550",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "accuracy",
+          "ref": "validators.b1NegativeDiscountLine"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "input": "Lumen Starter (3 seats) — 4,500\nData export utility — 220\nTotal: 4,270",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 6,
+          "metric": "faithfulness",
+          "ref": "validators.b1MismatchReported"
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "input": "Lumen Enterprise — 60,000\nPremium support — 9,000\nCredit applied (ticket LMN-8812) — −9,000\nTotal: 60,000",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 5,
+          "metric": "accuracy",
+          "ref": "validators.b1CreditCancelsCharge"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$review": [
+    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
+    "scoring.passThreshold defaulted to 0.7",
+    "harness.maxOutputTokens defaulted to 192",
+    "limits.estimatedTokensPerRun is a rough estimate"
+  ],
+  "id": "pg-a3",
+  "title": "ISO 8601 date normaliser",
+  "mode": "goal",
+  "difficulty": 2,
+  "tags": [],
+  "graderFamilies": [
+    "string-check"
+  ],
+  "public": {
+    "goal": "Lumen's notification service receives dates in whatever format a customer typed. Write a prompt that converts the date in the message to YYYY-MM-DD and returns {\"date\": \"YYYY-MM-DD\"}. Ambiguous numeric dates use the Indian convention, day first. If no specific calendar date can be determined, return {\"date\": null}.",
+    "startingPrompt": null,
+    "exampleInput": "Your onboarding slot is confirmed for 14th Aug '25.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2368,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  }
+}

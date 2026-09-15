@@ -52,6 +52,7 @@ tests:
         Total: 17,500
     assert:
       - type: javascript
+        # ref: validators.b1CleanThreeLine
         value: |
           (output) => {
             const j = JSON.parse(output);
@@ -72,6 +73,7 @@ tests:
         Total: 26,550
     assert:
       - type: javascript
+        # ref: validators.b1NegativeDiscountLine
         value: |
           (output) => {
             const j = JSON.parse(output);
@@ -115,6 +117,7 @@ tests:
         Total: 60,000
     assert:
       - type: javascript
+        # ref: validators.b1CreditCancelsCharge
         value: |
           (output) => {
             const j = JSON.parse(output);

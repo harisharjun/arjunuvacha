@@ -1,0 +1,39 @@
+{
+  "$review": [
+    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
+    "scoring.passThreshold defaulted to 0.7",
+    "harness.maxOutputTokens defaulted to 192",
+    "limits.estimatedTokensPerRun is a rough estimate"
+  ],
+  "id": "pg-c1",
+  "title": "Faithful paraphrase",
+  "mode": "goal",
+  "difficulty": 3,
+  "tags": [],
+  "graderFamilies": [
+    "text-similarity",
+    "rule-based"
+  ],
+  "public": {
+    "goal": "Rewrite the sentence so it means the same thing but shares as little wording as possible with the original. Keep every factual claim intact. Output only the rewritten sentence.",
+    "startingPrompt": null,
+    "exampleInput": "Lumen's free plan supports up to three active projects and one collaborator per project.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2368,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  }
+}

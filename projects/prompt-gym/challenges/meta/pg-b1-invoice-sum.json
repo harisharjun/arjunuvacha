@@ -1,0 +1,39 @@
+{
+  "$review": [
+    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
+    "scoring.passThreshold defaulted to 0.7",
+    "harness.maxOutputTokens defaulted to 256",
+    "limits.estimatedTokensPerRun is a rough estimate"
+  ],
+  "id": "pg-b1",
+  "title": "Line items must sum to the total",
+  "mode": "goal",
+  "difficulty": 3,
+  "tags": [],
+  "graderFamilies": [
+    "rule-based",
+    "string-check"
+  ],
+  "public": {
+    "goal": "Extract a Lumen invoice into {\"line_items\":[{\"description\",\"amount\"}], \"stated_total\": n, \"computed_total\": n, \"total_matches\": true|false}. Copy stated_total exactly as printed on the invoice. Compute computed_total yourself from the line items. Amounts are numbers, not strings.",
+    "startingPrompt": null,
+    "exampleInput": "Lumen Pro (5 seats) — 12,500\nLumen Analytics add-on — 3,000\nOnboarding support — 2,000\nTotal: 17,500",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2624,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  }
+}

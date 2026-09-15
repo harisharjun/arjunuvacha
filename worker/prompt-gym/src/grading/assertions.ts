@@ -45,6 +45,7 @@ function javascriptScore(
   assertion: Assertion,
   output: string,
   registry: ValidatorRegistry,
+  input: string,
 ): number {
   if (typeof assertion.ref !== 'string' || assertion.ref.length === 0) {
     throw new Error(
@@ -55,7 +56,7 @@ function javascriptScore(
   if (typeof fn !== 'function') {
     throw new Error(`Validator "${assertion.ref}" is not in the registry`);
   }
-  return fn(output) === true ? 1 : 0;
+  return fn(output, { vars: { input }, args: assertion.args ?? [] }) === true ? 1 : 0;
 }
 
 function rawScore(
@@ -63,6 +64,7 @@ function rawScore(
   assertion: Assertion,
   output: string,
   registry: ValidatorRegistry,
+  input: string,
 ): number {
   // Leading and trailing whitespace is not a prompt defect, so anchored and exact
   // comparisons run against the trimmed output. Substring checks use it as-is.
@@ -79,6 +81,10 @@ function rawScore(
       return asStringArray(assertion.value).every((v) => output.includes(v)) ? 1 : 0;
     case 'contains-any':
       return asStringArray(assertion.value).some((v) => output.includes(v)) ? 1 : 0;
+    case 'icontains-any': {
+      const lower = output.toLowerCase();
+      return asStringArray(assertion.value).some((v) => lower.includes(v.toLowerCase())) ? 1 : 0;
+    }
     case 'starts-with':
       return text.startsWith(String(assertion.value)) ? 1 : 0;
     case 'regex':
@@ -88,7 +94,7 @@ function rawScore(
     case 'is-json':
       return isJsonScore(text, assertion.value);
     case 'javascript':
-      return javascriptScore(assertion, output, registry);
+      return javascriptScore(assertion, output, registry, input);
     case 'levenshtein':
       return levenshteinSimilarity(String(assertion.value), text);
     case 'rouge-n':
@@ -102,6 +108,8 @@ export function evaluateAssertion(
   assertion: Assertion,
   output: string,
   registry: ValidatorRegistry,
+  /** The test case's hidden input, for validators that compare against it. */
+  input = '',
 ): AssertionResult {
   const weight = assertion.weight ?? 1;
   const base = { type: assertion.type, metric: assertion.metric, weight };
@@ -111,7 +119,7 @@ export function evaluateAssertion(
 
   let score: number;
   try {
-    score = rawScore(type, assertion, output, registry);
+    score = rawScore(type, assertion, output, registry, input);
   } catch (err) {
     // An assertion that could not be evaluated scores 0 and says why. Negation is
     // deliberately not applied — a broken assertion must never invert into a pass.

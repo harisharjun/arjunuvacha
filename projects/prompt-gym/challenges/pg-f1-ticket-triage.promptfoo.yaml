@@ -64,6 +64,7 @@ tests:
       input: "Nobody in the workspace can load any board since about 09:40. Blank screen, spinner forever. Whole team is stopped."
     assert:
       - type: javascript
+        # ref: validators.f1OutageIsP1
         value: |
           (output) => {
             const j = JSON.parse(output);
@@ -79,6 +80,7 @@ tests:
       input: "Which plan includes the audit log? Considering upgrading next quarter."
     assert:
       - type: javascript
+        # ref: validators.f1PlanQuestionIsLowPriority
         # category may reasonably be billing or other; priority must be low
         value: |
           (output) => {

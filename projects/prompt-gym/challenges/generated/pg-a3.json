@@ -1,0 +1,111 @@
+{
+  "id": "pg-a3",
+  "title": "ISO 8601 date normaliser",
+  "mode": "goal",
+  "difficulty": 2,
+  "tags": [],
+  "graderFamilies": [
+    "string-check"
+  ],
+  "public": {
+    "goal": "Lumen's notification service receives dates in whatever format a customer typed. Write a prompt that converts the date in the message to YYYY-MM-DD and returns {\"date\": \"YYYY-MM-DD\"}. Ambiguous numeric dates use the Indian convention, day first. If no specific calendar date can be determined, return {\"date\": null}.",
+    "startingPrompt": null,
+    "exampleInput": "Your onboarding slot is confirmed for 14th Aug '25.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2368,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  },
+  "defaultAssert": [
+    {
+      "type": "is-json",
+      "value": {
+        "type": "object",
+        "required": [
+          "date"
+        ]
+      },
+      "weight": 2,
+      "metric": "format"
+    },
+    {
+      "type": "not-contains",
+      "value": "```",
+      "weight": 1,
+      "metric": "format"
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "input": "Your onboarding slot is confirmed for 14th Aug '25.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "accuracy",
+          "ref": "validators.dateEquals",
+          "args": [
+            "2025-08-14"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "input": "Delivery scheduled 03/04/25.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "accuracy",
+          "ref": "validators.dateEquals",
+          "args": [
+            "2025-04-03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "input": "Let's push it to next Monday.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 5,
+          "metric": "hallucination",
+          "ref": "validators.dateIsNull"
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "input": "Invoice dated 31/02/25.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 5,
+          "metric": "hallucination",
+          "ref": "validators.dateIsNull"
+        }
+      ]
+    }
+  ]
+}

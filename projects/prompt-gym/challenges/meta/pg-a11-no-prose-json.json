@@ -1,0 +1,39 @@
+{
+  "$review": [
+    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
+    "scoring.passThreshold defaulted to 0.7",
+    "harness.maxOutputTokens defaulted to 192",
+    "limits.estimatedTokensPerRun is a rough estimate",
+    "startingPrompt taken verbatim from docs/challenge-data.md §4 — confirm it matches what you want handed over"
+  ],
+  "id": "pg-a11",
+  "title": "No-prose JSON array",
+  "mode": "debug",
+  "difficulty": 2,
+  "tags": [],
+  "graderFamilies": [
+    "string-check"
+  ],
+  "public": {
+    "goal": "This prompt works — except it wraps its answer in conversational text and code fences, so the calling code cannot parse it. Fix it without changing what it extracts.",
+    "startingPrompt": "You are a helpful assistant. Please read the text below and extract all the Lumen product names you find. Return them as a JSON array so my code can parse it. Thanks!",
+    "exampleInput": "Please send across 2× Lumen Pro licences and 1× Lumen Analytics add-on before the 15th.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 3,
+    "estimatedTokensPerRun": 1776,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  }
+}

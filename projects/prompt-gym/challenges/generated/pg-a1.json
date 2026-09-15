@@ -1,0 +1,179 @@
+{
+  "id": "pg-a1",
+  "title": "Strict JSON address extractor",
+  "mode": "goal",
+  "difficulty": 2,
+  "tags": [
+    "extraction",
+    "json",
+    "hallucination"
+  ],
+  "graderFamilies": [
+    "string-check",
+    "rule-based"
+  ],
+  "public": {
+    "goal": "Write a prompt that extracts a postal address from free text into strict JSON with exactly these keys: name, line1, city, pincode, state. If a field is missing from the input, leave it empty. If the input contains no address at all, return an empty object.",
+    "startingPrompt": null,
+    "exampleInput": "Ship to Priya Raman, 14 MG Road, Bengaluru 560001, Karnataka",
+    "constraintsShown": [
+      "Output must be valid JSON and nothing else",
+      "No prose, preamble or code fences",
+      "Values must come from the input — never guess a missing one"
+    ],
+    "gradedOn": [
+      "Valid JSON matching the required schema",
+      "Accuracy of the extracted values",
+      "Not inventing values that are absent from the input"
+    ]
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2200,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7,
+    "golfVariant": {
+      "id": "pg-g1",
+      "parTokens": 84,
+      "maxBonus": 20
+    }
+  },
+  "defaultAssert": [
+    {
+      "type": "is-json",
+      "weight": 2,
+      "metric": "format"
+    },
+    {
+      "type": "not-contains",
+      "value": "Here is",
+      "weight": 1,
+      "metric": "format"
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "input": "Ship to Priya Raman, 14 MG Road, Bengaluru 560001, Karnataka",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "is-json",
+          "value": {
+            "type": "object",
+            "required": [
+              "name",
+              "line1",
+              "city",
+              "pincode",
+              "state"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "line1": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "pincode": {
+                "type": "string",
+                "pattern": "^[0-9]{6}$"
+              },
+              "state": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "weight": 3,
+          "metric": "schema"
+        },
+        {
+          "type": "contains",
+          "value": "560001",
+          "weight": 1,
+          "metric": "accuracy"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "input": "Hi! Thanks for the quick turnaround last week. Could you send the replacement unit over to Arun Kumar, Flat 3B Sunrise Apartments, Jubilee Hills, Hyderabad 500033, Telangana. Let me know the tracking number when you have it.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "is-json",
+          "value": {
+            "type": "object",
+            "required": [
+              "name",
+              "line1",
+              "city",
+              "pincode",
+              "state"
+            ]
+          },
+          "weight": 3,
+          "metric": "schema"
+        },
+        {
+          "type": "contains",
+          "value": "500033",
+          "weight": 1,
+          "metric": "accuracy"
+        },
+        {
+          "type": "javascript",
+          "weight": 2,
+          "metric": "accuracy",
+          "ref": "validators.noCommentaryInFields"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "input": "Thanks for the update, I'll get back to you next week.",
+      "reveal": "partial",
+      "hint": "One hidden input contains no address at all. Your prompt invented one.",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "hallucination",
+          "ref": "validators.isEmptyObjectOrArray"
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "input": "Courier it to Meera S, 22 Residency Road, Pune 411001",
+      "reveal": "partial",
+      "hint": "One hidden input is missing a field. Your prompt filled it in with a guess.",
+      "assert": [
+        {
+          "type": "is-json",
+          "weight": 1,
+          "metric": "schema"
+        },
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "hallucination",
+          "ref": "validators.stateMustBeEmpty"
+        }
+      ]
+    }
+  ]
+}

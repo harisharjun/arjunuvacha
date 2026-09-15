@@ -1,0 +1,38 @@
+{
+  "$review": [
+    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
+    "scoring.passThreshold defaulted to 0.7",
+    "harness.maxOutputTokens defaulted to 256",
+    "limits.estimatedTokensPerRun is a rough estimate"
+  ],
+  "id": "pg-b7",
+  "title": "Empty input, empty output",
+  "mode": "goal",
+  "difficulty": 3,
+  "tags": [],
+  "graderFamilies": [
+    "rule-based"
+  ],
+  "public": {
+    "goal": "Write a prompt that pulls action items out of Lumen meeting notes into [{\"owner\": \"...\", \"action\": \"...\"}]. If an action has no named owner, owner must be null. If there are no action items, return [].",
+    "startingPrompt": null,
+    "exampleInput": "Standup, 3 Sep. Ravi to push the auth fix to staging by Thursday. Nisha will draft the release note once that's in. Backlog grooming moved to Friday.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2624,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  }
+}

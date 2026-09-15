@@ -1,0 +1,12 @@
+{
+  "name": "prompt-gym",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "convert": "node build/convert.mjs",
+    "publish-web": "./scripts/publish-web.sh"
+  },
+  "devDependencies": {
+    "yaml": "^2.5.0"
+  }
+}

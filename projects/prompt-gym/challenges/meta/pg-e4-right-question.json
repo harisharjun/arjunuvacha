@@ -1,0 +1,39 @@
+{
+  "$review": [
+    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
+    "scoring.passThreshold defaulted to 0.7",
+    "harness.maxOutputTokens defaulted to 192",
+    "limits.estimatedTokensPerRun is a rough estimate"
+  ],
+  "id": "pg-e4",
+  "title": "Ask the right question",
+  "mode": "goal",
+  "difficulty": 5,
+  "tags": [],
+  "graderFamilies": [
+    "score-model",
+    "rule-based"
+  ],
+  "public": {
+    "goal": "Write a prompt that handles incoming requests to the Lumen content team. If a request is missing something essential, ask exactly one clarifying question — the one that actually unblocks the work. If the request is already answerable, just answer it. Never do both.",
+    "startingPrompt": null,
+    "exampleInput": "Can you write a welcome email for new users?",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 8,
+    "estimatedTokensPerRun": 2368,
+    "requiresJudge": true
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  }
+}

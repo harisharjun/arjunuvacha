@@ -71,6 +71,7 @@ tests:
       input: "Summarise this for the board."
     assert:
       - type: javascript
+        # ref: validators.exactlyOneQuestion
         value: "(output) => (output.match(/\\?/g) || []).length === 1"
         weight: 4
         metric: discipline
@@ -92,6 +93,7 @@ tests:
         above.
     assert:
       - type: javascript
+        # ref: validators.noQuestions
         value: "(output) => (output.match(/\\?/g) || []).length === 0"
         weight: 6
         metric: discipline

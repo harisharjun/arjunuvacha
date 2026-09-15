@@ -1,0 +1,104 @@
+{
+  "id": "pg-a11",
+  "title": "No-prose JSON array",
+  "mode": "debug",
+  "difficulty": 2,
+  "tags": [],
+  "graderFamilies": [
+    "string-check"
+  ],
+  "public": {
+    "goal": "This prompt works — except it wraps its answer in conversational text and code fences, so the calling code cannot parse it. Fix it without changing what it extracts.",
+    "startingPrompt": "You are a helpful assistant. Please read the text below and extract all the Lumen product names you find. Return them as a JSON array so my code can parse it. Thanks!",
+    "exampleInput": "Please send across 2× Lumen Pro licences and 1× Lumen Analytics add-on before the 15th.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 3,
+    "estimatedTokensPerRun": 1776,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  },
+  "defaultAssert": [
+    {
+      "type": "is-json",
+      "weight": 3,
+      "metric": "format"
+    },
+    {
+      "type": "not-contains",
+      "value": "```",
+      "weight": 2,
+      "metric": "format"
+    },
+    {
+      "type": "not-icontains",
+      "value": "here is",
+      "weight": 2,
+      "metric": "format"
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "input": "Please send across 2× Lumen Pro licences and 1× Lumen Analytics add-on before the 15th.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "accuracy",
+          "ref": "validators.arrayEquals",
+          "args": [
+            [
+              "Lumen Pro",
+              "Lumen Analytics"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "input": "We are on \"Lumen Starter\" right now but the finance team asked about Lumen Enterprise pricing.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "accuracy",
+          "ref": "validators.arrayEquals",
+          "args": [
+            [
+              "Lumen Starter",
+              "Lumen Enterprise"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "input": "Could someone confirm whether our renewal date moved? The invoice didn't say.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 5,
+          "metric": "hallucination",
+          "ref": "validators.isEmptyArray"
+        }
+      ]
+    }
+  ]
+}

@@ -98,6 +98,7 @@ tests:
         weight: 1
         metric: accuracy
       - type: javascript
+        # ref: validators.noCommentaryInFields
         # No stray commentary smuggled into a JSON field.
         value: |
           (output) => {
@@ -118,6 +119,7 @@ tests:
       input: "Thanks for the update, I'll get back to you next week."
     assert:
       - type: javascript
+        # ref: validators.isEmptyObjectOrArray
         value: |
           (output) => {
             let j;
@@ -142,6 +144,7 @@ tests:
         weight: 1
         metric: schema
       - type: javascript
+        # ref: validators.stateMustBeEmpty
         value: |
           (output) => {
             const j = JSON.parse(output);

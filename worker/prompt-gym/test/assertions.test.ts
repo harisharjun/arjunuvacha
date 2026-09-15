@@ -63,6 +63,18 @@ describe('contains family', () => {
     expect(run('contains-any', ['x', 'y'], 'neither').score).toBe(0);
   });
 
+  it('icontains-any ignores case', () => {
+    expect(run('icontains-any', ['SORRY', 'AFRAID'], 'I am afraid not').score).toBe(1);
+    expect(run('icontains-any', ['SORRY', 'AFRAID'], 'certainly').score).toBe(0);
+  });
+
+  // Five assertions across the challenge set are `not-icontains-any`; without this
+  // type they would have become errored assertions in production.
+  it('not-icontains-any inverts', () => {
+    expect(run('not-icontains-any', ['Sure!', 'Here is'], 'plain output').score).toBe(1);
+    expect(run('not-icontains-any', ['Sure!', 'Here is'], 'SURE! here goes').score).toBe(0);
+  });
+
   it('starts-with checks the beginning', () => {
     expect(run('starts-with', '{', '{"a":1}').score).toBe(1);
     expect(run('starts-with', '{', 'Here is {"a":1}').score).toBe(0);

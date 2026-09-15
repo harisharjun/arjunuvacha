@@ -19,6 +19,8 @@ export interface Assertion {
   value?: unknown;
   /** For `javascript` assertions: the key of a function in the validator registry. */
   ref?: string;
+  /** Arguments for a parameterised ref, lifted out of `name(...)` by the converter. */
+  args?: unknown[];
   /** Relative importance within its test case. Defaults to 1. */
   weight?: number;
   metric?: string;
@@ -103,6 +105,18 @@ export interface ChallengeResult {
   byMetric: MetricBreakdown[];
 }
 
+/** Second argument handed to a validator. Deliberately shaped like promptfoo's own
+ *  context (`context.vars.input`) so a validator body is portable verbatim between
+ *  the local promptfoo run and the Worker — the two copies testing the same thing
+ *  is the whole point of authoring in YAML and shipping JSON. */
+export interface ValidatorContext {
+  vars: { input: string } & Record<string, unknown>;
+  /** Arguments from a parameterised ref, e.g. `validators.dateEquals('2025-04-03')`. */
+  args: unknown[];
+}
+
+export type Validator = (output: string, context: ValidatorContext) => boolean;
+
 /** Validator functions are shipped in the bundle and selected by name. Challenge
  *  data can only ever *choose* from this map — it can never supply a function body. */
-export type ValidatorRegistry = Record<string, (output: string) => boolean>;
+export type ValidatorRegistry = Record<string, Validator>;

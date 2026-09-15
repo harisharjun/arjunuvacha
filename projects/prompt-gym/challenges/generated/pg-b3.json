@@ -1,0 +1,108 @@
+{
+  "id": "pg-b3",
+  "title": "Redaction with zero leakage",
+  "mode": "goal",
+  "difficulty": 4,
+  "tags": [],
+  "graderFamilies": [
+    "rule-based"
+  ],
+  "public": {
+    "goal": "Write a prompt that redacts personal contact details from a Lumen support transcript. Replace phone numbers with [PHONE], email addresses with [EMAIL], and government ID numbers with [ID]. Leave everything else exactly as it was — including amounts, ticket numbers, dates and postcodes.",
+    "startingPrompt": null,
+    "exampleInput": "Customer Arun M (arun.m@example.com, 98765 43210) reported the sync failure on ticket LMN-3391.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2624,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  },
+  "defaultAssert": [],
+  "tests": [
+    {
+      "id": "t1",
+      "input": "Customer Arun M (arun.m@example.com, 98765 43210) reported the sync failure on ticket LMN-3391.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "leakage",
+          "ref": "validators.b3NoLeak"
+        },
+        {
+          "type": "contains",
+          "value": "LMN-3391",
+          "weight": 2,
+          "metric": "preservation"
+        },
+        {
+          "type": "contains-all",
+          "value": [
+            "[PHONE]",
+            "[EMAIL]"
+          ],
+          "weight": 2,
+          "metric": "format"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "input": "Reachable on +91 98 7654 3210 or at a.menon+lumen@example.co.in — he's also tried arun dot m at example dot com.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 5,
+          "metric": "leakage",
+          "ref": "validators.b3NoLeakObfuscated"
+        },
+        {
+          "type": "contains",
+          "value": "[EMAIL]",
+          "weight": 2,
+          "metric": "format"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "input": "Refund of 4,500 processed to the account ending 3344. Office at 14 MG Road, Bengaluru 560001. Invoice LMN-4471 dated 12/09/25.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 6,
+          "metric": "over-redaction",
+          "ref": "validators.b3NoOverRedaction"
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "input": "Best number is 98765-\n43210 (he's on leave till Monday). PAN ABCDE1234F on file.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 6,
+          "metric": "leakage",
+          "ref": "validators.b3SplitAndId"
+        }
+      ]
+    }
+  ]
+}

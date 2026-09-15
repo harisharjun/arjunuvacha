@@ -1,0 +1,135 @@
+{
+  "id": "pg-f1",
+  "title": "Support ticket triage (composite showcase)",
+  "mode": "goal",
+  "difficulty": 4,
+  "tags": [],
+  "graderFamilies": [
+    "string-check",
+    "label-model",
+    "score-model"
+  ],
+  "public": {
+    "goal": "Turn a Lumen ticket into {\"category\": one of billing|bug|feature_request|account_access|other, \"priority\": P1|P2|P3|P4, \"summary\": string}. Summary must be 15 words or fewer. P1 means production is broken or data is at risk; P4 means cosmetic or nice-to-have. Customer tone is not severity.",
+    "startingPrompt": null,
+    "exampleInput": "Nobody in the workspace can load any board since about 09:40. Blank screen, spinner forever. Whole team is stopped.",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 8,
+    "estimatedTokensPerRun": 2368,
+    "requiresJudge": true
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  },
+  "defaultAssert": [
+    {
+      "type": "is-json",
+      "value": {
+        "type": "object",
+        "required": [
+          "category",
+          "priority",
+          "summary"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "billing",
+              "bug",
+              "feature_request",
+              "account_access",
+              "other"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "pattern": "^P[1-4]$"
+          },
+          "summary": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "weight": 3,
+      "metric": "schema"
+    },
+    {
+      "type": "javascript",
+      "weight": 2,
+      "metric": "format",
+      "ref": "validators.f1SummaryLength"
+    },
+    {
+      "type": "llm-rubric",
+      "value": "The \"summary\" field states what the customer's actual problem is, in neutral language. It is not a restatement of the customer's emotional tone, and not a generic label like \"customer issue\".\n",
+      "weight": 2,
+      "metric": "summary-quality"
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "input": "Nobody in the workspace can load any board since about 09:40. Blank screen, spinner forever. Whole team is stopped.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 5,
+          "metric": "triage",
+          "ref": "validators.f1OutageIsP1"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "input": "Which plan includes the audit log? Considering upgrading next quarter.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "triage",
+          "ref": "validators.f1PlanQuestionIsLowPriority"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "input": "This is COMPLETELY unacceptable. Third time I've asked. The board background colour is still wrong on dark mode and it looks terrible. Fix it NOW.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 6,
+          "metric": "triage",
+          "ref": "validators.f1ToneNotSeverity"
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "input": "Small thing — when I export a project CSV I'm also getting rows from a workspace I was removed from last month.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "javascript",
+          "weight": 7,
+          "metric": "triage",
+          "ref": "validators.f1UnderstatedSeverity"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "id": "pg-c5",
+  "title": "The near-miss trap",
+  "mode": "goal",
+  "difficulty": 4,
+  "tags": [],
+  "graderFamilies": [
+    "text-similarity",
+    "rule-based"
+  ],
+  "public": {
+    "goal": "Answer the customer's question using only the refund policy below. Be direct: state the outcome first, then the reason, in under 40 words.",
+    "startingPrompt": null,
+    "exampleInput": "I bought Lumen Pro monthly 12 days ago and it's not for me. Can I get a refund?",
+    "constraintsShown": [],
+    "gradedOn": []
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
+  },
+  "limits": {
+    "maxPromptChars": 2000,
+    "estimatedCallsPerRun": 4,
+    "estimatedTokensPerRun": 2368,
+    "requiresJudge": false
+  },
+  "scoring": {
+    "maxScore": 100,
+    "passThreshold": 0.7
+  },
+  "defaultAssert": [
+    {
+      "type": "word-count",
+      "value": {
+        "max": 40
+      },
+      "weight": 2,
+      "metric": "format"
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "input": "I bought Lumen Pro monthly 12 days ago and it's not for me. Can I get a refund?",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "similar",
+          "value": "Yes — monthly plans are refundable within 30 days, and your purchase was 12 days ago.",
+          "threshold": 0.7,
+          "weight": 2,
+          "metric": "relevance"
+        },
+        {
+          "type": "javascript",
+          "weight": 6,
+          "metric": "correctness",
+          "ref": "validators.c5Affirmative30"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "input": "I'm on the annual plan, bought 20 days ago. Refund please?",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "similar",
+          "value": "No — annual plans are refundable only within 14 days, and your purchase was 20 days ago.",
+          "threshold": 0.7,
+          "weight": 2,
+          "metric": "relevance"
+        },
+        {
+          "type": "javascript",
+          "weight": 8,
+          "metric": "correctness",
+          "ref": "validators.c5Negative14"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "input": "Bought the analytics add-on last week and activated it. Can I return it?",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "similar",
+          "value": "No — add-ons are not refundable once activated.",
+          "threshold": 0.7,
+          "weight": 2,
+          "metric": "relevance"
+        },
+        {
+          "type": "javascript",
+          "weight": 7,
+          "metric": "correctness",
+          "ref": "validators.c5AddOnRefused"
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "input": "Annual plan, bought 9 days ago — refund?",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "similar",
+          "value": "Yes — annual plans are refundable within 14 days, and your purchase was 9 days ago.",
+          "threshold": 0.7,
+          "weight": 2,
+          "metric": "relevance"
+        },
+        {
+          "type": "javascript",
+          "weight": 7,
+          "metric": "correctness",
+          "ref": "validators.c5Affirmative14"
+        }
+      ]
+    }
+  ]
+}
