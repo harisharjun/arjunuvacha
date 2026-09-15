@@ -6,7 +6,8 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "try": "esbuild scripts/try-challenge.ts --bundle --platform=node --format=esm --outfile=.tmp/try.mjs --log-level=warning && node .tmp/try.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260702.1",

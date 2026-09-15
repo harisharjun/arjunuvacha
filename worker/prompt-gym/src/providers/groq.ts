@@ -1,0 +1,229 @@
+import {
+  InvalidRequestError,
+  JudgeError,
+  RateLimitedError,
+  UpstreamError,
+} from './errors';
+
+const MAX_PROMPT_CHARS = 2000;
+const TIMEOUT_MS = 20_000;
+/** A provider can ask us to wait a very long time; we would rather fail fast than
+ *  hold a request open for minutes. */
+const MAX_RETRY_WAIT_MS = 10_000;
+const DEFAULT_TEMPLATE = '{{userPrompt}}\n\n---\nINPUT:\n{{input}}';
+
+export interface GatewayConfig {
+  account?: string;
+  gateway?: string;
+  token?: string;
+}
+
+export interface GroqCallOptions {
+  apiKey: string;
+  model: string;
+  maxOutputTokens?: number;
+  gateway?: GatewayConfig;
+  /** Injected in tests. Unit tests must never reach the real API. */
+  fetchImpl?: typeof fetch;
+  /** Injected in tests so retry logic does not actually sleep. */
+  sleepImpl?: (ms: number) => Promise<void>;
+}
+
+/** Routes through the Cloudflare AI Gateway when configured — same gateway as the
+ *  other workers, which is what gives one dashboard for every Groq call. */
+export function groqBaseUrl(gateway?: GatewayConfig): string {
+  if (gateway?.account && gateway?.gateway) {
+    return `https://gateway.ai.cloudflare.com/v1/${gateway.account}/${gateway.gateway}/groq`;
+  }
+  return 'https://api.groq.com/openai/v1';
+}
+
+function parseRetryAfter(header: string | null): number | undefined {
+  if (!header) return undefined;
+  const seconds = Number(header);
+  if (Number.isFinite(seconds) && seconds >= 0) return seconds;
+  const date = Date.parse(header);
+  if (!Number.isNaN(date)) return Math.max(0, (date - Date.now()) / 1000);
+  return undefined;
+}
+
+const defaultSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+interface ChatResult {
+  content: string;
+  promptTokens: number;
+  completionTokens: number;
+}
+
+/** One chat-completions call, with the timeout and the single 429 retry.
+ *
+ *  Deliberately never reads the response body into an error message: some provider
+ *  error shapes include the submitted request, and the Authorization header with
+ *  it. Status codes only. */
+async function chat(
+  messages: { role: string; content: string }[],
+  options: GroqCallOptions,
+  attempt = 0,
+): Promise<ChatResult> {
+  const doFetch = options.fetchImpl ?? fetch;
+  const sleep = options.sleepImpl ?? defaultSleep;
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${options.apiKey}`,
+  };
+  if (options.gateway?.token) {
+    headers['cf-aig-authorization'] = `Bearer ${options.gateway.token}`;
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  let response: Response;
+  try {
+    response = await doFetch(`${groqBaseUrl(options.gateway)}/chat/completions`, {
+      method: 'POST',
+      headers,
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: options.model,
+        messages,
+        temperature: 0,
+        max_tokens: options.maxOutputTokens ?? 192,
+      }),
+    });
+  } catch (err) {
+    // An abort is our own timeout firing, not a provider error, but both are
+    // infrastructure rather than the user's prompt.
+    const aborted = err instanceof Error && err.name === 'AbortError';
+    throw new UpstreamError(aborted ? `Groq request timed out after ${TIMEOUT_MS}ms` : 'Groq request failed');
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (response.status === 429) {
+    const retryAfter = parseRetryAfter(response.headers.get('retry-after'));
+    if (attempt === 0) {
+      await sleep(Math.min((retryAfter ?? 1) * 1000, MAX_RETRY_WAIT_MS));
+      return chat(messages, options, 1);
+    }
+    throw new RateLimitedError('Groq rate limit reached', retryAfter);
+  }
+
+  if (response.status >= 500) {
+    throw new UpstreamError(`Groq returned ${response.status}`, response.status);
+  }
+
+  if (!response.ok) {
+    throw new UpstreamError(`Groq rejected the request with ${response.status}`, response.status);
+  }
+
+  let body: {
+    choices?: { message?: { content?: string } }[];
+    usage?: { prompt_tokens?: number; completion_tokens?: number };
+  };
+  try {
+    body = (await response.json()) as typeof body;
+  } catch {
+    throw new UpstreamError('Groq returned a response that was not JSON');
+  }
+
+  const content = body.choices?.[0]?.message?.content;
+  if (typeof content !== 'string') {
+    throw new UpstreamError('Groq returned no message content');
+  }
+
+  return {
+    content,
+    promptTokens: body.usage?.prompt_tokens ?? 0,
+    completionTokens: body.usage?.completion_tokens ?? 0,
+  };
+}
+
+export interface ExecuteOptions extends GroqCallOptions {
+  /** The player's submitted prompt. */
+  prompt: string;
+  /** The challenge's hidden test input. */
+  input: string;
+  /** The challenge harness; identical across challenges so players learn one shape. */
+  template?: string;
+}
+
+export async function execute(options: ExecuteOptions): Promise<ChatResult> {
+  // Checked before any network call: a prompt over the cap costs nothing to reject
+  // and must never consume budget. Enforced here as well as in the editor, because
+  // the editor is not a security boundary.
+  if (options.prompt.length > MAX_PROMPT_CHARS) {
+    throw new InvalidRequestError(
+      `Prompt is ${options.prompt.length} characters; the limit is ${MAX_PROMPT_CHARS}`,
+    );
+  }
+
+  const content = (options.template ?? DEFAULT_TEMPLATE)
+    .replace('{{userPrompt}}', options.prompt)
+    .replace('{{input}}', options.input);
+
+  return chat([{ role: 'user', content }], options);
+}
+
+export type JudgeVerdict =
+  | { pass: boolean; reason: string }
+  | { score: number; reason: string };
+
+const JUDGE_SYSTEM =
+  'You are grading one model output against a rubric. Reply with JSON only, no prose and no code fences.';
+
+function parseVerdict(raw: string): JudgeVerdict | null {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw.trim());
+  } catch {
+    return null;
+  }
+  if (!parsed || typeof parsed !== 'object') return null;
+
+  const v = parsed as Record<string, unknown>;
+  const reason = typeof v.reason === 'string' ? v.reason : '';
+  if (typeof v.pass === 'boolean') return { pass: v.pass, reason };
+  if (typeof v.score === 'number' && Number.isFinite(v.score)) return { score: v.score, reason };
+  return null;
+}
+
+export interface JudgeOptions extends GroqCallOptions {
+  output: string;
+  rubric: string;
+  /** Ask for a 0–1 score instead of a pass/fail verdict. */
+  wantScore?: boolean;
+}
+
+/** The pinned judge. Which model this is, is the house's choice and not the
+ *  player's — if everyone graded with a different judge, no two scores would be
+ *  comparable and the leaderboard would mean nothing. */
+export async function judge(options: JudgeOptions): Promise<JudgeVerdict> {
+  const shape = options.wantScore
+    ? '{"score": <number between 0 and 1>, "reason": "<one short sentence>"}'
+    : '{"pass": <true|false>, "reason": "<one short sentence>"}';
+
+  const ask = (extra: string) => [
+    { role: 'system', content: JUDGE_SYSTEM + extra },
+    {
+      role: 'user',
+      content: `RUBRIC:\n${options.rubric}\n\nOUTPUT TO GRADE:\n${options.output}\n\nReply with exactly this JSON shape:\n${shape}`,
+    },
+  ];
+
+  const first = await chat(ask(''), options);
+  const verdict = parseVerdict(first.content);
+  if (verdict) return verdict;
+
+  // One retry with a blunter instruction before giving up. A judge that cannot be
+  // parsed is an errored assertion, never a failing one.
+  const second = await chat(
+    ask(' Your previous reply could not be parsed. Output the raw JSON object and nothing else.'),
+    options,
+  );
+  const retried = parseVerdict(second.content);
+  if (retried) return retried;
+
+  throw new JudgeError('Judge did not return parseable JSON after a retry');
+}
