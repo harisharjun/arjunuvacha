@@ -58,13 +58,11 @@ arjunuvacha/
 │       │   ├── try-challenge.mjs     ← grade one challenge against real Groq
 │       │   └── publish-web.sh        ← copies web build into ../../static/prompt-gym/
 │       │
-│       ├── web/                      ← the SPA source
-│       │   ├── index.html
-│       │   ├── app.js
-│       │   ├── styles.css
-│       │   └── dist/                 ← build output (gitignored)
-│       │
-│       └── test/                     ← vitest for the grading engine
+│       └── web/                      ← the SPA source
+│           ├── index.html
+│           ├── app.js
+│           ├── styles.css
+│           └── dist/                 ← build output (gitignored)
 │
 ├── worker/
 │   ├── arjun-rag/                    ← existing
@@ -72,7 +70,9 @@ arjunuvacha/
 │   └── prompt-gym/                   ← NEW: the API + grading engine
 │       ├── wrangler.toml
 │       ├── package.json
+│       ├── tsconfig.json
 │       ├── migrations/               ← D1 schema
+│       ├── test/                     ← vitest, alongside the code it tests
 │       └── src/
 │           ├── index.ts              ← routes
 │           ├── challenges.ts         ← imports ../../projects/prompt-gym/challenges/generated/*.json
@@ -104,6 +104,10 @@ arjunuvacha/
 ├── content/page/ai-lab.md            ← add a PromptGym entry to `projects:`
 └── firebase.json                     ← needs one rewrite added, see §4
 ```
+
+**Why the tests sit in `worker/prompt-gym/test/`** (corrected 15 Sep 2026, after M1 — an earlier draft of this tree put them under `projects/prompt-gym/test/`): the grading engine they exercise lives in `worker/prompt-gym/src/grading/`, and tests belong in the same package as their subject. Splitting them would mean two `package.json` files, two `tsconfig.json` files, and cross-package TypeScript resolution for the one piece of code that most needs tests to be frictionless — every unit of friction there buys fewer tests of the thing that decides every leaderboard score. §5 below already says the Worker is what gets a test suite, so this also makes the document self-consistent.
+
+`projects/prompt-gym/` keeps its own tests if and when the SPA or the build scripts need them; they just are not where the engine's tests go.
 
 **Why the Worker sits in `worker/` rather than inside `projects/prompt-gym/`:** it matches where your other two Workers already live, and it keeps the split honest — `worker/` is "things deployed by wrangler", `projects/` is "things built into static files". The one cost is that `worker/prompt-gym/src/challenges.ts` imports across directories into `projects/prompt-gym/challenges/generated/`. That is a normal relative import and wrangler's bundler handles it fine. If it ever feels awkward, add a `paths` alias in `tsconfig.json`.
 

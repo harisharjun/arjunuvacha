@@ -42,3 +42,27 @@ export function meanCaseScore(caseScores: number[]): number {
   if (caseScores.length === 0) return 0;
   return caseScores.reduce((sum, s) => sum + s, 0) / caseScores.length;
 }
+
+/** Golf mode's efficiency bonus: `maxBonus × (1 − promptTokens / parTokens)`.
+ *
+ *  Correctness first, brevity second — never the reverse. A run that has not
+ *  cleared the challenge's pass threshold earns nothing at all, however short the
+ *  prompt, so the bonus can never rescue a prompt that does not work. Par earns
+ *  zero: it is the bar to beat, not a reward. */
+export function golfBonus(opts: {
+  meanScore: number;
+  passThreshold: number;
+  promptTokens: number;
+  parTokens: number;
+  maxBonus: number;
+}): number {
+  const { meanScore, passThreshold, promptTokens, parTokens, maxBonus } = opts;
+
+  if (meanScore < passThreshold) return 0;
+  // A challenge with no par cannot express brevity; pay nothing rather than divide
+  // by zero and hand out an infinite bonus.
+  if (!(parTokens > 0)) return 0;
+
+  const saved = Math.max(0, 1 - Math.max(0, promptTokens) / parTokens);
+  return Math.round(maxBonus * saved);
+}

@@ -6,7 +6,7 @@ import type {
   ValidatorRegistry,
 } from './types';
 import { evaluateAssertion } from './assertions';
-import { aggregateCase, challengeScore, meanCaseScore } from './score';
+import { aggregateCase, challengeScore, golfBonus, meanCaseScore } from './score';
 
 function breakdownByMetric(cases: CaseResult[]): MetricBreakdown[] {
   const totals = new Map<string, { weighted: number; weight: number }>();
@@ -37,6 +37,7 @@ export function gradeChallenge(
   challenge: Challenge,
   outputs: Record<string, string>,
   registry: ValidatorRegistry,
+  options: { promptTokens?: number } = {},
 ): ChallengeResult {
   const cases: CaseResult[] = challenge.tests.map((testCase) => {
     const output = outputs[testCase.id] ?? '';
@@ -48,10 +49,27 @@ export function gradeChallenge(
   });
 
   const caseScores = cases.map((c) => c.score);
+  const mean = meanCaseScore(caseScores);
+  const baseScore = challengeScore(caseScores);
+  const passed = cases.length > 0 && mean >= challenge.scoring.passThreshold;
+
+  const { parTokens, maxBonus } = challenge.scoring;
+  const efficiencyBonus =
+    challenge.mode === 'golf' && options.promptTokens !== undefined && parTokens !== undefined
+      ? golfBonus({
+          meanScore: mean,
+          passThreshold: challenge.scoring.passThreshold,
+          promptTokens: options.promptTokens,
+          parTokens,
+          maxBonus: maxBonus ?? 20,
+        })
+      : 0;
 
   return {
-    score: challengeScore(caseScores),
-    passed: cases.length > 0 && meanCaseScore(caseScores) >= challenge.scoring.passThreshold,
+    score: Math.min(challenge.scoring.maxScore, baseScore + efficiencyBonus),
+    baseScore,
+    efficiencyBonus,
+    passed,
     cases,
     byMetric: breakdownByMetric(cases),
   };

@@ -53,6 +53,11 @@ export interface Challenge {
     maxScore: number;
     /** Fraction of 1, not of 100 — compared against the mean case score. */
     passThreshold: number;
+    /** On a golf challenge: the reference prompt's token count, and the most the
+     *  efficiency bonus can add. Absent on non-golf challenges. */
+    parTokens?: number;
+    maxBonus?: number;
+    /** On a parent challenge: a pointer to the golf variant derived from it. */
     golfVariant?: { id: string; parTokens: number; maxBonus: number } | null;
   };
   /** Assertions applied to every test case, before the case's own. */
@@ -87,8 +92,12 @@ export interface MetricBreakdown {
 }
 
 export interface ChallengeResult {
-  /** 0–100, rounded. */
+  /** 0–100, rounded. On a golf challenge this includes the efficiency bonus. */
   score: number;
+  /** Correctness alone, before any efficiency bonus. Equal to `score` off golf. */
+  baseScore: number;
+  /** 0 unless this is a golf challenge whose correctness cleared the threshold. */
+  efficiencyBonus: number;
   passed: boolean;
   cases: CaseResult[];
   byMetric: MetricBreakdown[];
