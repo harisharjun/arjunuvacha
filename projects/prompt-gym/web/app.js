@@ -208,6 +208,7 @@ async function run() {
     if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
     $('run-status').textContent = '';
     renderScorecard(data);
+    if (data.newBest) noteScored(data);
   } catch (err) {
     $('run-status').className = 'notice error-box';
     $('run-status').textContent = `Run failed — ${err.message}`;
@@ -216,6 +217,101 @@ async function run() {
     updateCharCount();
   }
 }
+
+// -------------------------------------------------------------- leaderboard
+
+function playerName(row, isYou) {
+  if (row.displayName) return row.displayName + (isYou ? ' (you)' : '');
+  if (isYou) return 'You';
+  // Anonymous players, and anyone whose profile we never saw, get a stable
+  // handle from their uid rather than a blank cell.
+  return `player ${row.uid.slice(0, 6)}`;
+}
+
+function renderProgress(completed, total) {
+  const strip = $('progress-strip');
+  if (!total) return;
+  strip.hidden = false;
+  strip.replaceChildren();
+
+  const line = el('div');
+  line.appendChild(el('span', 'progress-count', `${completed.length} of ${total}`));
+  line.appendChild(el('span', 'muted', ' challenges completed'));
+  strip.appendChild(line);
+
+  const pips = el('div', 'pips');
+  for (let i = 0; i < total; i++) {
+    pips.appendChild(el('div', `pip${i < completed.length ? ' done' : ''}`));
+  }
+  strip.appendChild(pips);
+}
+
+async function loadLeaderboard() {
+  const status = $('board-status');
+  status.hidden = false;
+  status.className = 'muted';
+  status.textContent = 'Loading…';
+  $('board').hidden = true;
+  $('board-you').replaceChildren();
+
+  try {
+    const token = await getIdToken();
+    const res = await fetch(`${API}/api/leaderboard?limit=50`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    renderProgress(data.completed ?? [], data.totalChallenges ?? 0);
+
+    const body = $('board-body');
+    body.replaceChildren();
+
+    if (data.leaderboard.length === 0) {
+      status.textContent = 'Nobody has completed a challenge yet. Be first.';
+      return;
+    }
+
+    const youUid = data.you?.uid;
+    for (const row of data.leaderboard) {
+      const tr = document.createElement('tr');
+      if (row.uid === youUid) tr.className = 'you';
+      tr.appendChild(el('td', 'num', String(row.rank)));
+      tr.appendChild(el('td', null, playerName(row, row.uid === youUid)));
+      tr.appendChild(el('td', 'num', String(row.completed)));
+      tr.appendChild(el('td', 'num', String(row.totalScore)));
+      body.appendChild(tr);
+    }
+
+    status.hidden = true;
+    $('board').hidden = false;
+
+    // Someone outside the top 50 still gets to see where they stand.
+    const inTable = data.leaderboard.some((r) => r.uid === youUid);
+    if (data.you && !inTable) {
+      $('board-you').appendChild(
+        el('p', 'muted',
+          `You are ranked ${data.you.rank} — ${data.you.completed} completed, ${data.you.totalScore} total.`),
+      );
+    }
+  } catch (err) {
+    status.className = 'notice error-box';
+    status.textContent = `Could not load the leaderboard — ${err.message}`;
+  }
+}
+
+function showTab(which) {
+  const board = which === 'leaderboard';
+  $('tab-challenges').classList.toggle('active', !board);
+  $('tab-leaderboard').classList.toggle('active', board);
+  $('list-view').hidden = board;
+  $('play-view').hidden = true;
+  $('board-view').hidden = !board;
+  if (board) loadLeaderboard();
+}
+
+$('tab-challenges').addEventListener('click', () => showTab('challenges'));
+$('tab-leaderboard').addEventListener('click', () => showTab('leaderboard'));
 
 // -------------------------------------------------------------------- wiring
 
@@ -226,6 +322,11 @@ $('back').addEventListener('click', () => {
   $('list-view').hidden = false;
   current = null;
 });
+
+// A newly banked score changes the board, so refresh it next time it is opened.
+function noteScored(result) {
+  if (result?.newBest) loadLeaderboard();
+}
 
 onUserChanged((user) => {
   const label = $('account-label');

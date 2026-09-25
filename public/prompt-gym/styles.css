@@ -142,3 +142,29 @@ select {
 }
 .secondary:hover { border-color: var(--accent); }
 .secondary:disabled { opacity: .6; cursor: progress; }
+
+/* Tabs */
+#tabs { display: flex; gap: .25rem; max-width: 46rem; margin: 0 auto; padding: 1rem 1.5rem 0; }
+.tab {
+  font: inherit; cursor: pointer; background: none; color: var(--muted);
+  border: 0; border-bottom: 2px solid transparent; padding: .4rem .75rem;
+}
+.tab.active { color: var(--fg); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* Progress strip */
+.progress {
+  border: 1px solid var(--line); border-radius: .5rem; background: var(--card);
+  padding: .75rem 1rem; margin-bottom: 1rem;
+}
+.progress-count { font-weight: 600; }
+.pips { display: flex; gap: .25rem; margin-top: .5rem; flex-wrap: wrap; }
+.pip { width: 1.4rem; height: .4rem; border-radius: 999px; background: var(--line); }
+.pip.done { background: var(--pass); }
+
+/* Leaderboard */
+#board { width: 100%; border-collapse: collapse; font-size: .9rem; }
+#board th, #board td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--line); }
+#board th { font-size: .78rem; color: var(--muted); font-weight: 600; }
+#board td.num, #board th.num { text-align: right; font-variant-numeric: tabular-nums; }
+#board tr.you { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+#board-you { margin-top: .75rem; }

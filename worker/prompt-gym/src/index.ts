@@ -5,7 +5,10 @@ import { InvalidRequestError, ProviderError } from './providers/errors';
 import {
   findByHash,
   insertSubmission,
+  leaderboard,
+  progressFor,
   promptHash,
+  rankFor,
   upsertBestScore,
   upsertUser,
 } from './db/queries';
@@ -239,6 +242,37 @@ export default {
 
     if (pathname === '/api/run' && request.method === 'POST') {
       return handleRun(request, env, cors);
+    }
+
+    if (pathname === '/api/leaderboard' && request.method === 'GET') {
+      if (!env.DB) {
+        return Response.json({ error: 'no_database' }, { status: 503, headers: cors });
+      }
+
+      const requested = Number(new URL(request.url).searchParams.get('limit') ?? 50);
+      const limit = Math.min(Math.max(Number.isFinite(requested) ? requested : 50, 1), 100);
+
+      const { user } = await userFromRequest(request, env.FIREBASE_PROJECT_ID);
+
+      try {
+        const board = await leaderboard(env.DB, limit);
+        // Someone outside the top N still gets to see where they stand, so the
+        // board is useful rather than just aspirational.
+        const inBoard = user ? board.some((row) => row.uid === user.uid) : false;
+        const you = user && !inBoard ? await rankFor(env.DB, user.uid) : null;
+
+        return Response.json(
+          {
+            leaderboard: board,
+            you: you ?? (user ? (board.find((r) => r.uid === user.uid) ?? null) : null),
+            completed: user ? await progressFor(env.DB, user.uid) : [],
+            totalChallenges: challenges.length,
+          },
+          { headers: cors },
+        );
+      } catch {
+        return Response.json({ error: 'leaderboard_unavailable' }, { status: 503, headers: cors });
+      }
     }
 
     return Response.json({ error: 'not_found' }, { status: 404, headers: cors });

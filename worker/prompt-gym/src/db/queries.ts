@@ -109,6 +109,106 @@ export async function upsertBestScore(
   return (outcome.meta?.changes ?? 0) > 0;
 }
 
+export interface LeaderboardRow {
+  rank: number;
+  uid: string;
+  displayName: string | null;
+  isAnonymous: boolean;
+  completed: number;
+  totalScore: number;
+}
+
+/** The metric is challenges *completed* — a whole number, the easiest thing to
+ *  read and to brag about — tie-broken by total score so partial progress counts
+ *  for something without needing a second visible number.
+ *
+ *  `COUNT(*) FILTER` would be tidier but needs a recent SQLite; the CASE form
+ *  means the query cannot break under us if D1's engine moves. */
+const TOTALS = `
+  SELECT b.uid AS uid,
+         SUM(CASE WHEN b.passed = 1 THEN 1 ELSE 0 END) AS completed,
+         SUM(b.score) AS total_score
+  FROM best_scores b
+  GROUP BY b.uid`;
+
+export async function leaderboard(db: D1Database, limit: number): Promise<LeaderboardRow[]> {
+  const { results } = await db
+    .prepare(
+      `WITH totals AS (${TOTALS})
+       SELECT t.uid, t.completed, t.total_score, u.display_name, u.is_anonymous
+       FROM totals t
+       LEFT JOIN users u ON u.uid = t.uid
+       ORDER BY t.completed DESC, t.total_score DESC, t.uid ASC
+       LIMIT ?`,
+    )
+    .bind(limit)
+    .all<{
+      uid: string;
+      completed: number;
+      total_score: number;
+      display_name: string | null;
+      is_anonymous: number | null;
+    }>();
+
+  return (results ?? []).map((row, i) => ({
+    rank: i + 1,
+    uid: row.uid,
+    displayName: row.display_name,
+    // A row whose user has been deleted from Firebase still has a real score.
+    // Treat it as anonymous rather than dropping it or crashing on the null.
+    isAnonymous: row.is_anonymous !== 0,
+    completed: row.completed ?? 0,
+    totalScore: row.total_score ?? 0,
+  }));
+}
+
+/** One user's standing, so someone outside the top N still sees where they are.
+ *  Rank is "how many people are ahead of me, plus one", which matches the
+ *  ordering above exactly — including the tie-break. */
+export async function rankFor(db: D1Database, uid: string): Promise<LeaderboardRow | null> {
+  const row = await db
+    .prepare(
+      `WITH totals AS (${TOTALS})
+       SELECT t.uid, t.completed, t.total_score, u.display_name, u.is_anonymous,
+              (SELECT COUNT(*) FROM totals o
+                WHERE o.completed > t.completed
+                   OR (o.completed = t.completed AND o.total_score > t.total_score)
+                   OR (o.completed = t.completed AND o.total_score = t.total_score AND o.uid < t.uid)
+              ) + 1 AS rank
+       FROM totals t
+       LEFT JOIN users u ON u.uid = t.uid
+       WHERE t.uid = ?`,
+    )
+    .bind(uid)
+    .first<{
+      uid: string;
+      completed: number;
+      total_score: number;
+      display_name: string | null;
+      is_anonymous: number | null;
+      rank: number;
+    }>();
+
+  if (!row) return null;
+  return {
+    rank: row.rank,
+    uid: row.uid,
+    displayName: row.display_name,
+    isAnonymous: row.is_anonymous !== 0,
+    completed: row.completed ?? 0,
+    totalScore: row.total_score ?? 0,
+  };
+}
+
+/** Which challenges this user has cleared, for the progress strip. */
+export async function progressFor(db: D1Database, uid: string): Promise<string[]> {
+  const { results } = await db
+    .prepare('SELECT challenge_id FROM best_scores WHERE uid = ? AND passed = 1')
+    .bind(uid)
+    .all<{ challenge_id: string }>();
+  return (results ?? []).map((r) => r.challenge_id);
+}
+
 export async function upsertUser(
   db: D1Database,
   user: { uid: string; displayName?: string | null; avatarUrl?: string | null; isAnonymous: boolean },

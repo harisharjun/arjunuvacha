@@ -60,11 +60,16 @@ export function getUser() {
 }
 
 /** A fresh ID token for the Worker. The SDK refreshes it when it is close to
- *  expiring, which is why this is asked for per request rather than cached. */
-export async function getIdToken() {
+ *  expiring, which is why this is asked for per request rather than cached.
+ *
+ *  `force` re-mints it immediately. Needed straight after linking: the cached
+ *  token predates the Google credential, so it still says the account is
+ *  anonymous and still carries no name — which is why every user row in the
+ *  database had a null display_name. */
+export async function getIdToken(force = false) {
   if (!auth.currentUser) return null;
   try {
-    return await auth.currentUser.getIdToken();
+    return await auth.currentUser.getIdToken(force);
   } catch {
     return null;
   }
@@ -114,6 +119,9 @@ export async function signInWithGoogle() {
       // all. Without this the header would still read "playing as a guest" after
       // a sign-in that actually worked.
       setUser(credential.user);
+      // Re-mint the token so the next run carries the name and the real provider
+      // rather than the pre-link claims.
+      await credential.user.getIdToken(true);
       return { ok: true, linked: true, uid: credential.user.uid };
     } catch (err) {
       if (err.code !== 'auth/credential-already-in-use' && err.code !== 'auth/email-already-in-use') {

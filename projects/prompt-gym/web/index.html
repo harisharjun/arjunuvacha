@@ -22,8 +22,14 @@
     </div>
   </header>
 
+  <nav id="tabs">
+    <button id="tab-challenges" class="tab active">Challenges</button>
+    <button id="tab-leaderboard" class="tab">Leaderboard</button>
+  </nav>
+
   <main>
     <section id="list-view">
+      <div id="progress-strip" class="progress" hidden></div>
       <h2>Challenges</h2>
       <p id="list-status" class="muted">Loading…</p>
       <ul id="challenge-list"></ul>
@@ -55,6 +61,19 @@
 
       <div id="run-status" role="status" aria-live="polite"></div>
       <div id="scorecard"></div>
+    </section>
+
+    <section id="board-view" hidden>
+      <h2>Leaderboard</h2>
+      <p class="muted">Ranked by challenges completed. Ties are broken by total score.</p>
+      <p id="board-status" class="muted">Loading…</p>
+      <table id="board" hidden>
+        <thead>
+          <tr><th>#</th><th>Player</th><th>Completed</th><th>Total</th></tr>
+        </thead>
+        <tbody id="board-body"></tbody>
+      </table>
+      <div id="board-you"></div>
     </section>
   </main>
 
