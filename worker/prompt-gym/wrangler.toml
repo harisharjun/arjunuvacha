@@ -11,6 +11,10 @@ compatibility_date = "2024-11-06"
 [vars]
 AIG_ACCOUNT = "817ef4ab39edc6b855e3338a6903f3eb"
 AIG_GATEWAY = "vani"
+# Not a secret — it is the `aud` an ID token must carry to be accepted here, and
+# it appears in the browser's own Firebase config. One project for both the
+# staging and production frontends, because they share one Worker and one D1.
+FIREBASE_PROJECT_ID = "arjunuvacha-3de80"
 
 # Secret (set with `wrangler secret put GROQ_API_KEY`, do NOT put the value here):
 #   GROQ_API_KEY  -> the existing gsk_… key (same one arjun-rag / vani use)

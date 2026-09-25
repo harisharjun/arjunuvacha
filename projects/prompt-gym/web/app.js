@@ -1,3 +1,5 @@
+import { onUserChanged, getIdToken, signInWithGoogle, signOutUser } from './auth.js';
+
 // Served from localhost while developing, so talk to `wrangler dev` rather than
 // the deployed worker. `?api=` overrides both when testing one against the other.
 const API =
@@ -189,9 +191,13 @@ async function run() {
   $('run-status').textContent = `Running against ${current.testCaseCount} hidden test cases…`;
 
   try {
+    const token = await getIdToken();
     const res = await fetch(`${API}/api/run`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
       body: JSON.stringify({
         challengeId: current.id,
         prompt: $('prompt').value,
@@ -220,6 +226,42 @@ $('back').addEventListener('click', () => {
   $('list-view').hidden = false;
   current = null;
 });
+
+onUserChanged((user) => {
+  const label = $('account-label');
+  const signin = $('signin');
+  const signout = $('signout');
+
+  if (!user) {
+    label.textContent = 'Signing in…';
+    signin.hidden = true;
+    signout.hidden = true;
+    return;
+  }
+
+  if (user.isAnonymous) {
+    // Anonymous play works fully; signing in is what makes a score persist.
+    label.textContent = 'Playing as a guest — scores are not saved across devices';
+    signin.hidden = false;
+    signout.hidden = true;
+  } else {
+    label.textContent = `Signed in${user.name ? ` as ${user.name}` : ''}`;
+    signin.hidden = true;
+    signout.hidden = false;
+  }
+});
+
+$('signin').addEventListener('click', async () => {
+  const button = $('signin');
+  button.disabled = true;
+  const result = await signInWithGoogle();
+  button.disabled = false;
+  if (!result.ok) {
+    $('account-label').textContent = `Sign-in failed: ${result.error}`;
+  }
+});
+
+$('signout').addEventListener('click', () => signOutUser());
 
 loadChallenges().then(() => {
   const select = $('model');

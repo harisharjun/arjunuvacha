@@ -9,8 +9,17 @@
 </head>
 <body>
   <header>
-    <h1>PromptGym</h1>
-    <p class="tagline">Write a prompt. Run it against hidden test cases. Find out where it breaks.</p>
+    <div class="header-row">
+      <div>
+        <h1>PromptGym</h1>
+        <p class="tagline">Write a prompt. Run it against hidden test cases. Find out where it breaks.</p>
+      </div>
+      <div id="account">
+        <span id="account-label" class="muted"></span>
+        <button id="signin" class="secondary" hidden>Sign in with Google</button>
+        <button id="signout" class="link" hidden>Sign out</button>
+      </div>
+    </div>
   </header>
 
   <main>
@@ -49,6 +58,6 @@
     </section>
   </main>
 
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

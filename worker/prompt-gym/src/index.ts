@@ -2,14 +2,46 @@ import { challenges, findChallenge } from './challenges';
 import { publicChallenge } from './grading/reveal';
 import { EXEC_MODELS, runChallenge } from './run';
 import { InvalidRequestError, ProviderError } from './providers/errors';
-import { findByHash, insertSubmission, promptHash } from './db/queries';
+import {
+  findByHash,
+  insertSubmission,
+  promptHash,
+  upsertBestScore,
+  upsertUser,
+} from './db/queries';
+import { userFromRequest, type VerifiedUser } from './auth/verify';
+import type { RunResponse } from './run';
 
 export interface Env {
   GROQ_API_KEY?: string;
   AIG_ACCOUNT?: string;
   AIG_GATEWAY?: string;
   AIG_TOKEN?: string;
+  FIREBASE_PROJECT_ID?: string;
   DB?: D1Database;
+}
+
+/** Records who earned a score, and updates their best if this beat it.
+ *
+ *  Best-effort by design: a signed-in player whose leaderboard write fails should
+ *  still see their scorecard. The write itself refuses anything not
+ *  leaderboard-eligible. */
+async function recordForUser(
+  db: D1Database,
+  user: VerifiedUser,
+  result: RunResponse,
+): Promise<boolean> {
+  try {
+    await upsertUser(db, {
+      uid: user.uid,
+      displayName: user.name,
+      avatarUrl: user.picture,
+      isAnonymous: user.isAnonymous,
+    });
+    return await upsertBestScore(db, user.uid, result);
+  } catch {
+    return false;
+  }
 }
 
 const ALLOWED_ORIGINS = [
@@ -94,12 +126,27 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
   // A cache that is unavailable must degrade to a re-run rather than fail the
   // request: the player's prompt is fine, and the worst case is that we pay for a
   // run we already had.
+  // A missing or malformed Authorization header is an anonymous request, not an
+  // error: playing without signing in has to keep working.
+  const { user, error: authError } = await userFromRequest(request, env.FIREBASE_PROJECT_ID);
+  if (authError && authError !== 'auth_not_configured') {
+    return Response.json({ error: 'invalid_token', message: authError }, { status: 401, headers: cors });
+  }
+
   const hash = await promptHash(challengeId, prompt, execModel);
   if (env.DB) {
     try {
       const cached = await findByHash(env.DB, hash);
       if (cached) {
-        return Response.json({ ...cached.result, cached: true }, { headers: cors });
+        // The cache is global, so this may be someone else's earlier run of the
+        // same prompt. It still counts for whoever submits it: everything is
+        // temperature 0, so they would have got this result themselves.
+        let banked = false;
+        if (user) banked = await recordForUser(env.DB, user, cached.result);
+        return Response.json(
+          { ...cached.result, cached: true, uid: user?.uid ?? null, newBest: banked },
+          { headers: cors },
+        );
       }
     } catch {
       /* fall through and run it again */
@@ -123,23 +170,36 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
       gateway: { account: env.AIG_ACCOUNT, gateway: env.AIG_GATEWAY, token: env.AIG_TOKEN },
     });
 
+    let newBest = false;
     if (env.DB) {
       // A storage failure must not lose the player the run they just paid for, so
       // the scorecard is returned either way and the write failure is swallowed.
       try {
+        if (user) {
+          await upsertUser(env.DB, {
+            uid: user.uid,
+            displayName: user.name,
+            avatarUrl: user.picture,
+            isAnonymous: user.isAnonymous,
+          });
+        }
         await insertSubmission(env.DB, {
           result,
-          uid: null, // auth lands at M5
+          uid: user?.uid ?? null,
           prompt,
           hash,
           byoKeyUsed: Boolean(byoKey),
         });
+        if (user) newBest = await upsertBestScore(env.DB, user.uid, result);
       } catch {
-        /* persistence is best-effort until it has an owner to belong to */
+        /* persistence is best-effort; the scorecard is what the player came for */
       }
     }
 
-    return Response.json({ ...result, byoKeyUsed: Boolean(byoKey), cached: false }, { headers: cors });
+    return Response.json(
+      { ...result, byoKeyUsed: Boolean(byoKey), cached: false, uid: user?.uid ?? null, newBest },
+      { headers: cors },
+    );
   } catch (err) {
     if (err instanceof InvalidRequestError) {
       return Response.json({ error: err.message }, { status: 400, headers: cors });

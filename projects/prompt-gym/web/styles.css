@@ -132,3 +132,13 @@ select {
   border: 1px solid var(--err); border-radius: .4rem; color: var(--err);
 }
 .error-box { border-color: var(--fail); color: var(--fail); }
+
+/* Account */
+.header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+#account { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.secondary {
+  font: inherit; cursor: pointer; background: var(--card); color: var(--fg);
+  border: 1px solid var(--line); border-radius: .4rem; padding: .35rem .8rem;
+}
+.secondary:hover { border-color: var(--accent); }
+.secondary:disabled { opacity: .6; cursor: progress; }
