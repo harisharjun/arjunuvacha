@@ -1,4 +1,4 @@
-import { onUserChanged, getIdToken, signInWithGoogle, signOutUser } from './auth.js';
+import { onUserChanged, getIdToken, signInWithGoogle, signOutUser, authReady } from './auth.js';
 
 // Served from localhost while developing, so talk to `wrangler dev` rather than
 // the deployed worker. `?api=` overrides both when testing one against the other.
@@ -251,13 +251,29 @@ onUserChanged((user) => {
   }
 });
 
+// Disabled until the anonymous session exists, so a fast click cannot bypass
+// account linking and strand the guest's scores.
+$('signin').disabled = true;
+authReady.then(() => {
+  $('signin').disabled = false;
+});
+
 $('signin').addEventListener('click', async () => {
   const button = $('signin');
   button.disabled = true;
   const result = await signInWithGoogle();
   button.disabled = false;
+
   if (!result.ok) {
+    // A closed popup is the user changing their mind, not a failure worth shouting about.
+    if (result.error === 'auth/popup-closed-by-user' || result.error === 'auth/cancelled-popup-request') return;
     $('account-label').textContent = `Sign-in failed: ${result.error}`;
+    return;
+  }
+
+  if (!result.linked) {
+    $('account-label').textContent =
+      'Signed in to your existing account — progress from this guest session did not carry over.';
   }
 });
 

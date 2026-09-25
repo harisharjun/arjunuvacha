@@ -25,8 +25,29 @@ const provider = new GoogleAuthProvider();
 let currentUser = null;
 const listeners = new Set();
 
+/** Resolves once Firebase has told us who we are — restored session, freshly
+ *  minted anonymous account, or nobody. Sign-in must wait for this: clicking
+ *  before the anonymous session exists would skip linking and quietly strand the
+ *  guest's scores on an account nobody can reach again. */
+let markReady;
+export const authReady = new Promise((resolve) => {
+  markReady = resolve;
+});
+
 function notify() {
   for (const listener of listeners) listener(currentUser);
+}
+
+function setUser(user) {
+  currentUser = user
+    ? {
+        uid: user.uid,
+        name: user.displayName,
+        photo: user.photoURL,
+        isAnonymous: user.isAnonymous,
+      }
+    : null;
+  notify();
 }
 
 export function onUserChanged(listener) {
@@ -51,27 +72,23 @@ export async function getIdToken() {
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    currentUser = {
-      uid: user.uid,
-      name: user.displayName,
-      photo: user.photoURL,
-      isAnonymous: user.isAnonymous,
-    };
-    notify();
+    setUser(user);
+    markReady();
     return;
   }
 
-  currentUser = null;
-  notify();
+  setUser(null);
 
   // Nobody signed in: start an anonymous session so the first challenge can be
   // played in one click, with no sign-up wall in front of it.
   try {
     await signInAnonymously(auth);
+    // The listener fires again with the new user, which is what resolves ready.
   } catch (err) {
     // Anonymous auth being unavailable must not break play; it only costs the
-    // player their score being recorded.
+    // player their score being recorded. Unblock sign-in either way.
     console.warn('Anonymous sign-in unavailable:', err.code ?? err.message);
+    markReady();
   }
 });
 
@@ -85,22 +102,33 @@ onAuthStateChanged(auth, async (user) => {
  * anonymous one is abandoned.
  */
 export async function signInWithGoogle() {
+  // Never race the anonymous session. Clicking before it exists would skip
+  // linking and silently start a second, empty account.
+  await authReady;
   const anon = auth.currentUser;
 
   if (anon?.isAnonymous) {
     try {
       const credential = await linkWithPopup(anon, provider);
+      // Linking keeps the same uid, so Firebase may emit no auth-state change at
+      // all. Without this the header would still read "playing as a guest" after
+      // a sign-in that actually worked.
+      setUser(credential.user);
       return { ok: true, linked: true, uid: credential.user.uid };
     } catch (err) {
       if (err.code !== 'auth/credential-already-in-use' && err.code !== 'auth/email-already-in-use') {
         return { ok: false, error: err.code ?? err.message };
       }
-      // Fall through: sign in to the account that already exists.
+      // Fall through: that Google account already has its own PromptGym identity.
     }
   }
 
   try {
     const credential = await signInWithPopup(auth, provider);
+    setUser(credential.user);
+    // `linked: false` means the guest progress did NOT come across — it stayed
+    // with the anonymous account, which nothing can reach any more. The caller
+    // has to say so rather than let it look like a clean sign-in.
     return { ok: true, linked: false, uid: credential.user.uid };
   } catch (err) {
     return { ok: false, error: err.code ?? err.message };
