@@ -313,9 +313,9 @@ npx wrangler kv namespace create BUDGET
 ## Session 11 · The parked challenge-validation pass
 **Deferred deliberately on 15 Sep 2026 — do this once M8 is done, before launch**
 
-Only **pg-a2** has ever been run against a real model (reference 100/100, strawman 3/100, on `gpt-oss-20b` at M2). The other eleven are unproven: no test can tell you whether a challenge is impossible, trivially passable, or simply not discriminating, because that needs real model calls and a human reading the result.
+Only **pg-a2** has ever been run against a real model (reference 100/100, strawman 3/100, on `gpt-oss-20b` at M2), plus a smoke test of **pg-g3** confirming the golf bonus pays. The other twelve are unproven: no test can tell you whether a challenge is impossible, trivially passable, or simply not discriminating, because that needs real model calls and a human reading the result.
 
-For each of the remaining eleven, per the authoring loop in `challenge-format.md` §1:
+For each of the remaining twelve, per the authoring loop in `challenge-format.md` §1:
 
 ```bash
 cd worker/prompt-gym
@@ -326,6 +326,8 @@ npm run try -- <challengeId> --prompt "<the strawman>"        # expect a low sco
 If the two scores are close, the graders are not discriminating and the challenge is not ready. Also run the reference on `gpt-oss-20b` and not only `120b` — a challenge only the big model can pass makes the default look broken.
 
 **Decide during this pass:** the reference and strawman prompts currently live only as comments at the bottom of each `challenges/*.promptfoo.yaml`, which means nothing can check them and the golf par values rest on them. Worth promoting them to real files.
+
+**Re-derive the golf par values with the shipped measure.** `pg-golf-variants.json` says par is "the token count of the reference prompt", and its own `$note` says to re-measure with the tokeniser the Worker uses. The Worker estimates at four characters per token (`estimateTokens`), so par should be `ceil(reference_chars / 4)`: pg-g1 is set to 84 and pg-g3 to 40, both carried over from a different count. A par that is too low makes the bonus unreachable; too high and it is free. Check both against a reference prompt scoring exactly zero bonus.
 
 Budget: this runs against your own key, roughly 10 runs per challenge.
 

@@ -1,6 +1,12 @@
 import type { Assertion, AssertionResult, CaseResult, Challenge } from './grading/types';
 import { evaluateAssertion } from './grading/assertions';
-import { aggregateCase, challengeScore, golfBonus, meanCaseScore } from './grading/score';
+import {
+  aggregateCase,
+  challengeScore,
+  estimateTokens,
+  golfBonus,
+  meanCaseScore,
+} from './grading/score';
 import { validators } from './grading/validators';
 import { applyReveal, type PublicTestResult } from './grading/reveal';
 import { execute, judge, type GatewayConfig } from './providers/groq';
@@ -198,7 +204,9 @@ export async function runChallenge(options: RunOptions): Promise<RunResponse> {
       ? golfBonus({
           meanScore: mean,
           passThreshold: challenge.scoring.passThreshold,
-          promptTokens: Math.round(promptTokens / Math.max(1, cases.length)),
+          // The player's own prompt, not the whole request: `promptTokens` below
+          // includes the harness and the test input, which they did not write.
+          promptTokens: estimateTokens(prompt),
           parTokens,
           maxBonus: maxBonus ?? 20,
         })

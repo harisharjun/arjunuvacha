@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { golfBonus } from '../src/grading/score';
+import { golfBonus, estimateTokens } from '../src/grading/score';
 import { gradeChallenge } from '../src/grading/engine';
 import { validators } from '../src/grading/validators';
 import type { Challenge } from '../src/grading/types';
@@ -120,6 +120,26 @@ describe('gradeChallenge on a golf challenge', () => {
     const r = gradeChallenge(golf, correct, validators);
     expect(r.efficiencyBonus).toBe(0);
     expect(r.score).toBe(r.baseScore);
+  });
+});
+
+describe('the bonus measures the prompt, not the whole request', () => {
+  // Found by expanding the golf variants: the bonus was being fed the provider's
+  // prompt_tokens, which counts the harness template and the hidden test input
+  // too. Par is ~40 and a whole request is ~143, so the ratio was always negative
+  // and no golf run could ever earn a single point.
+  it('estimates from the prompt text alone', () => {
+    expect(estimateTokens('')).toBe(0);
+    expect(estimateTokens('a'.repeat(160))).toBe(40);
+    // Whitespace around the prompt is not something to be penalised for.
+    expect(estimateTokens('  ' + 'a'.repeat(160) + '  ')).toBe(40);
+  });
+
+  it('gives a short prompt a real bonus against a realistic par', () => {
+    const short = estimateTokens('Reply with one label only: billing, bug, other.');
+    expect(short).toBeLessThan(40);
+    expect(golfBonus({ meanScore: 1, passThreshold: 0.75, promptTokens: short, parTokens: 40, maxBonus: 20 }))
+      .toBeGreaterThan(0);
   });
 });
 

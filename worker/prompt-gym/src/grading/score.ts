@@ -43,6 +43,23 @@ export function meanCaseScore(caseScores: number[]): number {
   return caseScores.reduce((sum, s) => sum + s, 0) / caseScores.length;
 }
 
+/** Approximate token count of a piece of text, at roughly four characters per
+ *  token for English.
+ *
+ *  Golf needs to measure *the player's prompt*, and the only real count available
+ *  is the provider's `prompt_tokens` — which covers the harness template and the
+ *  test input as well, and is therefore several times larger. Feeding that to the
+ *  bonus made it unreachable: par is ~40 while a whole request is ~143, so the
+ *  ratio was always negative and every golf run scored a zero bonus.
+ *
+ *  An estimate is the right trade here. It is deterministic, so two identical
+ *  prompts always score the same; it is explainable to a player in the UI; and it
+ *  costs no extra call. Par values must be derived with this same measure, or the
+ *  bonus is either trivial or unreachable again. */
+export function estimateTokens(text: string): number {
+  return Math.ceil(text.trim().length / 4);
+}
+
 /** Golf mode's efficiency bonus: `maxBonus × (1 − promptTokens / parTokens)`.
  *
  *  Correctness first, brevity second — never the reverse. A run that has not

@@ -211,6 +211,56 @@ function goldenCheck(generated) {
   problems.push('pg-a1: golden check failed');
 }
 
+/** Golf variants are configuration, not authoring: each one reuses its parent's
+ *  test cases and assertions verbatim and only changes the scoring. They have no
+ *  YAML of their own, so they are expanded from pg-golf-variants.json here rather
+ *  than hand-maintained as a second copy of the parent's cases. */
+function expandGolfVariants(built) {
+  const path = join(CHALLENGES, 'pg-golf-variants.json');
+  if (!existsSync(path)) return [];
+
+  const { variants = [] } = JSON.parse(readFileSync(path, 'utf8'));
+  const expanded = [];
+
+  for (const variant of variants) {
+    const parent = built.get(variant.parent);
+    if (!parent) {
+      fail(variant.id, `parent challenge "${variant.parent}" was not converted`);
+      continue;
+    }
+    if (!(variant.scoring?.parTokens > 0)) {
+      fail(variant.id, 'needs a positive scoring.parTokens, or the bonus is unreachable');
+      continue;
+    }
+
+    expanded.push({
+      path: join(OUT, `${variant.id}.json`),
+      challenge: {
+        id: variant.id,
+        title: variant.title,
+        mode: variant.mode ?? 'golf',
+        difficulty: variant.difficulty ?? parent.difficulty,
+        tags: variant.tags ?? parent.tags,
+        graderFamilies: parent.graderFamilies,
+        // The parent's player-facing copy still applies; the variant only
+        // overrides what golf changes.
+        public: { ...parent.public, ...variant.public },
+        harness: parent.harness,
+        limits: parent.limits,
+        scoring: {
+          maxScore: parent.scoring.maxScore,
+          passThreshold: variant.scoring.passThreshold ?? parent.scoring.passThreshold,
+          parTokens: variant.scoring.parTokens,
+          maxBonus: variant.scoring.maxBonus ?? 20,
+        },
+        defaultAssert: parent.defaultAssert,
+        tests: parent.tests,
+      },
+    });
+  }
+  return expanded;
+}
+
 const validatorNames = loadValidatorNames();
 const engineTypes = loadEngineTypes();
 mkdirSync(OUT, { recursive: true });
@@ -222,15 +272,26 @@ const files = readdirSync(CHALLENGES)
   .sort();
 
 let written = 0;
+const built = new Map();
 for (const file of files) {
   const result = convert(join(CHALLENGES, file), validatorNames, engineTypes);
   if (!result) continue;
   writeFileSync(result.path, JSON.stringify(result.challenge, null, 2) + '\n');
+  built.set(result.challenge.id, result.challenge);
   written++;
   if (result.challenge.id === 'pg-a1') goldenCheck(result.challenge);
 }
 
-console.log(`\nconverted ${written}/${files.length} challenges -> challenges/generated/`);
+// Only when converting everything: expanding a variant needs its parent present.
+let golf = 0;
+if (only.length === 0) {
+  for (const result of expandGolfVariants(built)) {
+    writeFileSync(result.path, JSON.stringify(result.challenge, null, 2) + '\n');
+    golf++;
+  }
+}
+
+console.log(`\nconverted ${written}/${files.length} challenges + ${golf} golf variants -> challenges/generated/`);
 console.log(`validators in registry: ${validatorNames.size}`);
 console.log(`assertion types implemented: ${engineTypes.size}`);
 

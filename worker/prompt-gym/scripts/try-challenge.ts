@@ -12,6 +12,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { gradeChallenge } from '../src/grading/engine';
+import { estimateTokens } from '../src/grading/score';
 import { validators } from '../src/grading/validators';
 import { execute } from '../src/providers/groq';
 import { toOutcome, type ExecutionOutcome } from '../src/providers/errors';
@@ -140,8 +141,10 @@ const promptTokens = outcomes.reduce(
   0,
 );
 
+// The player's own prompt, not the whole request — `promptTokens` includes the
+// harness and the test input, which they did not write.
 const result = gradeChallenge(challenge, outputs, validators, {
-  promptTokens: Math.round(promptTokens / Math.max(1, Object.keys(outputs).length)),
+  promptTokens: estimateTokens(prompt),
 });
 
 for (const testCase of result.cases) {

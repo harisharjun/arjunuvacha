@@ -19,7 +19,7 @@ describe('GET /api/challenges', () => {
     const res = await worker.fetch(get('/api/challenges'), env);
     const body = (await res.json()) as { challenges: unknown[]; models: string[] };
     expect(res.status).toBe(200);
-    expect(body.challenges).toHaveLength(12);
+    expect(body.challenges).toHaveLength(14);
     expect(body.models).toContain('openai/gpt-oss-20b');
   });
 

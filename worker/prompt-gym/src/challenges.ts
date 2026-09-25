@@ -15,8 +15,12 @@ import pgC5 from '../../../projects/prompt-gym/challenges/generated/pg-c5.json';
 import pgD2 from '../../../projects/prompt-gym/challenges/generated/pg-d2.json';
 import pgE4 from '../../../projects/prompt-gym/challenges/generated/pg-e4.json';
 import pgF1 from '../../../projects/prompt-gym/challenges/generated/pg-f1.json';
+// Golf variants, expanded from pg-golf-variants.json — same test cases as their
+// parents, scored on brevity once correctness passes.
+import pgG1 from '../../../projects/prompt-gym/challenges/generated/pg-g1.json';
+import pgG3 from '../../../projects/prompt-gym/challenges/generated/pg-g3.json';
 
-const ALL = [pgA2, pgA1, pgA3, pgA11, pgB7, pgB1, pgB3, pgC1, pgC5, pgD2, pgE4, pgF1];
+const ALL = [pgA2, pgA1, pgA3, pgA11, pgB7, pgB1, pgB3, pgC1, pgC5, pgD2, pgE4, pgF1, pgG3, pgG1];
 
 /** Ordered as the catalog recommends playing them, easiest first. */
 export const challenges: Challenge[] = ALL as unknown as Challenge[];

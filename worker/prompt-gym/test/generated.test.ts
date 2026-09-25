@@ -25,8 +25,28 @@ const allAssertions = (c: Challenge) =>
   c.tests.flatMap((t) => [...(c.defaultAssert ?? []), ...(t.assert ?? [])]);
 
 describe('generated challenges', () => {
-  it('there are twelve of them', () => {
-    expect(challenges.length).toBe(12);
+  it('there are fourteen of them — twelve authored plus two golf variants', () => {
+    expect(challenges.length).toBe(14);
+  });
+
+  // The golf bonus was written at M1 but had no golf challenge to run against
+  // until the variants were expanded.
+  it('every golf challenge carries the par it is scored against', () => {
+    const golf = challenges.filter((c) => c.mode === 'golf');
+    expect(golf.length).toBe(2);
+    for (const c of golf) {
+      expect(c.scoring.parTokens).toBeGreaterThan(0);
+      expect(c.scoring.maxBonus).toBeGreaterThan(0);
+      expect(c.tests.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('a golf variant reuses its parent test cases exactly', () => {
+    const byId = new Map(challenges.map((c) => [c.id, c]));
+    for (const [variant, parent] of [['pg-g1', 'pg-a1'], ['pg-g3', 'pg-a2']] as const) {
+      expect(byId.get(variant)!.tests).toEqual(byId.get(parent)!.tests);
+      expect(byId.get(variant)!.defaultAssert).toEqual(byId.get(parent)!.defaultAssert);
+    }
   });
 
   it.each(challenges.map((c) => [c.id, c] as const))('%s is structurally loadable', (_id, c) => {
