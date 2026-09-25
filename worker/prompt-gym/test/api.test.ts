@@ -175,6 +175,39 @@ describe('POST /api/run with a stubbed provider', () => {
   });
 });
 
+describe('persistence is never allowed to break a run', () => {
+  const brokenDb = {
+    prepare: () => {
+      throw new Error('D1 unavailable');
+    },
+  } as unknown as D1Database;
+
+  const stubFetch = () =>
+    vi.fn().mockImplementation(async () =>
+      new Response(
+        JSON.stringify({
+          choices: [{ message: { content: 'billing' }, finish_reason: 'stop' }],
+          usage: { prompt_tokens: 10, completion_tokens: 1 },
+        }),
+        { status: 200 },
+      ),
+    );
+
+  // A cache lookup that throws should cost us a re-run, not cost the player their
+  // result. The dedupe check sits before the main try block, so this is easy to
+  // get wrong.
+  it('still returns a scorecard when the database is unavailable', async () => {
+    vi.stubGlobal('fetch', stubFetch());
+    const res = await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'classify' }), {
+      ...env,
+      DB: brokenDb,
+    });
+    expect(res.status).toBe(200);
+    expect((await res.json() as { score: number }).score).toBeGreaterThanOrEqual(0);
+    vi.unstubAllGlobals();
+  });
+});
+
 describe('CORS', () => {
   it('echoes an allowlisted origin, never a wildcard', async () => {
     const res = await worker.fetch(get('/api/challenges'), env);

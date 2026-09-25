@@ -2,12 +2,14 @@ import { challenges, findChallenge } from './challenges';
 import { publicChallenge } from './grading/reveal';
 import { EXEC_MODELS, runChallenge } from './run';
 import { InvalidRequestError, ProviderError } from './providers/errors';
+import { findByHash, insertSubmission, promptHash } from './db/queries';
 
 export interface Env {
   GROQ_API_KEY?: string;
   AIG_ACCOUNT?: string;
   AIG_GATEWAY?: string;
   AIG_TOKEN?: string;
+  DB?: D1Database;
 }
 
 const ALLOWED_ORIGINS = [
@@ -86,6 +88,24 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
     );
   }
 
+  // Dedupe is checked before the key, the rate limit or the budget, because a
+  // cached run costs nothing and should never be refused for lack of quota.
+  //
+  // A cache that is unavailable must degrade to a re-run rather than fail the
+  // request: the player's prompt is fine, and the worst case is that we pay for a
+  // run we already had.
+  const hash = await promptHash(challengeId, prompt, execModel);
+  if (env.DB) {
+    try {
+      const cached = await findByHash(env.DB, hash);
+      if (cached) {
+        return Response.json({ ...cached.result, cached: true }, { headers: cors });
+      }
+    } catch {
+      /* fall through and run it again */
+    }
+  }
+
   // A player's own key is request-scoped: used for this request and nothing else.
   // Never stored, never logged, never echoed back in a response or an error.
   const byoKey = request.headers.get('X-Groq-Key')?.trim();
@@ -102,7 +122,24 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
       apiKey,
       gateway: { account: env.AIG_ACCOUNT, gateway: env.AIG_GATEWAY, token: env.AIG_TOKEN },
     });
-    return Response.json({ ...result, byoKeyUsed: Boolean(byoKey) }, { headers: cors });
+
+    if (env.DB) {
+      // A storage failure must not lose the player the run they just paid for, so
+      // the scorecard is returned either way and the write failure is swallowed.
+      try {
+        await insertSubmission(env.DB, {
+          result,
+          uid: null, // auth lands at M5
+          prompt,
+          hash,
+          byoKeyUsed: Boolean(byoKey),
+        });
+      } catch {
+        /* persistence is best-effort until it has an owner to belong to */
+      }
+    }
+
+    return Response.json({ ...result, byoKeyUsed: Boolean(byoKey), cached: false }, { headers: cors });
   } catch (err) {
     if (err instanceof InvalidRequestError) {
       return Response.json({ error: err.message }, { status: 400, headers: cors });

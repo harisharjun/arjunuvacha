@@ -14,6 +14,17 @@ AIG_GATEWAY = "vani"
 
 # Secret (set with `wrangler secret put GROQ_API_KEY`, do NOT put the value here):
 #   GROQ_API_KEY  -> the existing gsk_… key (same one arjun-rag / vani use)
+
+# Every submission is written here, by the Worker and only by the Worker. That is
+# what makes the leaderboard defensible: a client can never post its own score.
 #
-# Bindings added later: D1 (M4), KV for the budget counter (M8), Workers AI for
-# embeddings (M1/M3). Nothing is bound yet — M0 is the health route only.
+# Apply migrations with:
+#   npx wrangler d1 migrations apply promptgym --local    (local dev)
+#   npx wrangler d1 migrations apply promptgym --remote   (production)
+[[d1_databases]]
+binding = "DB"
+database_name = "promptgym"
+database_id = "3713edb6-3c4c-4b81-a171-4ffb19ace107"
+migrations_dir = "migrations"
+
+# Still to bind: KV for the budget counter (M8), Workers AI for embeddings.
