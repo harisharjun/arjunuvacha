@@ -168,3 +168,10 @@ select {
 #board td.num, #board th.num { text-align: right; font-variant-numeric: tabular-nums; }
 #board tr.you { background: color-mix(in srgb, var(--accent) 10%, transparent); }
 #board-you { margin-top: .75rem; }
+
+/* Share controls */
+.share { margin-top: 1rem; display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.share code { font-size: .78rem; word-break: break-all; }
+label.inline { display: inline-flex; align-items: center; gap: .35rem; margin: 0; }
+#result-card .total { margin-bottom: .75rem; }
+#result-card .primary { margin-top: 1rem; }

@@ -171,6 +171,46 @@ function renderScorecard(result) {
     card.appendChild(box);
   }
 
+  // Share controls. The link is an unguessable id, so it is unlisted rather than
+  // public, and the prompt stays private until its owner chooses otherwise.
+  if (result.submissionId && !result.cached) {
+    const share = el('div', 'share');
+    const url = `${location.origin}${location.pathname.replace(/r\/[^/]+\/?$/, '')}r/${result.submissionId}`;
+
+    const copy = el('button', 'secondary', 'Copy share link');
+    copy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+        copy.textContent = 'Copied';
+        setTimeout(() => (copy.textContent = 'Copy share link'), 1500);
+      } catch {
+        // Clipboard access can be refused; showing the link is the fallback.
+        copy.replaceWith(el('code', null, url));
+      }
+    });
+    share.appendChild(copy);
+
+    if (result.uid) {
+      const label = document.createElement('label');
+      label.className = 'muted inline';
+      const box = document.createElement('input');
+      box.type = 'checkbox';
+      box.addEventListener('change', async () => {
+        const token = await getIdToken();
+        if (!token) return;
+        await fetch(`${API}/api/result/${result.submissionId}/visibility`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ showPrompt: box.checked }),
+        });
+      });
+      label.appendChild(box);
+      label.appendChild(document.createTextNode(' show my prompt on the shared page'));
+      share.appendChild(label);
+    }
+    card.appendChild(share);
+  }
+
   if (!result.leaderboardEligible) {
     card.appendChild(
       el(
@@ -300,12 +340,100 @@ async function loadLeaderboard() {
   }
 }
 
+// ------------------------------------------------------------- share links
+
+/** A shared result is deliberately thinner than your own scorecard: it carries
+ *  the score and the grader breakdown but none of the hidden test inputs, because
+ *  whoever opens the link may never have attempted the challenge. */
+async function loadSharedResult(id) {
+  $('list-view').hidden = true;
+  $('play-view').hidden = true;
+  $('board-view').hidden = true;
+  $('result-view').hidden = false;
+
+  const status = $('result-status');
+  const card = $('result-card');
+  card.replaceChildren();
+  status.hidden = false;
+  status.className = 'muted';
+  status.textContent = 'Loading…';
+
+  try {
+    const res = await fetch(`${API}/api/result/${encodeURIComponent(id)}`);
+    if (res.status === 404) throw new Error('That result does not exist.');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const r = await res.json();
+
+    const challenge = challenges.find((c) => c.id === r.challengeId);
+    status.hidden = true;
+
+    const total = el('div', 'total');
+    total.appendChild(el('span', 'score', String(r.score)));
+    total.appendChild(el('span', 'muted', '/ 100'));
+    total.appendChild(el('span', r.passed ? 'verdict-pass' : 'verdict-fail', r.passed ? 'PASSED' : 'not passed'));
+    total.appendChild(el('span', 'muted', r.execModel));
+    card.appendChild(total);
+
+    card.appendChild(
+      el('p', 'muted',
+        `${challenge ? challenge.title : r.challengeId} · ` +
+        `${r.cases.passed} passed, ${r.cases.failed} failed` +
+        (r.cases.errored ? `, ${r.cases.errored} errored` : '') +
+        (r.playerName ? ` · by ${r.playerName}` : '')),
+    );
+
+    if (r.byGrader.length > 0) {
+      const bars = el('div', 'bars');
+      for (const grader of r.byGrader) {
+        const row = el('div', 'bar-row');
+        row.appendChild(el('span', null, grader.metric));
+        const bar = el('div', 'bar');
+        const fill = document.createElement('span');
+        fill.style.width = `${Math.round(grader.score * 100)}%`;
+        bar.appendChild(fill);
+        row.appendChild(bar);
+        row.appendChild(el('span', 'muted', `${Math.round(grader.score * 100)}%`));
+        bars.appendChild(row);
+      }
+      card.appendChild(bars);
+    }
+
+    if (r.prompt) {
+      card.appendChild(el('p', 'muted', 'The prompt'));
+      card.appendChild(el('pre', null, r.prompt));
+    } else {
+      card.appendChild(el('p', 'muted', `Prompt not shown — ${r.promptChars} characters.`));
+    }
+
+    const tryIt = el('button', 'primary', 'Try this challenge');
+    tryIt.addEventListener('click', () => {
+      const target = challenges.find((c) => c.id === r.challengeId);
+      history.pushState({}, '', location.pathname.replace(/r\/[^/]+\/?$/, ''));
+      $('result-view').hidden = true;
+      if (target) openChallenge(target);
+      else showTab('challenges');
+    });
+    card.appendChild(tryIt);
+  } catch (err) {
+    status.className = 'notice error-box';
+    status.textContent = `Could not load that result — ${err.message}`;
+  }
+}
+
+/** `/prompt-gym/r/<id>` — Firebase rewrites every path under /prompt-gym/ to this
+ *  page, so the id has to be read back off the URL here. */
+function sharedResultId() {
+  const match = /\/r\/([A-Za-z0-9-]{8,64})\/?$/.exec(location.pathname);
+  return match ? match[1] : null;
+}
+
 function showTab(which) {
   const board = which === 'leaderboard';
   $('tab-challenges').classList.toggle('active', !board);
   $('tab-leaderboard').classList.toggle('active', board);
   $('list-view').hidden = board;
   $('play-view').hidden = true;
+  $('result-view').hidden = true;
   $('board-view').hidden = !board;
   if (board) loadLeaderboard();
 }
@@ -317,6 +445,11 @@ $('tab-leaderboard').addEventListener('click', () => showTab('leaderboard'));
 
 $('prompt').addEventListener('input', updateCharCount);
 $('run').addEventListener('click', run);
+$('result-back').addEventListener('click', () => {
+  history.pushState({}, '', location.pathname.replace(/r\/[^/]+\/?$/, ''));
+  showTab('challenges');
+});
+
 $('back').addEventListener('click', () => {
   $('play-view').hidden = true;
   $('list-view').hidden = false;
@@ -381,6 +514,11 @@ $('signin').addEventListener('click', async () => {
 $('signout').addEventListener('click', () => signOutUser());
 
 loadChallenges().then(() => {
+  // A share link lands here too, because Firebase rewrites all of /prompt-gym/**
+  // to this page. Challenge titles are needed first so the result can name one.
+  const shared = sharedResultId();
+  if (shared) loadSharedResult(shared);
+
   const select = $('model');
   for (const model of models) {
     const option = document.createElement('option');

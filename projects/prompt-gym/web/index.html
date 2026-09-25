@@ -5,7 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PromptGym</title>
 <meta name="description" content="Practise prompt engineering against real test suites and get graded, structured feedback on where your prompt breaks.">
-<link rel="stylesheet" href="styles.css">
+<!-- Root-relative, not relative. Firebase rewrites every path under /prompt-gym/**
+     to this file, so a share link at /prompt-gym/r/<id> would resolve "styles.css"
+     to /prompt-gym/r/styles.css — which the rewrite serves as this HTML, leaving the
+     page unstyled and the module script unparseable. -->
+<link rel="stylesheet" href="/prompt-gym/styles.css">
+
+<!-- A generic card, not a per-result one. Firebase Hosting serves /prompt-gym/**
+     from static files and its rewrites cannot target a Cloudflare Worker, so
+     there is nowhere to inject per-result tags. See docs/repo-layout.md §6. -->
+<meta property="og:title" content="PromptGym">
+<meta property="og:description" content="Write a prompt. Run it against hidden test cases. Find out where it breaks.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://arjunuvacha.com/prompt-gym/">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
   <header>
@@ -63,6 +76,13 @@
       <div id="scorecard"></div>
     </section>
 
+    <section id="result-view" hidden>
+      <button id="result-back" class="link">← All challenges</button>
+      <h2>Shared result</h2>
+      <p id="result-status" class="muted">Loading…</p>
+      <div id="result-card"></div>
+    </section>
+
     <section id="board-view" hidden>
       <h2>Leaderboard</h2>
       <p class="muted">Ranked by challenges completed. Ties are broken by total score.</p>
@@ -77,6 +97,6 @@
     </section>
   </main>
 
-  <script type="module" src="app.js"></script>
+  <script type="module" src="/prompt-gym/app.js"></script>
 </body>
 </html>

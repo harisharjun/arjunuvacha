@@ -8,7 +8,10 @@ import {
   leaderboard,
   progressFor,
   promptHash,
+  publicResult,
   rankFor,
+  setShowPrompt,
+  submissionOwner,
   upsertBestScore,
   upsertUser,
 } from './db/queries';
@@ -242,6 +245,43 @@ export default {
 
     if (pathname === '/api/run' && request.method === 'POST') {
       return handleRun(request, env, cors);
+    }
+
+    // A share permalink. The id is an unguessable UUID, which is the capability —
+    // the link is unlisted rather than public, and the prompt stays hidden until
+    // its owner says otherwise.
+    const resultMatch = /^\/api\/result\/([A-Za-z0-9-]{8,64})$/.exec(pathname);
+    if (resultMatch && request.method === 'GET') {
+      if (!env.DB) return Response.json({ error: 'no_database' }, { status: 503, headers: cors });
+      const result = await publicResult(env.DB, resultMatch[1]);
+      if (!result) return Response.json({ error: 'not_found' }, { status: 404, headers: cors });
+      return Response.json(result, { headers: cors });
+    }
+
+    const visibilityMatch = /^\/api\/result\/([A-Za-z0-9-]{8,64})\/visibility$/.exec(pathname);
+    if (visibilityMatch && request.method === 'POST') {
+      if (!env.DB) return Response.json({ error: 'no_database' }, { status: 503, headers: cors });
+
+      const { user } = await userFromRequest(request, env.FIREBASE_PROJECT_ID);
+      if (!user) return Response.json({ error: 'sign_in_required' }, { status: 401, headers: cors });
+
+      const submissionId = visibilityMatch[1];
+      const owner = await submissionOwner(env.DB, submissionId);
+      if (owner === null) return Response.json({ error: 'not_found' }, { status: 404, headers: cors });
+      // Only the person who wrote the prompt may publish it.
+      if (owner !== user.uid) {
+        return Response.json({ error: 'not_your_result' }, { status: 403, headers: cors });
+      }
+
+      let body: { showPrompt?: unknown };
+      try {
+        body = (await request.json()) as { showPrompt?: unknown };
+      } catch {
+        return Response.json({ error: 'invalid_json' }, { status: 400, headers: cors });
+      }
+      const showPrompt = body.showPrompt === true;
+      await setShowPrompt(env.DB, submissionId, showPrompt);
+      return Response.json({ ok: true, showPrompt }, { headers: cors });
     }
 
     if (pathname === '/api/leaderboard' && request.method === 'GET') {

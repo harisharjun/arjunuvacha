@@ -109,6 +109,118 @@ export async function upsertBestScore(
   return (outcome.meta?.changes ?? 0) > 0;
 }
 
+/** What a share link may show.
+ *
+ *  Deliberately far less than the owner's own scorecard. The stored result carries
+ *  each test case's input and the model's output, because the player who ran it
+ *  has earned that; a permalink is visible to people who have never attempted the
+ *  challenge, and handing them the hidden inputs would solve it for them. So this
+ *  is built from scratch — score, breakdown, counts — and never by trimming the
+ *  stored object, which would leak the day someone adds a field to it. */
+export interface PublicResult {
+  id: string;
+  challengeId: string;
+  score: number;
+  baseScore: number;
+  efficiencyBonus: number;
+  passed: boolean;
+  execModel: string;
+  promptChars: number;
+  createdAt: string;
+  byGrader: { metric: string; score: number }[];
+  cases: { passed: number; failed: number; errored: number };
+  /** Null unless the owner has chosen to show it. */
+  prompt: string | null;
+  playerName: string | null;
+}
+
+export async function publicResult(db: D1Database, id: string): Promise<PublicResult | null> {
+  const row = await db
+    .prepare(
+      `SELECT s.id, s.challenge_id, s.exec_model, s.prompt_text, s.prompt_chars, s.score,
+              s.base_score, s.efficiency_bonus, s.passed, s.grader_results_json, s.created_at,
+              u.display_name, u.is_anonymous,
+              COALESCE(sh.show_prompt, 0) AS show_prompt
+       FROM submissions s
+       LEFT JOIN users u ON u.uid = s.uid
+       LEFT JOIN share_results sh ON sh.submission_id = s.id
+       WHERE s.id = ?`,
+    )
+    .bind(id)
+    .first<{
+      id: string;
+      challenge_id: string;
+      exec_model: string;
+      prompt_text: string;
+      prompt_chars: number;
+      score: number;
+      base_score: number;
+      efficiency_bonus: number;
+      passed: number;
+      grader_results_json: string;
+      created_at: string;
+      display_name: string | null;
+      is_anonymous: number | null;
+      show_prompt: number;
+    }>();
+
+  if (!row) return null;
+
+  let byGrader: { metric: string; score: number }[] = [];
+  const counts = { passed: 0, failed: 0, errored: 0 };
+  try {
+    const stored = JSON.parse(row.grader_results_json) as {
+      byGrader?: { metric: string; score: number }[];
+      tests?: { status: 'passed' | 'failed' | 'errored' }[];
+    };
+    byGrader = (stored.byGrader ?? []).map((g) => ({ metric: g.metric, score: g.score }));
+    for (const test of stored.tests ?? []) counts[test.status] += 1;
+  } catch {
+    /* a result we cannot parse still has a score worth showing */
+  }
+
+  return {
+    id: row.id,
+    challengeId: row.challenge_id,
+    score: row.score,
+    baseScore: row.base_score,
+    efficiencyBonus: row.efficiency_bonus,
+    passed: row.passed === 1,
+    execModel: row.exec_model,
+    promptChars: row.prompt_chars,
+    createdAt: row.created_at,
+    byGrader,
+    cases: counts,
+    prompt: row.show_prompt === 1 ? row.prompt_text : null,
+    playerName: row.is_anonymous === 0 ? row.display_name : null,
+  };
+}
+
+/** Sets whether a result's prompt is visible. Owner only — checked by the caller
+ *  against the submission's uid, which is why that is returned here. */
+export async function submissionOwner(db: D1Database, id: string): Promise<string | null> {
+  const row = await db
+    .prepare('SELECT uid FROM submissions WHERE id = ?')
+    .bind(id)
+    .first<{ uid: string | null }>();
+  return row?.uid ?? null;
+}
+
+export async function setShowPrompt(
+  db: D1Database,
+  submissionId: string,
+  showPrompt: boolean,
+): Promise<void> {
+  await db
+    .prepare(
+      `INSERT INTO share_results (id, submission_id, show_prompt)
+       VALUES (?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET show_prompt = excluded.show_prompt`,
+    )
+    .bind(`share-${submissionId}`, submissionId, showPrompt ? 1 : 0)
+    .run();
+}
+
 export interface LeaderboardRow {
   rank: number;
   uid: string;
