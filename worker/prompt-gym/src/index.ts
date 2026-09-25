@@ -16,6 +16,15 @@ import {
   upsertUser,
 } from './db/queries';
 import { userFromRequest, type VerifiedUser } from './auth/verify';
+import {
+  budgetStatus,
+  clientIp,
+  consumeRateLimit,
+  limitsFromEnv,
+  reserveBudget,
+  runCost,
+  type CounterStore,
+} from './budget';
 import type { RunResponse } from './run';
 
 export interface Env {
@@ -25,6 +34,12 @@ export interface Env {
   AIG_TOKEN?: string;
   FIREBASE_PROJECT_ID?: string;
   DB?: D1Database;
+  /** Shared-budget and per-IP rate-limit counters. See `budget.ts`. */
+  BUDGET?: KVNamespace;
+  BUDGET_TOKENS_PER_DAY?: string;
+  BUDGET_TOKENS_PER_MINUTE?: string;
+  RATE_LIMIT_PER_MINUTE?: string;
+  RATE_LIMIT_PER_HOUR?: string;
 }
 
 /** Records who earned a score, and updates their best if this beat it.
@@ -60,6 +75,14 @@ const ALLOWED_ORIGINS = [
 const ALLOWED_DEV_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
 const MAX_PROMPT_CHARS = 2000;
+
+/** The same sentence the landing page already made, repeated at the moment it
+ *  bites. Nobody should meet the idea of bringing their own key for the first time
+ *  while they are blocked — see `docs/design-doc.md`, "Bring-your-own key". */
+const BYO_KEY_PROMPT =
+  "PromptGym's shared Groq allowance is spent for now. Add your own free Groq key " +
+  'and you never queue behind anyone — it stays in your browser and is never stored ' +
+  'on our side. Your runs still count on the leaderboard.';
 
 function resolveOrigin(origin: string | null): string | null {
   if (!origin) return null;
@@ -167,6 +190,63 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
     return Response.json({ error: 'no_api_key_configured' }, { status: 503, headers: cors });
   }
 
+  // Guardrails, in this order and after the dedupe lookup above: a cached run
+  // costs nothing and must never be refused for lack of quota.
+  //
+  // Without a KV binding there are no counters, so both checks pass. That is the
+  // deliberate direction to fail in — a KV outage should slow nobody down, and
+  // Groq's own 429 is the backstop underneath this one.
+  if (env.BUDGET) {
+    const kv: CounterStore = env.BUDGET;
+    const limits = limitsFromEnv(env);
+
+    try {
+      // Counted for everyone. A player's own key pays Groq; it does not pay for
+      // our Worker's CPU or our D1 writes.
+      const ip = clientIp(request);
+      if (ip) {
+        const verdict = await consumeRateLimit(kv, ip, limits.rate);
+        if (!verdict.ok) {
+          return Response.json(
+            {
+              error: 'rate_limited',
+              scope: verdict.scope,
+              retryAfterSeconds: verdict.retryAfterSeconds,
+              message: `Too many runs from this connection. Try again in ${verdict.retryAfterSeconds}s.`,
+            },
+            {
+              status: 429,
+              headers: { ...cors, 'Retry-After': String(verdict.retryAfterSeconds) },
+            },
+          );
+        }
+      }
+
+      // The shared budget exists to protect the one key everybody shares. A player
+      // spending their own quota is not spending ours, so they skip it entirely.
+      if (!byoKey) {
+        const verdict = await reserveBudget(kv, runCost(challenge.limits), limits.budget);
+        if (!verdict.ok) {
+          return Response.json(
+            {
+              error: 'budget_exhausted',
+              scope: verdict.scope,
+              retryAfterSeconds: verdict.retryAfterSeconds,
+              byoKeyAccepted: true,
+              message: BYO_KEY_PROMPT,
+            },
+            {
+              status: 429,
+              headers: { ...cors, 'Retry-After': String(verdict.retryAfterSeconds) },
+            },
+          );
+        }
+      }
+    } catch {
+      /* A counter we cannot read is not a reason to refuse a run. */
+    }
+  }
+
   try {
     const result = await runChallenge({
       challenge,
@@ -175,6 +255,18 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
       apiKey,
       gateway: { account: env.AIG_ACCOUNT, gateway: env.AIG_GATEWAY, token: env.AIG_TOKEN },
     });
+
+    // Groq's own 429 leaves the player exactly where an exhausted shared budget
+    // would have, so it gets the same offer in the same words. Only when it took
+    // out the whole run: a scorecard on which every case errored teaches nothing,
+    // and storing it would just poison the dedupe cache with a non-result.
+    const allErrored = result.tests.length > 0 && result.tests.every((t) => t.status === 'errored');
+    if (result.rateLimited && allErrored && !byoKey) {
+      return Response.json(
+        { error: 'upstream_rate_limited', byoKeyAccepted: true, message: BYO_KEY_PROMPT },
+        { status: 429, headers: cors },
+      );
+    }
 
     let newBest = false;
     if (env.DB) {
@@ -231,7 +323,17 @@ export default {
     const { pathname } = new URL(request.url);
 
     if (pathname === '/api/health' && request.method === 'GET') {
-      return Response.json({ ok: true }, { headers: cors });
+      // The remaining shared allowance is worth knowing before a LinkedIn post
+      // goes out, and it is not sensitive: it is a count of tokens, not of people.
+      let budget: Awaited<ReturnType<typeof budgetStatus>> | null = null;
+      if (env.BUDGET) {
+        try {
+          budget = await budgetStatus(env.BUDGET, limitsFromEnv(env).budget);
+        } catch {
+          /* health must stay up even when the counter store does not */
+        }
+      }
+      return Response.json({ ok: true, budget }, { headers: cors });
     }
 
     // Only the public block of each challenge. Test inputs, expected values,

@@ -20,6 +20,74 @@ let challenges = [];
 let models = [];
 let current = null;
 
+// ------------------------------------------------------------ bring-your-own key
+
+// This browser and nowhere else. The key is sent with each run and used for that
+// run; the Worker never writes it to the database or to a log. Local storage
+// throws in some private-browsing modes, so every access is guarded — a browser
+// that refuses to remember the key should still let someone play on the shared one.
+const KEY_STORAGE = 'promptgym.groqKey';
+
+function storedKey() {
+  try {
+    return localStorage.getItem(KEY_STORAGE) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+function rememberKey(key) {
+  try {
+    if (key) localStorage.setItem(KEY_STORAGE, key);
+    else localStorage.removeItem(KEY_STORAGE);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Held in memory as well as in storage, so a browser that refuses to persist it
+ *  still uses it for the rest of the session. */
+let sessionKey = storedKey();
+
+function renderKeyState(message) {
+  const status = $('byo-status');
+  const active = Boolean(sessionKey);
+
+  $('byo-summary').textContent = active
+    ? 'Running on your own Groq key'
+    : 'Your key, your compute, no waiting';
+  $('byo-key').value = active ? sessionKey : '';
+  $('byo-clear').hidden = !active;
+  $('byo-save').textContent = active ? 'Update key' : 'Save key';
+
+  if (message !== undefined) {
+    status.textContent = message;
+    status.className = 'muted';
+  } else if (active) {
+    status.textContent = 'Your key is in use for every run from this browser.';
+    status.className = 'byo-active';
+  } else {
+    status.textContent = '';
+    status.className = 'muted';
+  }
+}
+
+/** Opens the panel where the player is already looking, with the reason. The copy
+ *  comes from the Worker so the landing page and the blocked moment cannot drift. */
+function offerKey(message) {
+  const panel = $('byo');
+  panel.open = true;
+  panel.classList.add('urgent');
+  renderKeyState(message);
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  $('byo-key').focus();
+}
+
+function keyHeader() {
+  return sessionKey ? { 'X-Groq-Key': sessionKey } : {};
+}
+
 // ---------------------------------------------------------------- challenges
 
 async function loadChallenges() {
@@ -237,6 +305,7 @@ async function run() {
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...keyHeader(),
       },
       body: JSON.stringify({
         challengeId: current.id,
@@ -245,6 +314,17 @@ async function run() {
       }),
     });
     const data = await res.json();
+
+    // The shared allowance is gone, or Groq throttled the house key. Either way
+    // the player's own key is what clears it, so the offer is made here rather
+    // than reported as a failure they can do nothing about.
+    if (!res.ok && data.byoKeyAccepted) {
+      $('run-status').className = 'notice';
+      $('run-status').textContent = data.message;
+      offerKey(data.message);
+      return;
+    }
+
     if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
     $('run-status').textContent = '';
     renderScorecard(data);
@@ -445,6 +525,37 @@ $('tab-leaderboard').addEventListener('click', () => showTab('leaderboard'));
 
 $('prompt').addEventListener('input', updateCharCount);
 $('run').addEventListener('click', run);
+
+$('byo-save').addEventListener('click', () => {
+  const key = $('byo-key').value.trim();
+  if (!key) {
+    renderKeyState('Paste a key first — it starts with gsk_.');
+    return;
+  }
+  // Checked here only to catch a pasted wrong thing early. The Worker does not
+  // validate the shape: Groq owns what a valid key looks like, not us.
+  if (!key.startsWith('gsk_')) {
+    renderKeyState('That does not look like a Groq key — they start with gsk_.');
+    return;
+  }
+
+  sessionKey = key;
+  $('byo').classList.remove('urgent');
+  renderKeyState(
+    rememberKey(key)
+      ? 'Saved in this browser. Your runs use your key from now on.'
+      : 'This browser will not let the page store anything, so the key is used for ' +
+          'this session only and forgotten when you close the tab.',
+  );
+});
+
+$('byo-clear').addEventListener('click', () => {
+  sessionKey = '';
+  rememberKey('');
+  $('byo').classList.remove('urgent');
+  renderKeyState('Removed. Runs go back to the shared allowance.');
+});
+
 $('result-back').addEventListener('click', () => {
   history.pushState({}, '', location.pathname.replace(/r\/[^/]+\/?$/, ''));
   showTab('challenges');
@@ -512,6 +623,8 @@ $('signin').addEventListener('click', async () => {
 });
 
 $('signout').addEventListener('click', () => signOutUser());
+
+renderKeyState();
 
 loadChallenges().then(() => {
   // A share link lands here too, because Firebase rewrites all of /prompt-gym/**

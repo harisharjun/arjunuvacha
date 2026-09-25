@@ -306,7 +306,22 @@ npx wrangler kv namespace create BUDGET
 
 > Milestone M8. Add a KV-backed shared-budget counter keyed by day and by minute, decremented by each run's `estimatedTokensPerRun`. When exhausted, return a typed `BudgetExhausted` response and have the SPA switch to BYO-key mode. Add per-IP rate limits (per minute and per hour). Requests carrying `X-Groq-Key` bypass the shared budget but not the IP limits. Write the BYO-key explanation into the landing page copy per the design doc. Verify the user's key is never written to D1, never logged, and never echoed in any error.
 
-**Launch checklist:** all 14 challenges loaded · **reference and strawman verified for each — see the parked validation pass below** · secrets set via `wrangler secret put` and absent from git · an unknown challenge id returns a clean 400 · anonymous play works in a private window · reveal filter confirmed in the network tab.
+**✅ Code done 25 Sep 2026, with one step left on the Mac.** `worker/prompt-gym/src/budget.ts` holds both counters; `src/index.ts` runs them after the dedupe lookup and before the key is used. A `X-Groq-Key` request skips the budget and not the IP limits. The SPA carries the offer on the landing page and reopens the same panel in context on a 429. 354 tests pass, `tsc` clean.
+
+Two things worth knowing about the shape it took:
+
+- **Groq's own 429 never reached the handler's `catch`.** `runChallenge` converts a per-case provider failure into an `errored` outcome rather than throwing, so the BYO offer had to be made from the run's result — `RunResponse.rateLimited` — not from an exception. A run the throttle took out entirely returns 429 and is not stored; one that only partly errored still returns its scorecard, because throwing away real graded cases to show a banner costs the player the run they waited for.
+- **The Worker runs unguarded when `env.BUDGET` is absent**, deliberately: a KV outage should not take the site down. Which is also why the binding below is not optional.
+
+**Still to run on the Mac — the guardrails are inert until it does:**
+
+```bash
+cd worker/prompt-gym
+npx wrangler kv namespace create BUDGET     # paste the id into wrangler.toml
+npx wrangler deploy
+```
+
+**Launch checklist:** now a document of its own — `docs/launch-checklist.md`. It splits the list into what the test suite proves (14 challenges loaded, unknown id → clean 400, the reveal filter, the key never stored or echoed), what was checked in the repo (no Groq key in git; the committed Firebase web key is public by design), and what only Arjun can do: the KV namespace, `wrangler secret list`, anonymous play in a private window, the reveal filter in the network tab, guest-to-Google linking, and the BYO-key path end to end.
 
 ---
 

@@ -175,3 +175,42 @@ select {
 label.inline { display: inline-flex; align-items: center; gap: .35rem; margin: 0; }
 #result-card .total { margin-bottom: .75rem; }
 #result-card .primary { margin-top: 1rem; }
+
+/* Bring-your-own-key panel. Collapsed to one line on the landing page; the same
+   element is opened in context when the shared allowance runs out. */
+#byo {
+  margin: 0 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  font-size: .9rem;
+}
+#byo[open] { border-color: var(--accent); }
+#byo summary {
+  cursor: pointer;
+  padding: .6rem .9rem;
+  font-weight: 600;
+  list-style-position: inside;
+}
+#byo.urgent { border-color: var(--err); }
+#byo.urgent summary { color: var(--err); }
+.byo-body { padding: 0 .9rem .9rem; max-width: 62ch; }
+.byo-body p { margin: .5rem 0; }
+.byo-form { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin: .75rem 0 .25rem; }
+.byo-form input {
+  flex: 1 1 18rem;
+  padding: .45rem .55rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .85rem;
+}
+#byo-status:empty { display: none; }
+.byo-active { color: var(--pass); font-weight: 600; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}

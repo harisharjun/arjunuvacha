@@ -16,6 +16,18 @@ AIG_GATEWAY = "vani"
 # staging and production frontends, because they share one Worker and one D1.
 FIREBASE_PROJECT_ID = "arjunuvacha-3de80"
 
+# Guardrails (M8). Vars rather than constants because Groq publishes its free-tier
+# ceilings per organisation and moves them — check yours under Settings → Limits.
+# These sit under the published 8K tokens/minute and 200K tokens/day so that KV's
+# eventual consistency overshoots into headroom rather than into a 429.
+# Omit any of them and `src/budget.ts` uses its own defaults, which are these.
+BUDGET_TOKENS_PER_DAY = "180000"
+BUDGET_TOKENS_PER_MINUTE = "7000"
+# Per IP, counting runs rather than tokens. A player using their own Groq key is
+# still counted: their key pays Groq, not our Worker.
+RATE_LIMIT_PER_MINUTE = "6"
+RATE_LIMIT_PER_HOUR = "60"
+
 # Secret (set with `wrangler secret put GROQ_API_KEY`, do NOT put the value here):
 #   GROQ_API_KEY  -> the existing gsk_… key (same one arjun-rag / vani use)
 
@@ -31,4 +43,19 @@ database_name = "promptgym"
 database_id = "3713edb6-3c4c-4b81-a171-4ffb19ace107"
 migrations_dir = "migrations"
 
-# Still to bind: KV for the budget counter (M8), Workers AI for embeddings.
+# The shared-budget and per-IP rate-limit counters. Create the namespace and paste
+# the id it prints, on a machine with Cloudflare auth:
+#
+#   npx wrangler kv namespace create BUDGET
+#
+# Until this is bound the Worker still runs — `src/index.ts` skips both checks when
+# `env.BUDGET` is absent, on the grounds that a missing counter should not take the
+# site down. That is also why it must not stay commented out: with no binding there
+# is no budget, and Groq's own 429 is the only thing standing between a LinkedIn
+# post and an empty daily allowance.
+#
+# [[kv_namespaces]]
+# binding = "BUDGET"
+# id = "<paste the id from the command above>"
+
+# Still to bind: Workers AI for the embeddings the `similar` assertions need.

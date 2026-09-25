@@ -40,6 +40,40 @@
     <button id="tab-leaderboard" class="tab">Leaderboard</button>
   </nav>
 
+  <!-- Sits outside the views on purpose. The offer is made up front on the landing
+       page, and the identical panel is what gets opened in context when the shared
+       allowance runs out mid-challenge — one explanation, not two. -->
+  <details id="byo">
+    <summary id="byo-summary">Your key, your compute, no waiting</summary>
+    <div class="byo-body">
+      <p>
+        PromptGym runs on Groq's free tier, and that pool is shared by everyone on
+        the site. It is small — a busy hour empties it. Bring your own free Groq
+        key and you never queue behind anyone.
+      </p>
+      <p class="muted">
+        Get one at
+        <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">console.groq.com/keys</a>
+        — free, and it takes about a minute.
+      </p>
+      <div class="byo-form">
+        <label for="byo-key" class="visually-hidden">Your Groq API key</label>
+        <input id="byo-key" type="password" autocomplete="off" spellcheck="false"
+          placeholder="gsk_…">
+        <button id="byo-save" class="secondary">Save key</button>
+        <button id="byo-clear" class="link" hidden>Remove</button>
+      </div>
+      <p id="byo-status" class="muted" role="status" aria-live="polite"></p>
+      <p class="muted">
+        The key is kept in this browser's local storage and nowhere else. It is sent
+        with each run over HTTPS, used for that run, and never written to our
+        database or our logs. Removing it here removes it.
+        Runs on your own key are graded by the same pinned judge, so they still
+        count on the leaderboard.
+      </p>
+    </div>
+  </details>
+
   <main>
     <section id="list-view">
       <div id="progress-strip" class="progress" hidden></div>

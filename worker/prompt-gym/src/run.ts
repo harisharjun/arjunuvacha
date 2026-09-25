@@ -66,6 +66,12 @@ export interface RunResponse {
   promptChars: number;
   promptTokens: number;
   leaderboardEligible: boolean;
+  /** True when the provider turned at least one call away with its own 429.
+   *
+   *  Distinct from every other kind of `errored`, because it is the one the player
+   *  can do something about: their own key clears it. Optional because results
+   *  cached in D1 before this field existed are replayed as-is. */
+  rateLimited?: boolean;
   byGrader: { metric: string; score: number; weight: number }[];
   tests: PublicTestResult[];
 }
@@ -139,6 +145,7 @@ export async function runChallenge(options: RunOptions): Promise<RunResponse> {
   let promptTokens = 0;
   let anyErrored = false;
   let anyPending = false;
+  let anyRateLimited = false;
 
   const cases: CaseResult[] = [];
   const publicTests: PublicTestResult[] = [];
@@ -148,6 +155,7 @@ export async function runChallenge(options: RunOptions): Promise<RunResponse> {
 
     if (outcome.status === 'errored') {
       anyErrored = true;
+      if (outcome.kind === 'rate-limited') anyRateLimited = true;
       const errored: AssertionResult[] = declared.map((a) => ({
         type: a.type,
         metric: a.metric,
@@ -235,6 +243,7 @@ export async function runChallenge(options: RunOptions): Promise<RunResponse> {
     promptTokens,
     // A run that errored, or whose graders could not all run, must never be banked.
     leaderboardEligible: !anyErrored && !anyPending,
+    rateLimited: anyRateLimited,
     byGrader: [...totals.entries()].map(([metric, t]) => ({
       metric,
       score: t.weight > 0 ? t.weighted / t.weight : 0,

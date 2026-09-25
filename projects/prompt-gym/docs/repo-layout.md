@@ -42,7 +42,8 @@ arjunuvacha/
 │       │   ├── challenge-catalog.md
 │       │   ├── challenge-data.md
 │       │   ├── challenge-format.md
-│       │   └── groq-models.md
+│       │   ├── groq-models.md
+│       │   └── launch-checklist.md   ← added at M8
 │       │
 │       ├── challenges/               ← authoring source of truth
 │       │   ├── pg-a1-address-extractor.promptfoo.yaml
