@@ -27,6 +27,7 @@ let mf: Miniflare;
 let db: D1Database;
 let sent: { url: string; auth: string | null; body: Record<string, unknown> }[];
 let resendStatus: number;
+let resendBody: string;
 
 const post = (body: unknown) =>
   new Request('https://worker.test/api/feedback', {
@@ -52,6 +53,7 @@ beforeEach(async () => {
   // Only Resend is intercepted; anything else goes where it was going.
   sent = [];
   resendStatus = 200;
+  resendBody = '{"statusCode":500,"message":"boom"}';
   const realFetch = globalThis.fetch;
   vi.stubGlobal(
     'fetch',
@@ -60,7 +62,9 @@ beforeEach(async () => {
       if (url.startsWith('https://api.resend.com/')) {
         const headers = new Headers(init?.headers);
         sent.push({ url, auth: headers.get('Authorization'), body: JSON.parse(String(init?.body)) });
-        return new Response('{"id":"email_1"}', { status: resendStatus });
+        return resendStatus === 200
+          ? new Response('{"id":"email_1"}', { status: 200 })
+          : new Response(resendBody, { status: resendStatus });
       }
       return realFetch(input, init);
     }),
@@ -146,6 +150,27 @@ describe('a signed-in player sending feedback', () => {
     resendStatus = 401;
     const res = await worker.fetch(post({ message: 'x' }), env());
     expect(await res.text()).not.toContain(RESEND_KEY);
+  });
+
+  // A failed notification is otherwise invisible: the player is told "sent",
+  // correctly, and the only trace is this line in `wrangler tail`.
+  it('logs why Resend refused, without the key', async () => {
+    resendStatus = 403;
+    resendBody = `{"statusCode":403,"message":"You can only send testing emails to your own email address. key=${RESEND_KEY}"}`;
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+    await worker.fetch(post({ message: 'x' }), env());
+    const logged = errors.mock.calls.flat().join(' ');
+    expect(logged).toContain('403');
+    expect(logged).toContain('You can only send testing emails');
+    expect(logged).not.toContain(RESEND_KEY);
+    errors.mockRestore();
+  });
+
+  it('says in the log when this Worker has no Resend secrets', async () => {
+    const warns = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await worker.fetch(post({ message: 'x' }), { DB: db });
+    expect(warns.mock.calls.flat().join(' ')).toContain('RESEND_API_KEY or FEEDBACK_TO is not set');
+    warns.mockRestore();
   });
 
   it('refuses an empty message and an over-long one', async () => {

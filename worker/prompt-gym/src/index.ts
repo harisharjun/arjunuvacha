@@ -468,6 +468,10 @@ async function handleFeedback(
     })();
     if (ctx) ctx.waitUntil(notify);
     else await notify;
+  } else {
+    // Saved, and deliberately not an error for the player, but it should not be a
+    // mystery to Arjun why no email came. Each environment has its own secrets.
+    console.warn('feedback saved but not emailed: RESEND_API_KEY or FEEDBACK_TO is not set for this Worker');
   }
 
   return Response.json({ ok: true, id: row.id }, { headers: cors });

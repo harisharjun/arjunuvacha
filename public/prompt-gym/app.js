@@ -1420,6 +1420,10 @@ function openFeedback() {
 }
 
 $('feedback-fab').addEventListener('click', openFeedback);
+$('menu-feedback').addEventListener('click', () => {
+  closeUserMenu();
+  openFeedback();
+});
 $('feedback-message').addEventListener('input', () => {
   updateFeedbackCount();
   storageSet(feedbackDraftKey, $('feedback-message').value);

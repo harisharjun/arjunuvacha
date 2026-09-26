@@ -127,8 +127,17 @@ export async function sendFeedbackEmail(opts: {
       body: JSON.stringify(opts.email),
       signal: controller.signal,
     });
+    if (!res.ok) {
+      // Visible in `wrangler tail`, which is the only place a failed notification
+      // shows up. Resend's error text says why ("You can only send testing emails
+      // to your own email address", "API key is invalid"); it never echoes the key,
+      // and the key is scrubbed here anyway in case that ever changes.
+      const detail = (await res.text().catch(() => '')).slice(0, 300).split(opts.apiKey).join('[redacted]');
+      console.error(`feedback email not sent: Resend returned ${res.status} ${detail}`);
+    }
     return res.ok;
-  } catch {
+  } catch (err) {
+    console.error(`feedback email not sent: ${err instanceof Error ? err.name : 'request failed'}`);
     return false;
   } finally {
     clearTimeout(timer);

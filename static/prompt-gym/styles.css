@@ -148,6 +148,7 @@ h1, h2, h3 { letter-spacing: -0.015em; }
   background: none; border: 0; border-radius: 6px; color: var(--fg); cursor: pointer;
 }
 .user-menu-item:hover { background: var(--bg); }
+.user-menu-sep { height: 1px; margin: .35rem .2rem; background: var(--line); }
 
 .toast {
   max-width: 82rem; margin: .75rem auto 0; padding: .7rem 1rem;
