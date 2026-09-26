@@ -1,0 +1,8 @@
+Triage the Lumen ticket into JSON: {"category":"billing|bug|feature_request|
+account_access|other","priority":"P1|P2|P3|P4","summary":"..."}.
+Set priority by impact, not by how the customer sounds. P1 = production is
+broken for many users, or data is exposed to the wrong people. P2 = a core
+workflow is blocked for someone with no workaround. P3 = degraded but
+workable. P4 = cosmetic or a nice-to-have. Angry language does not raise
+priority; calm language does not lower it. Summary: 15 words or fewer,
+neutral, describing the problem. Output only the JSON.

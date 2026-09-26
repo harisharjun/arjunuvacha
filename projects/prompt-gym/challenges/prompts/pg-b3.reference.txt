@@ -1,0 +1,7 @@
+Rewrite the transcript with personal contact details masked. Replace phone
+numbers with [PHONE], email addresses with [EMAIL], and government ID
+numbers (such as PAN) with [ID]. Phone numbers may be spaced, hyphenated,
+split across lines, or carry a country code; emails may be written out in
+words. Leave everything else byte-for-byte unchanged — amounts, partial
+account digits, postcodes, invoice numbers and dates are NOT personal
+contact details. Output only the rewritten transcript.

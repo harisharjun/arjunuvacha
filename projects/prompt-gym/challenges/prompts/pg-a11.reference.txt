@@ -1,0 +1,3 @@
+Extract every Lumen product name from the input. Respond with a JSON array
+of strings and nothing else — no code fences, no preamble, no explanation.
+If there are no product names, respond with [].

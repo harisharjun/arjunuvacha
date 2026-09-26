@@ -1,0 +1,4 @@
+Rewrite the sentence so it means exactly the same thing but shares as little
+wording as possible with the original. Preserve every fact, number,
+condition and negation precisely. Do not add or remove information. Output
+only the rewritten sentence.

@@ -4,9 +4,11 @@ The list from `coding-runbook.md` §Session 10, split by who can actually check
 each item. The cloud sessions that wrote the code have no Cloudflare auth, no
 Firebase CLI auth and no Groq key, so everything in **By hand** is Arjun's.
 
-Nothing here is a substitute for **Session 11, the challenge-validation pass**.
-Twelve of the fourteen challenges have still never had a real model pointed at
-them. Do not launch before that runs.
+**Session 11 ran on 26 Sep 2026** — see `session-11-validation.md`. All twelve
+authored challenges have now been run against a real model. Seven are ready;
+four are partially validated because the judge path is not exercised by the try
+harness; **pg-c1 is blocked** and should not ship until Workers AI embeddings
+exist. The golf par values were re-derived (84 -> 97, 40 -> 49).
 
 ---
 
@@ -103,11 +105,18 @@ is the thing to fix.
   input focused, and the same wording as the landing page. Put the real value
   back afterwards.
 
-### 7. Session 11 — the challenge-validation pass
+### 7. Decisions left over from Session 11
 
-See `coding-runbook.md` §Session 11. Twelve challenges to validate, plus
-re-deriving the two golf par values against `estimateTokens` (4 chars/token).
-That pass is a launch blocker, not a nice-to-have.
+Done, but it surfaced four things that are yours to call — full detail in
+`session-11-validation.md`:
+
+- **pg-c1** cannot be validated without embeddings and currently scores its
+  strawman *above* its reference. Hold it back, or ship it flagged
+  non-leaderboard as it already is.
+- **pg-b3**'s strawman scores 62 against a <= 40 target. It still fails, so this
+  is a judgement call about how sharp you want the gap.
+- **pg-e4** scores worse on 120b than on 20b.
+- **pg-f1**'s `triage` metric tops out at 50% even for the reference.
 
 ---
 

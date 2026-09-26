@@ -326,7 +326,25 @@ npx wrangler deploy
 ---
 
 ## Session 11 · The parked challenge-validation pass
-**Deferred deliberately on 15 Sep 2026 — do this once M8 is done, before launch**
+**✅ Ran 26 Sep 2026 — results in `session-11-validation.md`**
+
+All twelve authored challenges have now been run against a real model on
+`gpt-oss-20b`, with `gpt-oss-120b` as a second opinion on the six that fell
+short. Seven discriminate cleanly. Four are only partly measurable because
+`npm run try` calls `gradeChallenge` rather than `runChallenge` and so never
+makes a judge call. **pg-c1 is blocked** on Workers AI embeddings and currently
+scores its strawman above its reference, for exactly that reason.
+
+The reference and strawman prompts were promoted out of the YAML comments into
+`challenges/prompts/` — the question this section raised below, now answered
+yes. Four strawmen did not exist at all and were written in the pass; they are
+marked for review in that directory's README.
+
+Golf par re-derived against `estimateTokens`: pg-g1 84 -> 97, pg-g3 40 -> 49.
+Both old values sat below the reference's own length, so the reference was above
+par and the bonus was unreachable.
+
+The original brief follows, for the record.
 
 Only **pg-a2** has ever been run against a real model (reference 100/100, strawman 3/100, on `gpt-oss-20b` at M2), plus a smoke test of **pg-g3** confirming the golf bonus pays. The other twelve are unproven: no test can tell you whether a challenge is impossible, trivially passable, or simply not discriminating, because that needs real model calls and a human reading the result.
 

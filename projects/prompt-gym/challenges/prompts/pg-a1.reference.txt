@@ -1,0 +1,7 @@
+Extract the postal address from the INPUT into JSON with exactly these
+keys: name, line1, city, pincode, state.
+Rules:
+- Output only the JSON object. No prose, no code fences, no preamble.
+- Copy values verbatim from the INPUT. Never infer or guess a value.
+- If a field is not present in the INPUT, use an empty string.
+- If the INPUT contains no postal address at all, output exactly {}

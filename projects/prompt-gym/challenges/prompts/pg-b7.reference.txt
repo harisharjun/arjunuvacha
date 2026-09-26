@@ -1,0 +1,5 @@
+Extract action items from the meeting notes as a JSON array of objects with
+keys "owner" and "action". An action item is something a person committed to
+doing. Discussion, observations, questions and schedule changes are not
+action items. If an action has no named owner, set "owner" to null. If there
+are no action items, return []. Never infer an owner. Output only the JSON.

@@ -1,0 +1,5 @@
+Answer the customer using only the POLICY above. Work out which rule applies
+before answering: annual plans use the 14-day rule, not the 30-day rule, and
+activated add-ons are never refundable. Start with a direct Yes or No, then
+give the reason and cite the number of days that actually applies. Under 40
+words. Do not cite a rule that does not apply to this customer.

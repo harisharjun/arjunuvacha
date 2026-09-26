@@ -1,0 +1,1 @@
+List the product names in this text as JSON.

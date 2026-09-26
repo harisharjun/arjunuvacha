@@ -11,13 +11,13 @@
     "string-check"
   ],
   "public": {
-    "goal": "Same task as 'One label, nothing else' — now in as few tokens as possible. Pass every test case first; only then does brevity earn points. Par is 40 tokens.",
+    "goal": "Same task as 'One label, nothing else' — now in as few tokens as possible. Pass every test case first; only then does brevity earn points. Par is 49 tokens.",
     "startingPrompt": null,
     "exampleInput": "I was charged twice for the October invoice — order LMN-4471 and LMN-4472 are identical. Can you refund the duplicate?",
     "constraintsShown": [
       "Correctness is scored exactly as in the original challenge",
       "The efficiency bonus applies only once you pass",
-      "Par: 40 tokens"
+      "Par: 49 tokens"
     ],
     "gradedOn": [
       "Output is a single word",
@@ -39,7 +39,7 @@
   "scoring": {
     "maxScore": 100,
     "passThreshold": 0.75,
-    "parTokens": 40,
+    "parTokens": 49,
     "maxBonus": 20
   },
   "defaultAssert": [

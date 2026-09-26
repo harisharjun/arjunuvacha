@@ -43,7 +43,8 @@ arjunuvacha/
 │       │   ├── challenge-data.md
 │       │   ├── challenge-format.md
 │       │   ├── groq-models.md
-│       │   └── launch-checklist.md   ← added at M8
+│       │   ├── launch-checklist.md   ← added at M8
+│       │   └── session-11-validation.md
 │       │
 │       ├── challenges/               ← authoring source of truth
 │       │   ├── pg-a1-address-extractor.promptfoo.yaml

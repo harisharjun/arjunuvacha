@@ -14,6 +14,7 @@
 > - `build-guide.md` — how to actually build it: milestones M0–M8, briefs to hand a coding agent, what to review by hand, plus appendices on the YAML→JSON converter and the Workers edge runtime
 > - `coding-runbook.md` — the session-by-session order of operations: commands, paste-ready prompts, done-when tests, and the repo `CLAUDE.md`
 > - `launch-checklist.md` — what is proven by the test suite, what is still Arjun's to do by hand, and the known gaps at launch
+> - `session-11-validation.md` — the 26 Sep 2026 pass running every challenge against a real model: discrimination per challenge, what the try harness cannot measure, and the re-derived golf par values
 >
 > **Challenge files** live one level up, in `projects/prompt-gym/challenges/`
 > - `pg-*.promptfoo.yaml` — all 12 authored challenges (the runtime JSON is generated from these by the build script into `challenges/generated/`; `pg-a1` and `pg-a2` ship both forms as worked examples)

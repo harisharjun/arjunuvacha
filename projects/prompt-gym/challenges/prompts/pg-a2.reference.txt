@@ -1,0 +1,3 @@
+Classify the ticket below into exactly one of: billing, bug,
+feature_request, account_access, other. Reply with only that single label
+in lowercase. No other words, punctuation, or explanation.

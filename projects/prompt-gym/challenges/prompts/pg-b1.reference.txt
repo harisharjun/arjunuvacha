@@ -1,0 +1,8 @@
+Extract the invoice into JSON: {"line_items":[{"description":"...","amount":n}],
+"stated_total":n,"computed_total":n,"total_matches":true|false}.
+Amounts are numbers, not strings — strip commas and currency symbols, keep
+the sign (discounts and credits are negative). Copy stated_total exactly as
+printed on the invoice, even if it looks wrong. Compute computed_total by
+adding the line items. Set total_matches to whether the two are equal.
+Never adjust a line item or the stated total to make them agree.
+Output only the JSON.

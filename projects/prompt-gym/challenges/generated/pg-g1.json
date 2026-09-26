@@ -13,13 +13,13 @@
     "rule-based"
   ],
   "public": {
-    "goal": "Same task as 'Strict JSON address extractor' — but now the prompt has to be short. Pass every test case first; only then does brevity earn points. Par is 84 tokens.",
+    "goal": "Same task as 'Strict JSON address extractor' — but now the prompt has to be short. Pass every test case first; only then does brevity earn points. Par is 97 tokens.",
     "startingPrompt": null,
     "exampleInput": "Ship to Priya Raman, 14 MG Road, Bengaluru 560001, Karnataka",
     "constraintsShown": [
       "Correctness is scored exactly as in the original challenge",
       "The efficiency bonus applies only once you pass",
-      "Par: 84 tokens"
+      "Par: 97 tokens"
     ],
     "gradedOn": [
       "Valid JSON matching the required schema",
@@ -41,7 +41,7 @@
   "scoring": {
     "maxScore": 100,
     "passThreshold": 0.7,
-    "parTokens": 84,
+    "parTokens": 97,
     "maxBonus": 20
   },
   "defaultAssert": [

@@ -10,14 +10,14 @@
       "difficulty": 3,
       "tags": ["golf", "extraction", "json"],
       "public": {
-        "goal": "Same task as 'Strict JSON address extractor' — but now the prompt has to be short. Pass every test case first; only then does brevity earn points. Par is 84 tokens.",
+        "goal": "Same task as 'Strict JSON address extractor' — but now the prompt has to be short. Pass every test case first; only then does brevity earn points. Par is 97 tokens.",
         "constraintsShown": [
           "Correctness is scored exactly as in the original challenge",
           "The efficiency bonus applies only once you pass",
-          "Par: 84 tokens"
+          "Par: 97 tokens"
         ]
       },
-      "scoring": { "parTokens": 84, "maxBonus": 20, "passThreshold": 0.7 }
+      "scoring": { "parTokens": 97, "maxBonus": 20, "passThreshold": 0.7 }
     },
     {
       "id": "pg-g3",
@@ -27,18 +27,18 @@
       "difficulty": 2,
       "tags": ["golf", "classification"],
       "public": {
-        "goal": "Same task as 'One label, nothing else' — now in as few tokens as possible. Pass every test case first; only then does brevity earn points. Par is 40 tokens.",
+        "goal": "Same task as 'One label, nothing else' — now in as few tokens as possible. Pass every test case first; only then does brevity earn points. Par is 49 tokens.",
         "constraintsShown": [
           "Correctness is scored exactly as in the original challenge",
           "The efficiency bonus applies only once you pass",
-          "Par: 40 tokens"
+          "Par: 49 tokens"
         ]
       },
-      "scoring": { "parTokens": 40, "maxBonus": 20, "passThreshold": 0.75 }
+      "scoring": { "parTokens": 49, "maxBonus": 20, "passThreshold": 0.75 }
     }
   ],
 
   "bonusFormula": "efficiencyBonus = round(20 * max(0, 1 - promptTokens / parTokens)), applied only when meanCaseScore >= passThreshold, and capped so total <= 100",
 
-  "$note": "Par values are the token counts of the reference prompts in the parent YAML files. Re-measure them with the same tokeniser the Worker uses before shipping — a par that is wrong by 20% makes the bonus either trivial or unreachable."
+  "$note": "Par values are the token counts of the reference prompts, re-measured on 26 Sep 2026 (Session 11) with the Worker's own estimateTokens — ceil(trimmed_chars/4) — against challenges/prompts/<parent>.reference.txt. pg-g1: 388 chars -> 97. pg-g3: 193 chars -> 49. They were 84 and 40, carried over from a different count, which put the reference prompt itself above par and made the bonus unreachable. Re-derive from those same files if a reference prompt is ever edited."
 }

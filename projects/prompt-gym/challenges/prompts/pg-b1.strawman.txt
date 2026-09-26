@@ -1,0 +1,1 @@
+Extract the invoice details and totals as JSON.

@@ -1,0 +1,5 @@
+Find the calendar date in the message and return exactly {"date":"YYYY-MM-DD"}.
+Rules: numeric dates are day-first (DD/MM/YY). If the message gives only a
+relative date, or a date that does not exist on the calendar, return
+{"date":null}. Never infer a date that is not explicitly stated. Output only
+the JSON object.
