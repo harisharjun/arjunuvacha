@@ -167,10 +167,10 @@ worth counting skipped judgements as absent rather than omitted.
 **Ready (9):** pg-a1, pg-a11, pg-a2, pg-a3, pg-b1, pg-b3, pg-b7, pg-c5, pg-f1 —
 plus the two golf variants, which inherit pg-a1 and pg-a2.
 
-**Shipped but failing (1):** pg-d2 — its strawman passes once the authored
-harness is used. See the correction above.
+**Withheld (3):** pg-c1, pg-e4 and — decided 26 Sep 2026 — pg-d2, whose
+strawman passes once the authored harness is used. See the correction above.
 
-**Withheld (2):** pg-e4 (no passing reference) and pg-c1 (inverted by design).
+**Withheld earlier:** pg-e4 (no passing reference) and pg-c1 (inverted by design).
 Dropped from the shipped catalog on 26 Sep 2026 — see the `WITHHELD` map in
 `worker/prompt-gym/src/challenges.ts`. Both remain imported and validated by the
 build; deleting an entry from that map ships it again.

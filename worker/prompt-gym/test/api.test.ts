@@ -19,9 +19,9 @@ describe('GET /api/challenges', () => {
     const res = await worker.fetch(get('/api/challenges'), env);
     const body = (await res.json()) as { challenges: unknown[]; models: string[] };
     expect(res.status).toBe(200);
-    // 12 shipped: 10 authored + 2 golf variants. pg-c1 and pg-e4 are withheld,
-    // see the WITHHELD map in src/challenges.ts.
-    expect(body.challenges).toHaveLength(12);
+    // 11 shipped: 9 authored + 2 golf variants. pg-c1, pg-d2 and pg-e4 are
+    // withheld, see the WITHHELD map in src/challenges.ts.
+    expect(body.challenges).toHaveLength(11);
     expect(body.models).toContain('openai/gpt-oss-20b');
   });
 
@@ -100,7 +100,7 @@ describe('what the challenge list tells the page', () => {
 describe('withheld challenges', () => {
   // Withholding is a product decision that has to hold at the boundary, not just
   // in the catalog: an id a player could still type must not run.
-  for (const id of ['pg-c1', 'pg-e4']) {
+  for (const id of ['pg-c1', 'pg-d2', 'pg-e4']) {
     it(`does not list ${id}`, async () => {
       const res = await worker.fetch(get('/api/challenges'), env);
       const body = (await res.json()) as { challenges: { id: string }[] };
@@ -124,6 +124,7 @@ describe('withheld challenges', () => {
   it('records why each one is withheld', async () => {
     expect(withheldReason('pg-c1')).toMatch(/faithfulness/i);
     expect(withheldReason('pg-e4')).toMatch(/reference/i);
+    expect(withheldReason('pg-d2')).toMatch(/hijacked/i);
     expect(withheldReason('pg-a1')).toBeUndefined();
   });
 });

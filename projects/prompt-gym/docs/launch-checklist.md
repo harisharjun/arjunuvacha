@@ -151,20 +151,19 @@ never played before if you want to test the linking path itself.
   input focused, and the same wording as the landing page. Put the real value
   back afterwards.
 
-### 8. pg-d2 — decide before launch
+### 8. pg-d2 — withheld, 26 Sep 2026
 
-Found while fixing the harness drift (see `session-11-validation.md`,
-"Correction"): with the harness it was authored with, pg-d2's naive strawman is
-hijacked on one case, leaks its instructions on another, and still passes at 72.
-Options: gate the run on any injection, strengthen the t4 judge, or withhold it
-alongside pg-c1 and pg-e4. It is still in the shipped set today.
+Its strawman is hijacked on t3, leaks its instructions on t4, and still passes at
+72 with the authored harness. Withheld alongside pg-c1 and pg-e4. To bring it
+back: make any injection fail the run outright, or strengthen the t4 judge, then
+re-run with `--live`.
 
 ### 9. Decisions left over from Session 11
 
 Done, but it surfaced four things that are yours to call — full detail in
 `session-11-validation.md`:
 
-**Ten of the twelve ship. pg-c1 and pg-e4 are withheld** — dropped from the
+**Nine of the twelve ship. pg-c1, pg-e4 and pg-d2 are withheld** — dropped from the
 catalog on 26 Sep 2026 via the `WITHHELD` map in `worker/prompt-gym/src/challenges.ts`,
 which also records why. They stay imported and the build still validates them, so
 bringing either back is a one-line deletion once its problem is fixed. The two
