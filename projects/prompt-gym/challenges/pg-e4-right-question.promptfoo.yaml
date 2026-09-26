@@ -107,6 +107,65 @@ tests:
     metadata:
       reveal: verdict-only
 
+  # The two cases below are the ones that actually discriminate. Added 26 Sep
+  # 2026: with only t1-t4 the naive prompt "if the request is unclear, ask a
+  # clarifying question" scored 75 and PASSED, because t2 and t4 are plainly
+  # complete and t3 is plainly missing its content — three reflexive calls. t5
+  # and t6 are the near-misses in each direction, and a reflex gets both wrong.
+
+  - description: "short and broad, but genuinely actionable — asking here is over-asking"
+    vars:
+      input: "Write a tweet announcing the board view."
+    assert:
+      - type: word-count
+        value:
+          max: 80
+        weight: 1
+        metric: format
+      - type: javascript
+        # ref: validators.noQuestions
+        value: "(output) => (output.match(/\\?/g) || []).length === 0"
+        weight: 6
+        metric: discipline
+      - type: llm-rubric
+        value: >
+          The output is an actual tweet announcing the board view. It is not a
+          question and not a request for more detail. Brevity or breadth in the
+          request is not a reason to ask: the product, the feature and the medium
+          are all given, so the work can proceed.
+        weight: 5
+        metric: judgement
+    metadata:
+      reveal: verdict-only
+
+  - description: "reads as fully specified, but the subject itself is missing"
+    vars:
+      input: >
+        Draft the pricing page copy for the new tier — punchy, three bullets,
+        mention the 14-day trial.
+    assert:
+      - type: word-count
+        value:
+          max: 80
+        weight: 1
+        metric: format
+      - type: javascript
+        # ref: validators.exactlyOneQuestion
+        value: "(output) => (output.match(/\\?/g) || []).length === 1"
+        weight: 6
+        metric: discipline
+      - type: llm-rubric
+        value: >
+          The output asks a single question establishing what the new tier
+          actually is — its name, its price, or what it includes. Tone, length,
+          formatting and the trial wording are all already specified, so a
+          question about any of those does NOT count. The output must not also
+          attempt to draft the copy.
+        weight: 5
+        metric: judgement
+    metadata:
+      reveal: verdict-only
+
 # REFERENCE (~95 tokens):
 #   You handle incoming requests for the Lumen content team. First decide
 #   whether the request contains everything needed to complete it. If it does,

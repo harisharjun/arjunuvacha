@@ -33,11 +33,11 @@ were only ever being under-measured.
 | pg-b1 | 80 | 0 | +80 | 100 on 120b — small-model arithmetic |
 | pg-b3 | 100 | 49 | +51 | after the preservation fix below |
 | pg-b7 | 100 | 0 | +100 | |
-| pg-c5 | 81 | 11 | +70 | live; non-eligible until embeddings |
+| pg-c5 | 82 | 24 | +58 | live + embeddings; **eligible** |
 | pg-d2 | 100 | 60 | +40 | live |
-| pg-e4 | 88 | **75** | +13 | live — **the strawman passes** |
 | pg-f1 | 74 | 0 | +74 | live |
-| pg-c1 | 69 | **88** | **−19** | live — **inverted**, needs embeddings |
+| pg-e4 | **67** | 58 | +9 | live, 6 cases — **no passing reference** |
+| pg-c1 | 79 | **88** | **−19** | live + embeddings — **still inverted** |
 
 ## What the floors hid
 
@@ -76,20 +76,43 @@ pure. The `[ai]` binding is in `wrangler.toml` and needs no credential. For
 
 ## Still needs a decision
 
-**pg-e4 — the strawman passes.** 88 vs **75**, against a 70% threshold. The
-naive one-liner *"If the request is unclear, ask a clarifying question"* clears
-the challenge, which means a player can pass it without learning anything. This
-is the most serious finding here and the reason is visible in the breakdown: on
-the three cases that are not t1 the two prompts behave almost identically.
-Either the cases need to separate "ask" from "just do it" more sharply, or the
-threshold has to rise.
+**pg-e4 — the strawman no longer passes, but now nothing does.** With only
+t1–t4 the naive one-liner scored 75 and cleared the challenge: t2 and t4 are
+plainly complete, t3 is plainly missing its content, so three of four cases were
+reflexive and t1 never had to be won.
 
-**pg-c1 — inverted, and worse live than on the floor.** Reference 69, strawman
-88. Its four `similar` assertions carry `faithfulness`, the entire point of the
-challenge; with them excluded only `novelty` is left, where a loose paraphrase
-beats a faithful one by construction. Now that embeddings are implemented this
-should resolve — but it has not been re-run, because that needs the Cloudflare
-token. **Re-run pg-c1 before shipping it.**
+Two near-misses were added, one in each direction. **t5** *"Write a tweet
+announcing the board view."* is short and broad but fully actionable — product,
+feature and medium are all given — so asking is over-asking, which is the clause
+the reference prompt states and nothing previously tested. **t6** *"Draft the
+pricing page copy for the new tier — punchy, three bullets, mention the 14-day
+trial."* reads fully specified but never says what the tier is, so drafting means
+inventing it.
+
+Both work. The strawman now fails at 58. But **so does the reference, at 67** —
+it asks about tone on t1, over-asks on t5, and invents "Premium Pro" on t6. A
+rewritten reference reached only 72, passing on the format point rather than on
+the cases that matter, and the original reference scores 58 on `gpt-oss-120b`
+too, so this is not a small-model limitation.
+
+The cases are good and the reference prompt is not. That is a content decision:
+either write a reference that actually holds the discipline, keep one of the two
+new cases rather than both, or revert to four cases and raise the threshold
+instead. **As it stands pg-e4 has no known passing prompt and must not ship.**
+
+**pg-c1 — embeddings did not fix it.** Reference 79, strawman 88, both now
+leaderboard-eligible with `similar` running. `faithfulness` comes out at **93%
+for both prompts**: cosine similarity cannot tell them apart, because it measures
+topical relatedness rather than factual fidelity. "free plan" → "complimentary
+tier" reads as faithful to an embedding model. So the strawman pays nothing for
+taking liberties while `novelty` — 57% for the reference, 79% for the strawman —
+actively rewards them.
+
+The challenge rewards maximum rewording at no fidelity cost, which is the
+opposite of its intent, and no amount of embedding work will change that. If
+pg-c1 is to ship, `faithfulness` needs a grader that checks facts, numbers,
+conditions and negations survive — an `llm-rubric`, not a `similar`. **Hold it
+back.**
 
 **pg-b1 is fine, but the reference prompt is not optimal.** t1 fails because the
 model computes `12,500 + 3,000 + 2,000 = 18,500`. Both validators fired
@@ -105,9 +128,17 @@ reports 67%, purely because the strawman failed earlier on t1. Totals are
 unaffected; only the per-metric display misleads. Worth a note in the UI, or
 worth counting skipped judgements as absent rather than omitted.
 
+## Where each challenge stands
+
+**Ready (10):** pg-a1, pg-a11, pg-a2, pg-a3, pg-b1, pg-b3, pg-b7, pg-c5, pg-d2,
+pg-f1 — plus the two golf variants, which inherit pg-a1 and pg-a2.
+
+**Not ready (2):** pg-e4 (no passing reference) and pg-c1 (inverted by design).
+Both need a content decision, neither is blocked on infrastructure.
+
 ## Outstanding
 
-- `CF_ACCOUNT_ID` / `CF_API_TOKEN` in `.dev.vars`, then re-run pg-c1 and pg-c5
-  with `--live` to confirm both grade end to end.
-- pg-e4's discrimination.
+- pg-e4: a reference prompt that holds the discipline, or fewer/easier cases.
+- pg-c1: replace the `similar` faithfulness graders with a fact-checking rubric.
 - Guest-to-Google account linking, still never confirmed end to end.
+- The KV namespace for M8.

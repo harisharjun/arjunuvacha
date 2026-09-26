@@ -3,7 +3,7 @@
     "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
     "scoring.passThreshold defaulted to 0.7",
     "harness.maxOutputTokens defaulted to 192",
-    "limits.estimatedTokensPerRun is a rough estimate"
+    "limits.estimatedTokensPerRun is a rough estimate — 592/case, the same rate as every other challenge, x6 cases since t5/t6 were added on 26 Sep 2026. This is the largest run in the set; M8 charges the shared budget by it."
   ],
   "id": "pg-e4",
   "title": "Ask the right question",
@@ -28,8 +28,8 @@
   },
   "limits": {
     "maxPromptChars": 2000,
-    "estimatedCallsPerRun": 8,
-    "estimatedTokensPerRun": 2368,
+    "estimatedCallsPerRun": 12,
+    "estimatedTokensPerRun": 3552,
     "requiresJudge": true
   },
   "scoring": {

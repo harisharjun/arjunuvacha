@@ -7,8 +7,9 @@ Firebase CLI auth and no Groq key, so everything in **By hand** is Arjun's.
 **Session 11 ran on 26 Sep 2026** — see `session-11-validation.md`. All twelve
 authored challenges have now been run against a real model, and `npm run try
 --live` was added so the judge actually runs. Ten discriminate cleanly.
-**pg-e4's strawman passes the challenge** and **pg-c1 scores its strawman above
-its reference**; both need a decision before launch. pg-b3 was fixed to penalise
+**pg-e4 and pg-c1 are not ready** — pg-e4 has no passing reference prompt and
+pg-c1 is inverted because embedding similarity cannot measure fidelity. Both
+need a content decision, neither is blocked on infrastructure. pg-b3 was fixed to penalise
 deletion and over-redaction, and the golf par values were re-derived
 (84 -> 97, 40 -> 49).
 
@@ -91,9 +92,10 @@ npm run try -- pg-c1 --prompt-file ../../projects/prompt-gym/challenges/prompts/
 npm run try -- pg-c5 --prompt-file ../../projects/prompt-gym/challenges/prompts/pg-c5.reference.txt --live
 ```
 
-Expect both to report leaderboard-eligible, and pg-c1's reference to beat its
-strawman. If pg-c1 is still inverted with faithfulness measured, the challenge
-itself needs work.
+**Already done on 26 Sep 2026.** pg-c5 came back 82 vs 24 and eligible — ready.
+pg-c1 came back 79 vs 88, still inverted with faithfulness fully measured, which
+is why it needs a rubric rather than a `similar`. Re-run these two only if the
+graders change.
 
 ### 3. Secrets
 
@@ -137,14 +139,20 @@ is the thing to fix.
 Done, but it surfaced four things that are yours to call — full detail in
 `session-11-validation.md`:
 
-- **pg-e4's strawman passes** — 88 vs 75 against a 70% threshold. A player can
-  clear it with a naive one-liner. Needs sharper cases or a higher threshold.
-- **pg-c1 scores its strawman above its reference** (69 vs 88) because
-  `faithfulness` was unmeasurable. Embeddings are now implemented, so re-run it
-  with `--live` once the Cloudflare token is in `.dev.vars` — it has not been
-  re-run yet.
+**Ten of the twelve are ready and can ship.** Two cannot:
+
+- **pg-e4 has no passing reference prompt.** Two near-miss cases were added and
+  they work — the strawman now fails at 58 — but the reference fails at 67, and
+  at 58 on 120b, so it is not a small-model problem. Write a reference that
+  holds the discipline, keep only one of the two new cases, or revert to four
+  cases and raise the threshold. Do not ship it as it stands.
+- **pg-c1 is inverted by design, and embeddings did not fix it.** Reference 79,
+  strawman 88, with `faithfulness` at 93% for *both* — cosine similarity
+  measures topical relatedness, not factual fidelity, so the strawman pays
+  nothing for taking liberties while `novelty` rewards them. It needs an
+  `llm-rubric` fact-check in place of `similar`, not more embedding work.
 - **pg-b1's reference prompt** never tells the model to check its own sum, which
-  is why t1 fails on 20b. The challenge itself is sound.
+  is why t1 fails on 20b. The challenge itself is sound and it ships.
 
 ---
 

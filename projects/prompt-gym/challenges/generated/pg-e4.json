@@ -22,8 +22,8 @@
   },
   "limits": {
     "maxPromptChars": 2000,
-    "estimatedCallsPerRun": 8,
-    "estimatedTokensPerRun": 2368,
+    "estimatedCallsPerRun": 12,
+    "estimatedTokensPerRun": 3552,
     "requiresJudge": true
   },
   "scoring": {
@@ -115,6 +115,60 @@
         {
           "type": "llm-rubric",
           "value": "The output is an actual changelog entry about the new board view, customer-facing in tone, mentioning Pro-and-above availability. It is not a question and not a request for more detail.\n",
+          "weight": 5,
+          "metric": "judgement"
+        }
+      ]
+    },
+    {
+      "id": "t5",
+      "input": "Write a tweet announcing the board view.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "word-count",
+          "value": {
+            "max": 80
+          },
+          "weight": 1,
+          "metric": "format"
+        },
+        {
+          "type": "javascript",
+          "weight": 6,
+          "metric": "discipline",
+          "ref": "validators.noQuestions"
+        },
+        {
+          "type": "llm-rubric",
+          "value": "The output is an actual tweet announcing the board view. It is not a question and not a request for more detail. Brevity or breadth in the request is not a reason to ask: the product, the feature and the medium are all given, so the work can proceed.\n",
+          "weight": 5,
+          "metric": "judgement"
+        }
+      ]
+    },
+    {
+      "id": "t6",
+      "input": "Draft the pricing page copy for the new tier — punchy, three bullets, mention the 14-day trial.",
+      "reveal": "partial",
+      "assert": [
+        {
+          "type": "word-count",
+          "value": {
+            "max": 80
+          },
+          "weight": 1,
+          "metric": "format"
+        },
+        {
+          "type": "javascript",
+          "weight": 6,
+          "metric": "discipline",
+          "ref": "validators.exactlyOneQuestion"
+        },
+        {
+          "type": "llm-rubric",
+          "value": "The output asks a single question establishing what the new tier actually is — its name, its price, or what it includes. Tone, length, formatting and the trial wording are all already specified, so a question about any of those does NOT count. The output must not also attempt to draft the copy.\n",
           "weight": 5,
           "metric": "judgement"
         }
