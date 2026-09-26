@@ -143,7 +143,7 @@ OPENAI_TOKENS_PER_DAY = "3000000"
 [[env.staging.d1_databases]]
 binding = "DB"
 database_name = "promptgym-staging"
-database_id = "REPLACE-WITH-ID-FROM-wrangler-d1-create-promptgym-staging"
+database_id = "fdbf67dc-d886-414f-9b5b-88ae80fbc1d8"
 migrations_dir = "migrations"
 
 [[env.staging.kv_namespaces]]
