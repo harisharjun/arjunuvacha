@@ -25,6 +25,8 @@
   --partial-soft: #fbf1dc;
   --fail: #b3362b;
   --err: #8a6d1f;
+  /* Highlighter yellow, for the terms the landing page is about. */
+  --highlight: rgba(250, 204, 21, .42);
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -54,6 +56,7 @@
     --partial-soft: #3a2f16;
     --fail: #ef8178;
     --err: #d9b45c;
+    --highlight: rgba(250, 204, 21, .34);
     --shadow: 0 1px 2px rgba(0, 0, 0, .3);
     --shadow-lg: 0 12px 32px rgba(0, 0, 0, .5);
   }
@@ -217,7 +220,7 @@ h1, h2, h3 { letter-spacing: -0.015em; }
 mark.hl {
   color: var(--fg); font-weight: 650; padding: 0 .15em; margin: 0 -.05em;
   border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
-  background: linear-gradient(transparent 38%, color-mix(in srgb, var(--maroon) 26%, transparent) 38%);
+  background: linear-gradient(transparent 38%, var(--highlight) 38%);
 }
 
 
