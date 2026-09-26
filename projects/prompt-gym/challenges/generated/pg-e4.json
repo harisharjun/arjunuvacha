@@ -9,16 +9,14 @@
     "rule-based"
   ],
   "public": {
+    "summary": "Know when to just do the work, and when to ask the one question that unblocks it.",
     "goal": "Write a prompt that handles incoming requests to the Lumen content team. If a request is missing something essential, ask exactly one clarifying question — the one that actually unblocks the work. If the request is already answerable, just answer it. Never do both.",
     "startingPrompt": null,
     "exampleInput": "Can you write a welcome email for new users?",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 192
+    "gradedOn": [],
+    "context": [],
+    "inputLabel": "REQUEST"
   },
   "limits": {
     "maxPromptChars": 2000,
@@ -29,6 +27,11 @@
   "scoring": {
     "maxScore": 100,
     "passThreshold": 0.7
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nREQUEST:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
   },
   "defaultAssert": [
     {

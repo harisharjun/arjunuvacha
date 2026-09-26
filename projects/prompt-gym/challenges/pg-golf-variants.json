@@ -1,44 +1,58 @@
 {
   "$comment": "Golf variants reuse a parent challenge's test cases and assertions verbatim. They are configuration, not authoring — the build script expands each entry by cloning the parent's `tests` and `defaultAssert`, swapping mode to 'golf', and attaching the efficiency bonus. Nothing here needs its own promptfoo YAML.",
-
   "variants": [
     {
       "id": "pg-g1",
       "parent": "pg-a1",
-      "title": "Shortest strict-JSON extractor",
+      "title": "Pull out an address, in fewer words",
       "mode": "golf",
       "difficulty": 3,
-      "tags": ["golf", "extraction", "json"],
+      "tags": [
+        "golf",
+        "extraction",
+        "json"
+      ],
       "public": {
-        "goal": "Same task as 'Strict JSON address extractor' — but now the prompt has to be short. Pass every test case first; only then does brevity earn points. Par is 97 tokens.",
+        "goal": "Same task as 'Pull out an address' — but now the prompt has to be short. Pass every test case first; only then does brevity earn points. Par is 97 tokens.",
         "constraintsShown": [
           "Correctness is scored exactly as in the original challenge",
           "The efficiency bonus applies only once you pass",
           "Par: 97 tokens"
-        ]
+        ],
+        "summary": "The same address task — but a shorter prompt earns bonus points once you pass."
       },
-      "scoring": { "parTokens": 97, "maxBonus": 20, "passThreshold": 0.7 }
+      "scoring": {
+        "parTokens": 97,
+        "maxBonus": 20,
+        "passThreshold": 0.7
+      }
     },
     {
       "id": "pg-g3",
       "parent": "pg-a2",
-      "title": "Minimal one-label classifier",
+      "title": "Label a ticket, in fewer words",
       "mode": "golf",
       "difficulty": 2,
-      "tags": ["golf", "classification"],
+      "tags": [
+        "golf",
+        "classification"
+      ],
       "public": {
-        "goal": "Same task as 'One label, nothing else' — now in as few tokens as possible. Pass every test case first; only then does brevity earn points. Par is 49 tokens.",
+        "goal": "Same task as 'Label a support ticket' — now in as few tokens as possible. Pass every test case first; only then does brevity earn points. Par is 49 tokens.",
         "constraintsShown": [
           "Correctness is scored exactly as in the original challenge",
           "The efficiency bonus applies only once you pass",
           "Par: 49 tokens"
-        ]
+        ],
+        "summary": "The same labelling task. Pass it with the shortest prompt you can."
       },
-      "scoring": { "parTokens": 49, "maxBonus": 20, "passThreshold": 0.75 }
+      "scoring": {
+        "parTokens": 49,
+        "maxBonus": 20,
+        "passThreshold": 0.75
+      }
     }
   ],
-
   "bonusFormula": "efficiencyBonus = round(20 * max(0, 1 - promptTokens / parTokens)), applied only when meanCaseScore >= passThreshold, and capped so total <= 100",
-
   "$note": "Par values are the token counts of the reference prompts, re-measured on 26 Sep 2026 (Session 11) with the Worker's own estimateTokens — ceil(trimmed_chars/4) — against challenges/prompts/<parent>.reference.txt. pg-g1: 388 chars -> 97. pg-g3: 193 chars -> 49. They were 84 and 40, carried over from a different count, which put the reference prompt itself above par and made the bonus unreachable. Re-derive from those same files if a reference prompt is ever edited."
 }

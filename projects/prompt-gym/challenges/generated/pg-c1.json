@@ -1,6 +1,6 @@
 {
   "id": "pg-c1",
-  "title": "Faithful paraphrase",
+  "title": "Reword without changing meaning",
   "mode": "goal",
   "difficulty": 3,
   "tags": [],
@@ -9,16 +9,14 @@
     "rule-based"
   ],
   "public": {
+    "summary": "Rewrite a sentence in completely new words while keeping every fact exactly right.",
     "goal": "Rewrite the sentence so it means the same thing but shares as little wording as possible with the original. Keep every factual claim intact. Output only the rewritten sentence.",
     "startingPrompt": null,
     "exampleInput": "Lumen's free plan supports up to three active projects and one collaborator per project.",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 192
+    "gradedOn": [],
+    "context": [],
+    "inputLabel": "INPUT"
   },
   "limits": {
     "maxPromptChars": 2000,
@@ -29,6 +27,11 @@
   "scoring": {
     "maxScore": 100,
     "passThreshold": 0.7
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
   },
   "defaultAssert": [
     {

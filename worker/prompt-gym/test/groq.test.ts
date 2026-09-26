@@ -127,6 +127,39 @@ describe('execute', () => {
   });
 });
 
+describe('harness rendering', () => {
+  const sent = async (prompt: string, input: string, template?: string) => {
+    const fetchImpl = vi.fn().mockImplementation(async () => ok('x'));
+    await execute({ ...base, fetchImpl, prompt, input, template });
+    return JSON.parse(fetchImpl.mock.calls[0][1].body).messages[0].content as string;
+  };
+
+  // String.replace with a string argument treats these as substitution patterns.
+  // A player's prompt has to reach the model byte for byte.
+  it('passes $ patterns in the prompt through verbatim', async () => {
+    const prompt = 'Costs are $$5, keep $& and $` and $\' literally.';
+    expect(await sent(prompt, 'ticket')).toContain(prompt);
+  });
+
+  it('passes $ patterns in the input through verbatim', async () => {
+    const input = 'Refund of $$4,500 — see $& on the invoice.';
+    expect(await sent('classify', input)).toContain(input);
+  });
+
+  // With two chained passes, the second rescans the first one's output.
+  it('does not treat {{input}} typed into a prompt as the input slot', async () => {
+    const content = await sent('Echo {{input}} back to me.', 'THE TICKET', '{{userPrompt}}\n---\nINPUT:\n{{input}}');
+    expect(content).toBe('Echo {{input}} back to me.\n---\nINPUT:\nTHE TICKET');
+  });
+
+  it('renders context authored in the template, like pg-c5\'s policy', async () => {
+    const template = '{{userPrompt}}\n\n---\nPOLICY:\nRefunds within 30 days.\n\nCUSTOMER:\n{{input}}';
+    const content = await sent('Answer from the policy.', 'Can I get a refund?', template);
+    expect(content).toContain('POLICY:\nRefunds within 30 days.');
+    expect(content.endsWith('CUSTOMER:\nCan I get a refund?')).toBe(true);
+  });
+});
+
 describe('rate limiting', () => {
   it('retries exactly once after a 429, then succeeds', async () => {
     const fetchImpl = vi

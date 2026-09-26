@@ -1,6 +1,6 @@
 {
   "id": "pg-g3",
-  "title": "Minimal one-label classifier",
+  "title": "Label a ticket, in fewer words",
   "mode": "golf",
   "difficulty": 2,
   "tags": [
@@ -11,7 +11,8 @@
     "string-check"
   ],
   "public": {
-    "goal": "Same task as 'One label, nothing else' — now in as few tokens as possible. Pass every test case first; only then does brevity earn points. Par is 49 tokens.",
+    "summary": "The same labelling task. Pass it with the shortest prompt you can.",
+    "goal": "Same task as 'Label a support ticket' — now in as few tokens as possible. Pass every test case first; only then does brevity earn points. Par is 49 tokens.",
     "startingPrompt": null,
     "exampleInput": "I was charged twice for the October invoice — order LMN-4471 and LMN-4472 are identical. Can you refund the duplicate?",
     "constraintsShown": [
@@ -23,7 +24,9 @@
       "Output is a single word",
       "Word is one of the five valid labels",
       "The label is correct for the ticket"
-    ]
+    ],
+    "context": [],
+    "inputLabel": "INPUT"
   },
   "harness": {
     "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",

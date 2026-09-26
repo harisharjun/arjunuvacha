@@ -1,6 +1,6 @@
 {
   "id": "pg-a2",
-  "title": "One label, nothing else",
+  "title": "Label a support ticket",
   "mode": "goal",
   "difficulty": 1,
   "tags": [
@@ -11,6 +11,7 @@
     "string-check"
   ],
   "public": {
+    "summary": "Make the model answer with one category word — no chatter, no punctuation.",
     "goal": "Write a prompt that classifies a Lumen support ticket into exactly one of five labels: billing, bug, feature_request, account_access, other. Output only the label — lowercase, no punctuation, no explanation, no preamble.",
     "startingPrompt": null,
     "exampleInput": "I was charged twice for the October invoice — order LMN-4471 and LMN-4472 are identical. Can you refund the duplicate?",
@@ -23,12 +24,9 @@
       "Output is a single word",
       "Word is one of the five valid labels",
       "The label is correct for the ticket"
-    ]
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 192
+    ],
+    "context": [],
+    "inputLabel": "INPUT"
   },
   "limits": {
     "maxPromptChars": 2000,
@@ -44,6 +42,11 @@
       "parTokens": 40,
       "maxBonus": 20
     }
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
   },
   "defaultAssert": [
     {

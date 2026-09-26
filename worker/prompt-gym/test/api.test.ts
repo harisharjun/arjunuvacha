@@ -60,6 +60,43 @@ describe('GET /api/challenges', () => {
   });
 });
 
+describe('what the challenge list tells the page', () => {
+  const list = async () =>
+    ((await (await worker.fetch(get('/api/challenges'), env)).json()) as {
+      challenges: Record<string, unknown>[];
+    }).challenges;
+
+  it('carries a grading breakdown that sums to the whole score', async () => {
+    for (const c of await list()) {
+      const grading = c.grading as { metric: string; share: number }[];
+      expect(grading.length, `${c.id}`).toBeGreaterThan(0);
+      const total = grading.reduce((s, g) => s + g.share, 0);
+      // Shares are rounded to 2dp each, so allow a little slack in the sum.
+      expect(total, `${c.id}`).toBeGreaterThan(0.97);
+      expect(total, `${c.id}`).toBeLessThan(1.03);
+    }
+  });
+
+  // The policy is part of the task: the goal says "using only the policy below".
+  // Before the converter read the YAML template, the Worker never sent it to the
+  // model either.
+  it("shows pg-c5's refund policy, which its goal points the player to", async () => {
+    const c5 = (await list()).find((c) => c.id === 'pg-c5')!;
+    const context = c5.context as { label: string; text: string }[];
+    expect(context.map((x) => x.label)).toContain('POLICY');
+    expect(context[0].text).toMatch(/30 days/);
+    expect(context[0].text).toMatch(/14 days/);
+    expect(c5.inputLabel).toBe('CUSTOMER');
+  });
+
+  it('gives golf challenges their par and bonus, and nobody else', async () => {
+    for (const c of await list()) {
+      if (c.mode === 'golf') expect(c.parTokens, `${c.id}`).toBeGreaterThan(0);
+      else expect(c.parTokens, `${c.id}`).toBeUndefined();
+    }
+  });
+});
+
 describe('withheld challenges', () => {
   // Withholding is a product decision that has to hold at the boundary, not just
   // in the catalog: an id a player could still type must not run.

@@ -1,12 +1,11 @@
 {
   "$review": [
-    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
     "scoring.passThreshold defaulted to 0.7",
-    "harness.maxOutputTokens defaulted to 256",
-    "limits.estimatedTokensPerRun is a rough estimate"
+    "limits.estimatedTokensPerRun is a rough estimate",
+    "title, public.summary and public.gradedOn written 26 Sep 2026 from the actual assertions — review the wording"
   ],
   "id": "pg-b3",
-  "title": "Redaction with zero leakage",
+  "title": "Hide personal details",
   "mode": "goal",
   "difficulty": 4,
   "tags": [],
@@ -14,16 +13,17 @@
     "rule-based"
   ],
   "public": {
+    "summary": "Mask phone numbers, emails and ID numbers in a chat log without touching anything else.",
     "goal": "Write a prompt that redacts personal contact details from a Lumen support transcript. Replace phone numbers with [PHONE], email addresses with [EMAIL], and government ID numbers with [ID]. Leave everything else exactly as it was — including amounts, ticket numbers, dates and postcodes.",
     "startingPrompt": null,
     "exampleInput": "Customer Arun M (arun.m@example.com, 98765 43210) reported the sync failure on ticket LMN-3391.",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 256
+    "gradedOn": [
+      "No phone number, email or ID number survives — in any spacing or spelling",
+      "Each one is replaced with [PHONE], [EMAIL] or [ID]",
+      "Everything that isn't personal stays exactly as written",
+      "Amounts, account endings, dates and ticket numbers are left alone"
+    ]
   },
   "limits": {
     "maxPromptChars": 2000,

@@ -151,7 +151,15 @@ never played before if you want to test the linking path itself.
   input focused, and the same wording as the landing page. Put the real value
   back afterwards.
 
-### 8. Decisions left over from Session 11
+### 8. pg-d2 — decide before launch
+
+Found while fixing the harness drift (see `session-11-validation.md`,
+"Correction"): with the harness it was authored with, pg-d2's naive strawman is
+hijacked on one case, leaks its instructions on another, and still passes at 72.
+Options: gate the run on any injection, strengthen the t4 judge, or withhold it
+alongside pg-c1 and pg-e4. It is still in the shipped set today.
+
+### 9. Decisions left over from Session 11
 
 Done, but it surfaced four things that are yours to call — full detail in
 `session-11-validation.md`:

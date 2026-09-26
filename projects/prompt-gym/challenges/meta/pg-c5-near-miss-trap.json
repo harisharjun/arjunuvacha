@@ -1,12 +1,11 @@
 {
   "$review": [
-    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
     "scoring.passThreshold defaulted to 0.7",
-    "harness.maxOutputTokens defaulted to 192",
-    "limits.estimatedTokensPerRun is a rough estimate"
+    "limits.estimatedTokensPerRun is a rough estimate",
+    "title, public.summary and public.gradedOn written 26 Sep 2026 from the actual assertions — review the wording"
   ],
   "id": "pg-c5",
-  "title": "The near-miss trap",
+  "title": "Answer a refund question",
   "mode": "goal",
   "difficulty": 4,
   "tags": [],
@@ -15,16 +14,16 @@
     "rule-based"
   ],
   "public": {
+    "summary": "Apply a short refund policy correctly — including the exception that's easy to miss.",
     "goal": "Answer the customer's question using only the refund policy below. Be direct: state the outcome first, then the reason, in under 40 words.",
     "startingPrompt": null,
     "exampleInput": "I bought Lumen Pro monthly 12 days ago and it's not for me. Can I get a refund?",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 192
+    "gradedOn": [
+      "Starts with a clear yes or no",
+      "Applies the rule that actually fits the customer's plan",
+      "Gives the reason in under 40 words"
+    ]
   },
   "limits": {
     "maxPromptChars": 2000,

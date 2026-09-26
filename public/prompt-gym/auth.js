@@ -38,12 +38,21 @@ function notify() {
   for (const listener of listeners) listener(currentUser);
 }
 
+/** Linking a guest account to Google does not always copy the Google profile
+ *  onto the user itself — `displayName` and `photoURL` can stay null while the
+ *  provider entry has both. Read either, so the header shows who signed in. */
+function profileField(user, key) {
+  if (user[key]) return user[key];
+  const fromProvider = (user.providerData ?? []).find((p) => p?.[key]);
+  return fromProvider ? fromProvider[key] : null;
+}
+
 function setUser(user) {
   currentUser = user
     ? {
         uid: user.uid,
-        name: user.displayName,
-        photo: user.photoURL,
+        name: profileField(user, 'displayName'),
+        photo: profileField(user, 'photoURL'),
         isAnonymous: user.isAnonymous,
       }
     : null;

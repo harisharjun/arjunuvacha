@@ -1,9 +1,8 @@
 {
   "$review": [
-    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
     "scoring.passThreshold defaulted to 0.7",
-    "harness.maxOutputTokens defaulted to 192",
-    "limits.estimatedTokensPerRun is a rough estimate — 592/case, the same rate as every other challenge, x6 cases since t5/t6 were added on 26 Sep 2026. This is the largest run in the set; M8 charges the shared budget by it."
+    "limits.estimatedTokensPerRun is a rough estimate — 592/case, the same rate as every other challenge, x6 cases since t5/t6 were added on 26 Sep 2026. This is the largest run in the set; M8 charges the shared budget by it.",
+    "title, public.summary and public.gradedOn written 26 Sep 2026 from the actual assertions — review the wording"
   ],
   "id": "pg-e4",
   "title": "Ask the right question",
@@ -15,16 +14,12 @@
     "rule-based"
   ],
   "public": {
+    "summary": "Know when to just do the work, and when to ask the one question that unblocks it.",
     "goal": "Write a prompt that handles incoming requests to the Lumen content team. If a request is missing something essential, ask exactly one clarifying question — the one that actually unblocks the work. If the request is already answerable, just answer it. Never do both.",
     "startingPrompt": null,
     "exampleInput": "Can you write a welcome email for new users?",
     "constraintsShown": [],
     "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 192
   },
   "limits": {
     "maxPromptChars": 2000,

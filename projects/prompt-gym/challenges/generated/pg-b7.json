@@ -1,6 +1,6 @@
 {
   "id": "pg-b7",
-  "title": "Empty input, empty output",
+  "title": "List the action items",
   "mode": "goal",
   "difficulty": 3,
   "tags": [],
@@ -8,16 +8,19 @@
     "rule-based"
   ],
   "public": {
+    "summary": "Find who promised to do what in meeting notes — and return nothing when nobody did.",
     "goal": "Write a prompt that pulls action items out of Lumen meeting notes into [{\"owner\": \"...\", \"action\": \"...\"}]. If an action has no named owner, owner must be null. If there are no action items, return [].",
     "startingPrompt": null,
     "exampleInput": "Standup, 3 Sep. Ravi to push the auth fix to staging by Thursday. Nisha will draft the release note once that's in. Backlog grooming moved to Friday.",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 256
+    "gradedOn": [
+      "Output is a JSON array of owner and action",
+      "Only real commitments count — not discussion, questions or schedule changes",
+      "Owner is null when nobody was named, never guessed",
+      "An empty list when there are no action items"
+    ],
+    "context": [],
+    "inputLabel": "INPUT"
   },
   "limits": {
     "maxPromptChars": 2000,
@@ -28,6 +31,11 @@
   "scoring": {
     "maxScore": 100,
     "passThreshold": 0.7
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
   },
   "defaultAssert": [
     {

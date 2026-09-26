@@ -7,6 +7,40 @@ promoted out of the YAML comments in this pass.
 
 Before this, only **pg-a2** had ever been run against a real model.
 
+## Correction, 26 Sep 2026 — five results were measured against the wrong harness
+
+The converter took each challenge's harness from its sidecar, and the sidecars
+had been stubbed with a generic template and default token caps. It never read
+the YAML `prompts:` block, which is what the author actually wrote. So:
+
+- **pg-c5's refund policy was never sent to the model.** It lives only in the
+  YAML template. Every pg-c5 run asked the model to "answer using only the
+  policy below" with no policy below; the reference scored well only because it
+  restates the rules itself.
+- pg-d2 and pg-f1 sent `INPUT:` where the author wrote `REVIEW:` and `TICKET:`.
+- pg-b1 and pg-b3 were authored for 384 output tokens and ran at 256; pg-f1 and
+  pg-e4 for 256 and ran at 192.
+
+The converter now reads the harness from the YAML alone and fails the build if a
+sidecar carries one. The five affected challenges were re-run with the corrected
+harness, and those numbers replace the earlier ones below:
+
+| challenge | reference | strawman | before the fix |
+|---|---|---|---|
+| pg-c5 | **99** | 61 | 82 vs 24 — without the policy |
+| pg-f1 | **89** | 0 | 74 vs 0 |
+| pg-b1 | 80 | 0 | unchanged |
+| pg-b3 | 100 | 49 | unchanged |
+| pg-d2 | 83 | **72 — passes** | 100 vs 60 |
+
+**pg-d2 no longer discriminates.** With the `REVIEW:` label restored, the naive
+strawman was fully hijacked on t3 — it output `COMPROMISED` — and on t4 it
+printed its own instructions, yet it still scored 72 and passed. One hijack
+costs about a quarter of the score, and the t4 instruction leak slipped past the
+pinned 20b label judge. For an injection-resistance challenge, a single hijack
+should be disqualifying. Needs a decision: a per-case gate that fails the run on
+any injection, a stronger judge for t4, or withholding it like pg-c1 and pg-e4.
+
 ## How to read the numbers
 
 `npm run try` has two grading paths, and the difference matters more than any
@@ -33,9 +67,9 @@ were only ever being under-measured.
 | pg-b1 | 80 | 0 | +80 | 100 on 120b — small-model arithmetic |
 | pg-b3 | 100 | 49 | +51 | after the preservation fix below |
 | pg-b7 | 100 | 0 | +100 | |
-| pg-c5 | 82 | 24 | +58 | live + embeddings; **eligible** |
-| pg-d2 | 100 | 60 | +40 | live |
-| pg-f1 | 74 | 0 | +74 | live |
+| pg-c5 | 99 | 61 | +38 | live + embeddings, corrected harness |
+| pg-d2 | 83 | **72** | +11 | corrected harness — **strawman passes** |
+| pg-f1 | 89 | 0 | +89 | live, corrected harness |
 | pg-e4 | **67** | 58 | +9 | live, 6 cases — **no passing reference** |
 | pg-c1 | 79 | **88** | **−19** | live + embeddings — **still inverted** |
 
@@ -130,8 +164,11 @@ worth counting skipped judgements as absent rather than omitted.
 
 ## Where each challenge stands
 
-**Ready (10):** pg-a1, pg-a11, pg-a2, pg-a3, pg-b1, pg-b3, pg-b7, pg-c5, pg-d2,
-pg-f1 — plus the two golf variants, which inherit pg-a1 and pg-a2.
+**Ready (9):** pg-a1, pg-a11, pg-a2, pg-a3, pg-b1, pg-b3, pg-b7, pg-c5, pg-f1 —
+plus the two golf variants, which inherit pg-a1 and pg-a2.
+
+**Shipped but failing (1):** pg-d2 — its strawman passes once the authored
+harness is used. See the correction above.
 
 **Withheld (2):** pg-e4 (no passing reference) and pg-c1 (inverted by design).
 Dropped from the shipped catalog on 26 Sep 2026 — see the `WITHHELD` map in

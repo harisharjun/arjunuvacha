@@ -1,6 +1,6 @@
 {
   "id": "pg-f1",
-  "title": "Support ticket triage (composite showcase)",
+  "title": "Triage a support ticket",
   "mode": "goal",
   "difficulty": 4,
   "tags": [],
@@ -10,16 +10,18 @@
     "score-model"
   ],
   "public": {
+    "summary": "Sort a ticket, set its priority by real impact rather than tone, and sum it up in a line.",
     "goal": "Turn a Lumen ticket into {\"category\": one of billing|bug|feature_request|account_access|other, \"priority\": P1|P2|P3|P4, \"summary\": string}. Summary must be 15 words or fewer. P1 means production is broken or data is at risk; P4 means cosmetic or nice-to-have. Customer tone is not severity.",
     "startingPrompt": null,
     "exampleInput": "Nobody in the workspace can load any board since about 09:40. Blank screen, spinner forever. Whole team is stopped.",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 192
+    "gradedOn": [
+      "Output is JSON with category, priority and summary",
+      "Priority reflects the actual impact, not how angry the customer sounds",
+      "Summary is neutral and 15 words or fewer"
+    ],
+    "context": [],
+    "inputLabel": "TICKET"
   },
   "limits": {
     "maxPromptChars": 2000,
@@ -30,6 +32,11 @@
   "scoring": {
     "maxScore": 100,
     "passThreshold": 0.7
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nTICKET:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
   },
   "defaultAssert": [
     {

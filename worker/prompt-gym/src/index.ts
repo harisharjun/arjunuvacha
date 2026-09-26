@@ -6,7 +6,8 @@ import {
   findByHash,
   insertSubmission,
   leaderboard,
-  progressFor,
+  playerCount,
+  progressDetailFor,
   promptHash,
   publicResult,
   rankFor,
@@ -396,8 +397,11 @@ export default {
         return Response.json({ error: 'no_database' }, { status: 503, headers: cors });
       }
 
+      // The page asks for 10 in its sidebar and for everyone when the full list is
+      // opened. 500 is a ceiling for a single response, not a design size: past
+      // that the panel needs paging, which is a good problem to have.
       const requested = Number(new URL(request.url).searchParams.get('limit') ?? 50);
-      const limit = Math.min(Math.max(Number.isFinite(requested) ? requested : 50, 1), 100);
+      const limit = Math.min(Math.max(Number.isFinite(requested) ? requested : 50, 1), 500);
 
       const { user } = await userFromRequest(request, env.FIREBASE_PROJECT_ID);
 
@@ -428,11 +432,21 @@ export default {
         const inBoard = user ? board.some((row) => row.uid === user.uid) : false;
         const you = user && !inBoard ? await rankFor(env.DB, user.uid) : null;
 
+        // Only shipped challenges count towards progress. A withheld challenge a
+        // player banked before it was withheld would otherwise inflate "7 of 12"
+        // with a card they can no longer see.
+        const shipped = new Set(challenges.map((c) => c.id));
+        const progress = user
+          ? (await progressDetailFor(env.DB, user.uid)).filter((p) => shipped.has(p.challengeId))
+          : [];
+
         return Response.json(
           {
             leaderboard: board,
             you: you ?? (user ? (board.find((r) => r.uid === user.uid) ?? null) : null),
-            completed: user ? await progressFor(env.DB, user.uid) : [],
+            completed: progress.filter((p) => p.passed).map((p) => p.challengeId),
+            progress,
+            totalPlayers: await playerCount(env.DB),
             totalChallenges: challenges.length,
           },
           { headers: cors },

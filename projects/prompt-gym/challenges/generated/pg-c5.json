@@ -1,6 +1,6 @@
 {
   "id": "pg-c5",
-  "title": "The near-miss trap",
+  "title": "Answer a refund question",
   "mode": "goal",
   "difficulty": 4,
   "tags": [],
@@ -9,16 +9,23 @@
     "rule-based"
   ],
   "public": {
+    "summary": "Apply a short refund policy correctly — including the exception that's easy to miss.",
     "goal": "Answer the customer's question using only the refund policy below. Be direct: state the outcome first, then the reason, in under 40 words.",
     "startingPrompt": null,
     "exampleInput": "I bought Lumen Pro monthly 12 days ago and it's not for me. Can I get a refund?",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 192
+    "gradedOn": [
+      "Starts with a clear yes or no",
+      "Applies the rule that actually fits the customer's plan",
+      "Gives the reason in under 40 words"
+    ],
+    "context": [
+      {
+        "label": "POLICY",
+        "text": "Lumen refunds are available within 30 days of purchase. Annual plans are the\nexception: they are refundable within 14 days of purchase only. Refunds are\nnot available on add-ons once activated."
+      }
+    ],
+    "inputLabel": "CUSTOMER"
   },
   "limits": {
     "maxPromptChars": 2000,
@@ -29,6 +36,11 @@
   "scoring": {
     "maxScore": 100,
     "passThreshold": 0.7
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nPOLICY:\nLumen refunds are available within 30 days of purchase. Annual plans are the\nexception: they are refundable within 14 days of purchase only. Refunds are\nnot available on add-ons once activated.\n\nCUSTOMER:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
   },
   "defaultAssert": [
     {

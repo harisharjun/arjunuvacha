@@ -1,6 +1,6 @@
 {
   "id": "pg-a3",
-  "title": "ISO 8601 date normaliser",
+  "title": "Clean up a date",
   "mode": "goal",
   "difficulty": 2,
   "tags": [],
@@ -8,16 +8,18 @@
     "string-check"
   ],
   "public": {
+    "summary": "Convert dates typed any old way into one standard format — and refuse to invent one.",
     "goal": "Lumen's notification service receives dates in whatever format a customer typed. Write a prompt that converts the date in the message to YYYY-MM-DD and returns {\"date\": \"YYYY-MM-DD\"}. Ambiguous numeric dates use the Indian convention, day first. If no specific calendar date can be determined, return {\"date\": null}.",
     "startingPrompt": null,
     "exampleInput": "Your onboarding slot is confirmed for 14th Aug '25.",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 192
+    "gradedOn": [
+      "Returns only the JSON object, nothing around it",
+      "The date is converted correctly, reading numeric dates day-first",
+      "Returns null instead of guessing when a date is relative or doesn't exist"
+    ],
+    "context": [],
+    "inputLabel": "INPUT"
   },
   "limits": {
     "maxPromptChars": 2000,
@@ -28,6 +30,11 @@
   "scoring": {
     "maxScore": 100,
     "passThreshold": 0.7
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 192
   },
   "defaultAssert": [
     {

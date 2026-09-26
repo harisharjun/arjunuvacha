@@ -1,6 +1,6 @@
 {
   "id": "pg-g1",
-  "title": "Shortest strict-JSON extractor",
+  "title": "Pull out an address, in fewer words",
   "mode": "golf",
   "difficulty": 3,
   "tags": [
@@ -13,7 +13,8 @@
     "rule-based"
   ],
   "public": {
-    "goal": "Same task as 'Strict JSON address extractor' — but now the prompt has to be short. Pass every test case first; only then does brevity earn points. Par is 97 tokens.",
+    "summary": "The same address task — but a shorter prompt earns bonus points once you pass.",
+    "goal": "Same task as 'Pull out an address' — but now the prompt has to be short. Pass every test case first; only then does brevity earn points. Par is 97 tokens.",
     "startingPrompt": null,
     "exampleInput": "Ship to Priya Raman, 14 MG Road, Bengaluru 560001, Karnataka",
     "constraintsShown": [
@@ -25,7 +26,9 @@
       "Valid JSON matching the required schema",
       "Accuracy of the extracted values",
       "Not inventing values that are absent from the input"
-    ]
+    ],
+    "context": [],
+    "inputLabel": "INPUT"
   },
   "harness": {
     "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",

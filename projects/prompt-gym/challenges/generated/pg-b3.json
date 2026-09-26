@@ -1,6 +1,6 @@
 {
   "id": "pg-b3",
-  "title": "Redaction with zero leakage",
+  "title": "Hide personal details",
   "mode": "goal",
   "difficulty": 4,
   "tags": [],
@@ -8,16 +8,19 @@
     "rule-based"
   ],
   "public": {
+    "summary": "Mask phone numbers, emails and ID numbers in a chat log without touching anything else.",
     "goal": "Write a prompt that redacts personal contact details from a Lumen support transcript. Replace phone numbers with [PHONE], email addresses with [EMAIL], and government ID numbers with [ID]. Leave everything else exactly as it was — including amounts, ticket numbers, dates and postcodes.",
     "startingPrompt": null,
     "exampleInput": "Customer Arun M (arun.m@example.com, 98765 43210) reported the sync failure on ticket LMN-3391.",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 256
+    "gradedOn": [
+      "No phone number, email or ID number survives — in any spacing or spelling",
+      "Each one is replaced with [PHONE], [EMAIL] or [ID]",
+      "Everything that isn't personal stays exactly as written",
+      "Amounts, account endings, dates and ticket numbers are left alone"
+    ],
+    "context": [],
+    "inputLabel": "INPUT"
   },
   "limits": {
     "maxPromptChars": 2000,
@@ -28,6 +31,11 @@
   "scoring": {
     "maxScore": 100,
     "passThreshold": 0.7
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 384
   },
   "defaultAssert": [],
   "tests": [

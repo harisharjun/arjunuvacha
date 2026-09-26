@@ -176,9 +176,16 @@ export async function execute(options: ExecuteOptions): Promise<ChatResult> {
     );
   }
 
-  const content = (options.template ?? DEFAULT_TEMPLATE)
-    .replace('{{userPrompt}}', options.prompt)
-    .replace('{{input}}', options.input);
+  // One pass, with a function replacer — deliberately not two chained
+  // `.replace(string, string)` calls. A string replacement interprets `$&`, `$'`,
+  // `` $` `` and `$$`, so a prompt containing "$$" reached the model as "$". And a
+  // second pass rescans the first one's output, so a player who typed `{{input}}`
+  // in their own prompt had the test input spliced there and the real slot sent
+  // as a literal. Substituted text is never looked at again this way.
+  const content = (options.template ?? DEFAULT_TEMPLATE).replace(
+    /\{\{(userPrompt|input)\}\}/g,
+    (_, slot: string) => (slot === 'userPrompt' ? options.prompt : options.input),
+  );
 
   return chat([{ role: 'user', content }], options);
 }

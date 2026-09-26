@@ -1,6 +1,6 @@
 {
   "id": "pg-a1",
-  "title": "Strict JSON address extractor",
+  "title": "Pull out an address",
   "mode": "goal",
   "difficulty": 2,
   "tags": [
@@ -13,6 +13,7 @@
     "rule-based"
   ],
   "public": {
+    "summary": "Turn a messy message into a clean address record, without guessing what's missing.",
     "goal": "Write a prompt that extracts a postal address from free text into strict JSON with exactly these keys: name, line1, city, pincode, state. If a field is missing from the input, leave it empty. If the input contains no address at all, return an empty object.",
     "startingPrompt": null,
     "exampleInput": "Ship to Priya Raman, 14 MG Road, Bengaluru 560001, Karnataka",
@@ -25,12 +26,9 @@
       "Valid JSON matching the required schema",
       "Accuracy of the extracted values",
       "Not inventing values that are absent from the input"
-    ]
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 256
+    ],
+    "context": [],
+    "inputLabel": "INPUT"
   },
   "limits": {
     "maxPromptChars": 2000,
@@ -46,6 +44,11 @@
       "parTokens": 84,
       "maxBonus": 20
     }
+  },
+  "harness": {
+    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
+    "temperature": 0,
+    "maxOutputTokens": 256
   },
   "defaultAssert": [
     {

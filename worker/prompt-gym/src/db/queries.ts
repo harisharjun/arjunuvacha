@@ -313,6 +313,61 @@ export async function rankFor(db: D1Database, uid: string): Promise<LeaderboardR
 }
 
 /** Which challenges this user has cleared, for the progress strip. */
+export interface ChallengeProgress {
+  challengeId: string;
+  /** Best leaderboard-eligible score, 0-100. */
+  bestScore: number;
+  passed: boolean;
+  /** When they first passed — the date a player thinks of as "completed". */
+  passedAt: string | null;
+  /** When their best score was last improved. */
+  updatedAt: string;
+}
+
+/** Every challenge this player has a banked score on, passed or not.
+ *
+ *  `passedAt` is the first eligible passing submission, which is what
+ *  "completed on" means to a player: later improvements do not move it. It falls
+ *  back to `best_scores.updated_at` because a deduped run banks a score without
+ *  writing a submission row of its own — the player passed, but the matching
+ *  submission belongs to whoever first ran that prompt. */
+export async function progressDetailFor(db: D1Database, uid: string): Promise<ChallengeProgress[]> {
+  const { results } = await db
+    .prepare(
+      `SELECT b.challenge_id, b.score, b.passed, b.updated_at,
+              (SELECT MIN(s.created_at) FROM submissions s
+                WHERE s.uid = b.uid AND s.challenge_id = b.challenge_id
+                  AND s.passed = 1 AND s.leaderboard_eligible = 1) AS first_passed_at
+       FROM best_scores b
+       WHERE b.uid = ?`,
+    )
+    .bind(uid)
+    .all<{
+      challenge_id: string;
+      score: number;
+      passed: number;
+      updated_at: string;
+      first_passed_at: string | null;
+    }>();
+
+  return (results ?? []).map((r) => ({
+    challengeId: r.challenge_id,
+    bestScore: r.score,
+    passed: r.passed === 1,
+    passedAt: r.passed === 1 ? (r.first_passed_at ?? r.updated_at) : null,
+    updatedAt: r.updated_at,
+  }));
+}
+
+/** How many players are on the board at all, so the page knows whether a
+ *  "show all" is worth offering. */
+export async function playerCount(db: D1Database): Promise<number> {
+  const row = await db
+    .prepare(`WITH totals AS (${TOTALS}) SELECT COUNT(*) AS n FROM totals`)
+    .first<{ n: number }>();
+  return row?.n ?? 0;
+}
+
 export async function progressFor(db: D1Database, uid: string): Promise<string[]> {
   const { results } = await db
     .prepare('SELECT challenge_id FROM best_scores WHERE uid = ? AND passed = 1')

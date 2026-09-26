@@ -4,10 +4,11 @@
 // This is a Node script that runs on your laptop, so Node APIs are fine here —
 // unlike anything under worker/src/. See docs/build-guide.md Appendix B.
 //
-// The YAML is the source of truth for test cases and assertions; a sidecar in
-// challenges/meta/ supplies the runtime-only fields promptfoo has no concept of
-// (mode, difficulty, the public block, limits, scoring). Generated output is
-// disposable — never hand-edit challenges/generated/.
+// The YAML is the source of truth for test cases, assertions AND the harness —
+// the prompt template and the provider settings promptfoo actually runs. A
+// sidecar in challenges/meta/ supplies only the runtime fields promptfoo has no
+// concept of (mode, difficulty, the public block, limits, scoring). Generated
+// output is disposable — never hand-edit challenges/generated/.
 
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname, join, basename } from 'node:path';
@@ -121,6 +122,67 @@ function convertAssertion(src, node, challenge, validatorNames, engineTypes) {
   return { ...rest, ...resolved };
 }
 
+/** The harness is read from the YAML, never from the sidecar.
+ *
+ *  It used to live in the sidecars, which were stubbed with a generic template
+ *  and default token caps — and quietly drifted from what the YAML authored.
+ *  pg-c5's refund policy lived only in its YAML template, so the Worker never
+ *  sent it: the model was asked to "answer using only the policy below" with no
+ *  policy below. pg-b1 and pg-b3 were authored for 384 output tokens and ran at
+ *  256; pg-e4 and pg-f1 for 256 and ran at 192. One owner makes that impossible. */
+function harnessFromYaml(doc, name) {
+  const prompts = doc.get('prompts')?.toJSON?.() ?? doc.get('prompts');
+  const template = Array.isArray(prompts) ? prompts[0] : null;
+  if (typeof template !== 'string') {
+    fail(name, 'no prompts[0] template in the YAML — the harness has nothing to render');
+    return null;
+  }
+  // Block scalars end with a newline; that is YAML syntax, not template content.
+  const trimmed = template.replace(/\n$/, '');
+  if (!trimmed.includes('{{userPrompt}}') || !trimmed.includes('{{input}}')) {
+    fail(name, 'the YAML template must contain both {{userPrompt}} and {{input}}');
+  }
+
+  const config = doc.getIn(['providers', 0, 'config'])?.toJSON?.() ?? {};
+  return {
+    template: trimmed,
+    temperature: typeof config.temperature === 'number' ? config.temperature : 0,
+    maxOutputTokens: typeof config.max_tokens === 'number' ? config.max_tokens : 192,
+  };
+}
+
+/** What the player should see of the harness around their prompt.
+ *
+ *  Fixed context the model receives on every case — pg-c5's refund policy — is
+ *  part of the task, not a secret: the goal says "using only the policy below",
+ *  so it has to actually be below. The label on the input slot (CUSTOMER,
+ *  REVIEW, TICKET) tells the player what kind of text their prompt will face.
+ *  Neither contains test data: the context is identical on every case, and the
+ *  input slot is only ever named here, never filled. */
+function frameFromTemplate(template) {
+  const after = template.split('{{userPrompt}}')[1] ?? '';
+  const body = after.replace(/^\s*---\s*\n/, '');
+  const sections = [];
+  let current = null;
+  for (const line of body.split('\n')) {
+    const heading = /^([A-Z][A-Z ]*[A-Z]):\s*$/.exec(line);
+    if (heading) {
+      current = { label: heading[1], lines: [] };
+      sections.push(current);
+    } else if (current) {
+      current.lines.push(line);
+    }
+  }
+  const context = [];
+  let inputLabel = null;
+  for (const s of sections) {
+    const text = s.lines.join('\n').trim();
+    if (text === '{{input}}') inputLabel = s.label;
+    else if (text) context.push({ label: s.label, text });
+  }
+  return { context, inputLabel };
+}
+
 function convert(yamlPath, validatorNames, engineTypes) {
   const name = basename(yamlPath).replace(/\.promptfoo\.yaml$/, '');
   const src = readFileSync(yamlPath, 'utf8');
@@ -132,6 +194,12 @@ function convert(yamlPath, validatorNames, engineTypes) {
     return null;
   }
   const meta = JSON.parse(readFileSync(metaPath, 'utf8'));
+
+  if (meta.harness) {
+    fail(name, 'the sidecar carries a "harness" block — delete it; the YAML prompts/providers own the harness');
+  }
+  const harness = harnessFromYaml(doc, name);
+  const frame = harness ? frameFromTemplate(harness.template) : { context: [], inputLabel: null };
 
   // 1. defaultTest.assert is promptfoo's inheritance mechanism; the runtime calls
   //    the same thing defaultAssert and never needs to know defaultTest exists.
@@ -167,7 +235,15 @@ function convert(yamlPath, validatorNames, engineTypes) {
   const runtimeMeta = Object.fromEntries(
     Object.entries(rest).filter(([k]) => !k.startsWith('$')),
   );
-  return { path: join(OUT, `${runtimeMeta.id}.json`), challenge: { ...runtimeMeta, defaultAssert, tests } };
+  const publicBlock = {
+    ...(runtimeMeta.public ?? {}),
+    context: frame.context,
+    inputLabel: frame.inputLabel,
+  };
+  return {
+    path: join(OUT, `${runtimeMeta.id}.json`),
+    challenge: { ...runtimeMeta, public: publicBlock, harness, defaultAssert, tests },
+  };
 }
 
 /** The committed pg-a1 JSON was hand-written before this converter existed, which

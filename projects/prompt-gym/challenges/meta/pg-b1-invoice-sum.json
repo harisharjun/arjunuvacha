@@ -1,12 +1,11 @@
 {
   "$review": [
-    "tags, constraintsShown and gradedOn are player-facing copy and were NOT invented — fill them in",
     "scoring.passThreshold defaulted to 0.7",
-    "harness.maxOutputTokens defaulted to 256",
-    "limits.estimatedTokensPerRun is a rough estimate"
+    "limits.estimatedTokensPerRun is a rough estimate",
+    "title, public.summary and public.gradedOn written 26 Sep 2026 from the actual assertions — review the wording"
   ],
   "id": "pg-b1",
-  "title": "Line items must sum to the total",
+  "title": "Check an invoice's maths",
   "mode": "goal",
   "difficulty": 3,
   "tags": [],
@@ -15,16 +14,17 @@
     "string-check"
   ],
   "public": {
+    "summary": "Read an invoice, add up the lines yourself, and flag it when the printed total is wrong.",
     "goal": "Extract a Lumen invoice into {\"line_items\":[{\"description\",\"amount\"}], \"stated_total\": n, \"computed_total\": n, \"total_matches\": true|false}. Copy stated_total exactly as printed on the invoice. Compute computed_total yourself from the line items. Amounts are numbers, not strings.",
     "startingPrompt": null,
     "exampleInput": "Lumen Pro (5 seats) — 12,500\nLumen Analytics add-on — 3,000\nOnboarding support — 2,000\nTotal: 17,500",
     "constraintsShown": [],
-    "gradedOn": []
-  },
-  "harness": {
-    "template": "{{userPrompt}}\n\n---\nINPUT:\n{{input}}",
-    "temperature": 0,
-    "maxOutputTokens": 256
+    "gradedOn": [
+      "Output is JSON with line items, stated total, computed total and a match flag",
+      "The computed total really is the sum of the line items",
+      "The stated total is copied as printed, even when it's wrong",
+      "Discounts and credits keep their minus sign"
+    ]
   },
   "limits": {
     "maxPromptChars": 2000,

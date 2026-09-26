@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Miniflare } from 'miniflare';
 import schemaSql from '../migrations/0001_initial.sql?raw';
-import { leaderboard, rankFor, progressFor, upsertBestScore } from '../src/db/queries';
+import { leaderboard, rankFor, progressFor, progressDetailFor, playerCount, upsertBestScore } from '../src/db/queries';
 import type { RunResponse } from '../src/run';
 
 /** A real D1, via Miniflare — the same SQLite engine the Worker runs against.
@@ -205,5 +205,78 @@ describe('what may be banked', () => {
     await upsertBestScore(db, 'u', result({ score: 95, passed: true }));
     await upsertBestScore(db, 'u', result({ score: 10, passed: false }));
     expect((await leaderboard(db, 50))[0].completed).toBe(1);
+  });
+});
+
+describe('per-challenge progress, for the cards', () => {
+  /** A submission with an explicit time, eligibility and outcome. */
+  const submission = (id: string, uid: string, challenge: string, score: number,
+                      passed: number, eligible: number, at: string) =>
+    exec(`INSERT INTO submissions (id, uid, challenge_id, exec_model, prompt_text, prompt_chars,
+            score, passed, leaderboard_eligible, grader_results_json, prompt_hash, created_at)
+          VALUES ('${id}', '${uid}', '${challenge}', 'm', 'p', 1, ${score}, ${passed}, ${eligible},
+            '{}', 'h-${id}', '${at}')`);
+
+  const banked = (uid: string, challenge: string, score: number, passed: number, subId: string, at: string) =>
+    exec(`INSERT INTO best_scores (uid, challenge_id, score, passed, submission_id, updated_at)
+          VALUES ('${uid}', '${challenge}', ${score}, ${passed}, '${subId}', '${at}')`);
+
+  // "Completed on" is the day they first passed. Improving the score later must
+  // not move it, or a card would claim they only finished yesterday.
+  it('dates a pass by the first passing run, not the best one', async () => {
+    await player('p');
+    await submission('s1', 'p', 'pg-a1', 72, 1, 1, '2026-09-24 10:00:00');
+    await submission('s2', 'p', 'pg-a1', 95, 1, 1, '2026-09-26 10:00:00');
+    await banked('p', 'pg-a1', 95, 1, 's2', '2026-09-26 10:00:00');
+
+    const [row] = await progressDetailFor(db, 'p');
+    expect(row).toMatchObject({ challengeId: 'pg-a1', bestScore: 95, passed: true, passedAt: '2026-09-24 10:00:00' });
+  });
+
+  // A run that errored is not a pass, however it scored.
+  it('ignores a passing run that was not leaderboard-eligible', async () => {
+    await player('p');
+    await submission('s0', 'p', 'pg-a1', 90, 1, 0, '2026-09-20 10:00:00');
+    await submission('s1', 'p', 'pg-a1', 80, 1, 1, '2026-09-25 10:00:00');
+    await banked('p', 'pg-a1', 80, 1, 's1', '2026-09-25 10:00:00');
+
+    expect((await progressDetailFor(db, 'p'))[0].passedAt).toBe('2026-09-25 10:00:00');
+  });
+
+  // A deduped run banks a score against a submission someone else made first,
+  // so this player has no passing submission of their own to date it by.
+  it('falls back to the best-score date when the pass came from the cache', async () => {
+    await player('first');
+    await player('second');
+    await submission('orig', 'first', 'pg-a2', 100, 1, 1, '2026-09-20 10:00:00');
+    await banked('first', 'pg-a2', 100, 1, 'orig', '2026-09-20 10:00:00');
+    await banked('second', 'pg-a2', 100, 1, 'orig', '2026-09-26 12:00:00');
+
+    expect((await progressDetailFor(db, 'second'))[0].passedAt).toBe('2026-09-26 12:00:00');
+  });
+
+  it('reports an attempt that has not passed, with no completion date', async () => {
+    await player('p');
+    await best('p', 'pg-a3', 45, 0);
+
+    const [row] = await progressDetailFor(db, 'p');
+    expect(row).toMatchObject({ challengeId: 'pg-a3', bestScore: 45, passed: false, passedAt: null });
+  });
+
+  it("returns only this player's challenges", async () => {
+    await player('p');
+    await player('q');
+    await best('p', 'pg-a1', 80, 1);
+    await best('q', 'pg-a2', 90, 1);
+    expect((await progressDetailFor(db, 'p')).map((r) => r.challengeId)).toEqual(['pg-a1']);
+  });
+
+  it('counts every player on the board, passed or not', async () => {
+    await player('a');
+    await player('b');
+    await player('c');
+    await best('a', 'pg-a1', 80, 1);
+    await best('b', 'pg-a1', 30, 0);
+    expect(await playerCount(db)).toBe(2);
   });
 });
