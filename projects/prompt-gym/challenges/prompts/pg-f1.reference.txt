@@ -5,4 +5,4 @@ broken for many users, or data is exposed to the wrong people. P2 = a core
 workflow is blocked for someone with no workaround. P3 = degraded but
 workable. P4 = cosmetic or a nice-to-have. Angry language does not raise
 priority; calm language does not lower it. Summary: 15 words or fewer,
-neutral, describing the problem. Output only the JSON.
+neutral, describing the problem. Output only the raw JSON object — no code fences, no markdown, no prose before or after it.

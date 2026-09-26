@@ -1,6 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import worker from '../src/index';
 import { challenges, withheldReason } from '../src/challenges';
+import { publicChallenge } from '../src/grading/reveal';
+import type { Challenge } from '../src/grading/types';
+import pgC5Json from '../../../projects/prompt-gym/challenges/generated/pg-c5.json';
 
 const env = { GROQ_API_KEY: 'gsk_test', AIG_ACCOUNT: 'acc', AIG_GATEWAY: 'vani' };
 
@@ -19,9 +22,9 @@ describe('GET /api/challenges', () => {
     const res = await worker.fetch(get('/api/challenges'), env);
     const body = (await res.json()) as { challenges: unknown[]; models: string[] };
     expect(res.status).toBe(200);
-    // 11 shipped: 9 authored + 2 golf variants. pg-c1, pg-d2 and pg-e4 are
-    // withheld, see the WITHHELD map in src/challenges.ts.
-    expect(body.challenges).toHaveLength(11);
+    // 10 shipped: 8 authored + 2 golf variants. pg-c1, pg-c5, pg-d2 and pg-e4
+    // are withheld, see the WITHHELD map in src/challenges.ts.
+    expect(body.challenges).toHaveLength(10);
     expect(body.models).toContain('openai/gpt-oss-20b');
   });
 
@@ -79,13 +82,16 @@ describe('what the challenge list tells the page', () => {
 
   // The policy is part of the task: the goal says "using only the policy below".
   // Before the converter read the YAML template, the Worker never sent it to the
-  // model either.
-  it("shows pg-c5's refund policy, which its goal points the player to", async () => {
-    const c5 = (await list()).find((c) => c.id === 'pg-c5')!;
-    const context = c5.context as { label: string; text: string }[];
-    expect(context.map((x) => x.label)).toContain('POLICY');
-    expect(context[0].text).toMatch(/30 days/);
-    expect(context[0].text).toMatch(/14 days/);
+  // model either. pg-c5 is withheld for now, so this checks its payload directly —
+  // it is what the page will get the moment it ships again.
+  it("carries pg-c5's refund policy, which its goal points the player to", () => {
+    const c5 = publicChallenge(pgC5Json as unknown as Challenge) as unknown as {
+      context: { label: string; text: string }[];
+      inputLabel: string;
+    };
+    expect(c5.context.map((x) => x.label)).toContain('POLICY');
+    expect(c5.context[0].text).toMatch(/30 days/);
+    expect(c5.context[0].text).toMatch(/14 days/);
     expect(c5.inputLabel).toBe('CUSTOMER');
   });
 
@@ -100,7 +106,7 @@ describe('what the challenge list tells the page', () => {
 describe('withheld challenges', () => {
   // Withholding is a product decision that has to hold at the boundary, not just
   // in the catalog: an id a player could still type must not run.
-  for (const id of ['pg-c1', 'pg-d2', 'pg-e4']) {
+  for (const id of ['pg-c1', 'pg-c5', 'pg-d2', 'pg-e4']) {
     it(`does not list ${id}`, async () => {
       const res = await worker.fetch(get('/api/challenges'), env);
       const body = (await res.json()) as { challenges: { id: string }[] };
@@ -125,6 +131,7 @@ describe('withheld challenges', () => {
     expect(withheldReason('pg-c1')).toMatch(/faithfulness/i);
     expect(withheldReason('pg-e4')).toMatch(/reference/i);
     expect(withheldReason('pg-d2')).toMatch(/hijacked/i);
+    expect(withheldReason('pg-c5')).toMatch(/strawman passes/i);
     expect(withheldReason('pg-a1')).toBeUndefined();
   });
 });

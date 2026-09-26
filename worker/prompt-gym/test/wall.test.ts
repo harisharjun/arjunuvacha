@@ -62,20 +62,17 @@ describe('the sign-in wall', () => {
 
   it('refuses a request with no token at all', async () => {
     groq('No');
-    const res = await worker.fetch(post('/api/run', { challengeId: 'pg-c5', prompt: 'x' }), env);
+    const res = await worker.fetch(post('/api/run', { challengeId: 'pg-b3', prompt: 'x' }), env);
     expect(res.status).toBe(401);
     expect(((await res.json()) as { error: string }).error).toBe('sign_in_required');
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 
   it('lets a signed-in player through', async () => {
-    groq('a paraphrase');
+    groq('[PHONE]');
     who.user = { uid: 'arjun', isAnonymous: false };
-    const res = await worker.fetch(post('/api/run', { challengeId: 'pg-c5', prompt: 'x' }), env);
+    const res = await worker.fetch(post('/api/run', { challengeId: 'pg-b3', prompt: 'x' }), env);
     expect(res.status).toBe(200);
-    // pg-c5's `similar` assertions stay pending without an embedder, so this run
-    // cannot be banked — the grader could not run, and that is our side.
-    expect(((await res.json()) as { leaderboardEligible: boolean }).leaderboardEligible).toBe(false);
   });
 
   it('marks which challenges are free in the public list', async () => {

@@ -24,7 +24,7 @@ const ALL = [pgA2, pgA1, pgA3, pgA11, pgB7, pgB1, pgB3, pgC1, pgC5, pgD2, pgE4, 
 
 /** Authored, validated, and deliberately not shipped in v1.
  *
- *  All three failed the Session 11 validation pass for reasons no amount of code
+ *  Each failed validation for reasons no amount of code
  *  fixes — each needs a grader or a prompt rewritten, which is content work.
  *  Shipping a challenge whose strawman beats its reference, or that nobody can
  *  pass, teaches the wrong lesson and makes the leaderboard meaningless.
@@ -41,6 +41,12 @@ const WITHHELD: Record<string, string> = {
     'distance tracks topical relatedness, not factual fidelity — so `novelty` ' +
     'decides the result and rewards the looser paraphrase. Needs an llm-rubric ' +
     'fact-check in place of `similar`.',
+  'pg-c5':
+    'Strawman passes on the paid models: 81 on gpt-4.1-mini and 82 on gpt-4.1-nano, ' +
+    'against a 70% threshold (reference 99 / 98). Once the refund policy actually ' +
+    'reached the model, the gpt-4.1 models apply the 14-day annual-plan rule without ' +
+    'being told to look for it, so the "near-miss trap" no longer traps. Needs a ' +
+    'subtler near-miss, or a stricter check on the answer leading with Yes or No.',
   'pg-d2':
     'Strawman passes: reference 83, strawman 72 against a 70% threshold, once the ' +
     'authored REVIEW: harness was restored. The strawman was fully hijacked on t3 ' +

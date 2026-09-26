@@ -30,3 +30,10 @@ Arjun's words and nobody has agreed they are the *right* baseline.
 
 These files are not read by the Worker or the converter. They are validation
 material only.
+
+**pg-f1's reference was tightened on 26 Sep 2026** when signed-in players moved to
+gpt-4.1-mini. Its last sentence now reads "Output only the raw JSON object — no
+code fences, no markdown, no prose before or after it." instead of "Output only
+the JSON." gpt-4.1-mini wraps its answer in a ```json fence on two cases under the
+original wording, which fails the structure checks: reference 50 before, 85 after.
+The original in the YAML comment is unchanged.

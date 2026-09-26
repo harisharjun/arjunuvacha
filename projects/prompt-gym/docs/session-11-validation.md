@@ -181,3 +181,32 @@ build; deleting an entry from that map ships it again.
 - pg-c1: replace the `similar` faithfulness graders with a fact-checking rubric.
 - Guest-to-Google account linking, still never confirmed end to end.
 - The KV namespace for M8.
+
+## Re-validation on the paid models — 26 Sep 2026
+
+Signed-in players moved to OpenAI (gpt-4.1-nano everywhere, gpt-4.1-mini on
+Hard), so every shipped challenge was re-run with `--live` on the model players
+now get.
+
+| challenge | level | model | reference | strawman |
+|---|---|---|---|---|
+| pg-a2 | Beginner | nano | 100 | 3 |
+| pg-a1 | Easy | nano | 100 | 67 — **fails, but only 3 points under the bar** |
+| pg-a3 | Easy | nano | 100 | 13 |
+| pg-a11 | Easy | nano | 100 | 48 |
+| pg-b7 | Intermediate | nano | 100 | 23 |
+| pg-b1 | Intermediate | nano | 100 | 0 |
+| pg-b3 | Hard | mini / nano | 91 / 75 | 24 |
+| pg-f1 | Hard | mini / nano | 85 / 74 | 0 |
+| pg-c5 | Hard | mini / nano | 99 / 98 | **81 / 82 — passes** |
+
+**pg-c5 is withheld.** With the policy reaching the model, the gpt-4.1 models
+apply the 14-day annual-plan rule from a naive prompt, so the near-miss no longer
+traps anyone.
+
+**pg-f1's reference was tightened.** gpt-4.1-mini wraps JSON in code fences under
+"Output only the JSON." (reference 50); adding "no code fences, no markdown"
+brings it to 85. See `challenges/prompts/README.md`.
+
+**Watch pg-a1.** Its strawman fails by 3 points on nano. It discriminates, but
+narrowly.
