@@ -93,7 +93,25 @@ npx wrangler deploy
 ```
 
 Apply the migration **before** deploying: the new Worker writes to a table that
-does not exist until it runs. Anything that did not email:
+does not exist until it runs.
+
+**Production's table did not come from this repo's `0002`.** An interrupted
+VS Code session wrote a different `0002_feedback.sql` and applied it to
+production before stopping. Wrangler records migrations by filename, so it
+treats this repo's `0002` as already applied there and will never run it. That
+earlier table has no `email` and no `challenge_id` column, so every insert fails
+until it is patched — once, by hand:
+
+```bash
+npx wrangler d1 execute promptgym --remote --command "ALTER TABLE feedback ADD COLUMN email TEXT; ALTER TABLE feedback ADD COLUMN challenge_id TEXT; CREATE INDEX IF NOT EXISTS idx_feedback_created ON feedback(created_at);"
+npx wrangler d1 execute promptgym --remote --command "PRAGMA table_info(feedback)"   # nine columns
+```
+
+Not a `0003`: SQLite has no `ADD COLUMN IF NOT EXISTS`, and staging already has
+both columns from the real `0002`, so a migration would fail there. Any
+database built fresh gets the right table from `0002`; only production diverged.
+
+Anything that did not email:
 
 ```bash
 npx wrangler d1 execute promptgym --remote \
