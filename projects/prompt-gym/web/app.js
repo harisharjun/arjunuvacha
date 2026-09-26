@@ -435,12 +435,11 @@ function renderHero() {
       : "You've passed every challenge.";
     return;
   }
-  button.textContent = 'Get going';
-  // pg-a2 is the example's own job, so say so: the story continues in the challenge.
-  const sameJob = next.id === 'pg-a2' ? ', the job in the example' : '';
+  // "First" only while it is true: someone who has passed one is on their next.
+  button.textContent = challenges.some(isPassed) ? 'Write your next prompt' : 'Write your first prompt';
   note.textContent = isGuest()
-    ? `No signup, about two minutes. Starts with “${next.title}”${sameJob}.`
-    : `Next up: “${next.title}”${sameJob}.`;
+    ? `No signup, about two minutes. Starts with “${next.title}”.`
+    : `Next up: “${next.title}”.`;
 }
 
 $('hero-start').addEventListener('click', () => {

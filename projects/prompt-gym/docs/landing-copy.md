@@ -1,24 +1,35 @@
 # PromptGym — first-fold copy
 
-## Current: Arjun's own words (26 Sep 2026, third pass)
-
-Neither generated version said what Arjun wanted, so the fold now uses his copy,
-with grammar tidied and nothing else changed:
+## Current: Arjun's own words, no example card (27 Sep 2026)
 
 **How good are you at writing prompts?**
 Try your luck with these challenges. They range from beginner to expert, so you
 can test your ability at every level.
 
-> I built this fun mini-eval system to give my fellow PMs a sneak peek into how
-> messy it can get when you update a system prompt for a new use case, and it
-> silently breaks an older one.
+> I built this **fun mini-eval system** to give my fellow PMs a sneak peek into
+> how messy it can get when you update a **system prompt** for a new use case,
+> and it silently breaks an older one.
 
-Button: **Get going**
+Teams building **AI agents** keep a list of cases that must keep working, and
+re-run all of it after every change. That list is called an **eval**. Every
+challenge here is a small one, with the cases hidden.
 
-The personal note is set apart with a rule so it reads as Arjun talking. The
-v1/v2 example card from the second pass stays under it, since it shows exactly
-what the note describes; the second pass's headline, subheadline and "Arjun
-built PromptGym after…" line are gone.
+Button: **Write your first prompt** ("Write your next prompt" once the player
+has passed one, since "first" would then be untrue).
+
+Bold above = a highlighter mark on the page (`mark.hl`). Arjun asked for the
+page's subjects to stand out: evals, prompts, agents.
+
+**Why the v1/v2 card went:** two columns of tickets and labels was hard to take
+in at a glance. Only its closing sentence about evals was kept, and it now sits
+under the personal note, where it explains what "mini-eval" means.
+
+---
+
+## Third pass: Arjun's own words, with the example card (26 Sep 2026)
+
+Same headline, subheadline and note as above, with the button reading
+**Get going** and the v1/v2 card from the second pass underneath.
 
 ---
 
