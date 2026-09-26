@@ -4,6 +4,7 @@ import {
   onAuthStateChanged,
   signInAnonymously,
   signInWithPopup,
+  signInWithCredential,
   linkWithPopup,
   signOut,
   updateProfile,
@@ -119,6 +120,10 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
+  // Mid-sign-in, Firebase can report nobody for a moment while it swaps the guest
+  // out. That is a hand-over, not a sign-out: do not start a new guest under it.
+  if (signingIn) return;
+
   setUser(null);
 
   // Nobody signed in: start an anonymous session so the first challenge can be
@@ -143,42 +148,59 @@ onAuthStateChanged(auth, async (user) => {
  * There is no merging them, so the established account wins and the throwaway
  * anonymous one is abandoned.
  */
+/** True while a Google sign-in is replacing the guest session, so the auth
+ *  listener does not mistake the hand-over for "nobody is signed in" and start a
+ *  fresh anonymous account underneath it. */
+let signingIn = false;
+
 export async function signInWithGoogle() {
   // Never race the anonymous session. Clicking before it exists would skip
   // linking and silently start a second, empty account.
   await authReady;
   const anon = auth.currentUser;
-
-  if (anon?.isAnonymous) {
-    try {
-      const credential = await linkWithPopup(anon, provider);
-      await repairProfile(credential.user);
-      // Linking keeps the same uid, so Firebase may emit no auth-state change at
-      // all. Without this the header would still read "playing as a guest" after
-      // a sign-in that actually worked.
-      setUser(credential.user);
-      // Re-mint the token so the next run carries the name and the real provider
-      // rather than the pre-link claims.
-      await credential.user.getIdToken(true);
-      return { ok: true, linked: true, uid: credential.user.uid };
-    } catch (err) {
-      if (err.code !== 'auth/credential-already-in-use' && err.code !== 'auth/email-already-in-use') {
-        return { ok: false, error: err.code ?? err.message };
-      }
-      // Fall through: that Google account already has its own PromptGym identity.
-    }
-  }
+  signingIn = true;
 
   try {
+    if (anon?.isAnonymous) {
+      try {
+        const credential = await linkWithPopup(anon, provider);
+        return { ok: true, linked: true, uid: await finish(credential.user) };
+      } catch (err) {
+        if (err.code !== 'auth/credential-already-in-use' && err.code !== 'auth/email-already-in-use') {
+          return { ok: false, error: err.code ?? err.message };
+        }
+        // That Google account already has its own PromptGym identity. Firebase
+        // hands back the credential the player just chose, so sign in with it —
+        // NOT with a second popup. A second popup opened after an await is no
+        // longer a direct result of the click: browsers may block it, and at best
+        // the player picks their account twice.
+        const google = GoogleAuthProvider.credentialFromError(err);
+        if (google) {
+          const credential = await signInWithCredential(auth, google);
+          // `linked: false`: the guest's progress stays with the guest, and the
+          // account's own saved progress loads — as Arjun asked for existing users.
+          return { ok: true, linked: false, uid: await finish(credential.user) };
+        }
+      }
+    }
+
     const credential = await signInWithPopup(auth, provider);
-    setUser(credential.user);
-    // `linked: false` means the guest progress did NOT come across — it stayed
-    // with the anonymous account, which nothing can reach any more. The caller
-    // has to say so rather than let it look like a clean sign-in.
-    return { ok: true, linked: false, uid: credential.user.uid };
+    return { ok: true, linked: false, uid: await finish(credential.user) };
   } catch (err) {
     return { ok: false, error: err.code ?? err.message };
+  } finally {
+    signingIn = false;
   }
+}
+
+/** The same ending for every path: the Google profile on the account, a token
+ *  that carries it, and only then the page told who is signed in — so the first
+ *  request after sign-in already has the name and the right uid. */
+async function finish(user) {
+  await repairProfile(user);
+  await user.getIdToken(true);
+  setUser(user);
+  return user.uid;
 }
 
 export async function signOutUser() {

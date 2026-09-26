@@ -1293,7 +1293,8 @@ async function startSignIn(then) {
     return;
   }
   toast(result.linked ? 'Signed in — your progress carried over.' : 'Welcome back — your saved progress is loaded.');
-  // Linking keeps the uid, so the uid-change refetch will not fire on its own.
+  // The auth listener has already refetched with the signed-in token (see
+  // onUserChanged); this makes sure the page has it before continuing.
   await loadBoard();
   then?.();
 }
@@ -1317,11 +1318,14 @@ onUserChanged((user) => {
   if (challenges.length) renderList();
   if (current && !$('play-view').hidden) renderModelSelect(current);
 
-  // Progress is per-uid; refetch whenever the uid changes. The board itself is
-  // public and has already been fetched without waiting for sign-in.
-  const uid = user?.uid ?? null;
-  if (uid && uid !== boardUid) {
-    boardUid = uid;
+  // Refetch progress and the board whenever who-is-signed-in changes in any way
+  // that shows: a new uid, a guest becoming a Google account, or a name arriving
+  // after the profile repair. Keying on the uid alone left the board saying
+  // "Anonymous" after sign-in until a reload. The board itself is public and was
+  // already fetched without waiting for sign-in.
+  const key = user ? `${user.uid}|${user.isAnonymous}|${user.name ?? ''}` : null;
+  if (key && key !== boardUid) {
+    boardUid = key;
     loadBoard();
   }
 });
