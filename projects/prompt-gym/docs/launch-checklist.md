@@ -59,9 +59,46 @@ measured on gpt-oss and will shift.
 
 ## Staging has its own Worker
 
-`prompt-gym-staging` (`[env.staging]` in `wrangler.toml`), same D1 and KV as
-production. The staging page picks it by hostname. Deploy with
-`npx wrangler deploy --env staging`.
+`prompt-gym-staging` (`[env.staging]` in `wrangler.toml`). The staging page
+picks it by hostname. Deploy with `npx wrangler deploy --env staging`.
+
+**Its own D1 since 26 Sep 2026** (`promptgym-staging`), so staging can never put
+a test score on the live leaderboard or send feedback as if a player had. The
+KV is still shared on purpose: it holds the Groq and OpenAI budgets, which are
+one real allowance whichever site spends them. One-time setup:
+
+```bash
+cd worker/prompt-gym
+npx wrangler d1 create promptgym-staging      # paste the id into wrangler.toml
+npx wrangler d1 migrations apply promptgym-staging --remote --env staging
+npx wrangler deploy --env staging
+```
+
+Until the id is pasted, `deploy --env staging` fails on the placeholder — on
+purpose, so staging cannot silently fall back to production's database.
+
+## Feedback (26 Sep 2026)
+
+Signed-in players get a Feedback button (bottom right). Each message is saved to
+the `feedback` table first, then emailed through Resend; `notified = 0` marks one
+whose email did not go out. Guests are refused by the Worker, not only hidden
+from in the page. 5 messages an hour and 20 a day per player.
+
+```bash
+cd worker/prompt-gym
+npx wrangler d1 migrations apply promptgym --remote   # adds the feedback table
+npx wrangler secret put RESEND_API_KEY                # re_… from resend.com/api-keys
+npx wrangler secret put FEEDBACK_TO                   # your Resend account's address
+npx wrangler deploy
+```
+
+Apply the migration **before** deploying: the new Worker writes to a table that
+does not exist until it runs. Anything that did not email:
+
+```bash
+npx wrangler d1 execute promptgym --remote \
+  --command "SELECT created_at, display_name, email, page, message FROM feedback WHERE notified = 0"
+```
 
 **Promoting to production: deploy the Worker and the page together.** The new
 page expects the new Worker's fields, and the new Worker's sign-in wall would
@@ -74,7 +111,7 @@ cd ../.. && npx firebase-tools deploy -P prod --only hosting
 
 ## Proven by the test suite
 
-`cd worker/prompt-gym && npm test` — 353 tests. These items are covered, so a
+`cd worker/prompt-gym && npm test` — 460 tests. These items are covered, so a
 regression fails the build rather than the launch:
 
 | Item | Proven by |

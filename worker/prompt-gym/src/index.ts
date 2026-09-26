@@ -28,6 +28,16 @@ import {
   type CounterStore,
 } from './budget';
 import { bindingEmbedder, type AiBinding } from './providers/embeddings';
+import {
+  DEFAULT_FROM,
+  FEEDBACK_LIMITS,
+  MAX_FEEDBACK_CHARS,
+  feedbackEmail,
+  insertFeedback,
+  markNotified,
+  parseFeedback,
+  sendFeedbackEmail,
+} from './feedback';
 import type { RunResponse } from './run';
 
 export interface Env {
@@ -51,6 +61,11 @@ export interface Env {
   USER_RUNS_PER_DAY?: string;
   /** Signed-in players run on OpenAI. Without it they fall back to Groq. */
   OPENAI_API_KEY?: string;
+  /** Feedback notifications. Without the key or the address, feedback is still
+   *  stored — it just is not emailed. See feedback.ts. */
+  RESEND_API_KEY?: string;
+  FEEDBACK_TO?: string;
+  FEEDBACK_FROM?: string;
 }
 
 /** Records who earned a score, and updates their best if this beat it.
@@ -380,6 +395,84 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
   }
 }
 
+/** A message from a signed-in player to Arjun. Stored first, emailed second. */
+async function handleFeedback(
+  request: Request,
+  env: Env,
+  cors: Record<string, string>,
+  ctx?: { waitUntil(promise: Promise<unknown>): void },
+) {
+  if (!env.DB) return Response.json({ error: 'no_database' }, { status: 503, headers: cors });
+
+  // Signed-in only. That is what makes a reply possible, and what keeps this from
+  // being an anonymous way to put text in someone's inbox.
+  const { user } = await userFromRequest(request, env.FIREBASE_PROJECT_ID);
+  if (!user || user.isAnonymous) {
+    return Response.json({ error: 'sign_in_required' }, { status: 401, headers: cors });
+  }
+
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: 'invalid_json' }, { status: 400, headers: cors });
+  }
+  const parsed = parseFeedback(body, (id) => Boolean(findChallenge(id)));
+  if (!parsed.ok) {
+    return Response.json(
+      { error: parsed.error, ...(parsed.error === 'message_too_long' ? { limit: MAX_FEEDBACK_CHARS } : {}) },
+      { status: 400, headers: cors },
+    );
+  }
+
+  if (env.BUDGET) {
+    try {
+      const verdict = await consumeWindows(env.BUDGET, `feedback:${user.uid}`, FEEDBACK_LIMITS);
+      if (!verdict.ok) {
+        return Response.json(
+          {
+            error: 'rate_limited',
+            retryAfterSeconds: verdict.retryAfterSeconds,
+            message: `That's a lot of messages in a short time. Try again in ${formatWait(verdict.retryAfterSeconds)}.`,
+          },
+          { status: 429, headers: { ...cors, 'Retry-After': String(verdict.retryAfterSeconds) } },
+        );
+      }
+    } catch {
+      /* as with runs: a counter we cannot read is not a reason to refuse */
+    }
+  }
+
+  const row = { id: crypto.randomUUID(), uid: user.uid, email: user.email, displayName: user.name, ...parsed.value };
+  try {
+    await insertFeedback(env.DB, row);
+  } catch {
+    // Unlike a run, there is nothing to hand back if this fails, so say so.
+    return Response.json({ error: 'feedback_unavailable' }, { status: 503, headers: cors });
+  }
+
+  // The player has been heard the moment the row exists. The email is a
+  // notification about it, and must not hold up their response or fail it.
+  if (env.RESEND_API_KEY && env.FEEDBACK_TO) {
+    const db = env.DB;
+    const notify = (async () => {
+      const sent = await sendFeedbackEmail({
+        apiKey: env.RESEND_API_KEY!,
+        email: feedbackEmail(row, {
+          from: env.FEEDBACK_FROM || DEFAULT_FROM,
+          to: env.FEEDBACK_TO!,
+          challengeTitle: row.challengeId ? findChallenge(row.challengeId)?.title : undefined,
+        }),
+      });
+      if (sent) await markNotified(db, row.id).catch(() => {});
+    })();
+    if (ctx) ctx.waitUntil(notify);
+    else await notify;
+  }
+
+  return Response.json({ ok: true, id: row.id }, { headers: cors });
+}
+
 /** Who is asking, and what they have passed — the prompt gate needs both. */
 async function viewerFor(request: Request, env: Env): Promise<Viewer | undefined> {
   if (!env.DB) return undefined;
@@ -392,7 +485,11 @@ async function viewerFor(request: Request, env: Env): Promise<Viewer | undefined
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx?: { waitUntil(promise: Promise<unknown>): void },
+  ): Promise<Response> {
     const cors = corsHeaders(request.headers.get('Origin'));
 
     if (request.method === 'OPTIONS') {
@@ -436,6 +533,10 @@ export default {
 
     if (pathname === '/api/run' && request.method === 'POST') {
       return handleRun(request, env, cors);
+    }
+
+    if (pathname === '/api/feedback' && request.method === 'POST') {
+      return handleFeedback(request, env, cors, ctx);
     }
 
     // A share permalink. The id is an unguessable UUID, which is the capability —

@@ -13,7 +13,7 @@ AIG_ACCOUNT = "817ef4ab39edc6b855e3338a6903f3eb"
 AIG_GATEWAY = "vani"
 # Not a secret — it is the `aud` an ID token must carry to be accepted here, and
 # it appears in the browser's own Firebase config. One project for both the
-# staging and production frontends, because they share one Worker and one D1.
+# staging and production frontends: they share sign-in, though not a database.
 FIREBASE_PROJECT_ID = "arjunuvacha-3de80"
 
 # Guardrails (M8). Vars rather than constants because Groq publishes its free-tier
@@ -41,12 +41,23 @@ OPENAI_TOKENS_PER_DAY = "3000000"
 # Secret (set with `wrangler secret put GROQ_API_KEY`, do NOT put the value here):
 #   GROQ_API_KEY  -> the existing gsk_… key (same one arjun-rag / vani use)
 
+# Feedback emails (26 Sep 2026), via Resend. Two secrets, both needed:
+#   npx wrangler secret put RESEND_API_KEY   -> re_… from resend.com/api-keys
+#   npx wrangler secret put FEEDBACK_TO      -> the address the Resend account
+#                                               was registered with
+# Kept as a secret rather than a var so the address is not published in the repo.
+# Without either one, feedback is still saved to D1 — it just is not emailed.
+# The sender defaults to onboarding@resend.dev, which Resend delivers only to the
+# account's own address; set FEEDBACK_FROM here once a domain is verified there.
+
 # Every submission is written here, by the Worker and only by the Worker. That is
 # what makes the leaderboard defensible: a client can never post its own score.
 #
 # Apply migrations with:
 #   npx wrangler d1 migrations apply promptgym --local    (local dev)
 #   npx wrangler d1 migrations apply promptgym --remote   (production)
+# 0002_feedback.sql adds the feedback table and must be applied before deploying
+# the code that writes to it.
 [[d1_databases]]
 binding = "DB"
 database_name = "promptgym"
@@ -94,13 +105,18 @@ binding = "AI"
 # otherwise change the live site the moment staging was deployed. The page picks
 # this Worker by hostname (see `API` in web/app.js).
 #
-# Same D1 and same KV as production, deliberately: one set of players, one Groq
-# budget. Bindings and vars do not inherit into an environment, so they are all
-# repeated here. Deploy with:
+# Its own D1 (since 26 Sep 2026), so testing on staging can never put a score on
+# the live leaderboard, share a result into the live gallery, or email a test
+# message as if a player had sent it. The KV stays shared, deliberately: it holds
+# the Groq and OpenAI budgets, and those are one real allowance whichever site
+# spends them. Bindings and vars do not inherit into an environment, so they are
+# all repeated here. Deploy with:
 #   npx wrangler deploy --env staging
 # Its secrets are set separately:
 #   npx wrangler secret put GROQ_API_KEY --env staging
 #   npx wrangler secret put OPENAI_API_KEY --env staging
+#   npx wrangler secret put RESEND_API_KEY --env staging   (optional)
+#   npx wrangler secret put FEEDBACK_TO --env staging      (optional)
 [env.staging]
 name = "prompt-gym-staging"
 
@@ -116,10 +132,18 @@ USER_RUNS_PER_HOUR = "15"
 USER_RUNS_PER_DAY = "100"
 OPENAI_TOKENS_PER_DAY = "3000000"
 
+# Create it once, paste the id it prints over the placeholder, then build its
+# schema from the same migrations production has:
+#   npx wrangler d1 create promptgym-staging
+#   npx wrangler d1 migrations apply promptgym-staging --remote --env staging
+#
+# The placeholder is deliberate. Until it is replaced, `deploy --env staging`
+# fails loudly — which is the point: the alternative is staging quietly writing
+# to production's database again.
 [[env.staging.d1_databases]]
 binding = "DB"
-database_name = "promptgym"
-database_id = "3713edb6-3c4c-4b81-a171-4ffb19ace107"
+database_name = "promptgym-staging"
+database_id = "REPLACE-WITH-ID-FROM-wrangler-d1-create-promptgym-staging"
 migrations_dir = "migrations"
 
 [[env.staging.kv_namespaces]]
