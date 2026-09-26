@@ -133,8 +133,10 @@ worth counting skipped judgements as absent rather than omitted.
 **Ready (10):** pg-a1, pg-a11, pg-a2, pg-a3, pg-b1, pg-b3, pg-b7, pg-c5, pg-d2,
 pg-f1 — plus the two golf variants, which inherit pg-a1 and pg-a2.
 
-**Not ready (2):** pg-e4 (no passing reference) and pg-c1 (inverted by design).
-Both need a content decision, neither is blocked on infrastructure.
+**Withheld (2):** pg-e4 (no passing reference) and pg-c1 (inverted by design).
+Dropped from the shipped catalog on 26 Sep 2026 — see the `WITHHELD` map in
+`worker/prompt-gym/src/challenges.ts`. Both remain imported and validated by the
+build; deleting an entry from that map ships it again.
 
 ## Outstanding
 

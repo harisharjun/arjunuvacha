@@ -22,8 +22,42 @@ import pgG3 from '../../../projects/prompt-gym/challenges/generated/pg-g3.json';
 
 const ALL = [pgA2, pgA1, pgA3, pgA11, pgB7, pgB1, pgB3, pgC1, pgC5, pgD2, pgE4, pgF1, pgG3, pgG1];
 
+/** Authored, validated, and deliberately not shipped in v1.
+ *
+ *  Both failed the Session 11 validation pass for reasons no amount of code
+ *  fixes — each needs a grader or a prompt rewritten, which is content work.
+ *  Shipping a challenge whose strawman beats its reference, or that nobody can
+ *  pass, teaches the wrong lesson and makes the leaderboard meaningless.
+ *
+ *  They stay imported rather than deleted: the data is fine, the build still
+ *  checks it, and un-shipping is a one-line change in either direction. Delete
+ *  the entry here to bring one back.
+ *
+ *  See docs/session-11-validation.md. */
+const WITHHELD: Record<string, string> = {
+  'pg-c1':
+    'Inverted: reference 79, strawman 88. `faithfulness` is measured with ' +
+    'embedding similarity, which scores 93% for both prompts because cosine ' +
+    'distance tracks topical relatedness, not factual fidelity — so `novelty` ' +
+    'decides the result and rewards the looser paraphrase. Needs an llm-rubric ' +
+    'fact-check in place of `similar`.',
+  'pg-e4':
+    'No passing reference prompt: reference 67, strawman 58, both under the 70% ' +
+    'threshold, and 58 on gpt-oss-120b too. The six cases discriminate correctly ' +
+    '— the reference over-asks on t5 and invents a product on t6. Needs a ' +
+    'stronger reference, or fewer cases.',
+};
+
 /** Ordered as the catalog recommends playing them, easiest first. */
-export const challenges: Challenge[] = ALL as unknown as Challenge[];
+export const challenges: Challenge[] = (ALL as unknown as Challenge[]).filter(
+  (c) => !(c.id in WITHHELD),
+);
+
+/** Why a challenge that exists in the bundle is not playable. Exported so the
+ *  reason lives next to the decision rather than only in a commit message. */
+export function withheldReason(id: string): string | undefined {
+  return WITHHELD[id];
+}
 
 export function findChallenge(id: string): Challenge | undefined {
   return challenges.find((c) => c.id === id);

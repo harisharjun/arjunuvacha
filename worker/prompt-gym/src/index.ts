@@ -401,6 +401,26 @@ export default {
 
       const { user } = await userFromRequest(request, env.FIREBASE_PROJECT_ID);
 
+      // Refresh the profile from the token while we have it.
+      //
+      // Linking a guest account to Google keeps the same uid, so the scores are
+      // already theirs — but `users.display_name` is only written during a run,
+      // so without this the board would still call them "player 4f2a1c" until
+      // they happened to submit again. The first thing most people do after
+      // signing in is look at the board.
+      if (user) {
+        try {
+          await upsertUser(env.DB, {
+            uid: user.uid,
+            displayName: user.name,
+            avatarUrl: user.picture,
+            isAnonymous: user.isAnonymous,
+          });
+        } catch {
+          /* best-effort: never fail a read because a write did */
+        }
+      }
+
       try {
         const board = await leaderboard(env.DB, limit);
         // Someone outside the top N still gets to see where they stand, so the

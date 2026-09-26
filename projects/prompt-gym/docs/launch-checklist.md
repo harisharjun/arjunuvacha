@@ -22,7 +22,9 @@ regression fails the build rather than the launch:
 
 | Item | Proven by |
 | --- | --- |
-| All 14 challenges load | `test/api.test.ts` — "lists every challenge with the model allowlist" |
+| The 12 shipped challenges load | `test/api.test.ts` — "lists every challenge with the model allowlist" |
+| pg-c1 and pg-e4 are withheld, and unrunnable by id | `test/api.test.ts` — "withheld challenges" (5 tests) |
+| A guest's score survives Google linking | `test/linking.test.ts` (3 tests) |
 | An unknown challenge id returns a clean 400 | `test/api.test.ts` — "rejects an unknown challenge id cleanly" |
 | The reveal filter holds server-side | `test/api.test.ts` — "leaks no hidden test input beyond the published example", and `test/reveal.test.ts` |
 | No expected values, assertions or validator names reach the browser | `test/api.test.ts` — "carries no expected values, assertions or validator names" |
@@ -45,31 +47,26 @@ regression fails the build rather than the launch:
 
 ## By hand, on the Mac
 
-### 1. Create the KV namespace — the guardrails are inert until this exists
+### 1. KV namespace — ✅ done 26 Sep 2026
 
-```bash
-cd worker/prompt-gym
-npx wrangler kv namespace create BUDGET
-```
+Created and bound: `id = "5e390c8016f94850b8fcea49b432c859"` in `wrangler.toml`.
+Deployed and verified against production:
 
-Paste the id into the commented `[[kv_namespaces]]` block in `wrangler.toml` and
-uncomment it. **This is the one M8 item that could not be finished in the cloud.**
-The Worker deliberately runs unguarded when `env.BUDGET` is absent — a missing
-counter must not take the site down — which also means that until this is bound
-there is no budget at all, and Groq's own 429 is the only thing between a
-LinkedIn post and an empty daily allowance.
+| check | result |
+|---|---|
+| `/api/health` reports the counter | `remainingToday: 180000` |
+| a real run charges the declared cost | pg-a2 run -> `spentToday: 1400` |
+| per-IP rate limit refuses | 3rd request -> 429 `rate_limited`, `Retry-After: 23` |
+| budget exhaustion is typed | 429 `budget_exhausted`, `byoKeyAccepted: true` |
+| a BYO key gets past an empty budget | same request + `X-Groq-Key` -> 200 |
 
-Then confirm the counter is live:
-
-```bash
-npx wrangler deploy
-curl -s https://prompt-gym.harisharjun127.workers.dev/api/health | jq
-# budget should be an object, not null
-```
-
-Check the limits in `wrangler.toml` against your own console first —
-**Settings → Limits**. They are written for 8K tokens/minute and 200K tokens/day
-and sit under both; Groq publishes these per organisation and moves them.
+**Known consequence:** a *cached* run bypasses both guards, because the dedupe
+lookup returns before them. That is what the build guide asked for and it is
+right for the budget — a cached run costs Groq nothing. It is arguably wrong for
+the IP limit, which exists to protect our Worker and D1 rather than Groq's
+quota, and which a replayed prompt can therefore sidestep without limit. One-line
+fix if you want it: move the `consumeRateLimit` call above the dedupe block in
+`handleRun` and leave `reserveBudget` where it is.
 
 ### 2. Workers AI — the `[ai]` binding needs no credential, `--live` does
 
@@ -116,12 +113,32 @@ On that run, open the `POST /api/run` response. Every test case after the first
 should carry `"input": null` and no `output`. If any hidden input is visible, stop
 — that is the one bug that makes every challenge worthless.
 
-### 6. Guest-to-Google linking — still unconfirmed
+### 6. Guest-to-Google linking — server side done, browser step is yours
 
-Score a challenge as a guest, then sign in with Google and check the score
-survived. This has never been verified end to end. If the score is lost, the
-fallback path in `web/auth.js` already tells the player so, but the linking itself
-is the thing to fix.
+`linkWithPopup` keeps the same Firebase uid, and every row in D1 is keyed by
+uid, so a guest's scores are already the signed-in user's scores — nothing
+migrates. `test/linking.test.ts` pins that invariant.
+
+One real gap was found and fixed: `upsertUser` only ran during `/api/run`, so
+after linking the board kept calling the player `player 4f2a1c` until they
+happened to submit again. `/api/leaderboard` now refreshes the profile from the
+token it has already verified.
+
+What still needs a human, because it needs a Google popup:
+
+1. Private window -> `https://arjunuvacha.com/prompt-gym/`, confirm the header
+   reads "Playing as a guest".
+2. Play a challenge and pass it. Note the score.
+3. Sign in with Google.
+4. The header should read "Signed in as <name>" with no page reload.
+5. Open the Leaderboard. **The score from step 2 must still be there, now under
+   your real name.** If it is, linking works end to end.
+
+If instead you see "Signed in to your existing account — progress from this
+guest session did not carry over", that Google account already had its own
+PromptGym identity, so linking was refused and the guest rows were left behind.
+That message is correct behaviour, not a bug — but use a Google account that has
+never played before if you want to test the linking path itself.
 
 ### 7. The BYO-key path, end to end
 
@@ -139,7 +156,13 @@ is the thing to fix.
 Done, but it surfaced four things that are yours to call — full detail in
 `session-11-validation.md`:
 
-**Ten of the twelve are ready and can ship.** Two cannot:
+**Ten of the twelve ship. pg-c1 and pg-e4 are withheld** — dropped from the
+catalog on 26 Sep 2026 via the `WITHHELD` map in `worker/prompt-gym/src/challenges.ts`,
+which also records why. They stay imported and the build still validates them, so
+bringing either back is a one-line deletion once its problem is fixed. The two
+golf variants are unaffected: they derive from pg-a1 and pg-a2, both ready.
+
+Why each is out:
 
 - **pg-e4 has no passing reference prompt.** Two near-miss cases were added and
   they work — the strawman now fails at 58 — but the reference fails at 67, and

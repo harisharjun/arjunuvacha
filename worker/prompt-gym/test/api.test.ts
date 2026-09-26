@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import worker from '../src/index';
-import { challenges } from '../src/challenges';
+import { challenges, withheldReason } from '../src/challenges';
 
 const env = { GROQ_API_KEY: 'gsk_test', AIG_ACCOUNT: 'acc', AIG_GATEWAY: 'vani' };
 
@@ -19,7 +19,9 @@ describe('GET /api/challenges', () => {
     const res = await worker.fetch(get('/api/challenges'), env);
     const body = (await res.json()) as { challenges: unknown[]; models: string[] };
     expect(res.status).toBe(200);
-    expect(body.challenges).toHaveLength(14);
+    // 12 shipped: 10 authored + 2 golf variants. pg-c1 and pg-e4 are withheld,
+    // see the WITHHELD map in src/challenges.ts.
+    expect(body.challenges).toHaveLength(12);
     expect(body.models).toContain('openai/gpt-oss-20b');
   });
 
@@ -55,6 +57,37 @@ describe('GET /api/challenges', () => {
     expect(text).not.toContain('defaultAssert');
     expect(text).not.toContain('"assert"');
     expect(text).not.toContain('"reveal"');
+  });
+});
+
+describe('withheld challenges', () => {
+  // Withholding is a product decision that has to hold at the boundary, not just
+  // in the catalog: an id a player could still type must not run.
+  for (const id of ['pg-c1', 'pg-e4']) {
+    it(`does not list ${id}`, async () => {
+      const res = await worker.fetch(get('/api/challenges'), env);
+      const body = (await res.json()) as { challenges: { id: string }[] };
+      expect(body.challenges.map((c) => c.id)).not.toContain(id);
+    });
+
+    it(`refuses to run ${id}, as if it did not exist`, async () => {
+      const res = await worker.fetch(post({ challengeId: id, prompt: 'x' }), env);
+      expect(res.status).toBe(400);
+      expect((await res.json() as { error: string }).error).toBe('unknown_challenge');
+    });
+  }
+
+  it('still ships both golf variants, whose parents are fine', async () => {
+    const res = await worker.fetch(get('/api/challenges'), env);
+    const ids = ((await res.json()) as { challenges: { id: string }[] }).challenges.map((c) => c.id);
+    expect(ids).toContain('pg-g1');
+    expect(ids).toContain('pg-g3');
+  });
+
+  it('records why each one is withheld', async () => {
+    expect(withheldReason('pg-c1')).toMatch(/faithfulness/i);
+    expect(withheldReason('pg-e4')).toMatch(/reference/i);
+    expect(withheldReason('pg-a1')).toBeUndefined();
   });
 });
 
@@ -139,9 +172,9 @@ describe('POST /api/run with a stubbed provider', () => {
   });
 
   it('marks a run non-eligible when a grader could not run', async () => {
-    // pg-c1 carries `similar` assertions, which need embeddings we have not built.
+    // pg-c5 carries `similar` assertions, which stay pending without an embedder.
     vi.stubGlobal('fetch', stub('a paraphrase'));
-    const res = await worker.fetch(post({ challengeId: 'pg-c1', prompt: 'rewrite it' }), env);
+    const res = await worker.fetch(post({ challengeId: 'pg-c5', prompt: 'rewrite it' }), env);
     const body = (await res.json()) as { leaderboardEligible: boolean };
     expect(body.leaderboardEligible).toBe(false);
     vi.unstubAllGlobals();

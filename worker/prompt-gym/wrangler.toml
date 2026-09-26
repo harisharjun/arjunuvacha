@@ -48,15 +48,16 @@ migrations_dir = "migrations"
 #
 #   npx wrangler kv namespace create BUDGET
 #
-# Until this is bound the Worker still runs — `src/index.ts` skips both checks when
+# The Worker still runs without this — `src/index.ts` skips both checks when
 # `env.BUDGET` is absent, on the grounds that a missing counter should not take the
-# site down. That is also why it must not stay commented out: with no binding there
-# is no budget, and Groq's own 429 is the only thing standing between a LinkedIn
+# site down. Which is exactly why it has to be bound: with no binding there is no
+# budget, and Groq's own 429 would be the only thing standing between a LinkedIn
 # post and an empty daily allowance.
 #
-# [[kv_namespaces]]
-# binding = "BUDGET"
-# id = "<paste the id from the command above>"
+# Created 26 Sep 2026.
+[[kv_namespaces]]
+binding = "BUDGET"
+id = "5e390c8016f94850b8fcea49b432c859"
 
 # Workers AI, for the embeddings behind the `similar` assertions in pg-c1 and
 # pg-c5. Groq has no embeddings endpoint, so these go to Cloudflare instead.

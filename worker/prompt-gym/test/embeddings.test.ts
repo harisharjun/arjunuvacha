@@ -2,7 +2,14 @@ import { describe, it, expect, vi } from 'vitest';
 import { cosineSimilarity } from '../src/grading/text';
 import { bindingEmbedder, restEmbedder, EMBEDDING_MODEL, type AiBinding } from '../src/providers/embeddings';
 import { runChallenge } from '../src/run';
-import { findChallenge } from '../src/challenges';
+import type { Challenge } from '../src/grading/types';
+// Imported directly, not via `findChallenge`: pg-c1 is withheld from the shipped
+// set (see challenges.ts) but its data is still the clearest exercise of the
+// similarity path — four `similar` assertions, one per case. Whether a challenge
+// ships is a product decision and should not decide what the grader is tested on.
+import pgC1Json from '../../../projects/prompt-gym/challenges/generated/pg-c1.json';
+
+const pgC1 = pgC1Json as unknown as Challenge;
 
 describe('cosineSimilarity', () => {
   it('is 1 for identical vectors and 0 for orthogonal ones', () => {
@@ -94,7 +101,7 @@ describe('similar assertions inside runChallenge', () => {
   it('stays non-eligible and pending when no embedder is supplied', async () => {
     vi.stubGlobal('fetch', groqStub('a paraphrase'));
     const r = await runChallenge({
-      challenge: findChallenge('pg-c1')!,
+      challenge: pgC1,
       prompt: 'rewrite it',
       model: 'openai/gpt-oss-20b',
       apiKey: 'gsk_test',
@@ -106,7 +113,7 @@ describe('similar assertions inside runChallenge', () => {
   it('becomes eligible once an embedder can run them', async () => {
     vi.stubGlobal('fetch', groqStub('a paraphrase'));
     const r = await runChallenge({
-      challenge: findChallenge('pg-c1')!,
+      challenge: pgC1,
       prompt: 'rewrite it',
       model: 'openai/gpt-oss-20b',
       apiKey: 'gsk_test',
@@ -124,7 +131,7 @@ describe('similar assertions inside runChallenge', () => {
   it('scores faithfulness down when the output is unrelated', async () => {
     vi.stubGlobal('fetch', groqStub('something else entirely'));
     const r = await runChallenge({
-      challenge: findChallenge('pg-c1')!,
+      challenge: pgC1,
       prompt: 'rewrite it',
       model: 'openai/gpt-oss-20b',
       apiKey: 'gsk_test',
@@ -140,7 +147,7 @@ describe('similar assertions inside runChallenge', () => {
   it('marks the run errored, not failed, when embedding throws', async () => {
     vi.stubGlobal('fetch', groqStub('a paraphrase'));
     const r = await runChallenge({
-      challenge: findChallenge('pg-c1')!,
+      challenge: pgC1,
       prompt: 'rewrite it',
       model: 'openai/gpt-oss-20b',
       apiKey: 'gsk_test',
@@ -156,7 +163,7 @@ describe('similar assertions inside runChallenge', () => {
     vi.stubGlobal('fetch', groqStub('a paraphrase'));
     const calls: string[][] = [];
     await runChallenge({
-      challenge: findChallenge('pg-c1')!,
+      challenge: pgC1,
       prompt: 'rewrite it',
       model: 'openai/gpt-oss-20b',
       apiKey: 'gsk_test',
