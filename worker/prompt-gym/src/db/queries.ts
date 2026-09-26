@@ -261,6 +261,43 @@ export async function publicResult(
 
 /** Sets whether a result's prompt is visible. Owner only — checked by the caller
  *  against the submission's uid, which is why that is returned here. */
+/** A player's most recent run of one challenge, so the scorecard is still there
+ *  when they come back to it — from another page, a reload or another device.
+ *
+ *  Latest, not best: the card shows what the prompt in front of them last did.
+ *  `rowid` breaks a tie within one second, where `created_at` cannot. The stored
+ *  result is the response the player was already sent, filtered by reveal level
+ *  before it was saved, so nothing hidden comes back with it. */
+export async function lastRunFor(
+  db: D1Database,
+  uid: string,
+  challengeId: string,
+): Promise<StoredSubmission | null> {
+  const row = await db
+    .prepare(
+      `SELECT s.id, s.uid, s.grader_results_json, COALESCE(sh.show_prompt, 0) AS show_prompt
+         FROM submissions s
+         LEFT JOIN share_results sh ON sh.submission_id = s.id
+        WHERE s.uid = ? AND s.challenge_id = ?
+        ORDER BY s.created_at DESC, s.rowid DESC
+        LIMIT 1`,
+    )
+    .bind(uid, challengeId)
+    .first<{ id: string; uid: string | null; grader_results_json: string; show_prompt: number }>();
+
+  if (!row) return null;
+  try {
+    return {
+      id: row.id,
+      uid: row.uid,
+      shared: row.show_prompt === 1,
+      result: JSON.parse(row.grader_results_json) as RunResponse,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function submissionOwner(db: D1Database, id: string): Promise<string | null> {
   const row = await db
     .prepare('SELECT uid FROM submissions WHERE id = ?')

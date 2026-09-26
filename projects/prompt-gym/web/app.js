@@ -205,10 +205,13 @@ function storageSet(key, value) {
 
 // Every prompt a player has typed is kept, per challenge, so wandering off to
 // look at another one never costs them their work. In memory for the session and
-// in local storage across visits; the last scorecard is kept for the session.
+// in local storage across visits. The last scorecard comes back from the Worker
+// (see loadLastRun), so it survives a reload and another device too.
 const DRAFT_KEY = (id) => `promptgym.draft.${id}`;
 const drafts = new Map();
 const lastResults = new Map();
+// Whose scorecards `lastResults` holds. Undefined until auth first reports.
+let resultsUid;
 
 function draftFor(challenge) {
   if (drafts.has(challenge.id)) return drafts.get(challenge.id);
@@ -392,6 +395,13 @@ function renderList() {
     el('h3', 'card-title', 'More challenges coming soon'),
     el('p', 'card-summary', 'New ones are added as they pass validation.'),
   );
+  // Ideas arrive through the feedback panel, which needs an address to reply to.
+  const idea = el('p', 'card-summary coming-soon-idea', 'Have an idea for a challenge? ');
+  const shareIdea = el('button', 'text-btn', 'Share it');
+  shareIdea.type = 'button';
+  shareIdea.addEventListener('click', () => (isGuest() ? startSignIn(openFeedback) : openFeedback()));
+  idea.appendChild(shareIdea);
+  card.appendChild(idea);
   soon.appendChild(card);
   list.appendChild(soon);
 
@@ -627,7 +637,10 @@ function openChallenge(challenge, { push = true } = {}) {
   // Coming back to a challenge shows where you left it.
   const last = lastResults.get(challenge.id);
   if (last) renderScorecard(last);
-  else $('scorecard').replaceChildren();
+  else {
+    $('scorecard').replaceChildren();
+    loadLastRun(challenge);
+  }
 
   $('prompt').focus({ preventScroll: true });
 }
@@ -841,9 +854,53 @@ function publicToggle(result) {
   return wrap;
 }
 
+// Share controls. The link is an unguessable id, so it is unlisted. Only a run
+// stored under this player can be linked or published; the Worker says which
+// (older Workers did not, and there a cached run was never theirs to share).
+function shareControls(result) {
+  const shareable = result.shareable ?? (Boolean(result.submissionId) && !result.cached);
+  if (!shareable || !result.submissionId) return null;
+  const share = el('div', 'share');
+  const url = `${location.origin}${BASE}/r/${result.submissionId}`;
+
+  const copy = el('button', 'secondary', 'Copy link');
+  copy.type = 'button';
+  copy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      copy.textContent = 'Copied';
+      setTimeout(() => (copy.textContent = 'Copy link'), 1500);
+    } catch {
+      // Clipboard access can be refused; showing the link is the fallback.
+      copy.replaceWith(el('code', null, url));
+    }
+  });
+  share.appendChild(copy);
+
+  // Publishing is for a prompt that passed: the gallery is where players compare
+  // working solutions. A guest has no name to publish under, so they sign in first.
+  if (result.passed) {
+    if (isGuest()) {
+      const g = googleButton('Sign in to make your prompt public');
+      // Signing into a different account swaps the card for that account's own.
+    g.addEventListener('click', () =>
+      startSignIn(() => lastResults.get(result.challengeId) === result && renderScorecard(result)),
+    );
+      share.appendChild(g);
+    } else {
+      share.appendChild(publicToggle(result));
+    }
+  }
+  return share;
+}
+
 function renderScorecard(result) {
   const card = $('scorecard');
   card.replaceChildren();
+
+  // Above the score, where a player who just passed is already looking.
+  const share = shareControls(result);
+  if (share) card.appendChild(share);
 
   const total = el('div', 'total');
   total.appendChild(el('span', 'score', String(result.score)));
@@ -890,42 +947,6 @@ function renderScorecard(result) {
     card.appendChild(box);
   }
 
-  // Share controls. The link is an unguessable id, so it is unlisted. Only a run
-  // stored under this player can be linked or published; the Worker says which
-  // (older Workers did not, and there a cached run was never theirs to share).
-  const shareable = result.shareable ?? (Boolean(result.submissionId) && !result.cached);
-  if (shareable && result.submissionId) {
-    const share = el('div', 'share');
-    const url = `${location.origin}${BASE}/r/${result.submissionId}`;
-
-    const copy = el('button', 'secondary', 'Copy link');
-    copy.type = 'button';
-    copy.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(url);
-        copy.textContent = 'Copied';
-        setTimeout(() => (copy.textContent = 'Copy link'), 1500);
-      } catch {
-        // Clipboard access can be refused; showing the link is the fallback.
-        copy.replaceWith(el('code', null, url));
-      }
-    });
-    share.appendChild(copy);
-
-    // Publishing is for a prompt that passed: the gallery is where players compare
-    // working solutions. A guest has no name to publish under, so they sign in first.
-    if (result.passed) {
-      if (isGuest()) {
-        const g = googleButton('Sign in to make your prompt public');
-        g.addEventListener('click', () => startSignIn(() => renderScorecard(result)));
-        share.appendChild(g);
-      } else {
-        share.appendChild(publicToggle(result));
-      }
-    }
-    card.appendChild(share);
-  }
-
   if (!result.leaderboardEligible) {
     card.appendChild(
       el('div', 'notice',
@@ -955,6 +976,26 @@ function renderNudge(result) {
   g.addEventListener('click', () => startSignIn());
   box.append(p, g);
   $('scorecard').appendChild(box);
+}
+
+/** Puts a player's last scorecard for this challenge back on the page, from the
+ *  Worker, when this session has none. Only a new run replaces it. */
+async function loadLastRun(challenge) {
+  await authReady;
+  const token = await getIdToken();
+  if (!token) return;
+  const asked = getUser()?.uid ?? null;
+  try {
+    const res = await fetch(`${API}/api/last-run/${challenge.id}`, { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) return; // 404: never run it, which is nothing to report
+    const data = await res.json();
+    // Too late to matter: a run finished meanwhile, or someone else signed in.
+    if (lastResults.has(challenge.id) || (getUser()?.uid ?? null) !== asked) return;
+    lastResults.set(challenge.id, data);
+    if (current?.id === challenge.id && !$('play-view').hidden && !$('run').disabled) renderScorecard(data);
+  } catch {
+    /* the page works without it; the card just starts empty */
+  }
 }
 
 async function run() {
@@ -1025,6 +1066,8 @@ async function run() {
       renderPlayTags(challenge);
     }
   } catch (err) {
+    const last = lastResults.get(challenge.id);
+    if (last && current?.id === challenge.id) renderScorecard(last);
     $('run-status').className = 'notice error-box';
     $('run-status').textContent = `Run failed — ${err.message}`;
   } finally {
@@ -1426,6 +1469,18 @@ onUserChanged((user) => {
   // after the profile repair. Keying on the uid alone left the board saying
   // "Anonymous" after sign-in until a reload. The board itself is public and was
   // already fetched without waiting for sign-in.
+  // Scorecards belong to a uid. Linking a guest keeps it, so theirs stay; signing
+  // out, or into another account, swaps them for that account's own.
+  const uid = user?.uid ?? null;
+  if (resultsUid !== undefined && uid !== resultsUid) {
+    lastResults.clear();
+    if (current && !$('play-view').hidden) {
+      $('scorecard').replaceChildren();
+      if (uid) loadLastRun(current);
+    }
+  }
+  resultsUid = uid;
+
   const key = user ? `${user.uid}|${user.isAnonymous}|${user.name ?? ''}` : null;
   if (key && key !== boardUid) {
     boardUid = key;

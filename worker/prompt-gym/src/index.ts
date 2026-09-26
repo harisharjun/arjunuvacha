@@ -5,6 +5,7 @@ import { EXEC_MODELS, runChallenge } from './run';
 import { InvalidRequestError, ProviderError } from './providers/errors';
 import {
   findByHash,
+  lastRunFor,
   insertSubmission,
   boardFor,
   progressDetailFor,
@@ -580,6 +581,24 @@ export default {
 
     if (pathname === '/api/feedback' && request.method === 'POST') {
       return handleFeedback(request, env, cors, ctx);
+    }
+
+    // Your own last run of a challenge, to put its scorecard back on the page.
+    // Guests too: an anonymous account owns its runs as much as a Google one does.
+    const lastRunMatch = /^\/api\/last-run\/([A-Za-z0-9-]{1,64})$/.exec(pathname);
+    if (lastRunMatch && request.method === 'GET') {
+      if (!env.DB) return Response.json({ error: 'no_database' }, { status: 503, headers: cors });
+      const { user } = await userFromRequest(request, env.FIREBASE_PROJECT_ID);
+      if (!user) return Response.json({ error: 'sign_in_required' }, { status: 401, headers: cors });
+      if (!findChallenge(lastRunMatch[1])) {
+        return Response.json({ error: 'unknown_challenge' }, { status: 404, headers: cors });
+      }
+      const last = await lastRunFor(env.DB, user.uid, lastRunMatch[1]);
+      if (!last) return Response.json({ error: 'no_runs' }, { status: 404, headers: cors });
+      return Response.json(
+        { ...last.result, submissionId: last.id, shareable: true, sharedToGallery: last.shared, uid: user.uid },
+        { headers: cors },
+      );
     }
 
     // A share permalink. The id is an unguessable UUID, which is the capability —

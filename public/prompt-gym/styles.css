@@ -326,6 +326,8 @@ mark.hl {
 }
 .card.coming-soon:hover { transform: none; border-color: var(--line-strong); box-shadow: none; }
 .card.coming-soon .card-title { color: var(--fg); opacity: .8; }
+.coming-soon-idea { margin-top: .35rem; }
+.coming-soon-idea .text-btn { font-size: inherit; font-weight: 600; color: var(--maroon); }
 .coming-soon-mark { font-size: 1.5rem; line-height: 1; color: var(--maroon); opacity: .7; }
 .model-hint { font-size: .78rem; }
 
@@ -469,7 +471,7 @@ select {
   font-size: .7rem; border: 1px solid var(--line); border-radius: 999px;
   padding: .05rem .5rem; color: var(--muted); font-weight: 500;
 }
-.share { margin-top: 1rem; display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.share { margin: 0 0 1rem; display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
 .share code { font-size: .78rem; word-break: break-all; }
 label.inline { display: inline-flex; align-items: center; gap: .4rem; margin: 0; font-size: .85rem; }
 #result-card .total { margin-bottom: .75rem; }
