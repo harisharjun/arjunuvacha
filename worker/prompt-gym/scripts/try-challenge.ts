@@ -28,6 +28,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { gradeChallenge } from '../src/grading/engine';
 import { runChallenge } from '../src/run';
+import { OPENAI_JUDGE, providerFor, type Provider } from '../src/models';
 import { restEmbedder, type Embedder } from '../src/providers/embeddings';
 import { estimateTokens } from '../src/grading/score';
 import { validators } from '../src/grading/validators';
@@ -53,20 +54,22 @@ function arg(name: string): string | undefined {
   return rest.length > 0 ? rest.join(' ') : undefined;
 }
 
-function loadApiKey(): string {
-  if (process.env.GROQ_API_KEY) return process.env.GROQ_API_KEY;
-
+/** Reads a key from the environment, or from .dev.vars (gitignored). */
+function readKey(name: string): string | undefined {
+  if (process.env[name]) return process.env[name];
   const keyFile = arg('key-file') ?? join(import.meta.dirname, '..', '.dev.vars');
-  if (existsSync(keyFile)) {
-    const match = readFileSync(keyFile, 'utf8').match(/^\s*GROQ_API_KEY\s*=\s*"?([^"\n]+)"?/m);
-    if (match) return match[1].trim();
-  }
+  if (!existsSync(keyFile)) return undefined;
+  const match = readFileSync(keyFile, 'utf8').match(new RegExp(`^\\s*${name}\\s*=\\s*"?([^"\\n]+)"?`, 'm'));
+  return match?.[1]?.trim() || undefined;
+}
 
-  console.error(
-    'No Groq key found. Either:\n' +
-      '  export GROQ_API_KEY=gsk_...\n' +
-      'or put GROQ_API_KEY=gsk_... in worker/prompt-gym/.dev.vars (gitignored).',
-  );
+/** The key for whichever provider serves the model: OPENAI_API_KEY for
+ *  gpt-4.1-nano / gpt-4.1-mini, GROQ_API_KEY for everything else. */
+function loadApiKey(provider: Provider): string {
+  const name = provider === 'openai' ? 'OPENAI_API_KEY' : 'GROQ_API_KEY';
+  const key = readKey(name);
+  if (key) return key;
+  console.error(`No ${name} found. Either export it, or put ${name}=... in worker/prompt-gym/.dev.vars (gitignored).`);
   process.exit(2);
 }
 
@@ -107,7 +110,13 @@ if (!prompt) {
 }
 
 const model = arg('model') ?? 'openai/gpt-oss-20b';
-const apiKey = loadApiKey();
+const provider = providerFor(model);
+const apiKey = loadApiKey(provider);
+// The judge, pinned as the Worker pins it: OpenAI's when that key exists.
+const openaiKey = readKey('OPENAI_API_KEY');
+const judgeConfig = openaiKey
+  ? { provider: 'openai' as const, apiKey: openaiKey, scoreModel: OPENAI_JUDGE, labelModel: OPENAI_JUDGE }
+  : undefined;
 const live = process.argv.includes('--live');
 
 /** Workers AI over REST, for `similar`. Optional: without it those assertions
@@ -142,7 +151,7 @@ if (live) {
     console.log('note: no CF_ACCOUNT_ID / CF_API_TOKEN in .dev.vars — `similar`');
     console.log('      assertions stay pending and this run is not eligible.');
   }
-  const r = await runChallenge({ challenge, prompt, model, apiKey, embedder });
+  const r = await runChallenge({ challenge, prompt, model, apiKey, embedder, provider, judge: judgeConfig });
 
   for (const t of r.tests) {
     const mark = t.status === 'errored' ? '!' : t.status === 'passed' ? '✓' : '✗';
@@ -174,6 +183,7 @@ const outcomes = await mapWithLimit(
     try {
       const r = await execute({
         apiKey,
+        provider,
         model,
         prompt,
         input: test.input,

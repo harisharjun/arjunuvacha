@@ -12,6 +12,7 @@ import { applyReveal, type PublicTestResult } from './grading/reveal';
 import { execute, judge, type GatewayConfig } from './providers/groq';
 import { cosineSimilarity } from './grading/text';
 import type { Embedder } from './providers/embeddings';
+import { GROQ_MODELS, type Provider } from './models';
 import { toOutcome } from './providers/errors';
 
 const EXEC_CONCURRENCY = 3;
@@ -28,11 +29,9 @@ const NEEDS_EMBEDDINGS = new Set(['similar']);
 const JUDGE_SCORE_MODEL = 'openai/gpt-oss-120b';
 const JUDGE_LABEL_MODEL = 'openai/gpt-oss-20b';
 
-export const EXEC_MODELS = [
-  'openai/gpt-oss-20b',
-  'openai/gpt-oss-120b',
-  'qwen/qwen3.8-27b',
-] as const;
+/** The Groq models, kept under this name for existing callers. Which models a
+ *  player may actually choose now depends on who they are — see `models.ts`. */
+export const EXEC_MODELS = GROQ_MODELS;
 
 const bare = (type: string) => (type.startsWith('not-') ? type.slice(4) : type);
 
@@ -60,6 +59,11 @@ export interface RunOptions {
   /** Supplied by the Worker from its `AI` binding, or by the try script from the
    *  REST API. Absent means `similar` assertions cannot run. */
   embedder?: Embedder;
+  /** Who serves the player's model. Groq when absent. */
+  provider?: Provider;
+  /** Who grades model-graded assertions. Pinned per deployment, never chosen by
+   *  the player. Absent means the Groq judges on the run's own key. */
+  judge?: { provider: Provider; apiKey: string; scoreModel: string; labelModel: string };
 }
 
 export interface RunResponse {
@@ -134,11 +138,15 @@ async function gradeWithJudge(
   const wantScore = assertion.threshold !== undefined;
 
   try {
+    const pinned = options.judge;
     const verdict = await judge({
-      apiKey: options.apiKey,
+      apiKey: pinned?.apiKey ?? options.apiKey,
+      provider: pinned?.provider ?? 'groq',
       gateway: options.gateway,
       fetchImpl: options.fetchImpl,
-      model: wantScore ? JUDGE_SCORE_MODEL : JUDGE_LABEL_MODEL,
+      model: pinned
+        ? wantScore ? pinned.scoreModel : pinned.labelModel
+        : wantScore ? JUDGE_SCORE_MODEL : JUDGE_LABEL_MODEL,
       output,
       rubric: String(assertion.value ?? ''),
       wantScore,
@@ -168,6 +176,7 @@ export async function runChallenge(options: RunOptions): Promise<RunResponse> {
     try {
       const r = await execute({
         apiKey: options.apiKey,
+        provider: options.provider,
         gateway: options.gateway,
         fetchImpl: options.fetchImpl,
         model,

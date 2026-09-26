@@ -33,6 +33,30 @@ Decided by Arjun; each is enforced by the Worker, not only shown by the page.
 - **A validator that throws on the player's output is a fail, not an error.**
   Fenced JSON on pg-a11 used to mark the run ineligible and blame "our side".
 
+## Model tiers and submission limits (26 Sep 2026)
+
+Decided by Arjun; enforced by the Worker (`src/models.ts`, `src/budget.ts`).
+
+| | model | limit | when it runs out |
+|---|---|---|---|
+| Guest | Groq free tier (gpt-oss, Qwen) | 5 submissions an hour, per connection | nudged to sign in |
+| Signed in | gpt-4.1-nano everywhere; gpt-4.1-mini too on Hard | 3 a minute, 15 an hour, 100 a day, per account | told how long to wait |
+
+- Every submission counts, including a repeat served from the result cache.
+- The judge for model-graded assertions is pinned to gpt-4.1-mini.
+- A site-wide daily cap on OpenAI tokens (`OPENAI_TOKENS_PER_DAY`, default 3M ≈
+  $1–5) stops many accounts adding up to a large bill.
+- GPT-5-family models were ruled out: they accept only the default temperature,
+  so the same prompt could score differently twice and the cache would lie.
+- Without `OPENAI_API_KEY` the Worker falls back to Groq for everyone.
+- The "use your own Groq key" panel is gone. The Worker still accepts
+  `X-Groq-Key` from a guest; nothing in the page sends it.
+
+**Before launch:** re-run the reference and strawman prompts on gpt-4.1-nano
+(Beginner–Intermediate) and gpt-4.1-mini (Hard) with
+`npm run try -- <id> --prompt-file … --model gpt-4.1-nano --live`. Pass rates were
+measured on gpt-oss and will shift.
+
 ## Staging has its own Worker
 
 `prompt-gym-staging` (`[env.staging]` in `wrangler.toml`), same D1 and KV as

@@ -263,11 +263,30 @@ h1, h2, h3 { letter-spacing: -0.015em; }
 .seg.active { background: var(--surface); color: var(--fg); box-shadow: var(--shadow); font-weight: 600; }
 .gallery-link { text-decoration: none; }
 
-/* a locked card: visible, clearly not playable yet */
+/* a locked card: visible, clearly not playable yet, and one click from playable */
 .card.locked { background: color-mix(in srgb, var(--surface) 60%, var(--bg)); box-shadow: none; }
 .card.locked .card-title, .card.locked .card-summary { opacity: .6; }
 .card.locked:hover { border-color: var(--maroon); transform: none; }
+.card.locked:hover .unlock-cta { filter: brightness(1.12); }
 .status.locked { color: var(--maroon); }
+.unlock-cta {
+  display: inline-flex; align-items: center; gap: .4rem; flex: none;
+  padding: .38rem .8rem; border-radius: 999px;
+  background: var(--maroon); color: #fff; font-size: .78rem; font-weight: 650;
+  box-shadow: 0 1px 2px rgba(114, 41, 41, .25);
+}
+.unlock-cta svg { width: 12px; height: 12px; }
+
+/* the last card: a promise, not a challenge */
+.card.coming-soon {
+  cursor: default; align-items: center; justify-content: center; text-align: center;
+  background: transparent; box-shadow: none; border: 1.5px dashed var(--line-strong);
+  color: var(--muted); min-height: 11rem;
+}
+.card.coming-soon:hover { transform: none; border-color: var(--line-strong); box-shadow: none; }
+.card.coming-soon .card-title { color: var(--fg); opacity: .8; }
+.coming-soon-mark { font-size: 1.5rem; line-height: 1; color: var(--maroon); opacity: .7; }
+.model-hint { font-size: .78rem; }
 
 .list-empty {
   grid-column: 1 / -1; padding: 2rem 1rem; text-align: center; color: var(--muted);
@@ -512,28 +531,6 @@ label.inline { display: inline-flex; align-items: center; gap: .4rem; margin: 0;
 #board-you .board-row { border: 1px dashed var(--line-strong); }
 .board-more { display: block; width: 100%; text-align: center; margin-top: .7rem; padding: .5rem; border-radius: 6px; }
 .board-more:hover { background: var(--bg); text-decoration: none; }
-
-/* ───────────────────────────── BYO key */
-.byo-panel { font-size: .875rem; }
-.byo-panel summary {
-  cursor: pointer; padding: .85rem 1.1rem; font-weight: 600; list-style: none;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.byo-panel summary::-webkit-details-marker { display: none; }
-.byo-panel summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 1.1rem; }
-.byo-panel[open] summary::after { content: "−"; }
-.byo-panel.urgent { border-color: var(--err); }
-.byo-panel.urgent summary { color: var(--err); }
-.byo-body { padding: 0 1.1rem 1rem; }
-.byo-body p { margin: .5rem 0; }
-.byo-form { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin: .75rem 0 .25rem; }
-.byo-form input {
-  flex: 1 1 10rem; min-width: 0; padding: .5rem .6rem;
-  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
-  background: var(--bg); color: var(--fg); font: .85rem var(--mono);
-}
-#byo-status:empty { display: none; }
-.byo-active { color: var(--pass); font-weight: 600; }
 
 /* ───────────────────────────── drawers */
 .backdrop {

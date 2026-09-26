@@ -67,7 +67,7 @@ describe('the shared budget', () => {
     const body = (await res.json()) as {
       error: string;
       scope: string;
-      byoKeyAccepted: boolean;
+      signInUnlocks: boolean;
       retryAfterSeconds: number;
       message: string;
     };
@@ -76,9 +76,9 @@ describe('the shared budget', () => {
     expect(res.headers.get('retry-after')).toBe(String(body.retryAfterSeconds));
     expect(body.error).toBe('budget_exhausted');
     expect(body.scope).toBe('day');
-    // The SPA switches to BYO-key mode off this flag, so it is part of the contract.
-    expect(body.byoKeyAccepted).toBe(true);
-    expect(body.message).toMatch(/your own free Groq key/i);
+    // The page offers sign-in off this flag, so it is part of the contract.
+    expect(body.signInUnlocks).toBe(true);
+    expect(body.message).toMatch(/sign in/i);
     // Refused before any spend, and before Groq was ever called.
     expect([...store.keys()].some((k) => k.startsWith('budget:day:'))).toBe(false);
     expect(globalThis.fetch).not.toHaveBeenCalled();
@@ -183,41 +183,62 @@ describe('the shared budget', () => {
   });
 });
 
-describe('per-IP rate limits', () => {
-  it('refuses a client that has run too many times this minute', async () => {
+describe('guest submission limits', () => {
+  it('gives a guest their hourly allowance, then sends them to sign in', async () => {
     stubGroq();
     const { kv } = fakeKv();
-    const env = { ...base, BUDGET: kv, RATE_LIMIT_PER_MINUTE: '2' };
+    const env = { ...base, BUDGET: kv, GUEST_RUNS_PER_HOUR: '2' };
 
     await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'one' }), env);
     await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'two' }), env);
     const res = await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'three' }), env);
 
-    const body = (await res.json()) as { error: string; scope: string; retryAfterSeconds: number };
+    const body = (await res.json()) as { error: string; signInUnlocks: boolean; limit: number; retryAfterSeconds: number; message: string };
     expect(res.status).toBe(429);
-    expect(body.error).toBe('rate_limited');
-    expect(body.scope).toBe('minute');
+    expect(body.error).toBe('guest_limit');
+    expect(body.signInUnlocks).toBe(true);
+    expect(body.limit).toBe(2);
+    expect(body.message).toMatch(/sign in/i);
     expect(res.headers.get('retry-after')).toBe(String(body.retryAfterSeconds));
   });
 
-  // Their key pays Groq. It does not pay for our Worker's CPU or our D1 writes.
-  it('applies to a BYO-key client too', async () => {
+  it('defaults to five an hour', async () => {
     stubGroq();
     const { kv } = fakeKv();
-    const env = { ...base, BUDGET: kv, RATE_LIMIT_PER_MINUTE: '1' };
+    const env = { ...base, BUDGET: kv };
+    for (let i = 0; i < 5; i++) {
+      expect((await worker.fetch(post({ challengeId: 'pg-a2', prompt: `p${i}` }), env)).status).toBe(200);
+    }
+    expect((await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'p6' }), env)).status).toBe(429);
+  });
+
+  // A repeated prompt is still a submission; a limit a replayed prompt could
+  // sidestep would not be a limit.
+  it('counts a repeated prompt, even though the result comes from the cache', async () => {
+    stubGroq();
+    const { kv } = fakeKv();
+    const env = { ...base, BUDGET: kv, GUEST_RUNS_PER_HOUR: '1' };
+    await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'same' }), env);
+    const again = await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'same' }), env);
+    expect(again.status).toBe(429);
+  });
+
+  it('applies whatever key the guest brings', async () => {
+    stubGroq();
+    const { kv } = fakeKv();
+    const env = { ...base, BUDGET: kv, GUEST_RUNS_PER_HOUR: '1' };
     const byo = { 'X-Groq-Key': 'gsk_PLAYER' };
 
     await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'one' }, byo), env);
     const res = await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'two' }, byo), env);
-
     expect(res.status).toBe(429);
-    expect(((await res.json()) as { error: string }).error).toBe('rate_limited');
+    expect(((await res.json()) as { error: string }).error).toBe('guest_limit');
   });
 
-  it("does not let one client's limit block another", async () => {
+  it("does not let one connection's limit block another", async () => {
     stubGroq();
     const { kv } = fakeKv();
-    const env = { ...base, BUDGET: kv, RATE_LIMIT_PER_MINUTE: '1' };
+    const env = { ...base, BUDGET: kv, GUEST_RUNS_PER_HOUR: '1' };
 
     await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'one' }), env);
     const other = await worker.fetch(
@@ -228,7 +249,7 @@ describe('per-IP rate limits', () => {
   });
 });
 
-describe("Groq's own 429 makes the same offer the budget would", () => {
+describe("Groq's own 429 sends a guest to sign in, as the budget does", () => {
   it('offers BYO-key mode when the shared key is the one being throttled', async () => {
     // Groq turning the house key away is the same wall as our own counter, one
     // layer down: the player's own key is the thing that clears either.
@@ -248,14 +269,14 @@ describe("Groq's own 429 makes the same offer the budget would", () => {
     const res = await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'classify' }), base);
     const body = (await res.json()) as {
       error: string;
-      byoKeyAccepted?: boolean;
+      signInUnlocks?: boolean;
       message: string;
     };
 
     expect(res.status).toBe(429);
     expect(body.error).toBe('upstream_rate_limited');
-    expect(body.byoKeyAccepted).toBe(true);
-    expect(body.message).toMatch(/your own free Groq key/i);
+    expect(body.signInUnlocks).toBe(true);
+    expect(body.message).toMatch(/sign in/i);
   });
 
   it('makes no such offer to a player who is already using their own key', async () => {
@@ -273,9 +294,9 @@ describe("Groq's own 429 makes the same offer the budget would", () => {
     );
     // Their own key is already the answer, so there is nothing to offer. They get
     // the ordinary errored scorecard, which says it was the provider's fault.
-    const body = (await res.json()) as { byoKeyAccepted?: boolean; rateLimited?: boolean };
+    const body = (await res.json()) as { signInUnlocks?: boolean; rateLimited?: boolean };
     expect(res.status).toBe(200);
-    expect(body.byoKeyAccepted).toBeUndefined();
+    expect(body.signInUnlocks).toBeUndefined();
     expect(body.rateLimited).toBe(true);
   });
 
@@ -315,7 +336,7 @@ describe("a player's own key never leaves the request", () => {
   it('is absent from a rate-limit refusal', async () => {
     stubGroq();
     const { kv } = fakeKv();
-    const env = { ...base, BUDGET: kv, RATE_LIMIT_PER_MINUTE: '1' };
+    const env = { ...base, BUDGET: kv, GUEST_RUNS_PER_HOUR: '1' };
     const byo = { 'X-Groq-Key': SECRET };
 
     await worker.fetch(post({ challengeId: 'pg-a2', prompt: 'one' }, byo), env);

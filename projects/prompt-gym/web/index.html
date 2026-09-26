@@ -129,6 +129,7 @@
           <div class="editor-foot">
             <span id="charcount" class="muted"></span>
             <span class="spacer"></span>
+            <span id="model-hint" class="muted model-hint"></span>
             <label for="model" class="inline-label">Model</label>
             <select id="model"></select>
             <button id="run" class="primary" type="button">Run against hidden tests</button>
@@ -203,8 +204,10 @@
             <li>An account id, and — once you sign in — your Google display name and profile picture URL.</li>
             <li>The prompts you run, their scores, and when you ran them.</li>
           </ul>
-          <p>If you bring your own Groq key, it stays in your browser. It is sent with each run, used for that run, and never stored or logged on our side.</p>
-          <p>Prompts are sent to Groq to be run and graded, and to Cloudflare to measure similarity. Don't put anything personal or confidential in a prompt.</p>
+          <p>Prompts are sent to be run and graded — to Groq for guests, and to OpenAI for signed-in players — and to Cloudflare to measure similarity. Don't put anything personal or confidential in a prompt.</p>
+
+          <h2>Fair use</h2>
+          <p>To keep the site running for everyone, guests can submit 5 prompts an hour, and signed-in players 3 a minute, 15 an hour and 100 a day. The site may pause runs for everyone if it reaches its daily limit.</p>
 
           <h2>Your consent</h2>
           <p>By playing — signed in or as a guest — you agree to these terms. If you don't, please don't use the site.</p>
@@ -216,7 +219,7 @@
     </main>
 
     <!-- ─────────────────────────────── right column -->
-    <aside class="sidebar" aria-label="Leaderboard and settings">
+    <aside class="sidebar" aria-label="Leaderboard">
       <section class="panel board-panel" aria-labelledby="board-title">
         <div class="panel-head">
           <h2 id="board-title">Leaderboard</h2>
@@ -241,36 +244,6 @@
         <button id="board-more" class="text-btn board-more" type="button" hidden></button>
       </section>
 
-      <!-- Offered up front, per the design doc, and the same element is opened in
-           context when the shared allowance runs out — one explanation, not two. -->
-      <details id="byo" class="panel byo-panel">
-        <summary id="byo-summary">Use your own Groq key</summary>
-        <div class="byo-body">
-          <p>
-            PromptGym runs on Groq's free tier, shared by everyone on the site. It is
-            small — a busy hour empties it. Bring your own free key and you never
-            queue behind anyone.
-          </p>
-          <p class="muted">
-            Get one at
-            <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">console.groq.com/keys</a>
-            — it's free and takes about a minute.
-          </p>
-          <div class="byo-form">
-            <label for="byo-key" class="visually-hidden">Your Groq API key</label>
-            <input id="byo-key" type="password" autocomplete="off" spellcheck="false" placeholder="gsk_…">
-            <button id="byo-save" class="secondary" type="button">Save key</button>
-            <button id="byo-clear" class="text-btn" type="button" hidden>Remove</button>
-          </div>
-          <p id="byo-status" class="muted" role="status" aria-live="polite"></p>
-          <p class="muted fine">
-            Kept in this browser's local storage and nowhere else. Sent with each run
-            over HTTPS, used for that run, never written to our database or logs.
-            Runs on your key are graded by the same judge and still count on the
-            leaderboard.
-          </p>
-        </div>
-      </details>
     </aside>
   </div>
 

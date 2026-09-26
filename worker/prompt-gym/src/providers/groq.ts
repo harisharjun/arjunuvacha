@@ -1,3 +1,4 @@
+import type { Provider } from '../models';
 import {
   InvalidRequestError,
   JudgeError,
@@ -21,6 +22,9 @@ export interface GatewayConfig {
 export interface GroqCallOptions {
   apiKey: string;
   model: string;
+  /** Groq by default. OpenAI speaks the same chat-completions format, so one
+   *  client serves both; only the base URL and two body fields differ. */
+  provider?: Provider;
   maxOutputTokens?: number;
   /** The GPT-OSS models reason before answering, and reasoning is billed against
    *  the same `max_tokens` as the answer. At the default effort a 192-token cap can
@@ -38,10 +42,27 @@ export interface GroqCallOptions {
 /** Routes through the Cloudflare AI Gateway when configured — same gateway as the
  *  other workers, which is what gives one dashboard for every Groq call. */
 export function groqBaseUrl(gateway?: GatewayConfig): string {
+  return providerBaseUrl('groq', gateway);
+}
+
+/** Both providers route through the same Cloudflare AI Gateway when it is
+ *  configured, so logging, caching and analytics stay in one place. */
+export function providerBaseUrl(provider: Provider, gateway?: GatewayConfig): string {
   if (gateway?.account && gateway?.gateway) {
-    return `https://gateway.ai.cloudflare.com/v1/${gateway.account}/${gateway.gateway}/groq`;
+    return `https://gateway.ai.cloudflare.com/v1/${gateway.account}/${gateway.gateway}/${provider}`;
   }
-  return 'https://api.groq.com/openai/v1';
+  return provider === 'openai' ? 'https://api.openai.com/v1' : 'https://api.groq.com/openai/v1';
+}
+
+const LABEL: Record<Provider, string> = { groq: 'Groq', openai: 'OpenAI' };
+
+/** The request body. gpt-4.1 is not a reasoning model and rejects
+ *  `reasoning_effort`; OpenAI also names the output cap `max_completion_tokens`. */
+function requestBody(messages: { role: string; content: string }[], options: GroqCallOptions) {
+  const base = { model: options.model, messages, temperature: 0 };
+  const cap = options.maxOutputTokens ?? 192;
+  if (options.provider === 'openai') return { ...base, max_completion_tokens: cap };
+  return { ...base, max_tokens: cap, reasoning_effort: options.reasoningEffort ?? 'low' };
 }
 
 function parseRetryAfter(header: string | null): number | undefined {
@@ -77,6 +98,8 @@ async function chat(
 ): Promise<ChatResult> {
   const doFetch = options.fetchImpl ?? fetch;
   const sleep = options.sleepImpl ?? defaultSleep;
+  const provider: Provider = options.provider ?? 'groq';
+  const name = LABEL[provider];
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -91,23 +114,17 @@ async function chat(
 
   let response: Response;
   try {
-    response = await doFetch(`${groqBaseUrl(options.gateway)}/chat/completions`, {
+    response = await doFetch(`${providerBaseUrl(provider, options.gateway)}/chat/completions`, {
       method: 'POST',
       headers,
       signal: controller.signal,
-      body: JSON.stringify({
-        model: options.model,
-        messages,
-        temperature: 0,
-        max_tokens: options.maxOutputTokens ?? 192,
-        reasoning_effort: options.reasoningEffort ?? 'low',
-      }),
+      body: JSON.stringify(requestBody(messages, options)),
     });
   } catch (err) {
     // An abort is our own timeout firing, not a provider error, but both are
     // infrastructure rather than the user's prompt.
     const aborted = err instanceof Error && err.name === 'AbortError';
-    throw new UpstreamError(aborted ? `Groq request timed out after ${TIMEOUT_MS}ms` : 'Groq request failed');
+    throw new UpstreamError(aborted ? `${name} request timed out after ${TIMEOUT_MS}ms` : `${name} request failed`);
   } finally {
     clearTimeout(timer);
   }
@@ -118,15 +135,15 @@ async function chat(
       await sleep(Math.min((retryAfter ?? 1) * 1000, MAX_RETRY_WAIT_MS));
       return chat(messages, options, 1);
     }
-    throw new RateLimitedError('Groq rate limit reached', retryAfter);
+    throw new RateLimitedError(`${name} rate limit reached`, retryAfter);
   }
 
   if (response.status >= 500) {
-    throw new UpstreamError(`Groq returned ${response.status}`, response.status);
+    throw new UpstreamError(`${name} returned ${response.status}`, response.status);
   }
 
   if (!response.ok) {
-    throw new UpstreamError(`Groq rejected the request with ${response.status}`, response.status);
+    throw new UpstreamError(`${name} rejected the request with ${response.status}`, response.status);
   }
 
   let body: {
@@ -140,12 +157,12 @@ async function chat(
   try {
     body = (await response.json()) as typeof body;
   } catch {
-    throw new UpstreamError('Groq returned a response that was not JSON');
+    throw new UpstreamError(`${name} returned a response that was not JSON`);
   }
 
   const content = body.choices?.[0]?.message?.content;
   if (typeof content !== 'string') {
-    throw new UpstreamError('Groq returned no message content');
+    throw new UpstreamError(`${name} returned no message content`);
   }
 
   return {

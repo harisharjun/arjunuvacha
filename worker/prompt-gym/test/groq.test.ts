@@ -160,6 +160,44 @@ describe('harness rendering', () => {
   });
 });
 
+describe('the OpenAI provider', () => {
+  const call = async (provider?: 'groq' | 'openai', gateway?: { account: string; gateway: string }) => {
+    const fetchImpl = vi.fn().mockImplementation(async () => ok('x'));
+    await execute({ ...base, model: 'gpt-4.1-nano', provider, gateway, fetchImpl, prompt: 'p', input: 'i', maxOutputTokens: 256 });
+    const [url, init] = fetchImpl.mock.calls[0];
+    return { url: url as string, body: JSON.parse(init.body) };
+  };
+
+  it('sends OpenAI its own field names, and no reasoning_effort', async () => {
+    const { url, body } = await call('openai');
+    expect(url).toBe('https://api.openai.com/v1/chat/completions');
+    expect(body.max_completion_tokens).toBe(256);
+    expect(body.max_tokens).toBeUndefined();
+    // gpt-4.1 is not a reasoning model and rejects the field outright.
+    expect(body.reasoning_effort).toBeUndefined();
+    expect(body.temperature).toBe(0);
+  });
+
+  it('routes OpenAI through the same AI Gateway as Groq', async () => {
+    const { url } = await call('openai', { account: 'acc', gateway: 'vani' });
+    expect(url).toBe('https://gateway.ai.cloudflare.com/v1/acc/vani/openai/chat/completions');
+  });
+
+  it('keeps Groq exactly as it was when no provider is named', async () => {
+    const { url, body } = await call();
+    expect(url).toBe('https://api.groq.com/openai/v1/chat/completions');
+    expect(body.max_tokens).toBe(256);
+    expect(body.reasoning_effort).toBe('low');
+  });
+
+  it('names the right provider in its errors', async () => {
+    const fetchImpl = vi.fn().mockImplementation(async () => status(503));
+    await expect(
+      execute({ ...base, provider: 'openai', fetchImpl, prompt: 'p', input: 'i' }),
+    ).rejects.toThrow(/^OpenAI returned 503$/);
+  });
+});
+
 describe('rate limiting', () => {
   it('retries exactly once after a 429, then succeeds', async () => {
     const fetchImpl = vi

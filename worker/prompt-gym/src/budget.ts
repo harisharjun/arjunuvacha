@@ -31,20 +31,28 @@ export interface BudgetLimits {
   perMinute: number;
 }
 
+/** How many runs a caller may submit, by who they are.
+ *
+ *  Set by Arjun on 26 Sep 2026. Guests: 5 an hour, then the nudge to sign in.
+ *  Signed-in players: 3 a minute, 15 an hour, 100 a day — generous for someone
+ *  iterating on a prompt, and a ceiling on what one account can cost. */
 export interface RateLimits {
-  /** Runs per clock minute from one IP. */
-  perMinute: number;
-  /** Runs per clock hour from one IP. */
-  perHour: number;
+  guestPerHour: number;
+  userPerMinute: number;
+  userPerHour: number;
+  userPerDay: number;
 }
 
 /** Under Groq's 200K/day and 8K/minute, with room for the overshoot above and for
  *  the judge calls a challenge's `estimatedTokensPerRun` only approximates. */
 export const DEFAULT_BUDGET: BudgetLimits = { perDay: 180_000, perMinute: 7_000 };
 
-/** Generous enough that nobody iterating on a challenge notices, tight enough that
- *  a script cannot drain a day's budget in a minute. */
-export const DEFAULT_RATE: RateLimits = { perMinute: 6, perHour: 60 };
+export const DEFAULT_RATE: RateLimits = { guestPerHour: 5, userPerMinute: 3, userPerHour: 15, userPerDay: 100 };
+
+/** A site-wide daily cap on paid (OpenAI) tokens. Per-player limits do not stop
+ *  someone opening ten Google accounts; this does. ~3M tokens is roughly $1-5 a
+ *  day depending on the nano/mini mix. */
+export const DEFAULT_PAID_BUDGET: BudgetLimits = { perDay: 3_000_000, perMinute: 1_000_000 };
 
 /** Used when a challenge carries no `estimatedTokensPerRun`. Deliberately the
  *  high end of what the 14 shipped challenges cost, so an unmeasured challenge
@@ -60,23 +68,32 @@ const DAY = 86_400;
 const DAY_TTL = 2 * DAY;
 
 export type BudgetScope = 'day' | 'minute';
-export type RateScope = 'minute' | 'hour';
+export type RateScope = 'minute' | 'hour' | 'day';
 
 export type BudgetDecision =
   | { ok: true; cost: number; remainingToday: number }
   | { ok: false; scope: BudgetScope; retryAfterSeconds: number };
 
-export type RateDecision = { ok: true } | { ok: false; scope: RateScope; retryAfterSeconds: number };
+export type RateDecision =
+  | { ok: true }
+  | { ok: false; scope: RateScope; limit: number; retryAfterSeconds: number };
 
 /** UTC throughout. A budget that resets at a time zone's midnight would reset at a
  *  different moment than Groq's own quota does, which is the one thing it has to
  *  agree with. */
-function dayKey(now: Date): string {
-  return `budget:day:${now.toISOString().slice(0, 10)}`;
+/** A budget pool: Groq's shared free allowance, or the paid OpenAI one. */
+export type BudgetPool = 'groq' | 'openai';
+
+/** The Groq pool keeps its original key names, so counters written before the
+ *  paid tier existed carry on. */
+const POOL_PREFIX: Record<BudgetPool, string> = { groq: 'budget', openai: 'budget-openai' };
+
+function dayKey(now: Date, pool: BudgetPool = 'groq'): string {
+  return `${POOL_PREFIX[pool]}:day:${now.toISOString().slice(0, 10)}`;
 }
 
-function minuteKey(now: Date): string {
-  return `budget:min:${now.toISOString().slice(0, 16)}`;
+function minuteKey(now: Date, pool: BudgetPool = 'groq'): string {
+  return `${POOL_PREFIX[pool]}:min:${now.toISOString().slice(0, 16)}`;
 }
 
 function secondsLeftIn(period: number, now: Date): number {
@@ -111,8 +128,9 @@ export async function reserveBudget(
   cost: number,
   limits: BudgetLimits,
   now: Date = new Date(),
+  pool: BudgetPool = 'groq',
 ): Promise<BudgetDecision> {
-  const keys = { day: dayKey(now), minute: minuteKey(now) };
+  const keys = { day: dayKey(now, pool), minute: minuteKey(now, pool) };
   const [spentToday, spentThisMinute] = await Promise.all([
     readCount(kv, keys.day),
     readCount(kv, keys.minute),
@@ -169,36 +187,37 @@ export function clientIp(request: Request): string | null {
   return null;
 }
 
-/** Counts this run against the IP's per-minute and per-hour buckets.
+const WINDOW: Record<RateScope, { seconds: number; stamp: number }> = {
+  minute: { seconds: MINUTE, stamp: 16 },
+  hour: { seconds: HOUR, stamp: 13 },
+  day: { seconds: DAY, stamp: 10 },
+};
+
+/** Counts one run against every window given, for one subject — `guest:<ip>` or
+ *  `user:<uid>`. Refuses, without counting, if any window is already full.
  *
- *  Counted whether or not the player brought their own key: their key pays Groq,
- *  it does not pay for our Worker's CPU or our D1 writes. */
-export async function consumeRateLimit(
+ *  Counted before the result cache is consulted: a repeated prompt is still a
+ *  submission, and a limit a replayed prompt could sidestep is not a limit. */
+export async function consumeWindows(
   kv: CounterStore,
-  ip: string,
-  limits: RateLimits,
+  subject: string,
+  windows: { scope: RateScope; limit: number }[],
   now: Date = new Date(),
 ): Promise<RateDecision> {
   const stamp = now.toISOString();
-  const keys = { minute: `rl:min:${ip}:${stamp.slice(0, 16)}`, hour: `rl:hr:${ip}:${stamp.slice(0, 13)}` };
+  const keyed = windows.map((w) => ({ ...w, key: `rl:${subject}:${w.scope}:${stamp.slice(0, WINDOW[w.scope].stamp)}` }));
+  const counts = await Promise.all(keyed.map((w) => readCount(kv, w.key)));
 
-  const [thisMinute, thisHour] = await Promise.all([
-    readCount(kv, keys.minute),
-    readCount(kv, keys.hour),
-  ]);
-
-  if (thisMinute >= limits.perMinute) {
-    return { ok: false, scope: 'minute', retryAfterSeconds: secondsLeftIn(MINUTE, now) };
-  }
-  if (thisHour >= limits.perHour) {
-    return { ok: false, scope: 'hour', retryAfterSeconds: secondsLeftIn(HOUR, now) };
+  for (let i = 0; i < keyed.length; i++) {
+    if (counts[i] >= keyed[i].limit) {
+      const { scope, limit } = keyed[i];
+      return { ok: false, scope, limit, retryAfterSeconds: secondsLeftIn(WINDOW[scope].seconds, now) };
+    }
   }
 
-  await Promise.all([
-    kv.put(keys.minute, String(thisMinute + 1), { expirationTtl: 2 * MINUTE }),
-    kv.put(keys.hour, String(thisHour + 1), { expirationTtl: 2 * HOUR }),
-  ]);
-
+  await Promise.all(
+    keyed.map((w, i) => kv.put(w.key, String(counts[i] + 1), { expirationTtl: 2 * WINDOW[w.scope].seconds })),
+  );
   return { ok: true };
 }
 
@@ -210,14 +229,18 @@ function positiveInt(value: unknown, fallback: number): number {
 export interface LimitEnv {
   BUDGET_TOKENS_PER_DAY?: string;
   BUDGET_TOKENS_PER_MINUTE?: string;
-  RATE_LIMIT_PER_MINUTE?: string;
-  RATE_LIMIT_PER_HOUR?: string;
+  OPENAI_TOKENS_PER_DAY?: string;
+  GUEST_RUNS_PER_HOUR?: string;
+  USER_RUNS_PER_MINUTE?: string;
+  USER_RUNS_PER_HOUR?: string;
+  USER_RUNS_PER_DAY?: string;
 }
 
 /** Limits are `[vars]` rather than constants so they can be retuned in
- *  `wrangler.toml` — Groq publishes these numbers per organisation and moves them. */
+ *  `wrangler.toml` without a code change. */
 export function limitsFromEnv(env: LimitEnv): {
   budget: BudgetLimits;
+  paidBudget: BudgetLimits;
   rate: RateLimits;
 } {
   return {
@@ -225,9 +248,15 @@ export function limitsFromEnv(env: LimitEnv): {
       perDay: positiveInt(env.BUDGET_TOKENS_PER_DAY, DEFAULT_BUDGET.perDay),
       perMinute: positiveInt(env.BUDGET_TOKENS_PER_MINUTE, DEFAULT_BUDGET.perMinute),
     },
+    paidBudget: {
+      perDay: positiveInt(env.OPENAI_TOKENS_PER_DAY, DEFAULT_PAID_BUDGET.perDay),
+      perMinute: DEFAULT_PAID_BUDGET.perMinute,
+    },
     rate: {
-      perMinute: positiveInt(env.RATE_LIMIT_PER_MINUTE, DEFAULT_RATE.perMinute),
-      perHour: positiveInt(env.RATE_LIMIT_PER_HOUR, DEFAULT_RATE.perHour),
+      guestPerHour: positiveInt(env.GUEST_RUNS_PER_HOUR, DEFAULT_RATE.guestPerHour),
+      userPerMinute: positiveInt(env.USER_RUNS_PER_MINUTE, DEFAULT_RATE.userPerMinute),
+      userPerHour: positiveInt(env.USER_RUNS_PER_HOUR, DEFAULT_RATE.userPerHour),
+      userPerDay: positiveInt(env.USER_RUNS_PER_DAY, DEFAULT_RATE.userPerDay),
     },
   };
 }

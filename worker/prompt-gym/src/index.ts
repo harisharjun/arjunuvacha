@@ -1,4 +1,5 @@
 import { challenges, findChallenge, FREE_TO_PLAY, levels } from './challenges';
+import { modelsFor, OPENAI_JUDGE, providerFor } from './models';
 import { publicChallenge } from './grading/reveal';
 import { EXEC_MODELS, runChallenge } from './run';
 import { InvalidRequestError, ProviderError } from './providers/errors';
@@ -20,7 +21,7 @@ import { userFromRequest, type VerifiedUser } from './auth/verify';
 import {
   budgetStatus,
   clientIp,
-  consumeRateLimit,
+  consumeWindows,
   limitsFromEnv,
   reserveBudget,
   runCost,
@@ -43,8 +44,13 @@ export interface Env {
   AI?: AiBinding;
   BUDGET_TOKENS_PER_DAY?: string;
   BUDGET_TOKENS_PER_MINUTE?: string;
-  RATE_LIMIT_PER_MINUTE?: string;
-  RATE_LIMIT_PER_HOUR?: string;
+  OPENAI_TOKENS_PER_DAY?: string;
+  GUEST_RUNS_PER_HOUR?: string;
+  USER_RUNS_PER_MINUTE?: string;
+  USER_RUNS_PER_HOUR?: string;
+  USER_RUNS_PER_DAY?: string;
+  /** Signed-in players run on OpenAI. Without it they fall back to Groq. */
+  OPENAI_API_KEY?: string;
 }
 
 /** Records who earned a score, and updates their best if this beat it.
@@ -81,13 +87,20 @@ const ALLOWED_DEV_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
 const MAX_PROMPT_CHARS = 2000;
 
-/** The same sentence the landing page already made, repeated at the moment it
- *  bites. Nobody should meet the idea of bringing their own key for the first time
- *  while they are blocked — see `docs/design-doc.md`, "Bring-your-own key". */
-const BYO_KEY_PROMPT =
-  "PromptGym's shared Groq allowance is spent for now. Add your own free Groq key " +
-  'and you never queue behind anyone — it stays in your browser and is never stored ' +
-  'on our side. Your runs still count on the leaderboard.';
+/** What a guest is told when the free tier runs out, whichever way it ran out.
+ *  Signing in is the answer every time: a higher allowance, on a paid model that
+ *  does not share its quota with every other visitor. */
+const GUEST_SIGN_IN =
+  "You've used the free runs for guests for now. Sign in with Google to keep going — " +
+  'signed-in players get 15 runs an hour on a faster, more reliable model, and their ' +
+  'scores count on the leaderboard.';
+
+/** "42s", "12 min", "3 h" — for telling someone how long to wait. */
+function formatWait(seconds: number): string {
+  if (seconds < 90) return `${Math.max(1, Math.round(seconds))}s`;
+  if (seconds < 90 * 60) return `${Math.round(seconds / 60)} min`;
+  return `${Math.round(seconds / 3600)} h`;
+}
 
 function resolveOrigin(origin: string | null): string | null {
   if (!origin) return null;
@@ -146,14 +159,6 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
     );
   }
 
-  const execModel = typeof model === 'string' && model.length > 0 ? model : EXEC_MODELS[0];
-  if (!(EXEC_MODELS as readonly string[]).includes(execModel)) {
-    return Response.json(
-      { error: 'unknown_model', allowed: EXEC_MODELS },
-      { status: 400, headers: cors },
-    );
-  }
-
   // Dedupe is checked before the key, the rate limit or the budget, because a
   // cached run costs nothing and should never be refused for lack of quota.
   //
@@ -169,11 +174,75 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
 
   // The sign-in wall. Enforced here, not only greyed out in the page, and before
   // the dedupe cache so a cached result is never a way around it.
-  if (!FREE_TO_PLAY.has(challenge.id) && (!user || user.isAnonymous)) {
+  const signedIn = Boolean(user && !user.isAnonymous);
+  if (!FREE_TO_PLAY.has(challenge.id) && !signedIn) {
     return Response.json(
       { error: 'sign_in_required', message: 'Sign in to play this challenge.' },
       { status: 401, headers: cors },
     );
+  }
+
+  // Which models this player may use here: Groq for guests; for signed-in
+  // players gpt-4.1-nano, plus gpt-4.1-mini on Hard. See models.ts.
+  const paidEnabled = Boolean(env.OPENAI_API_KEY);
+  const allowed = modelsFor(challenge.difficulty ?? 1, signedIn ? 'signed-in' : 'guest', paidEnabled);
+  const execModel = typeof model === 'string' && model.length > 0 ? model : allowed[0];
+  if (!allowed.includes(execModel)) {
+    return Response.json({ error: 'unknown_model', allowed }, { status: 400, headers: cors });
+  }
+  const provider = providerFor(execModel);
+
+  const kv: CounterStore | undefined = env.BUDGET;
+  const limits = limitsFromEnv(env);
+
+  // Submission limits — before the cache, because a repeated prompt is still a
+  // submission. Guests are counted per connection (a guest can mint a new
+  // anonymous account just by clearing storage); signed-in players per account.
+  //
+  // Without a KV binding there are no counters and every check passes. That is
+  // the deliberate direction to fail in: a KV outage should slow nobody down.
+  if (kv) {
+    try {
+      const subject = signedIn ? `user:${user!.uid}` : `guest:${clientIp(request) ?? user?.uid ?? 'unknown'}`;
+      const windows = signedIn
+        ? [
+            { scope: 'minute' as const, limit: limits.rate.userPerMinute },
+            { scope: 'hour' as const, limit: limits.rate.userPerHour },
+            { scope: 'day' as const, limit: limits.rate.userPerDay },
+          ]
+        : [{ scope: 'hour' as const, limit: limits.rate.guestPerHour }];
+      const verdict = await consumeWindows(kv, subject, windows);
+      if (!verdict.ok) {
+        const retry = { ...cors, 'Retry-After': String(verdict.retryAfterSeconds) };
+        if (!signedIn) {
+          return Response.json(
+            {
+              error: 'guest_limit',
+              limit: verdict.limit,
+              retryAfterSeconds: verdict.retryAfterSeconds,
+              signInUnlocks: true,
+              message:
+                `You've used your ${verdict.limit} free run${verdict.limit === 1 ? '' : 's'} for this hour. Sign in with Google to keep going — ` +
+                'signed-in players get 15 an hour on a faster, more reliable model.',
+            },
+            { status: 429, headers: retry },
+          );
+        }
+        const per = { minute: 'a minute', hour: 'an hour', day: 'a day' }[verdict.scope];
+        return Response.json(
+          {
+            error: 'rate_limited',
+            scope: verdict.scope,
+            limit: verdict.limit,
+            retryAfterSeconds: verdict.retryAfterSeconds,
+            message: `That's the limit of ${verdict.limit} runs ${per}. Try again in ${formatWait(verdict.retryAfterSeconds)}.`,
+          },
+          { status: 429, headers: retry },
+        );
+      }
+    } catch {
+      /* A counter we cannot read is not a reason to refuse a run. */
+    }
   }
 
   const hash = await promptHash(challengeId, prompt, execModel);
@@ -196,68 +265,45 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
     }
   }
 
-  // A player's own key is request-scoped: used for this request and nothing else.
-  // Never stored, never logged, never echoed back in a response or an error.
-  const byoKey = request.headers.get('X-Groq-Key')?.trim();
-  const apiKey = byoKey || env.GROQ_API_KEY;
+  // A player's own Groq key is request-scoped: used for this request and nothing
+  // else. Never stored, never logged, never echoed back. The page no longer
+  // offers it — signed-in players run on the paid tier — but it still works.
+  const byoKey = provider === 'groq' ? request.headers.get('X-Groq-Key')?.trim() : undefined;
+  const apiKey = provider === 'openai' ? env.OPENAI_API_KEY : byoKey || env.GROQ_API_KEY;
   if (!apiKey) {
     return Response.json({ error: 'no_api_key_configured' }, { status: 503, headers: cors });
   }
 
-  // Guardrails, in this order and after the dedupe lookup above: a cached run
-  // costs nothing and must never be refused for lack of quota.
-  //
-  // Without a KV binding there are no counters, so both checks pass. That is the
-  // deliberate direction to fail in — a KV outage should slow nobody down, and
-  // Groq's own 429 is the backstop underneath this one.
-  if (env.BUDGET) {
-    const kv: CounterStore = env.BUDGET;
-    const limits = limitsFromEnv(env);
-
+  // Budgets, after the cache: a cached run costs nothing. Groq's shared free pool
+  // protects the one key every guest shares; the paid pool is a site-wide ceiling
+  // on what OpenAI can cost in a day, whatever the number of accounts.
+  if (kv && !byoKey) {
     try {
-      // Counted for everyone. A player's own key pays Groq; it does not pay for
-      // our Worker's CPU or our D1 writes.
-      const ip = clientIp(request);
-      if (ip) {
-        const verdict = await consumeRateLimit(kv, ip, limits.rate);
-        if (!verdict.ok) {
-          return Response.json(
-            {
-              error: 'rate_limited',
-              scope: verdict.scope,
-              retryAfterSeconds: verdict.retryAfterSeconds,
-              message: `Too many runs from this connection. Try again in ${verdict.retryAfterSeconds}s.`,
-            },
-            {
-              status: 429,
-              headers: { ...cors, 'Retry-After': String(verdict.retryAfterSeconds) },
-            },
-          );
-        }
-      }
-
-      // The shared budget exists to protect the one key everybody shares. A player
-      // spending their own quota is not spending ours, so they skip it entirely.
-      if (!byoKey) {
-        const verdict = await reserveBudget(kv, runCost(challenge.limits), limits.budget);
-        if (!verdict.ok) {
-          return Response.json(
-            {
-              error: 'budget_exhausted',
-              scope: verdict.scope,
-              retryAfterSeconds: verdict.retryAfterSeconds,
-              byoKeyAccepted: true,
-              message: BYO_KEY_PROMPT,
-            },
-            {
-              status: 429,
-              headers: { ...cors, 'Retry-After': String(verdict.retryAfterSeconds) },
-            },
-          );
-        }
+      const pool = provider === 'openai' ? 'openai' : 'groq';
+      const verdict = await reserveBudget(
+        kv,
+        runCost(challenge.limits),
+        pool === 'openai' ? limits.paidBudget : limits.budget,
+        new Date(),
+        pool,
+      );
+      if (!verdict.ok) {
+        const retry = { ...cors, 'Retry-After': String(verdict.retryAfterSeconds) };
+        return Response.json(
+          {
+            error: 'budget_exhausted',
+            scope: verdict.scope,
+            retryAfterSeconds: verdict.retryAfterSeconds,
+            ...(signedIn ? {} : { signInUnlocks: true }),
+            message: signedIn
+              ? `PromptGym has reached its limit for ${verdict.scope === 'day' ? 'today' : 'this minute'}. Try again in ${formatWait(verdict.retryAfterSeconds)}.`
+              : GUEST_SIGN_IN,
+          },
+          { status: 429, headers: retry },
+        );
       }
     } catch {
-      /* A counter we cannot read is not a reason to refuse a run. */
+      /* as above */
     }
   }
 
@@ -269,6 +315,11 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
       apiKey,
       gateway: { account: env.AIG_ACCOUNT, gateway: env.AIG_GATEWAY, token: env.AIG_TOKEN },
       embedder: env.AI ? bindingEmbedder(env.AI) : undefined,
+      provider,
+      // Pinned, never the player's choice: every judged score must be comparable.
+      judge: paidEnabled
+        ? { provider: 'openai', apiKey: env.OPENAI_API_KEY!, scoreModel: OPENAI_JUDGE, labelModel: OPENAI_JUDGE }
+        : undefined,
     });
 
     // Groq's own 429 leaves the player exactly where an exhausted shared budget
@@ -278,7 +329,9 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
     const allErrored = result.tests.length > 0 && result.tests.every((t) => t.status === 'errored');
     if (result.rateLimited && allErrored && !byoKey) {
       return Response.json(
-        { error: 'upstream_rate_limited', byoKeyAccepted: true, message: BYO_KEY_PROMPT },
+        signedIn
+          ? { error: 'upstream_rate_limited', message: 'The model is busy right now. Try again in a minute.' }
+          : { error: 'upstream_rate_limited', signInUnlocks: true, message: GUEST_SIGN_IN },
         { status: 429, headers: cors },
       );
     }
@@ -367,7 +420,14 @@ export default {
     if (pathname === '/api/challenges' && request.method === 'GET') {
       return Response.json(
         {
-          challenges: challenges.map((c) => ({ ...publicChallenge(c), freeToPlay: FREE_TO_PLAY.has(c.id) })),
+          challenges: challenges.map((c) => ({
+            ...publicChallenge(c),
+            freeToPlay: FREE_TO_PLAY.has(c.id),
+            // What a signed-in player may choose here. Guests get `guestModels`.
+            models: modelsFor(c.difficulty ?? 1, 'signed-in', Boolean(env.OPENAI_API_KEY)),
+          })),
+          guestModels: modelsFor(1, 'guest', false),
+          // Kept for older pages that read a single list.
           models: EXEC_MODELS,
         },
         { headers: cors },

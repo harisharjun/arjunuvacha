@@ -23,10 +23,20 @@ FIREBASE_PROJECT_ID = "arjunuvacha-3de80"
 # Omit any of them and `src/budget.ts` uses its own defaults, which are these.
 BUDGET_TOKENS_PER_DAY = "180000"
 BUDGET_TOKENS_PER_MINUTE = "7000"
-# Per IP, counting runs rather than tokens. A player using their own Groq key is
-# still counted: their key pays Groq, not our Worker.
-RATE_LIMIT_PER_MINUTE = "6"
-RATE_LIMIT_PER_HOUR = "60"
+# Submission limits (26 Sep 2026). Guests are counted per connection, since a
+# guest can mint a new anonymous account by clearing storage; signed-in players
+# per account. Every submission counts, including a repeat served from the cache.
+GUEST_RUNS_PER_HOUR = "5"
+USER_RUNS_PER_MINUTE = "3"
+USER_RUNS_PER_HOUR = "15"
+USER_RUNS_PER_DAY = "100"
+# Site-wide daily ceiling on paid (OpenAI) tokens, whatever the number of
+# accounts. ~3M is roughly $1-5 a day depending on the nano/mini mix.
+OPENAI_TOKENS_PER_DAY = "3000000"
+
+# Secret, set with `wrangler secret put OPENAI_API_KEY` (and `--env staging`):
+#   OPENAI_API_KEY -> signed-in players run on gpt-4.1-nano / gpt-4.1-mini.
+#   Without it they fall back to the Groq models.
 
 # Secret (set with `wrangler secret put GROQ_API_KEY`, do NOT put the value here):
 #   GROQ_API_KEY  -> the existing gsk_… key (same one arjun-rag / vani use)
@@ -88,8 +98,9 @@ binding = "AI"
 # budget. Bindings and vars do not inherit into an environment, so they are all
 # repeated here. Deploy with:
 #   npx wrangler deploy --env staging
-# Its secret is set separately:
+# Its secrets are set separately:
 #   npx wrangler secret put GROQ_API_KEY --env staging
+#   npx wrangler secret put OPENAI_API_KEY --env staging
 [env.staging]
 name = "prompt-gym-staging"
 
@@ -99,8 +110,11 @@ AIG_GATEWAY = "vani"
 FIREBASE_PROJECT_ID = "arjunuvacha-3de80"
 BUDGET_TOKENS_PER_DAY = "180000"
 BUDGET_TOKENS_PER_MINUTE = "7000"
-RATE_LIMIT_PER_MINUTE = "6"
-RATE_LIMIT_PER_HOUR = "60"
+GUEST_RUNS_PER_HOUR = "5"
+USER_RUNS_PER_MINUTE = "3"
+USER_RUNS_PER_HOUR = "15"
+USER_RUNS_PER_DAY = "100"
+OPENAI_TOKENS_PER_DAY = "3000000"
 
 [[env.staging.d1_databases]]
 binding = "DB"

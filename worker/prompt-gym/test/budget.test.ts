@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   budgetStatus,
   clientIp,
-  consumeRateLimit,
+  consumeWindows,
+  DEFAULT_PAID_BUDGET,
   DEFAULT_BUDGET,
   DEFAULT_RATE,
   FALLBACK_RUN_COST,
@@ -143,46 +144,81 @@ describe('budgetStatus', () => {
   });
 });
 
-describe('consumeRateLimit', () => {
-  const limits = { perMinute: 3, perHour: 5 };
+describe('consumeWindows', () => {
+  const guest = [{ scope: 'hour' as const, limit: 5 }];
+  const user = [
+    { scope: 'minute' as const, limit: 3 },
+    { scope: 'hour' as const, limit: 15 },
+    { scope: 'day' as const, limit: 100 },
+  ];
 
-  it('lets an IP through up to its per-minute allowance', async () => {
+  it('gives a guest five runs an hour, then refuses with the limit and the wait', async () => {
     const { kv } = fakeKv();
-    const now = at('2026-09-25T10:30:00Z');
-    for (let i = 0; i < 3; i++) {
-      expect((await consumeRateLimit(kv, '1.2.3.4', limits, now)).ok).toBe(true);
+    const now = at('2026-09-25T10:40:00Z');
+    for (let i = 0; i < 5; i++) expect((await consumeWindows(kv, 'guest:1.2.3.4', guest, now)).ok).toBe(true);
+    const sixth = await consumeWindows(kv, 'guest:1.2.3.4', guest, now);
+    expect(sixth).toEqual({ ok: false, scope: 'hour', limit: 5, retryAfterSeconds: 20 * 60 });
+  });
+
+  it('holds a signed-in player to three a minute', async () => {
+    const { kv } = fakeKv();
+    const now = at('2026-09-25T10:30:15Z');
+    for (let i = 0; i < 3; i++) await consumeWindows(kv, 'user:u', user, now);
+    const r = await consumeWindows(kv, 'user:u', user, now);
+    expect(!r.ok && r.scope).toBe('minute');
+    expect(!r.ok && r.retryAfterSeconds).toBe(45);
+  });
+
+  it('keeps counting the hour across minutes, and refuses at fifteen', async () => {
+    const { kv } = fakeKv();
+    for (let m = 0; m < 5; m++) {
+      for (let i = 0; i < 3; i++) await consumeWindows(kv, 'user:u', user, at(`2026-09-25T10:${10 + m}:00Z`));
     }
-    const blocked = await consumeRateLimit(kv, '1.2.3.4', limits, now);
-    expect(!blocked.ok && blocked.scope).toBe('minute');
+    const r = await consumeWindows(kv, 'user:u', user, at('2026-09-25T10:20:00Z'));
+    expect(!r.ok && r.scope).toBe('hour');
   });
 
-  it('keeps counting against the hour once the minute rolls over', async () => {
-    const { kv } = fakeKv();
-    await consumeRateLimit(kv, '1.2.3.4', limits, at('2026-09-25T10:30:00Z'));
-    await consumeRateLimit(kv, '1.2.3.4', limits, at('2026-09-25T10:31:00Z'));
-    await consumeRateLimit(kv, '1.2.3.4', limits, at('2026-09-25T10:32:00Z'));
-    await consumeRateLimit(kv, '1.2.3.4', limits, at('2026-09-25T10:33:00Z'));
-    await consumeRateLimit(kv, '1.2.3.4', limits, at('2026-09-25T10:34:00Z'));
-
-    const blocked = await consumeRateLimit(kv, '1.2.3.4', limits, at('2026-09-25T10:35:00Z'));
-    expect(!blocked.ok && blocked.scope).toBe('hour');
-    expect(!blocked.ok && blocked.retryAfterSeconds).toBe(60 * 25);
+  it('refuses at a hundred in a day, even spread across hours', async () => {
+    const { kv, store } = fakeKv();
+    store.set('rl:user:u:day:2026-09-25', '100');
+    const r = await consumeWindows(kv, 'user:u', user, at('2026-09-25T23:00:00Z'));
+    expect(!r.ok && r.scope).toBe('day');
+    expect(!r.ok && r.retryAfterSeconds).toBe(3600);
   });
 
-  it('counts each IP separately', async () => {
+  it('counts each subject separately', async () => {
     const { kv } = fakeKv();
     const now = at('2026-09-25T10:30:00Z');
-    for (let i = 0; i < 3; i++) await consumeRateLimit(kv, '1.2.3.4', limits, now);
-
-    expect((await consumeRateLimit(kv, '5.6.7.8', limits, now)).ok).toBe(true);
+    for (let i = 0; i < 5; i++) await consumeWindows(kv, 'guest:1.2.3.4', guest, now);
+    expect((await consumeWindows(kv, 'guest:5.6.7.8', guest, now)).ok).toBe(true);
+    expect((await consumeWindows(kv, 'user:u', user, now)).ok).toBe(true);
   });
 
+  // A refused run must not also use up the allowance it was refused for.
   it('does not count a run it refused', async () => {
     const { kv, store } = fakeKv();
     const now = at('2026-09-25T10:30:00Z');
-    for (let i = 0; i < 4; i++) await consumeRateLimit(kv, '1.2.3.4', limits, now);
+    for (let i = 0; i < 4; i++) await consumeWindows(kv, 'user:u', user, now);
+    expect(store.get('rl:user:u:minute:2026-09-25T10:30')).toBe('3');
+    expect(store.get('rl:user:u:hour:2026-09-25T10')).toBe('3');
+  });
+});
 
-    expect(store.get('rl:min:1.2.3.4:2026-09-25T10:30')).toBe('3');
+describe('budget pools', () => {
+  it('keeps the Groq and OpenAI allowances apart', async () => {
+    const { kv, store } = fakeKv();
+    const now = at('2026-09-25T10:30:00Z');
+    await reserveBudget(kv, 1000, { perDay: 10_000, perMinute: 9_000 }, now);
+    await reserveBudget(kv, 2000, { perDay: 10_000, perMinute: 9_000 }, now, 'openai');
+    expect(store.get('budget:day:2026-09-25')).toBe('1000');
+    expect(store.get('budget-openai:day:2026-09-25')).toBe('2000');
+  });
+
+  it('refuses paid runs once the site-wide daily cap is spent', async () => {
+    const { kv, store } = fakeKv();
+    store.set('budget-openai:day:2026-09-25', String(DEFAULT_PAID_BUDGET.perDay));
+    const r = await reserveBudget(kv, 500, DEFAULT_PAID_BUDGET, at('2026-09-25T10:30:00Z'), 'openai');
+    expect(!r.ok && r.scope).toBe('day');
   });
 });
 
@@ -206,20 +242,25 @@ describe('clientIp', () => {
 
 describe('limitsFromEnv', () => {
   it('uses the shipped defaults when nothing is configured', () => {
-    expect(limitsFromEnv({})).toEqual({ budget: DEFAULT_BUDGET, rate: DEFAULT_RATE });
+    expect(limitsFromEnv({})).toEqual({ budget: DEFAULT_BUDGET, paidBudget: DEFAULT_PAID_BUDGET, rate: DEFAULT_RATE });
   });
 
   it('reads overrides from wrangler vars, which arrive as strings', () => {
-    const limits = limitsFromEnv({ BUDGET_TOKENS_PER_DAY: '50000', RATE_LIMIT_PER_MINUTE: '2' });
+    const limits = limitsFromEnv({ BUDGET_TOKENS_PER_DAY: '50000', GUEST_RUNS_PER_HOUR: '2', OPENAI_TOKENS_PER_DAY: '999' });
     expect(limits.budget.perDay).toBe(50_000);
-    expect(limits.rate.perMinute).toBe(2);
+    expect(limits.rate.guestPerHour).toBe(2);
+    expect(limits.paidBudget.perDay).toBe(999);
     expect(limits.budget.perMinute).toBe(DEFAULT_BUDGET.perMinute);
   });
 
   it('ignores a var that is not a positive number rather than disabling the limit', () => {
-    const limits = limitsFromEnv({ BUDGET_TOKENS_PER_DAY: '0', RATE_LIMIT_PER_HOUR: 'lots' });
+    const limits = limitsFromEnv({ BUDGET_TOKENS_PER_DAY: '0', USER_RUNS_PER_DAY: 'lots' });
     expect(limits.budget.perDay).toBe(DEFAULT_BUDGET.perDay);
-    expect(limits.rate.perHour).toBe(DEFAULT_RATE.perHour);
+    expect(limits.rate.userPerDay).toBe(DEFAULT_RATE.userPerDay);
+  });
+
+  it("ships Arjun's limits: guests 5/hour; signed-in 3/minute, 15/hour, 100/day", () => {
+    expect(DEFAULT_RATE).toEqual({ guestPerHour: 5, userPerMinute: 3, userPerHour: 15, userPerDay: 100 });
   });
 
   // The defaults have to sit under Groq's published free-tier ceilings, or the

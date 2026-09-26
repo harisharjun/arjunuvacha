@@ -22,7 +22,8 @@ const el = (tag, className, text) => {
 };
 
 let challenges = [];
-let models = [];
+/** Groq models, for guests. Signed-in players get each challenge's own list. */
+let guestModels = [];
 let current = null;
 /** challengeId -> { bestScore, passed, passedAt } for whoever is signed in. */
 let progress = new Map();
@@ -116,6 +117,8 @@ function typeChip(mode) {
   return el('span', `type-chip ${t.cls}`, t.label);
 }
 
+const LOCK_ICON = '<svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="M6 1a2.5 2.5 0 0 0-2.5 2.5V5H3a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-.5V3.5A2.5 2.5 0 0 0 6 1Zm-1.5 4V3.5a1.5 1.5 0 0 1 3 0V5h-3Z"/></svg>';
+
 const isGuest = () => {
   const u = getUser();
   return !u || u.isAnonymous;
@@ -136,7 +139,7 @@ function statusOf(challenge) {
 
 function statusNode(challenge) {
   const s = statusOf(challenge);
-  if (s.kind === 'locked') return el('span', 'status locked', 'Sign in to unlock');
+  if (s.kind === 'locked') return el('span', 'status locked', 'Locked');
   if (s.kind === 'passed') return el('span', 'status passed', `✓ Passed${s.date ? ` · ${s.date}` : ''}`);
   if (s.kind === 'partial') return el('span', 'status partial', `In progress · best ${s.score}`);
   return el('span', 'status new', 'Not started');
@@ -176,14 +179,10 @@ function toast(message) {
   toast.timer = setTimeout(() => (t.hidden = true), 7000);
 }
 
-// ------------------------------------------------------------ bring-your-own key
+// ------------------------------------------------------------------ storage
 
-// This browser and nowhere else. The key is sent with each run and used for that
-// run; the Worker never writes it to the database or to a log. Local storage
-// throws in some private-browsing modes, so every access is guarded — a browser
-// that refuses to remember the key should still let someone play on the shared one.
-const KEY_STORAGE = 'promptgym.groqKey';
-
+// Local storage throws in some private-browsing modes, so every access is
+// guarded: a browser that refuses to remember anything should still play.
 function storageGet(key) {
   try {
     return localStorage.getItem(key);
@@ -200,46 +199,6 @@ function storageSet(key, value) {
   } catch {
     return false;
   }
-}
-
-/** Held in memory as well as in storage, so a browser that refuses to persist it
- *  still uses it for the rest of the session. */
-let sessionKey = storageGet(KEY_STORAGE) ?? '';
-
-function renderKeyState(message) {
-  const status = $('byo-status');
-  const active = Boolean(sessionKey);
-
-  $('byo-summary').textContent = active ? 'Using your own Groq key' : 'Use your own Groq key';
-  $('byo-key').value = active ? sessionKey : '';
-  $('byo-clear').hidden = !active;
-  $('byo-save').textContent = active ? 'Update' : 'Save key';
-
-  if (message !== undefined) {
-    status.textContent = message;
-    status.className = 'muted';
-  } else if (active) {
-    status.textContent = 'Every run from this browser uses your key.';
-    status.className = 'byo-active';
-  } else {
-    status.textContent = '';
-    status.className = 'muted';
-  }
-}
-
-/** Opens the panel where the player can reach it, with the reason. The copy comes
- *  from the Worker so the landing page and the blocked moment cannot drift. */
-function offerKey(message) {
-  const panel = $('byo');
-  panel.open = true;
-  panel.classList.add('urgent');
-  renderKeyState(message);
-  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  $('byo-key').focus({ preventScroll: true });
-}
-
-function keyHeader() {
-  return sessionKey ? { 'X-Groq-Key': sessionKey } : {};
 }
 
 // ------------------------------------------------------------------ drafts
@@ -361,7 +320,7 @@ async function loadChallenges() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     challenges = data.challenges;
-    models = data.models;
+    guestModels = data.guestModels ?? data.models;
     renderList();
   } catch (err) {
     $('list-status').textContent = `Could not load challenges — ${err.message}`;
@@ -398,7 +357,13 @@ function renderList() {
 
     const foot = el('div', 'card-foot');
     foot.appendChild(difficultyNode(challenge.difficulty));
-    if (s.kind === 'passed') {
+    if (s.kind === 'locked') {
+      // The one thing to do with a locked card, said as loudly as the card allows.
+      const cta = el('span', 'unlock-cta');
+      cta.innerHTML = LOCK_ICON;
+      cta.appendChild(document.createTextNode('Sign in to unlock'));
+      foot.appendChild(cta);
+    } else if (s.kind === 'passed') {
       foot.appendChild(el('span', null, `Best ${s.score}`));
     } else if (s.kind === 'partial') {
       // How far off the pass mark they are, at a glance.
@@ -418,6 +383,18 @@ function renderList() {
     item.appendChild(card);
     list.appendChild(item);
   }
+
+  // Always last: the catalogue is meant to grow, and saying so beats an ending.
+  const soon = document.createElement('li');
+  const card = el('div', 'card coming-soon');
+  card.append(
+    el('span', 'coming-soon-mark', '+'),
+    el('h3', 'card-title', 'More challenges coming soon'),
+    el('p', 'card-summary', 'New ones are added as they pass validation.'),
+  );
+  soon.appendChild(card);
+  list.appendChild(soon);
+
   renderStanding();
 }
 
@@ -530,6 +507,22 @@ function showView(which) {
   window.scrollTo({ top: 0 });
 }
 
+/** The models this player may choose here. Guests: the free Groq models.
+ *  Signed-in: gpt-4.1-nano, plus gpt-4.1-mini on Hard. The Worker enforces it. */
+function renderModelSelect(challenge) {
+  const select = $('model');
+  const list = isGuest() ? guestModels : (challenge.models ?? guestModels);
+  const keep = list.includes(select.value) ? select.value : list[0];
+  select.replaceChildren(
+    ...list.map((m) => Object.assign(document.createElement('option'), { value: m, textContent: shortModel(m) })),
+  );
+  select.value = keep;
+  const paid = list.some((m) => m.startsWith('gpt-4.1'));
+  $('model-hint').textContent = isGuest()
+    ? 'Sign in for the faster gpt-4.1 models'
+    : paid && list.length === 1 ? 'gpt-4.1-mini unlocks on Hard challenges' : '';
+}
+
 function renderPlayTags(challenge) {
   $('play-tags').replaceChildren(typeChip(challenge.mode), difficultyNode(challenge.difficulty), statusNode(challenge));
 }
@@ -582,6 +575,7 @@ function openChallenge(challenge, { push = true } = {}) {
   $('run-status').className = '';
 
   renderPlayTags(challenge);
+  renderModelSelect(challenge);
   $('play-title').textContent = challenge.title;
   $('play-summary').textContent = challenge.summary ?? '';
   $('play-goal').textContent = challenge.goal;
@@ -878,7 +872,6 @@ async function run() {
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...keyHeader(),
       },
       body: JSON.stringify({
         challengeId: challenge.id,
@@ -888,17 +881,27 @@ async function run() {
     });
     const data = await res.json();
 
-    // The shared allowance is gone, or Groq throttled the house key. Either way
-    // the player's own key is what clears it, so the offer is made here rather
-    // than reported as a failure they can do nothing about.
-    if (!res.ok && data.byoKeyAccepted) {
-      $('run-status').className = 'notice';
-      $('run-status').textContent = data.message;
-      offerKey(data.message);
+    // A guest's free runs are spent — the hourly limit, the shared allowance, or
+    // Groq itself. Signing in is the answer to all three, so say that, with the
+    // button right there, rather than reporting a failure.
+    // A refused run must not cost the player the result they already had.
+    const restore = () => {
+      const last = lastResults.get(challenge.id);
+      if (last && current?.id === challenge.id) renderScorecard(last);
+    };
+
+    if (!res.ok && data.signInUnlocks) {
+      restore();
+      $('run-status').className = 'nudge-box';
+      $('run-status').replaceChildren(el('p', null, data.message));
+      const g = googleButton('Sign in to keep going');
+      g.addEventListener('click', () => startSignIn());
+      $('run-status').appendChild(g);
       return;
     }
 
     if (res.status === 401 && data.error === 'sign_in_required') {
+      restore();
       $('run-status').className = 'nudge-box';
       $('run-status').replaceChildren(el('p', null, 'Sign in with Google to play this challenge.'));
       const g = googleButton();
@@ -907,7 +910,10 @@ async function run() {
       return;
     }
 
-    if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
+    if (!res.ok) {
+      restore();
+      throw new Error(data.message || data.error || `HTTP ${res.status}`);
+    }
     $('run-status').textContent = '';
     $('run-status').className = '';
     lastResults.set(challenge.id, data);
@@ -1289,8 +1295,10 @@ onUserChanged((user) => {
     $('user-menu-name').textContent = name;
   }
 
-  // Locks depend on who is signed in; repaint before the board comes back.
+  // Locks and model choices depend on who is signed in; repaint before the board
+  // comes back.
   if (challenges.length) renderList();
+  if (current && !$('play-view').hidden) renderModelSelect(current);
 
   // Progress is per-uid; refetch whenever the uid changes. The board itself is
   // public and has already been fetched without waiting for sign-in.
@@ -1330,47 +1338,7 @@ $('prompt').addEventListener('input', () => {
 });
 $('run').addEventListener('click', run);
 
-$('byo-save').addEventListener('click', () => {
-  const key = $('byo-key').value.trim();
-  if (!key) {
-    renderKeyState('Paste a key first — it starts with gsk_.');
-    return;
-  }
-  // Checked here only to catch a pasted wrong thing early. The Worker does not
-  // validate the shape: Groq owns what a valid key looks like, not us.
-  if (!key.startsWith('gsk_')) {
-    renderKeyState('That does not look like a Groq key — they start with gsk_.');
-    return;
-  }
-
-  sessionKey = key;
-  $('byo').classList.remove('urgent');
-  renderKeyState(
-    storageSet(KEY_STORAGE, key)
-      ? 'Saved in this browser. Your runs use your key from now on.'
-      : 'This browser will not let the page store anything, so the key is used for ' +
-          'this session only and forgotten when you close the tab.',
-  );
-});
-
-$('byo-clear').addEventListener('click', () => {
-  sessionKey = '';
-  storageSet(KEY_STORAGE, null);
-  $('byo').classList.remove('urgent');
-  renderKeyState('Removed. Runs go back to the shared allowance.');
-});
-
-renderKeyState();
-
 loadChallenges().then(() => {
-  const select = $('model');
-  for (const model of models) {
-    const option = document.createElement('option');
-    option.value = model;
-    option.textContent = shortModel(model);
-    select.appendChild(option);
-  }
-
   // Challenge titles are needed before any route can name one.
   route();
 
