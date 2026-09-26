@@ -77,3 +77,40 @@ binding = "AI"
 #   CF_ACCOUNT_ID=<your Cloudflare account id>
 #   CF_API_TOKEN=<an API token with Workers AI read>
 # Without them --live still works; `similar` just stays pending.
+
+# ─────────────────────────────────────────────────────────────── staging
+# A second Worker for the staging site (arjunuvacha-test.web.app), so staging can
+# run code production has not got yet — a sign-in wall or a new ranking would
+# otherwise change the live site the moment staging was deployed. The page picks
+# this Worker by hostname (see `API` in web/app.js).
+#
+# Same D1 and same KV as production, deliberately: one set of players, one Groq
+# budget. Bindings and vars do not inherit into an environment, so they are all
+# repeated here. Deploy with:
+#   npx wrangler deploy --env staging
+# Its secret is set separately:
+#   npx wrangler secret put GROQ_API_KEY --env staging
+[env.staging]
+name = "prompt-gym-staging"
+
+[env.staging.vars]
+AIG_ACCOUNT = "817ef4ab39edc6b855e3338a6903f3eb"
+AIG_GATEWAY = "vani"
+FIREBASE_PROJECT_ID = "arjunuvacha-3de80"
+BUDGET_TOKENS_PER_DAY = "180000"
+BUDGET_TOKENS_PER_MINUTE = "7000"
+RATE_LIMIT_PER_MINUTE = "6"
+RATE_LIMIT_PER_HOUR = "60"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "promptgym"
+database_id = "3713edb6-3c4c-4b81-a171-4ffb19ace107"
+migrations_dir = "migrations"
+
+[[env.staging.kv_namespaces]]
+binding = "BUDGET"
+id = "5e390c8016f94850b8fcea49b432c859"
+
+[env.staging.ai]
+binding = "AI"

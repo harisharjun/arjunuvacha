@@ -1,12 +1,17 @@
 import { onUserChanged, getIdToken, getUser, signInWithGoogle, signOutUser, authReady } from './auth.js';
 
 // Served from localhost while developing, so talk to `wrangler dev` rather than
-// the deployed worker. `?api=` overrides both when testing one against the other.
+// the deployed worker. The staging site talks to the staging Worker, so staging
+// can run code production has not got yet. `?api=` overrides all of it.
 const API =
   new URLSearchParams(location.search).get('api') ??
   (location.hostname === 'localhost' || location.hostname === '127.0.0.1'
     ? 'http://localhost:8787'
-    : 'https://prompt-gym.harisharjun127.workers.dev');
+    : location.hostname.startsWith('arjunuvacha-test.')
+      ? 'https://prompt-gym-staging.harisharjun127.workers.dev'
+      : 'https://prompt-gym.harisharjun127.workers.dev');
+
+const BASE = '/prompt-gym';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, className, text) => {
@@ -21,7 +26,13 @@ let models = [];
 let current = null;
 /** challengeId -> { bestScore, passed, passedAt } for whoever is signed in. */
 let progress = new Map();
+/** This player's leaderboard row, or null if unranked. */
+let myStanding = null;
+let totalPlayers = 0;
 let boardUid = null;
+let boardLoaded = false;
+let listFilter = 'all';
+let signingOut = false;
 
 // ------------------------------------------------------------- presentation
 
@@ -69,13 +80,27 @@ const INPUT_LABEL = {
 const titleCase = (s) => s.toLowerCase().replace(/(^|\s)\w/g, (c) => c.toUpperCase());
 
 /** SQLite stores `datetime('now')` as UTC without a zone marker. */
-function formatDate(sqlite) {
-  if (!sqlite) return '';
+function parseDate(sqlite) {
+  if (!sqlite) return null;
   const d = new Date(sqlite.replace(' ', 'T') + 'Z');
-  if (Number.isNaN(d.getTime())) return '';
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function formatDate(sqlite) {
+  const d = parseDate(sqlite);
+  if (!d) return '';
   const sameYear = d.getFullYear() === new Date().getFullYear();
   return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', ...(sameYear ? {} : { year: 'numeric' }) });
 }
+
+function formatDateTime(sqlite) {
+  const d = parseDate(sqlite);
+  if (!d) return '';
+  return `${formatDate(sqlite)}, ${d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}`;
+}
+
+const displayName = (name) => name || 'Anonymous User';
+const shortModel = (m) => (m ?? '').replace(/^[^/]+\//, '');
 
 function difficultyNode(level) {
   const wrap = el('span', 'difficulty');
@@ -91,8 +116,18 @@ function typeChip(mode) {
   return el('span', `type-chip ${t.cls}`, t.label);
 }
 
-/** One of three states, and the only place the rules for them live. */
+const isGuest = () => {
+  const u = getUser();
+  return !u || u.isAnonymous;
+};
+/** Guests get the free challenges; the rest need a Google sign-in. The Worker
+ *  enforces the same rule — this only decides what the page offers. */
+const isLocked = (c) => isGuest() && !c.freeToPlay;
+const isPassed = (c) => Boolean(progress.get(c.id)?.passed);
+
+/** One of four states, and the only place the rules for them live. */
 function statusOf(challenge) {
+  if (isLocked(challenge)) return { kind: 'locked' };
   const p = progress.get(challenge.id);
   if (!p) return { kind: 'new' };
   if (p.passed) return { kind: 'passed', score: p.bestScore, date: formatDate(p.passedAt) };
@@ -101,10 +136,13 @@ function statusOf(challenge) {
 
 function statusNode(challenge) {
   const s = statusOf(challenge);
+  if (s.kind === 'locked') return el('span', 'status locked', 'Sign in to unlock');
   if (s.kind === 'passed') return el('span', 'status passed', `✓ Passed${s.date ? ` · ${s.date}` : ''}`);
   if (s.kind === 'partial') return el('span', 'status partial', `In progress · best ${s.score}`);
   return el('span', 'status new', 'Not started');
 }
+
+const initial = (name) => (name?.trim()?.[0] ?? '?').toUpperCase();
 
 function avatarNode(name, photo, small = false) {
   const node = el('span', `avatar${small ? ' sm' : ''}`);
@@ -121,7 +159,14 @@ function avatarNode(name, photo, small = false) {
   }
   return node;
 }
-const initial = (name) => (name?.trim()?.[0] ?? '?').toUpperCase();
+
+function googleButton(label = 'Sign in with Google') {
+  const btn = el('button', 'google-btn');
+  btn.type = 'button';
+  btn.innerHTML = $('signin').querySelector('svg').outerHTML;
+  btn.appendChild(el('span', null, label));
+  return btn;
+}
 
 function toast(message) {
   const t = $('toast');
@@ -139,18 +184,18 @@ function toast(message) {
 // that refuses to remember the key should still let someone play on the shared one.
 const KEY_STORAGE = 'promptgym.groqKey';
 
-function storedKey() {
+function storageGet(key) {
   try {
-    return localStorage.getItem(KEY_STORAGE) ?? '';
+    return localStorage.getItem(key);
   } catch {
-    return '';
+    return null;
   }
 }
 
-function rememberKey(key) {
+function storageSet(key, value) {
   try {
-    if (key) localStorage.setItem(KEY_STORAGE, key);
-    else localStorage.removeItem(KEY_STORAGE);
+    if (value) localStorage.setItem(key, value);
+    else localStorage.removeItem(key);
     return true;
   } catch {
     return false;
@@ -159,7 +204,7 @@ function rememberKey(key) {
 
 /** Held in memory as well as in storage, so a browser that refuses to persist it
  *  still uses it for the rest of the session. */
-let sessionKey = storedKey();
+let sessionKey = storageGet(KEY_STORAGE) ?? '';
 
 function renderKeyState(message) {
   const status = $('byo-status');
@@ -197,6 +242,29 @@ function keyHeader() {
   return sessionKey ? { 'X-Groq-Key': sessionKey } : {};
 }
 
+// ------------------------------------------------------------------ drafts
+
+// Every prompt a player has typed is kept, per challenge, so wandering off to
+// look at another one never costs them their work. In memory for the session and
+// in local storage across visits; the last scorecard is kept for the session.
+const DRAFT_KEY = (id) => `promptgym.draft.${id}`;
+const drafts = new Map();
+const lastResults = new Map();
+
+function draftFor(challenge) {
+  if (drafts.has(challenge.id)) return drafts.get(challenge.id);
+  const stored = storageGet(DRAFT_KEY(challenge.id));
+  return stored ?? challenge.startingPrompt ?? '';
+}
+
+function saveDraft() {
+  if (!current) return;
+  const value = $('prompt').value;
+  drafts.set(current.id, value);
+  // Nothing worth remembering: do not keep an empty or untouched draft around.
+  storageSet(DRAFT_KEY(current.id), value && value !== (current.startingPrompt ?? '') ? value : null);
+}
+
 // ------------------------------------------------------------------ drawers
 
 let openDrawer = null;
@@ -230,6 +298,61 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ------------------------------------------------------------------ routing
+
+// Firebase rewrites every path under /prompt-gym/ to this page, so the route is
+// read back off the URL here. Pushing state keeps the browser's back button and
+// shareable links working without a server that knows the routes.
+function navigate(path) {
+  if (location.pathname !== path) history.pushState({}, '', path);
+  route();
+}
+
+function route() {
+  const path = location.pathname.replace(/\/+$/, '');
+  const result = /\/r\/([A-Za-z0-9-]{8,64})$/.exec(path);
+  const play = /\/c\/([a-z0-9-]+)$/.exec(path);
+  closeDrawer();
+  document.querySelector('.tip')?.classList.remove('open');
+
+  if (result) return loadSharedResult(result[1]);
+  if (path === `${BASE}/shared`) return openGallery();
+  if (path === `${BASE}/terms`) return showView('terms');
+  if (play) {
+    const challenge = challenges.find((c) => c.id === play[1]);
+    if (challenge && !isLocked(challenge)) return openChallenge(challenge, { push: false });
+    if (challenge) toast('Sign in with Google to play that challenge.');
+  }
+  current = null;
+  showView('list');
+}
+
+window.addEventListener('popstate', route);
+
+for (const [id, path] of [
+  ['back', BASE + '/'],
+  ['result-back', BASE + '/'],
+  ['gallery-back', BASE + '/'],
+  ['terms-back', BASE + '/'],
+]) {
+  $(id).addEventListener('click', () => {
+    if (id === 'back') saveDraft();
+    navigate(path);
+  });
+}
+
+// In-app links: handled here rather than reloading the page.
+for (const id of ['home-link', 'gallery-link', 'terms-link']) {
+  $(id).addEventListener('click', (e) => {
+    e.preventDefault();
+    navigate(new URL($(id).href).pathname);
+  });
+}
+document.querySelector('.view-nav-link').addEventListener('click', (e) => {
+  e.preventDefault();
+  navigate(`${BASE}/shared`);
+});
+
 // ---------------------------------------------------------------- challenges
 
 async function loadChallenges() {
@@ -251,11 +374,20 @@ function renderList() {
   const list = $('challenge-list');
   list.replaceChildren();
 
-  for (const challenge of challenges) {
+  // A guest sees what they can play first; the rest follow, locked.
+  let shown = isGuest() ? [...challenges].sort((a, b) => Number(b.freeToPlay) - Number(a.freeToPlay)) : challenges;
+  if (listFilter === 'unsolved') shown = shown.filter((c) => !isPassed(c));
+
+  if (shown.length === 0) {
+    list.appendChild(el('li', 'list-empty', 'Nothing left unsolved. Every challenge here is passed.'));
+  }
+
+  for (const challenge of shown) {
     const s = statusOf(challenge);
     const item = document.createElement('li');
     const card = el('button', `card ${s.kind === 'new' ? '' : s.kind}`);
     card.type = 'button';
+    if (s.kind === 'locked') card.setAttribute('aria-label', `${challenge.title} — sign in to unlock`);
 
     const top = el('div', 'card-top');
     top.append(typeChip(challenge.mode), statusNode(challenge));
@@ -286,46 +418,120 @@ function renderList() {
     item.appendChild(card);
     list.appendChild(item);
   }
-  renderProgressStrip();
+  renderStanding();
 }
 
-function renderProgressStrip() {
-  const strip = $('progress-strip');
-  if (challenges.length === 0 || progress.size === 0) {
-    strip.hidden = true;
+function setFilter(which) {
+  listFilter = which;
+  for (const [id, value] of [['filter-all', 'all'], ['filter-unsolved', 'unsolved']]) {
+    $(id).classList.toggle('active', which === value);
+    $(id).setAttribute('aria-pressed', String(which === value));
+  }
+  renderList();
+}
+$('filter-all').addEventListener('click', () => setFilter('all'));
+$('filter-unsolved').addEventListener('click', () => setFilter('unsolved'));
+
+// ----------------------------------------------------------------- standing
+
+/** Where the player stands: their rank, or the one thing that would get them one.
+ *  Never a "3 of 11" — the catalogue will grow, and a denominator ages badly. */
+function renderStanding() {
+  const box = $('standing');
+  if (challenges.length === 0 || !boardLoaded) {
+    box.hidden = true;
     return;
   }
-  strip.hidden = false;
-  strip.replaceChildren();
+  box.hidden = false;
+  box.replaceChildren();
+  box.classList.remove('nudge');
 
-  const passed = challenges.filter((c) => statusOf(c).kind === 'passed').length;
-  const line = el('div');
-  line.appendChild(el('span', 'progress-count', `${passed} of ${challenges.length}`));
-  line.appendChild(el('span', 'muted', ' passed'));
-  strip.appendChild(line);
+  const passedCount = challenges.filter(isPassed).length;
+  const free = challenges.filter((c) => c.freeToPlay);
+  const firstFree = free.find((c) => !isPassed(c)) ?? free[0];
+  const lockedCount = challenges.filter(isLocked).length;
 
-  const pips = el('div', 'pips');
-  for (const c of challenges) {
-    const kind = statusOf(c).kind;
-    const pip = el('div', `pip${kind === 'passed' ? ' done' : kind === 'partial' ? ' partial' : ''}`);
-    pip.title = c.title;
-    pips.appendChild(pip);
+  const badge = (value, caption, zero = false) => {
+    const b = el('div', `standing-rank${zero ? ' zero' : ''}`, value);
+    b.title = caption;
+    b.setAttribute('aria-label', `${value} ${caption}`);
+    return b;
+  };
+  const text = (strong, span) => {
+    const t = el('div', 'standing-text');
+    t.append(el('strong', null, strong), el('span', null, span));
+    return t;
+  };
+  const actions = el('div', 'standing-actions');
+  const startBtn = (label) => {
+    const b = el('button', 'primary', label);
+    b.type = 'button';
+    b.addEventListener('click', () => openChallenge(firstFree));
+    return b;
+  };
+  const signInBtn = () => {
+    const g = googleButton();
+    g.addEventListener('click', () => startSignIn());
+    return g;
+  };
+  const boardBtn = el('button', 'secondary view-board-btn', 'View leaderboard');
+  boardBtn.type = 'button';
+  boardBtn.addEventListener('click', openFullBoard);
+
+  if (isGuest()) {
+    box.classList.add('nudge');
+    const allFreeDone = free.length > 0 && free.every(isPassed);
+    if (passedCount === 0) {
+      box.append(
+        badge('0', 'passed', true),
+        text('Pass your first challenge', `Start with “${firstFree?.title}” — it takes about two minutes.`),
+      );
+      actions.append(startBtn('Start'));
+    } else if (allFreeDone) {
+      box.append(
+        badge(String(passedCount), 'passed'),
+        text("You've cleared every free challenge",
+          `Sign in to unlock ${lockedCount} more and put your scores on the leaderboard.`),
+      );
+      actions.append(signInBtn());
+    } else {
+      box.append(
+        badge(String(passedCount), 'passed'),
+        text(`${passedCount} passed as a guest`, 'Sign in to put your scores on the leaderboard — they carry over.'),
+      );
+      actions.append(signInBtn());
+    }
+  } else if (!myStanding) {
+    box.classList.add('nudge');
+    box.append(
+      badge('0', 'passed', true),
+      text("You haven't passed a challenge yet", `Pass one to join the leaderboard — start with “${firstFree?.title}”.`),
+    );
+    actions.append(startBtn('Start'));
+  } else {
+    const levels = Object.entries(myStanding.passedByLevel ?? {})
+      .sort((a, b) => Number(b[0]) - Number(a[0]))
+      .map(([lvl, n]) => `${DIFFICULTY[lvl]} ${n}`)
+      .join(' · ');
+    box.append(
+      badge(`#${myStanding.rank}`, 'on the leaderboard'),
+      text(`You're ranked #${myStanding.rank} of ${totalPlayers}`,
+        `${myStanding.completed} passed${levels ? ` — ${levels}` : ''}`),
+    );
   }
-  strip.appendChild(pips);
+  actions.append(boardBtn);
+  box.appendChild(actions);
 }
 
 // --------------------------------------------------------------------- play
 
 function showView(which) {
-  $('list-view').hidden = which !== 'list';
-  $('play-view').hidden = which !== 'play';
-  $('result-view').hidden = which !== 'result';
+  for (const v of ['list', 'play', 'result', 'gallery', 'terms']) $(`${v}-view`).hidden = which !== v;
   window.scrollTo({ top: 0 });
 }
 
 function renderPlayTags(challenge) {
-  const tags = $('play-tags');
-  tags.replaceChildren(typeChip(challenge.mode), difficultyNode(challenge.difficulty), statusNode(challenge));
+  $('play-tags').replaceChildren(typeChip(challenge.mode), difficultyNode(challenge.difficulty), statusNode(challenge));
 }
 
 /** Fixed context the model receives on every case, then one example of the text
@@ -362,11 +568,18 @@ function renderFrame(challenge) {
   frame.hidden = frame.childElementCount === 0;
 }
 
-function openChallenge(challenge) {
+function openChallenge(challenge, { push = true } = {}) {
+  if (!challenge) return;
+  if (isLocked(challenge)) {
+    startSignIn(() => openChallenge(challenge));
+    return;
+  }
+  if (current && current.id !== challenge.id) saveDraft();
   current = challenge;
+  if (push) history.pushState({}, '', `${BASE}/c/${challenge.id}`);
   showView('play');
-  $('scorecard').replaceChildren();
   $('run-status').replaceChildren();
+  $('run-status').className = '';
 
   renderPlayTags(challenge);
   $('play-title').textContent = challenge.title;
@@ -381,10 +594,25 @@ function openChallenge(challenge) {
     challenge.mode === 'golf' && challenge.parTokens
       ? `Par ${challenge.parTokens} tokens ≈ ${challenge.parTokens * 4} characters`
       : '';
-  $('prompt').value = challenge.startingPrompt ?? '';
+  $('prompt').value = draftFor(challenge);
+  $('prompt-reset').hidden = !fixing || $('prompt').value === challenge.startingPrompt;
   updateCharCount();
+
+  // Coming back to a challenge shows where you left it.
+  const last = lastResults.get(challenge.id);
+  if (last) renderScorecard(last);
+  else $('scorecard').replaceChildren();
+
   $('prompt').focus({ preventScroll: true });
 }
+
+$('prompt-reset').addEventListener('click', () => {
+  if (!current) return;
+  $('prompt').value = current.startingPrompt ?? '';
+  saveDraft();
+  $('prompt-reset').hidden = true;
+  updateCharCount();
+});
 
 function renderGrading(challenge) {
   const body = $('grading-body');
@@ -470,6 +698,58 @@ function updateCharCount() {
 
 // ---------------------------------------------------------------- scorecard
 
+function metricBars(byGrader) {
+  const bars = el('div', 'bars');
+  for (const grader of byGrader) {
+    const row = el('div', 'bar-row');
+    row.appendChild(el('span', null, metricName(grader.metric)));
+    const bar = el('div', 'bar');
+    const fill = document.createElement('span');
+    fill.style.width = `${Math.round(grader.score * 100)}%`;
+    bar.appendChild(fill);
+    row.appendChild(bar);
+    row.appendChild(el('span', 'muted', `${Math.round(grader.score * 100)}%`));
+    bars.appendChild(row);
+  }
+  return bars;
+}
+
+async function setShared(submissionId, share) {
+  const token = await getIdToken();
+  if (!token) throw new Error('Sign in first.');
+  const res = await fetch(`${API}/api/result/${submissionId}/visibility`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ showPrompt: share }),
+  });
+  if (res.status === 403) throw new Error('This run belongs to a different account — run it again to share it.');
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+}
+
+/** Share / Unshare, as one toggle that knows its own state. */
+function shareToggle(submissionId, initiallyShared, onChange) {
+  const btn = el('button', 'secondary');
+  btn.type = 'button';
+  let shared = initiallyShared;
+  const paint = () => (btn.textContent = shared ? 'Shared · Unshare' : 'Share to gallery');
+  paint();
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    try {
+      await setShared(submissionId, !shared);
+      shared = !shared;
+      paint();
+      onChange?.(shared);
+      toast(shared ? 'Shared to the gallery. Players who pass this challenge can read your prompt.' : 'Unshared.');
+    } catch (err) {
+      toast(err.message);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+  return btn;
+}
+
 function renderScorecard(result) {
   const card = $('scorecard');
   card.replaceChildren();
@@ -480,27 +760,13 @@ function renderScorecard(result) {
   total.appendChild(
     el('span', result.passed ? 'verdict-pass' : 'verdict-fail', result.passed ? 'Passed' : 'Not yet'),
   );
-  total.appendChild(el('span', 'muted', `${result.execModel.replace(/^[^/]+\//, '')} · ${result.promptChars} chars`));
+  total.appendChild(el('span', 'muted', `${shortModel(result.execModel)} · ${result.promptChars} chars`));
   if (result.efficiencyBonus > 0) {
     total.appendChild(el('span', 'muted', `${result.baseScore} correctness + ${result.efficiencyBonus} brevity`));
   }
   card.appendChild(total);
 
-  if (result.byGrader.length > 0) {
-    const bars = el('div', 'bars');
-    for (const grader of result.byGrader) {
-      const row = el('div', 'bar-row');
-      row.appendChild(el('span', null, metricName(grader.metric)));
-      const bar = el('div', 'bar');
-      const fill = document.createElement('span');
-      fill.style.width = `${Math.round(grader.score * 100)}%`;
-      bar.appendChild(fill);
-      row.appendChild(bar);
-      row.appendChild(el('span', 'muted', `${Math.round(grader.score * 100)}%`));
-      bars.appendChild(row);
-    }
-    card.appendChild(bars);
-  }
+  if (result.byGrader.length > 0) card.appendChild(metricBars(result.byGrader));
 
   for (const test of result.tests) {
     const box = el('div', `case ${test.status}`);
@@ -533,19 +799,19 @@ function renderScorecard(result) {
     card.appendChild(box);
   }
 
-  // Share controls. The link is an unguessable id, so it is unlisted rather than
-  // public, and the prompt stays private until its owner chooses otherwise.
+  // Share controls. The link is an unguessable id, so it is unlisted; the gallery
+  // is opt-in, and only for signed-in players — sharing shows a name and a photo.
   if (result.submissionId && !result.cached) {
     const share = el('div', 'share');
-    const url = `${location.origin}/prompt-gym/r/${result.submissionId}`;
+    const url = `${location.origin}${BASE}/r/${result.submissionId}`;
 
-    const copy = el('button', 'secondary', 'Copy share link');
+    const copy = el('button', 'secondary', 'Copy link');
     copy.type = 'button';
     copy.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(url);
         copy.textContent = 'Copied';
-        setTimeout(() => (copy.textContent = 'Copy share link'), 1500);
+        setTimeout(() => (copy.textContent = 'Copy link'), 1500);
       } catch {
         // Clipboard access can be refused; showing the link is the fallback.
         copy.replaceWith(el('code', null, url));
@@ -553,23 +819,14 @@ function renderScorecard(result) {
     });
     share.appendChild(copy);
 
-    if (result.uid) {
-      const label = document.createElement('label');
-      label.className = 'muted inline';
-      const box = document.createElement('input');
-      box.type = 'checkbox';
-      box.addEventListener('change', async () => {
-        const token = await getIdToken();
-        if (!token) return;
-        await fetch(`${API}/api/result/${result.submissionId}/visibility`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ showPrompt: box.checked }),
-        });
-      });
-      label.appendChild(box);
-      label.appendChild(document.createTextNode(' show my prompt on the shared page'));
-      share.appendChild(label);
+    if (isGuest()) {
+      const g = googleButton('Log in to share your results');
+      g.addEventListener('click', () => startSignIn(() => renderScorecard(result)));
+      share.appendChild(g);
+    } else {
+      share.appendChild(shareToggle(result.submissionId, Boolean(result.sharedToGallery), (v) => {
+        result.sharedToGallery = v;
+      }));
     }
     card.appendChild(share);
   }
@@ -581,14 +838,38 @@ function renderScorecard(result) {
           'That is our side, not your prompt.'),
     );
   }
+
+  renderNudge(result);
+}
+
+/** After a guest passes something, say what signing in would do for them. */
+function renderNudge(result) {
+  if (!isGuest() || !result.passed) return;
+  const free = challenges.filter((c) => c.freeToPlay);
+  const allFreeDone = free.length > 0 && free.every((c) => isPassed(c) || c.id === result.challengeId);
+  const box = el('div', 'nudge-box');
+  const p = el('p');
+  if (allFreeDone) {
+    p.append(el('strong', null, "That's every free challenge. "),
+      document.createTextNode(`Sign in to unlock ${challenges.filter(isLocked).length} more, and put your scores on the leaderboard.`));
+  } else {
+    p.append(el('strong', null, 'Passed! '),
+      document.createTextNode('Sign in to add this score to the leaderboard — your progress carries over.'));
+  }
+  const g = googleButton();
+  g.addEventListener('click', () => startSignIn());
+  box.append(p, g);
+  $('scorecard').appendChild(box);
 }
 
 async function run() {
   const button = $('run');
   button.disabled = true;
+  saveDraft();
   $('scorecard').replaceChildren();
   $('run-status').className = 'muted';
   $('run-status').textContent = `Running against ${current.testCaseCount} hidden test cases…`;
+  const challenge = current;
 
   try {
     const token = await getIdToken();
@@ -600,7 +881,7 @@ async function run() {
         ...keyHeader(),
       },
       body: JSON.stringify({
-        challengeId: current.id,
+        challengeId: challenge.id,
         prompt: $('prompt').value,
         model: $('model').value,
       }),
@@ -617,12 +898,25 @@ async function run() {
       return;
     }
 
+    if (res.status === 401 && data.error === 'sign_in_required') {
+      $('run-status').className = 'nudge-box';
+      $('run-status').replaceChildren(el('p', null, 'Sign in with Google to play this challenge.'));
+      const g = googleButton();
+      g.addEventListener('click', () => startSignIn());
+      $('run-status').appendChild(g);
+      return;
+    }
+
     if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
     $('run-status').textContent = '';
-    renderScorecard(data);
+    $('run-status').className = '';
+    lastResults.set(challenge.id, data);
     // Any banked run can change a card's status or the board, not only a new best.
     await loadBoard();
-    if (current) renderPlayTags(current);
+    if (current?.id === challenge.id) {
+      renderScorecard(data);
+      renderPlayTags(challenge);
+    }
   } catch (err) {
     $('run-status').className = 'notice error-box';
     $('run-status').textContent = `Run failed — ${err.message}`;
@@ -634,26 +928,22 @@ async function run() {
 
 // -------------------------------------------------------------- leaderboard
 
-function playerName(row, isYou) {
-  if (row.displayName) return row.displayName;
-  if (isYou) return 'You';
-  // Anonymous players, and anyone whose profile we never saw, get a stable
-  // handle from their uid rather than a blank cell.
-  return `Player ${row.uid.slice(0, 6)}`;
-}
-
 function boardRow(row, youUid) {
   const isYou = row.uid === youUid;
   const li = el('li', `board-row${isYou ? ' you' : ''}${row.rank <= 3 ? ' top' : ''}`);
   li.appendChild(el('span', 'board-rank', String(row.rank)));
-  // Initials, not other players' Google photos: the board already shows a name,
-  // and publishing everyone's profile picture is a bigger step than this needs.
-  li.appendChild(avatarNode(playerName(row, isYou), isYou ? getUser()?.photo : null, true));
-  const name = el('span', 'board-name', playerName(row, isYou));
-  if (isYou && row.displayName) name.appendChild(el('small', null, ' (you)'));
+  // Signed-in players' Google photos are shown, as the terms say.
+  li.appendChild(avatarNode(displayName(row.displayName), row.avatarUrl, true));
+  const name = el('span', 'board-name', displayName(row.displayName));
+  if (isYou) name.appendChild(el('small', null, ' (you)'));
   li.appendChild(name);
+  // Show the number that decides the order — passes at their hardest level — so
+  // "3 passed" above "6 passed" reads as right rather than as a bug.
+  const top = Object.keys(row.passedByLevel ?? {}).map(Number).sort((a, b) => b - a)[0];
   const score = el('span', 'board-score', `${row.completed} passed`);
-  score.appendChild(el('small', null, `${row.totalScore} pts`));
+  score.appendChild(
+    el('small', null, top ? `${row.passedByLevel[top]} ${DIFFICULTY[top]} · ${row.totalScore} pts` : `${row.totalScore} pts`),
+  );
   li.appendChild(score);
   return li;
 }
@@ -673,15 +963,19 @@ async function loadBoard() {
     const data = await fetchBoard(10);
 
     progress = new Map((data.progress ?? []).map((p) => [p.challengeId, p]));
+    myStanding = data.you ?? null;
+    totalPlayers = data.totalPlayers ?? data.leaderboard.length;
+    boardLoaded = true;
     if (challenges.length) renderList();
+    if (current && !$('play-view').hidden) renderPlayTags(current);
 
     const list = $('board-top');
     list.replaceChildren();
-    const youUid = data.you?.uid ?? getUser()?.uid;
+    const youUid = getUser()?.uid;
 
     if (data.leaderboard.length === 0) {
       status.hidden = false;
-      status.textContent = 'Nobody has passed a challenge yet. Be first.';
+      status.textContent = 'Nobody is on the board yet. Be first.';
     } else {
       status.hidden = true;
       for (const row of data.leaderboard) list.appendChild(boardRow(row, youUid));
@@ -690,24 +984,37 @@ async function loadBoard() {
     // Someone outside the top ten still gets to see where they stand.
     const you = $('board-you');
     you.replaceChildren();
-    const inTop = data.leaderboard.some((r) => r.uid === youUid);
-    if (data.you && !inTop) {
+    if (myStanding && !data.leaderboard.some((r) => r.uid === youUid)) {
       const ol = el('ol', 'board-list');
-      ol.appendChild(boardRow(data.you, youUid));
+      ol.appendChild(boardRow(myStanding, youUid));
       you.appendChild(ol);
     }
 
+    // A guest is never ranked; say how to change that, right where they look.
+    const guestBox = $('board-guest');
+    guestBox.replaceChildren();
+    guestBox.hidden = true;
+    if (isGuest()) {
+      guestBox.hidden = false;
+      guestBox.appendChild(document.createTextNode('Guests are not ranked. Sign in to join the leaderboard — your progress carries over.'));
+      const g = googleButton();
+      g.addEventListener('click', () => startSignIn());
+      guestBox.appendChild(g);
+    } else if (!myStanding) {
+      guestBox.hidden = false;
+      guestBox.textContent = 'Pass a challenge to join the leaderboard.';
+    }
+
     const more = $('board-more');
-    const total = data.totalPlayers ?? data.leaderboard.length;
-    more.hidden = total <= data.leaderboard.length;
-    more.textContent = `Show all ${total} players →`;
+    more.hidden = totalPlayers <= data.leaderboard.length;
+    more.textContent = `Show all ${totalPlayers} players →`;
   } catch (err) {
     status.hidden = false;
     status.textContent = `Could not load the leaderboard — ${err.message}`;
   }
 }
 
-$('board-more').addEventListener('click', async () => {
+async function openFullBoard() {
   showDrawer('drawer-board');
   const status = $('full-board-status');
   const list = $('full-board');
@@ -716,15 +1023,17 @@ $('board-more').addEventListener('click', async () => {
   list.replaceChildren();
   try {
     const data = await fetchBoard(500);
-    const youUid = data.you?.uid ?? getUser()?.uid;
+    const youUid = getUser()?.uid;
     for (const row of data.leaderboard) list.appendChild(boardRow(row, youUid));
-    status.hidden = true;
+    if (data.leaderboard.length === 0) status.textContent = 'Nobody is on the board yet. Be first.';
+    else status.hidden = true;
   } catch (err) {
     status.textContent = `Could not load the full list — ${err.message}`;
   }
-});
+}
+$('board-more').addEventListener('click', openFullBoard);
 
-// ------------------------------------------------------------- share links
+// ------------------------------------------------------------ shared result
 
 /** A shared result is deliberately thinner than your own scorecard: it carries
  *  the score and the grader breakdown but none of the hidden test inputs, because
@@ -739,7 +1048,11 @@ async function loadSharedResult(id) {
   status.textContent = 'Loading…';
 
   try {
-    const res = await fetch(`${API}/api/result/${encodeURIComponent(id)}`);
+    await authReady;
+    const token = await getIdToken();
+    const res = await fetch(`${API}/api/result/${encodeURIComponent(id)}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
     if (res.status === 404) throw new Error('That result does not exist.');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const r = await res.json();
@@ -747,64 +1060,183 @@ async function loadSharedResult(id) {
     const challenge = challenges.find((c) => c.id === r.challengeId);
     status.hidden = true;
 
+    card.appendChild(el('h2', null, challenge ? challenge.title : r.challengeId));
+    const by = el('div', 'byline');
+    by.append(
+      avatarNode(displayName(r.playerName), r.avatarUrl, true),
+      el('strong', null, r.isYours ? 'You' : displayName(r.playerName)),
+      el('span', null, `· run ${formatDateTime(r.createdAt)} · ${shortModel(r.execModel)}`),
+    );
+    card.appendChild(by);
+
     const total = el('div', 'total');
     total.appendChild(el('span', 'score', String(r.score)));
     total.appendChild(el('span', 'muted', '/ 100'));
     total.appendChild(el('span', r.passed ? 'verdict-pass' : 'verdict-fail', r.passed ? 'Passed' : 'Not passed'));
-    total.appendChild(el('span', 'muted', r.execModel.replace(/^[^/]+\//, '')));
+    total.appendChild(
+      el('span', 'muted',
+        `${r.cases.passed} passed, ${r.cases.failed} failed` + (r.cases.errored ? `, ${r.cases.errored} errored` : '')),
+    );
     card.appendChild(total);
 
-    card.appendChild(
-      el('p', 'muted',
-        `${challenge ? challenge.title : r.challengeId} · ` +
-          `${r.cases.passed} passed, ${r.cases.failed} failed` +
-          (r.cases.errored ? `, ${r.cases.errored} errored` : '') +
-          (r.playerName ? ` · by ${r.playerName}` : '')),
-    );
+    if (r.byGrader.length > 0) card.appendChild(metricBars(r.byGrader));
 
-    if (r.byGrader.length > 0) {
-      const bars = el('div', 'bars');
-      for (const grader of r.byGrader) {
-        const row = el('div', 'bar-row');
-        row.appendChild(el('span', null, metricName(grader.metric)));
-        const bar = el('div', 'bar');
-        const fill = document.createElement('span');
-        fill.style.width = `${Math.round(grader.score * 100)}%`;
-        bar.appendChild(fill);
-        row.appendChild(bar);
-        row.appendChild(el('span', 'muted', `${Math.round(grader.score * 100)}%`));
-        bars.appendChild(row);
-      }
-      card.appendChild(bars);
-    }
-
+    card.appendChild(el('p', 'muted', `The prompt · ${r.promptChars} characters`));
     if (r.prompt) {
-      card.appendChild(el('p', 'muted', 'The prompt'));
-      card.appendChild(el('pre', null, r.prompt));
+      card.appendChild(el('pre', 'prompt-block', r.prompt));
+    } else if (r.promptLocked) {
+      card.appendChild(el('div', 'locked-prompt', 'Pass this challenge yourself to read the prompt.'));
     } else {
-      card.appendChild(el('p', 'muted', `Prompt not shown — ${r.promptChars} characters.`));
+      card.appendChild(el('div', 'locked-prompt', "The author hasn't shared this prompt."));
     }
 
-    const tryIt = el('button', 'primary', 'Try this challenge');
+    const actions = el('div', 'result-actions');
+    const tryIt = el('button', 'primary', r.isYours ? 'Back to this challenge' : 'Try this challenge');
     tryIt.type = 'button';
-    tryIt.addEventListener('click', () => {
-      history.pushState({}, '', '/prompt-gym/');
-      if (challenge) openChallenge(challenge);
-      else showView('list');
-    });
-    card.appendChild(tryIt);
+    tryIt.addEventListener('click', () => (challenge ? openChallenge(challenge) : navigate(BASE + '/')));
+    actions.appendChild(tryIt);
+    if (r.isYours && !isGuest()) actions.appendChild(shareToggle(r.id, r.shared));
+    card.appendChild(actions);
   } catch (err) {
     status.className = 'notice error-box';
     status.textContent = `Could not load that result — ${err.message}`;
   }
 }
 
-/** `/prompt-gym/r/<id>` — Firebase rewrites every path under /prompt-gym/ to this
- *  page, so the id has to be read back off the URL here. */
-function sharedResultId() {
-  const match = /\/r\/([A-Za-z0-9-]{8,64})\/?$/.exec(location.pathname);
-  return match ? match[1] : null;
+// ------------------------------------------------------------------ gallery
+
+async function openGallery() {
+  showView('gallery');
+  await authReady;
+  $('gallery-mine-wrap').hidden = isGuest();
+  if (isGuest()) $('gallery-mine').checked = false;
+  await loadGallery();
 }
+
+async function loadGallery() {
+  const status = $('gallery-status');
+  const list = $('gallery-list');
+  status.hidden = false;
+  status.className = 'muted';
+  status.textContent = 'Loading…';
+  list.replaceChildren();
+
+  const params = new URLSearchParams();
+  if ($('gallery-difficulty').value) params.set('difficulty', $('gallery-difficulty').value);
+  params.set('sort', $('gallery-sort').value);
+  if ($('gallery-mine').checked) params.set('mine', '1');
+
+  try {
+    const token = await getIdToken();
+    const res = await fetch(`${API}/api/shares?${params}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const { shares } = await res.json();
+
+    if (shares.length === 0) {
+      status.textContent = $('gallery-mine').checked
+        ? "You haven't shared anything yet. Run a challenge, then choose “Share to gallery”."
+        : 'Nothing shared here yet.';
+      return;
+    }
+    status.hidden = true;
+    for (const s of shares) list.appendChild(shareRow(s));
+  } catch (err) {
+    status.className = 'notice error-box';
+    status.textContent = `Could not load shared prompts — ${err.message}`;
+  }
+}
+
+/** One share, in two or three lines: what and how well, who and when, the prompt. */
+function shareRow(s) {
+  const challenge = challenges.find((c) => c.id === s.challengeId);
+  const li = el('li', `share-row${s.isYours ? ' yours' : ''}`);
+
+  const top = el('div', 'share-top');
+  top.append(el('span', 'share-title', challenge?.title ?? s.challengeId));
+  if (challenge) top.append(el('span', 'share-level', DIFFICULTY[challenge.difficulty]));
+  li.appendChild(top);
+
+  const score = el('div', 'share-score');
+  score.append(el('b', s.passed ? 'pass' : '', String(s.score)), el('small', null, s.passed ? 'passed' : 'not passed'));
+  li.appendChild(score);
+
+  const meta = el('div', 'share-meta');
+  meta.append(
+    avatarNode(displayName(s.playerName), s.avatarUrl, true),
+    el('strong', null, s.isYours ? 'You' : displayName(s.playerName)),
+    el('span', null, `· ${formatDateTime(s.runAt)} · ${shortModel(s.execModel)} · ${s.promptChars} chars`),
+  );
+  li.appendChild(meta);
+
+  const line = el('div', `share-line${s.prompt ? '' : ' locked'}`);
+  const actions = el('span', 'share-actions');
+  if (s.prompt) {
+    line.appendChild(el('code', null, s.prompt.replace(/\s+/g, ' ')));
+    const expand = el('button', 'text-btn', 'Show');
+    expand.type = 'button';
+    let full = null;
+    expand.addEventListener('click', () => {
+      if (full) {
+        full.remove();
+        full = null;
+        expand.textContent = 'Show';
+      } else {
+        full = el('pre', 'share-prompt', s.prompt);
+        li.appendChild(full);
+        expand.textContent = 'Hide';
+      }
+    });
+    actions.appendChild(expand);
+  } else {
+    line.appendChild(el('span', null, '🔒 Pass this challenge to read the prompt'));
+    if (challenge && !isPassed(challenge)) {
+      const tryIt = el('button', 'text-btn', 'Try it');
+      tryIt.type = 'button';
+      tryIt.addEventListener('click', () => openChallenge(challenge));
+      actions.appendChild(tryIt);
+    }
+  }
+  const open = el('a', 'text-btn', 'Open');
+  open.href = `${BASE}/r/${s.id}`;
+  open.addEventListener('click', (e) => {
+    e.preventDefault();
+    navigate(`${BASE}/r/${s.id}`);
+  });
+  actions.appendChild(open);
+  if (s.isYours) {
+    const unshare = el('button', 'text-btn danger', 'Unshare');
+    unshare.type = 'button';
+    unshare.addEventListener('click', async () => {
+      unshare.disabled = true;
+      try {
+        await setShared(s.id, false);
+        li.remove();
+        toast('Unshared.');
+        if ($('gallery-list').childElementCount === 0) loadGallery();
+      } catch (err) {
+        toast(err.message);
+        unshare.disabled = false;
+      }
+    });
+    actions.appendChild(unshare);
+  }
+  line.appendChild(actions);
+  li.appendChild(line);
+  return li;
+}
+
+for (const id of ['gallery-difficulty', 'gallery-sort', 'gallery-mine']) {
+  $(id).addEventListener('change', loadGallery);
+}
+
+// The ranking tooltip opens on hover, and on tap — phones have no hover.
+document.querySelector('.tip-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  e.currentTarget.parentElement.classList.toggle('open');
+});
+document.addEventListener('click', () => document.querySelector('.tip')?.classList.remove('open'));
 
 // ------------------------------------------------------------------ account
 
@@ -823,10 +1255,32 @@ document.addEventListener('click', (e) => {
   if (!$('account-user').contains(e.target)) closeUserMenu();
 });
 
+/** Google sign-in, from anywhere on the page.
+ *
+ *  A guest with no Google account here is linked, keeping the same uid, so their
+ *  progress simply carries over. A guest whose Google account already plays
+ *  signs into that account instead, and their saved progress loads from it. */
+async function startSignIn(then) {
+  await authReady;
+  const result = await signInWithGoogle();
+  if (!result.ok) {
+    // A closed popup is the user changing their mind, not a failure worth shouting about.
+    if (result.error === 'auth/popup-closed-by-user' || result.error === 'auth/cancelled-popup-request') return;
+    toast(`Sign-in failed: ${result.error}`);
+    return;
+  }
+  toast(result.linked ? 'Signed in — your progress carried over.' : 'Welcome back — your saved progress is loaded.');
+  // Linking keeps the uid, so the uid-change refetch will not fire on its own.
+  await loadBoard();
+  then?.();
+}
+
 onUserChanged((user) => {
   $('account-loading').hidden = Boolean(user);
+  $('account-loading').textContent = signingOut ? 'Signing out…' : 'Signing in…';
   $('account-guest').hidden = !user || !user.isAnonymous;
   $('account-user').hidden = !user || user.isAnonymous;
+  if (user) signingOut = false;
 
   if (user && !user.isAnonymous) {
     const name = user.name || 'Signed in';
@@ -834,6 +1288,9 @@ onUserChanged((user) => {
     $('user-name').textContent = name;
     $('user-menu-name').textContent = name;
   }
+
+  // Locks depend on who is signed in; repaint before the board comes back.
+  if (challenges.length) renderList();
 
   // Progress is per-uid; refetch whenever the uid changes. The board itself is
   // public and has already been fetched without waiting for sign-in.
@@ -850,55 +1307,28 @@ $('signin').disabled = true;
 authReady.then(() => {
   $('signin').disabled = false;
 });
-
-$('signin').addEventListener('click', async () => {
-  const button = $('signin');
-  button.disabled = true;
-  const result = await signInWithGoogle();
-  button.disabled = false;
-
-  if (!result.ok) {
-    // A closed popup is the user changing their mind, not a failure worth shouting about.
-    if (result.error === 'auth/popup-closed-by-user' || result.error === 'auth/cancelled-popup-request') return;
-    toast(`Sign-in failed: ${result.error}`);
-    return;
-  }
-
-  if (!result.linked) {
-    toast('Signed in to your existing account — progress from this guest session did not carry over.');
-  }
-  // Linking keeps the uid, so the uid-change refetch above will not fire; the
-  // board still has to pick up the new name.
-  loadBoard();
-});
+$('signin').addEventListener('click', () => startSignIn());
 
 $('signout').addEventListener('click', () => {
   closeUserMenu();
+  signingOut = true;
+  // Show it straight away: Firebase reports the sign-out a moment later.
+  $('account-user').hidden = true;
+  $('account-loading').hidden = false;
+  $('account-loading').textContent = 'Signing out…';
+  progress = new Map();
+  myStanding = null;
   signOutUser();
 });
 
 // -------------------------------------------------------------------- wiring
 
-$('prompt').addEventListener('input', updateCharCount);
+$('prompt').addEventListener('input', () => {
+  updateCharCount();
+  saveDraft();
+  if (current?.mode === 'debug') $('prompt-reset').hidden = $('prompt').value === (current.startingPrompt ?? '');
+});
 $('run').addEventListener('click', run);
-
-$('back').addEventListener('click', () => {
-  current = null;
-  showView('list');
-});
-
-$('home-link').addEventListener('click', (e) => {
-  // Stay in the app rather than reloading the page, unless on a share link.
-  if (sharedResultId()) return;
-  e.preventDefault();
-  current = null;
-  showView('list');
-});
-
-$('result-back').addEventListener('click', () => {
-  history.pushState({}, '', '/prompt-gym/');
-  showView('list');
-});
 
 $('byo-save').addEventListener('click', () => {
   const key = $('byo-key').value.trim();
@@ -916,7 +1346,7 @@ $('byo-save').addEventListener('click', () => {
   sessionKey = key;
   $('byo').classList.remove('urgent');
   renderKeyState(
-    rememberKey(key)
+    storageSet(KEY_STORAGE, key)
       ? 'Saved in this browser. Your runs use your key from now on.'
       : 'This browser will not let the page store anything, so the key is used for ' +
           'this session only and forgotten when you close the tab.',
@@ -925,7 +1355,7 @@ $('byo-save').addEventListener('click', () => {
 
 $('byo-clear').addEventListener('click', () => {
   sessionKey = '';
-  rememberKey('');
+  storageSet(KEY_STORAGE, null);
   $('byo').classList.remove('urgent');
   renderKeyState('Removed. Runs go back to the shared allowance.');
 });
@@ -937,14 +1367,12 @@ loadChallenges().then(() => {
   for (const model of models) {
     const option = document.createElement('option');
     option.value = model;
-    option.textContent = model.replace(/^[^/]+\//, '');
+    option.textContent = shortModel(model);
     select.appendChild(option);
   }
 
-  // A share link lands here too, because Firebase rewrites all of /prompt-gym/**
-  // to this page. Challenge titles are needed first so the result can name one.
-  const shared = sharedResultId();
-  if (shared) loadSharedResult(shared);
+  // Challenge titles are needed before any route can name one.
+  route();
 
   // The board is public, so it does not wait for sign-in. If Firebase is slow or
   // fails, visitors still see who is winning; progress fills in once a uid exists.

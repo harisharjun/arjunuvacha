@@ -15,6 +15,39 @@ deletion and over-redaction, and the golf par values were re-derived
 
 ---
 
+## Product rules added 26 Sep 2026
+
+Decided by Arjun; each is enforced by the Worker, not only shown by the page.
+
+- **Sign-in wall.** Guests can play pg-a2, pg-a3 and pg-b7 (`FREE_TO_PLAY` in
+  `worker/prompt-gym/src/challenges.ts`). Everything else returns 401
+  `sign_in_required`, checked before the dedupe cache.
+- **Only signed-in players are ranked.** Order: passes at the hardest level first,
+  then points at the hardest level, then fewest prompt characters, then fewest
+  attempts (`src/db/ranking.ts`). Withheld challenges never count.
+- **Shared-results gallery** at `/prompt-gym/shared`. Only signed-in players can
+  share. A shared prompt is readable only by its author and by players who have
+  passed that challenge — identical prompts replay the cached result, so a
+  readable passing prompt would be a free pass. This applies to share links too,
+  so an outside visitor sees the score, not the prompt.
+- **A validator that throws on the player's output is a fail, not an error.**
+  Fenced JSON on pg-a11 used to mark the run ineligible and blame "our side".
+
+## Staging has its own Worker
+
+`prompt-gym-staging` (`[env.staging]` in `wrangler.toml`), same D1 and KV as
+production. The staging page picks it by hostname. Deploy with
+`npx wrangler deploy --env staging`.
+
+**Promoting to production: deploy the Worker and the page together.** The new
+page expects the new Worker's fields, and the new Worker's sign-in wall would
+leave the old page's guests facing locked challenges with no explanation.
+
+```bash
+cd worker/prompt-gym && npx wrangler deploy
+cd ../.. && npx firebase-tools deploy -P prod --only hosting
+```
+
 ## Proven by the test suite
 
 `cd worker/prompt-gym && npm test` — 353 tests. These items are covered, so a
@@ -22,9 +55,12 @@ regression fails the build rather than the launch:
 
 | Item | Proven by |
 | --- | --- |
-| The 12 shipped challenges load | `test/api.test.ts` — "lists every challenge with the model allowlist" |
+| The 11 shipped challenges load | `test/api.test.ts` — "lists every challenge with the model allowlist" |
 | pg-c1 and pg-e4 are withheld, and unrunnable by id | `test/api.test.ts` — "withheld challenges" (5 tests) |
 | A guest's score survives Google linking | `test/linking.test.ts` (3 tests) |
+| The sign-in wall, and that only signed-in players can share | `test/wall.test.ts` |
+| Ranking order and who is ranked | `test/leaderboard.test.ts` — "ranking — the order Arjun specified" |
+| The gallery and its prompt gate | `test/gallery.test.ts`, `test/share.test.ts` |
 | An unknown challenge id returns a clean 400 | `test/api.test.ts` — "rejects an unknown challenge id cleanly" |
 | The reveal filter holds server-side | `test/api.test.ts` — "leaks no hidden test input beyond the published example", and `test/reveal.test.ts` |
 | No expected values, assertions or validator names reach the browser | `test/api.test.ts` — "carries no expected values, assertions or validator names" |

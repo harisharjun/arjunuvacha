@@ -195,10 +195,21 @@ describe('javascript validators', () => {
     expect(run('javascript', undefined, '{"a":1}', { ref: 'validators.isEmptyObjectOrArray' }).score).toBe(0);
   });
 
-  it('scores 0 and records an error when the validator throws on malformed output', () => {
+  // Reversed deliberately (26 Sep 2026). A validator throwing on the player's
+  // output is the output failing the check. Recording it as an error made the run
+  // ineligible and told the player "that is our side, not your prompt" when their
+  // prompt had emitted ```json fences — exactly what pg-a11 is testing for.
+  it('fails, without an error, when the validator throws on malformed output', () => {
     const r = run('javascript', undefined, 'not json at all', { ref: 'validators.throwsOnBadJson' });
     expect(r.score).toBe(0);
-    expect(r.error).toBeTruthy();
+    expect(r.passed).toBe(false);
+    expect(r.error).toBeUndefined();
+  });
+
+  it('does not invert a validator that threw on the output into a pass', () => {
+    const r = run('not-javascript', undefined, 'not json at all', { ref: 'validators.throwsOnBadJson' });
+    expect(r.score).toBe(0);
+    expect(r.passed).toBe(false);
   });
 
   it('errors rather than silently passing when the ref is not in the registry', () => {

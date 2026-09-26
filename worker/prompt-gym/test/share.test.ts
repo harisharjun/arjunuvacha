@@ -119,15 +119,38 @@ describe('the prompt is private until its owner publishes it', () => {
     expect((await publicResult(db, 'sub-share-1'))?.prompt).toBeNull();
   });
 
-  it('appears once the owner turns it on', async () => {
+  // Shared prompts are gated (Arjun, 26 Sep 2026): identical prompts replay the
+  // cached result, so a readable passing prompt is a free pass for anyone.
+  const solver = { uid: 'solver', passed: new Set(['pg-a1']) };
+  const stranger = { uid: 'stranger', passed: new Set<string>() };
+
+  it('appears once shared, to a viewer who has passed the challenge', async () => {
     await setShowPrompt(db, 'sub-share-1', true);
-    expect((await publicResult(db, 'sub-share-1'))?.prompt).toBe(THE_PROMPT);
+    expect((await publicResult(db, 'sub-share-1', solver))?.prompt).toBe(THE_PROMPT);
   });
 
-  it('can be turned back off', async () => {
+  it('stays locked for a viewer who has not passed it, and says so', async () => {
+    await setShowPrompt(db, 'sub-share-1', true);
+    const r = await publicResult(db, 'sub-share-1', stranger);
+    expect(r?.prompt).toBeNull();
+    expect(r?.promptLocked).toBe(true);
+    // With no token at all, likewise.
+    expect((await publicResult(db, 'sub-share-1'))?.promptLocked).toBe(true);
+  });
+
+  it('is always readable by its author, shared or not', async () => {
+    const owner = { uid: 'owner', passed: new Set<string>() };
+    expect((await publicResult(db, 'sub-share-1', owner))?.prompt).toBe(THE_PROMPT);
+    expect((await publicResult(db, 'sub-share-1', owner))?.isYours).toBe(true);
+  });
+
+  it('can be turned back off, and is then private rather than locked', async () => {
     await setShowPrompt(db, 'sub-share-1', true);
     await setShowPrompt(db, 'sub-share-1', false);
-    expect((await publicResult(db, 'sub-share-1'))?.prompt).toBeNull();
+    const r = await publicResult(db, 'sub-share-1', solver);
+    expect(r?.prompt).toBeNull();
+    expect(r?.promptLocked).toBe(false);
+    expect(r?.shared).toBe(false);
   });
 
   it('does not create a second share row when toggled twice', async () => {

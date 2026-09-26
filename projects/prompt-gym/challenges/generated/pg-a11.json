@@ -9,7 +9,7 @@
   ],
   "public": {
     "summary": "This prompt finds the right answer but wraps it in small talk. Make it return just the data.",
-    "goal": "This prompt works — except it wraps its answer in conversational text and code fences, so the calling code cannot parse it. Fix it without changing what it extracts.",
+    "goal": "This prompt works — except it wraps its answer in conversational text and code fences, so the calling code cannot parse it. Fix it without changing what it extracts. Product names are the name alone — leave out words like \"licence\" or \"add-on\" that describe what was bought.",
     "startingPrompt": "You are a helpful assistant. Please read the text below and extract all the Lumen product names you find. Return them as a JSON array so my code can parse it. Thanks!",
     "exampleInput": "Please send across 2× Lumen Pro licences and 1× Lumen Analytics add-on before the 15th.",
     "constraintsShown": [],

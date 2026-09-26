@@ -1,4 +1,5 @@
 import type { RunResponse } from '../run';
+import { rankedPlayers, type Levels, type RankedStanding } from './ranking';
 
 /** SHA-256 hex of the three things that decide a run's outcome.
  *
@@ -131,15 +132,44 @@ export interface PublicResult {
   cases: { passed: number; failed: number; errored: number };
   /** Null unless the owner has chosen to show it. */
   prompt: string | null;
+  /** Shared, but this viewer has not passed the challenge yet. */
+  promptLocked: boolean;
+  /** In the public gallery. */
+  shared: boolean;
+  isYours: boolean;
+  avatarUrl: string | null;
   playerName: string | null;
 }
 
-export async function publicResult(db: D1Database, id: string): Promise<PublicResult | null> {
+/** Who is looking, for the prompt gate. Absent for a request with no token. */
+export interface Viewer {
+  uid: string;
+  /** Challenges the viewer has passed. */
+  passed: Set<string>;
+}
+
+/** Whether a viewer may read a shared prompt.
+ *
+ *  Identical prompts replay the cached result, so a copied prompt passes
+ *  instantly and banks on the leaderboard. A shared prompt is therefore readable
+ *  only by someone who has already passed that challenge themselves — Arjun's
+ *  call, 26 Sep 2026 — and always by its author. Everyone else sees that it
+ *  exists, who wrote it, and how it scored. */
+export function revealPrompt(o: { shared: boolean; isYours: boolean; viewerPassed: boolean }): boolean {
+  if (o.isYours) return true;
+  return o.shared && o.viewerPassed;
+}
+
+export async function publicResult(
+  db: D1Database,
+  id: string,
+  viewer?: Viewer,
+): Promise<PublicResult | null> {
   const row = await db
     .prepare(
       `SELECT s.id, s.challenge_id, s.exec_model, s.prompt_text, s.prompt_chars, s.score,
               s.base_score, s.efficiency_bonus, s.passed, s.grader_results_json, s.created_at,
-              u.display_name, u.is_anonymous,
+              s.uid, u.display_name, u.avatar_url, u.is_anonymous,
               COALESCE(sh.show_prompt, 0) AS show_prompt
        FROM submissions s
        LEFT JOIN users u ON u.uid = s.uid
@@ -159,12 +189,17 @@ export async function publicResult(db: D1Database, id: string): Promise<PublicRe
       passed: number;
       grader_results_json: string;
       created_at: string;
+      uid: string | null;
       display_name: string | null;
+      avatar_url: string | null;
       is_anonymous: number | null;
       show_prompt: number;
     }>();
 
   if (!row) return null;
+  const isYours = Boolean(viewer && row.uid && viewer.uid === row.uid);
+  const shared = row.show_prompt === 1;
+  const unlocked = revealPrompt({ shared, isYours, viewerPassed: viewer?.passed.has(row.challenge_id) ?? false });
 
   let byGrader: { metric: string; score: number }[] = [];
   const counts = { passed: 0, failed: 0, errored: 0 };
@@ -191,8 +226,12 @@ export async function publicResult(db: D1Database, id: string): Promise<PublicRe
     createdAt: row.created_at,
     byGrader,
     cases: counts,
-    prompt: row.show_prompt === 1 ? row.prompt_text : null,
+    prompt: unlocked ? row.prompt_text : null,
+    promptLocked: shared && !unlocked,
+    shared,
+    isYours,
     playerName: row.is_anonymous === 0 ? row.display_name : null,
+    avatarUrl: row.is_anonymous === 0 ? row.avatar_url : null,
   };
 }
 
@@ -215,7 +254,11 @@ export async function setShowPrompt(
     .prepare(
       `INSERT INTO share_results (id, submission_id, show_prompt)
        VALUES (?, ?, ?)
-       ON CONFLICT(id) DO UPDATE SET show_prompt = excluded.show_prompt`,
+       ON CONFLICT(id) DO UPDATE SET
+         show_prompt = excluded.show_prompt,
+         -- Re-sharing after an unshare is a new share; it goes to the back.
+         created_at = CASE WHEN excluded.show_prompt = 1 AND share_results.show_prompt = 0
+                           THEN datetime('now') ELSE share_results.created_at END`,
     )
     .bind(`share-${submissionId}`, submissionId, showPrompt ? 1 : 0)
     .run();
@@ -225,91 +268,57 @@ export interface LeaderboardRow {
   rank: number;
   uid: string;
   displayName: string | null;
-  isAnonymous: boolean;
+  avatarUrl: string | null;
   completed: number;
   totalScore: number;
+  promptChars: number;
+  attempts: number;
+  /** Passes per difficulty level, 1 (Beginner) to 5 (Expert). */
+  passedByLevel: Record<number, number>;
 }
 
-/** The metric is challenges *completed* — a whole number, the easiest thing to
- *  read and to brag about — tie-broken by total score so partial progress counts
- *  for something without needing a second visible number.
- *
- *  `COUNT(*) FILTER` would be tidier but needs a recent SQLite; the CASE form
- *  means the query cannot break under us if D1's engine moves. */
-const TOTALS = `
-  SELECT b.uid AS uid,
-         SUM(CASE WHEN b.passed = 1 THEN 1 ELSE 0 END) AS completed,
-         SUM(b.score) AS total_score
-  FROM best_scores b
-  GROUP BY b.uid`;
-
-export async function leaderboard(db: D1Database, limit: number): Promise<LeaderboardRow[]> {
-  const { results } = await db
-    .prepare(
-      `WITH totals AS (${TOTALS})
-       SELECT t.uid, t.completed, t.total_score, u.display_name, u.is_anonymous
-       FROM totals t
-       LEFT JOIN users u ON u.uid = t.uid
-       ORDER BY t.completed DESC, t.total_score DESC, t.uid ASC
-       LIMIT ?`,
-    )
-    .bind(limit)
-    .all<{
-      uid: string;
-      completed: number;
-      total_score: number;
-      display_name: string | null;
-      is_anonymous: number | null;
-    }>();
-
-  return (results ?? []).map((row, i) => ({
-    rank: i + 1,
-    uid: row.uid,
-    displayName: row.display_name,
-    // A row whose user has been deleted from Firebase still has a real score.
-    // Treat it as anonymous rather than dropping it or crashing on the null.
-    isAnonymous: row.is_anonymous !== 0,
-    completed: row.completed ?? 0,
-    totalScore: row.total_score ?? 0,
-  }));
-}
-
-/** One user's standing, so someone outside the top N still sees where they are.
- *  Rank is "how many people are ahead of me, plus one", which matches the
- *  ordering above exactly — including the tie-break. */
-export async function rankFor(db: D1Database, uid: string): Promise<LeaderboardRow | null> {
-  const row = await db
-    .prepare(
-      `WITH totals AS (${TOTALS})
-       SELECT t.uid, t.completed, t.total_score, u.display_name, u.is_anonymous,
-              (SELECT COUNT(*) FROM totals o
-                WHERE o.completed > t.completed
-                   OR (o.completed = t.completed AND o.total_score > t.total_score)
-                   OR (o.completed = t.completed AND o.total_score = t.total_score AND o.uid < t.uid)
-              ) + 1 AS rank
-       FROM totals t
-       LEFT JOIN users u ON u.uid = t.uid
-       WHERE t.uid = ?`,
-    )
-    .bind(uid)
-    .first<{
-      uid: string;
-      completed: number;
-      total_score: number;
-      display_name: string | null;
-      is_anonymous: number | null;
-      rank: number;
-    }>();
-
-  if (!row) return null;
+function toRow(s: RankedStanding): LeaderboardRow {
   return {
-    rank: row.rank,
-    uid: row.uid,
-    displayName: row.display_name,
-    isAnonymous: row.is_anonymous !== 0,
-    completed: row.completed ?? 0,
-    totalScore: row.total_score ?? 0,
+    rank: s.rank,
+    uid: s.uid,
+    displayName: s.displayName,
+    avatarUrl: s.avatarUrl,
+    completed: s.completed,
+    totalScore: s.totalScore,
+    promptChars: s.promptChars,
+    attempts: s.attempts,
+    passedByLevel: s.passedAt,
   };
+}
+
+/** The top of the board. See `ranking.ts` for the order and who is on it. */
+export async function leaderboard(db: D1Database, limit: number, levels: Levels): Promise<LeaderboardRow[]> {
+  return (await rankedPlayers(db, levels)).slice(0, limit).map(toRow);
+}
+
+/** One player's standing, so someone outside the top N still sees where they are.
+ *  Null for a guest, or anyone who has not passed anything yet. */
+export async function rankFor(db: D1Database, uid: string, levels: Levels): Promise<LeaderboardRow | null> {
+  const found = (await rankedPlayers(db, levels)).find((s) => s.uid === uid);
+  return found ? toRow(found) : null;
+}
+
+/** The board, the viewer's own row, and the player count, from one ranking pass. */
+export async function boardFor(
+  db: D1Database,
+  levels: Levels,
+  limit: number,
+  uid?: string,
+): Promise<{ board: LeaderboardRow[]; you: LeaderboardRow | null; total: number }> {
+  const ranked = await rankedPlayers(db, levels);
+  const mine = uid ? ranked.find((s) => s.uid === uid) : undefined;
+  return { board: ranked.slice(0, limit).map(toRow), you: mine ? toRow(mine) : null, total: ranked.length };
+}
+
+/** How many players are on the board, so the page knows whether a "show all" is
+ *  worth offering. */
+export async function playerCount(db: D1Database, levels: Levels): Promise<number> {
+  return (await rankedPlayers(db, levels)).length;
 }
 
 /** Which challenges this user has cleared, for the progress strip. */
@@ -359,15 +368,6 @@ export async function progressDetailFor(db: D1Database, uid: string): Promise<Ch
   }));
 }
 
-/** How many players are on the board at all, so the page knows whether a
- *  "show all" is worth offering. */
-export async function playerCount(db: D1Database): Promise<number> {
-  const row = await db
-    .prepare(`WITH totals AS (${TOTALS}) SELECT COUNT(*) AS n FROM totals`)
-    .first<{ n: number }>();
-  return row?.n ?? 0;
-}
-
 export async function progressFor(db: D1Database, uid: string): Promise<string[]> {
   const { results } = await db
     .prepare('SELECT challenge_id FROM best_scores WHERE uid = ? AND passed = 1')
@@ -391,4 +391,87 @@ export async function upsertUser(
     )
     .bind(user.uid, user.displayName ?? null, user.avatarUrl ?? null, user.isAnonymous ? 1 : 0)
     .run();
+}
+
+export interface SharedEntry {
+  id: string;
+  challengeId: string;
+  score: number;
+  passed: boolean;
+  promptChars: number;
+  execModel: string;
+  /** When the prompt was run. */
+  runAt: string;
+  /** When it was shared to the gallery. */
+  sharedAt: string;
+  playerName: string | null;
+  avatarUrl: string | null;
+  isYours: boolean;
+  prompt: string | null;
+  promptLocked: boolean;
+}
+
+/** The public gallery: every submission its author chose to share.
+ *
+ *  Only shipped challenges appear, and the caller narrows further by difficulty
+ *  (as a set of ids) or to the viewer's own shares. Oldest share first by
+ *  default, as asked; or highest score first, shortest prompt breaking ties. */
+export async function sharedResults(
+  db: D1Database,
+  opts: { challengeIds: string[]; sort: 'oldest' | 'score'; mineOnly: boolean; viewer?: Viewer; limit: number },
+): Promise<SharedEntry[]> {
+  if (opts.challengeIds.length === 0) return [];
+  if (opts.mineOnly && !opts.viewer) return [];
+
+  const ids = opts.challengeIds.map(() => '?').join(', ');
+  const order = opts.sort === 'score' ? 's.score DESC, s.prompt_chars ASC, sh.created_at ASC' : 'sh.created_at ASC';
+  const { results } = await db
+    .prepare(
+      `SELECT s.id, s.challenge_id, s.score, s.passed, s.prompt_chars, s.exec_model, s.prompt_text,
+              s.created_at AS run_at, sh.created_at AS shared_at, s.uid,
+              u.display_name, u.avatar_url, u.is_anonymous
+       FROM share_results sh
+       JOIN submissions s ON s.id = sh.submission_id
+       LEFT JOIN users u ON u.uid = s.uid
+       WHERE sh.show_prompt = 1 AND s.challenge_id IN (${ids})
+         ${opts.mineOnly ? 'AND s.uid = ?' : ''}
+       ORDER BY ${order}
+       LIMIT ?`,
+    )
+    .bind(...opts.challengeIds, ...(opts.mineOnly ? [opts.viewer!.uid] : []), opts.limit)
+    .all<{
+      id: string;
+      challenge_id: string;
+      score: number;
+      passed: number;
+      prompt_chars: number;
+      exec_model: string;
+      prompt_text: string;
+      run_at: string;
+      shared_at: string;
+      uid: string | null;
+      display_name: string | null;
+      avatar_url: string | null;
+      is_anonymous: number | null;
+    }>();
+
+  return (results ?? []).map((r) => {
+    const isYours = Boolean(opts.viewer && r.uid === opts.viewer.uid);
+    const unlocked = revealPrompt({ shared: true, isYours, viewerPassed: opts.viewer?.passed.has(r.challenge_id) ?? false });
+    return {
+      id: r.id,
+      challengeId: r.challenge_id,
+      score: r.score,
+      passed: r.passed === 1,
+      promptChars: r.prompt_chars,
+      execModel: r.exec_model,
+      runAt: r.run_at,
+      sharedAt: r.shared_at,
+      playerName: r.is_anonymous === 0 ? r.display_name : null,
+      avatarUrl: r.is_anonymous === 0 ? r.avatar_url : null,
+      isYours,
+      prompt: unlocked ? r.prompt_text : null,
+      promptLocked: !unlocked,
+    };
+  });
 }

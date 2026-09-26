@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Miniflare } from 'miniflare';
 import schemaSql from '../migrations/0001_initial.sql?raw';
-import { leaderboard, rankFor, progressFor, progressDetailFor, playerCount, upsertBestScore } from '../src/db/queries';
+import { boardFor, leaderboard, rankFor, progressFor, progressDetailFor, playerCount, upsertBestScore } from '../src/db/queries';
 import type { RunResponse } from '../src/run';
 
 /** A real D1, via Miniflare — the same SQLite engine the Worker runs against.
@@ -49,96 +49,168 @@ const best = async (uid: string, challenge: string, score: number, passed: numbe
               VALUES ('${uid}', '${challenge}', ${score}, ${passed}, '${id}')`);
 };
 
-describe('ranking', () => {
-  it('ranks by challenges completed, not by total score', async () => {
-    // `low` has a far higher total but cleared fewer challenges. Breadth is the
-    // metric, so they must rank below.
-    await player('wide');
-    await player('low');
-    await best('wide', 'pg-a1', 71, 1);
-    await best('wide', 'pg-a2', 76, 1);
-    await best('low', 'pg-a1', 100, 1);
-    await best('low', 'pg-a3', 99, 0);
+/** Difficulty per challenge, as the Worker builds it from the shipped list. */
+const LEVELS = { 'pg-a2': 1, 'pg-a1': 2, 'pg-a3': 2, 'pg-b7': 3, 'pg-b1': 3, 'pg-b3': 4, 'pg-c5': 4, 'pg-x5': 5 };
 
-    const board = await leaderboard(db, 50);
-    expect(board.map((r) => r.uid)).toEqual(['wide', 'low']);
-    expect(board[0].completed).toBe(2);
-    expect(board[1].completed).toBe(1);
-    expect(board[1].totalScore).toBeGreaterThan(board[0].totalScore);
+let seq = 0;
+/** A banked pass, with its submission. `extraAttempts` are earlier failed runs. */
+const pass = async (uid: string, challenge: string, score: number, chars = 50, extraAttempts = 0) => {
+  for (let i = 0; i < extraAttempts; i++) {
+    await exec(`INSERT INTO submissions (id, uid, challenge_id, exec_model, prompt_text, prompt_chars,
+                  score, grader_results_json, prompt_hash, created_at)
+                VALUES ('try-${++seq}', '${uid}', '${challenge}', 'm', 'p', ${chars}, 10, '{}', 'h-${seq}',
+                  '2026-09-01 00:00:00')`);
+  }
+  const id = `pass-${++seq}`;
+  await exec(`INSERT INTO submissions (id, uid, challenge_id, exec_model, prompt_text, prompt_chars,
+                score, passed, leaderboard_eligible, grader_results_json, prompt_hash, created_at)
+              VALUES ('${id}', '${uid}', '${challenge}', 'm', 'p', ${chars}, ${score}, 1, 1, '{}', 'h-${id}',
+                '2026-09-10 00:00:00')`);
+  await exec(`INSERT INTO best_scores (uid, challenge_id, score, passed, submission_id, updated_at)
+              VALUES ('${uid}', '${challenge}', ${score}, 1, '${id}', '2026-09-10 00:00:00')`);
+};
+
+const guest = (uid: string) => exec(`INSERT INTO users (uid, is_anonymous) VALUES ('${uid}', 1)`);
+const order = async () => (await leaderboard(db, 50, LEVELS)).map((r) => r.uid);
+
+describe('ranking — the order Arjun specified', () => {
+  it('ranks one harder pass above any number of easier ones', async () => {
+    await player('hard');
+    await player('many');
+    await pass('hard', 'pg-b3', 70);
+    await pass('many', 'pg-a2', 100);
+    await pass('many', 'pg-a1', 100);
+    await pass('many', 'pg-b7', 100);
+    expect(await order()).toEqual(['hard', 'many']);
   });
 
-  it('breaks a tie on completions with total score', async () => {
+  it('compares level by level, highest first', async () => {
     await player('a');
     await player('b');
-    await best('a', 'pg-a1', 80, 1);
-    await best('a', 'pg-a2', 10, 0);
-    await best('b', 'pg-a1', 80, 1);
-    await best('b', 'pg-a2', 40, 0);
+    // Same Hard count; `b` has more Intermediate, `a` has more Beginner.
+    await pass('a', 'pg-b3', 80);
+    await pass('a', 'pg-a2', 90);
+    await pass('b', 'pg-b3', 80);
+    await pass('b', 'pg-b7', 75);
+    expect(await order()).toEqual(['b', 'a']);
+  });
 
-    const board = await leaderboard(db, 50);
-    expect(board.map((r) => r.uid)).toEqual(['b', 'a']);
-    expect(board[0].completed).toBe(board[1].completed);
+  it('breaks a tie on counts with points at the highest level, not total points', async () => {
+    await player('topheavy');
+    await player('bigtotal');
+    await pass('topheavy', 'pg-b3', 95);
+    await pass('topheavy', 'pg-a2', 70);
+    await pass('bigtotal', 'pg-b3', 85);
+    await pass('bigtotal', 'pg-a2', 100); // more points overall, fewer where it counts
+    expect(await order()).toEqual(['topheavy', 'bigtotal']);
+  });
+
+  it('breaks a tie on points with fewer prompt characters', async () => {
+    await player('verbose');
+    await player('terse');
+    await pass('verbose', 'pg-a1', 90, 400);
+    await pass('terse', 'pg-a1', 90, 120);
+    expect(await order()).toEqual(['terse', 'verbose']);
+  });
+
+  it('breaks a tie on characters with fewer attempts', async () => {
+    await player('grinder');
+    await player('sharp');
+    await pass('grinder', 'pg-a1', 90, 100, 4);
+    await pass('sharp', 'pg-a1', 90, 100, 0);
+    const board = await leaderboard(db, 50, LEVELS);
+    expect(board.map((r) => r.uid)).toEqual(['sharp', 'grinder']);
+    expect(board.find((r) => r.uid === 'grinder')!.attempts).toBe(5);
+    expect(board.find((r) => r.uid === 'sharp')!.attempts).toBe(1);
+  });
+
+  // A pass served from the dedupe cache has no run of its own. It still took one.
+  it('counts a cached pass as one attempt, never zero', async () => {
+    await player('orig');
+    await player('copy');
+    await pass('orig', 'pg-a2', 100);
+    await exec(`INSERT INTO best_scores (uid, challenge_id, score, passed, submission_id, updated_at)
+                SELECT 'copy', challenge_id, score, 1, submission_id, updated_at FROM best_scores WHERE uid = 'orig'`);
+    expect((await leaderboard(db, 50, LEVELS)).find((r) => r.uid === 'copy')!.attempts).toBe(1);
+  });
+
+  it('gives every player a distinct rank, even when fully tied', async () => {
+    await player('x');
+    await player('y');
+    await pass('x', 'pg-a1', 90);
+    await pass('y', 'pg-a1', 90);
+    const board = await leaderboard(db, 50, LEVELS);
+    expect(board.map((r) => r.rank)).toEqual([1, 2]);
+  });
+});
+
+describe('who is on the board', () => {
+  it('leaves guests off — signing in is how a guest joins', async () => {
+    await player('named');
+    await guest('anon');
+    await pass('named', 'pg-a1', 80);
+    await pass('anon', 'pg-b3', 100);
+    expect(await order()).toEqual(['named']);
+  });
+
+  it('counts only passes, so an unfinished attempt does not rank', async () => {
+    await player('p');
+    await best('p', 'pg-a1', 60, 0);
+    expect(await order()).toEqual([]);
+  });
+
+  // A pass on something since withheld would rank a player on a card nobody sees.
+  it('ignores passes on challenges that are not shipped', async () => {
+    await player('p');
+    await pass('p', 'pg-withheld', 100);
+    expect(await order()).toEqual([]);
+  });
+
+  it('keeps a signed-in player who has no display name', async () => {
+    await exec(`INSERT INTO users (uid, is_anonymous) VALUES ('noname', 0)`);
+    await pass('noname', 'pg-a2', 100);
+    const [row] = await leaderboard(db, 50, LEVELS);
+    expect(row.uid).toBe('noname');
+    expect(row.displayName).toBeNull();
   });
 
   it('honours the limit', async () => {
-    for (const uid of ['a', 'b', 'c', 'd']) {
-      await player(uid);
-      await best(uid, 'pg-a1', 90, 1);
+    for (const u of ['a', 'b', 'c']) {
+      await player(u);
+      await pass(u, 'pg-a2', 90);
     }
-    expect((await leaderboard(db, 2)).length).toBe(2);
+    expect(await leaderboard(db, 2, LEVELS)).toHaveLength(2);
+    expect(await playerCount(db, LEVELS)).toBe(3);
   });
 
   it('returns an empty board rather than failing when nobody has played', async () => {
-    expect(await leaderboard(db, 50)).toEqual([]);
-  });
-
-  // Deleting someone from Firebase Auth leaves their D1 rows untouched — the two
-  // know nothing about each other — so their score stays on the board with no
-  // name attached. Seen in production: every user row so far has a null name,
-  // because the Worker sees the token before Firebase fills in the profile.
-  it('keeps a score whose user has no display name', async () => {
-    await exec("INSERT INTO users (uid, display_name, is_anonymous) VALUES ('nameless', NULL, 0)");
-    await best('nameless', 'pg-a1', 88, 1);
-    const board = await leaderboard(db, 50);
-    expect(board).toHaveLength(1);
-    expect(board[0].displayName).toBeNull();
-    expect(board[0].completed).toBe(1);
+    expect(await leaderboard(db, 50, LEVELS)).toEqual([]);
+    expect(await leaderboard(db, 50, {})).toEqual([]);
   });
 });
 
 describe('your own rank', () => {
-  beforeEach(async () => {
-    for (const [uid, completed] of [['first', 3], ['second', 2], ['third', 1]] as const) {
-      await player(uid);
-      for (let i = 0; i < completed; i++) await best(uid, `pg-${i}`, 90, 1);
+  it('finds someone outside the top of the board, with the same rank the board gives', async () => {
+    for (const [u, sc] of [['a', 99], ['b', 98], ['c', 97]] as const) {
+      await player(u);
+      await pass(u, 'pg-a2', sc);
     }
+    const { board, you, total } = await boardFor(db, LEVELS, 2, 'c');
+    expect(board.map((r) => r.uid)).toEqual(['a', 'b']);
+    expect(you).toMatchObject({ uid: 'c', rank: 3 });
+    expect(total).toBe(3);
+    expect((await rankFor(db, 'c', LEVELS))!.rank).toBe(3);
   });
 
-  it('gives the same rank the board would', async () => {
-    const board = await leaderboard(db, 50);
-    for (const row of board) {
-      expect((await rankFor(db, row.uid))?.rank).toBe(row.rank);
-    }
+  it('has no rank for a guest, however well they did', async () => {
+    await guest('anon');
+    await pass('anon', 'pg-b3', 100);
+    expect((await boardFor(db, LEVELS, 10, 'anon')).you).toBeNull();
   });
 
-  it('finds someone outside the top of the board', async () => {
-    const you = await rankFor(db, 'third');
-    expect(you?.rank).toBe(3);
-    expect(you?.completed).toBe(1);
-  });
-
-  it('returns null for a user who has never scored', async () => {
-    expect(await rankFor(db, 'nobody')).toBeNull();
-  });
-
-  it('does not give two tied users the same rank', async () => {
-    await player('tieA');
-    await player('tieB');
-    await best('tieA', 'pg-x', 50, 1);
-    await best('tieB', 'pg-x', 50, 1);
-    const a = await rankFor(db, 'tieA');
-    const b = await rankFor(db, 'tieB');
-    expect(a?.rank).not.toBe(b?.rank);
+  it('has no rank for someone who has not passed anything', async () => {
+    await player('p');
+    expect(await rankFor(db, 'p', LEVELS)).toBeNull();
   });
 });
 
@@ -180,7 +252,7 @@ describe('what may be banked', () => {
 
   it('banks an eligible run', async () => {
     expect(await upsertBestScore(db, 'u', result())).toBe(true);
-    expect((await leaderboard(db, 50))[0].totalScore).toBe(90);
+    expect((await leaderboard(db, 50, LEVELS))[0].totalScore).toBe(90);
   });
 
   // The rule the whole errored-vs-failed distinction exists to protect: an
@@ -189,22 +261,22 @@ describe('what may be banked', () => {
     expect(await upsertBestScore(db, 'u', result({ leaderboardEligible: false, score: 0 }))).toBe(
       false,
     );
-    expect(await leaderboard(db, 50)).toEqual([]);
+    expect(await leaderboard(db, 50, LEVELS)).toEqual([]);
   });
 
   it('keeps the better of two scores, whichever order they arrive in', async () => {
     await upsertBestScore(db, 'u', result({ score: 80, submissionId: 's1' }));
     await upsertBestScore(db, 'u', result({ score: 95, submissionId: 's2' }));
-    expect((await leaderboard(db, 50))[0].totalScore).toBe(95);
+    expect((await leaderboard(db, 50, LEVELS))[0].totalScore).toBe(95);
 
     await upsertBestScore(db, 'u', result({ score: 60, submissionId: 's3' }));
-    expect((await leaderboard(db, 50))[0].totalScore).toBe(95);
+    expect((await leaderboard(db, 50, LEVELS))[0].totalScore).toBe(95);
   });
 
   it('does not let a later worse run un-complete a challenge', async () => {
     await upsertBestScore(db, 'u', result({ score: 95, passed: true }));
     await upsertBestScore(db, 'u', result({ score: 10, passed: false }));
-    expect((await leaderboard(db, 50))[0].completed).toBe(1);
+    expect((await leaderboard(db, 50, LEVELS))[0].completed).toBe(1);
   });
 });
 
@@ -271,12 +343,12 @@ describe('per-challenge progress, for the cards', () => {
     expect((await progressDetailFor(db, 'p')).map((r) => r.challengeId)).toEqual(['pg-a1']);
   });
 
-  it('counts every player on the board, passed or not', async () => {
+  it('counts the players on the board — signed in, with at least one pass', async () => {
     await player('a');
     await player('b');
     await player('c');
     await best('a', 'pg-a1', 80, 1);
     await best('b', 'pg-a1', 30, 0);
-    expect(await playerCount(db)).toBe(2);
+    expect(await playerCount(db, LEVELS)).toBe(1);
   });
 });

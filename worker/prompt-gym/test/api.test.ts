@@ -209,14 +209,6 @@ describe('POST /api/run with a stubbed provider', () => {
     vi.unstubAllGlobals();
   });
 
-  it('marks a run non-eligible when a grader could not run', async () => {
-    // pg-c5 carries `similar` assertions, which stay pending without an embedder.
-    vi.stubGlobal('fetch', stub('a paraphrase'));
-    const res = await worker.fetch(post({ challengeId: 'pg-c5', prompt: 'rewrite it' }), env);
-    const body = (await res.json()) as { leaderboardEligible: boolean };
-    expect(body.leaderboardEligible).toBe(false);
-    vi.unstubAllGlobals();
-  });
 
   it('never echoes a player-supplied key back in the response', async () => {
     vi.stubGlobal('fetch', stub('billing'));

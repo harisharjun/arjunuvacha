@@ -68,3 +68,16 @@ export function withheldReason(id: string): string | undefined {
 export function findChallenge(id: string): Challenge | undefined {
   return challenges.find((c) => c.id === id);
 }
+
+/** Playable without signing in. Everything else sits behind the sign-in wall —
+ *  enforced by the Worker on /api/run, not just greyed out in the page.
+ *
+ *  One Beginner, one Easy, one Intermediate: enough to learn what the game is,
+ *  and a reason to sign in for the rest. */
+export const FREE_TO_PLAY = new Set(['pg-a2', 'pg-a3', 'pg-b7']);
+
+/** Difficulty of every shipped challenge, for the leaderboard's ordering. Built
+ *  from the shipped list, so a withheld challenge can never earn rank. */
+export const levels: Record<string, number> = Object.fromEntries(
+  challenges.map((c) => [c.id, c.difficulty ?? 1]),
+);

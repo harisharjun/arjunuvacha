@@ -1,106 +1,88 @@
-import { describe, it, expect } from 'vitest';
-import { upsertUser, upsertBestScore, leaderboard, progressFor } from '../src/db/queries';
-import type { RunResponse } from '../src/run';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { Miniflare } from 'miniflare';
+import schemaSql from '../migrations/0001_initial.sql?raw';
+import { upsertUser, leaderboard, progressDetailFor } from '../src/db/queries';
 
 /** The linking invariant, tested at the layer that actually has to hold it.
  *
  *  Firebase's `linkWithPopup` keeps the same uid, so nothing needs to migrate —
- *  the guest's rows are already the signed-in user's rows. What can still go
- *  wrong is on our side: the profile that decides how they are NAMED is written
- *  in a different place from the scores, and if it never gets refreshed the
- *  board keeps calling them a guest after they have signed in. */
+ *  the guest's rows are already the signed-in user's rows. What can go wrong is
+ *  on our side: the profile that decides how they are named, and whether they are
+ *  ranked at all, is written separately from the scores. A real D1 via Miniflare,
+ *  because a hand-written fake only replays what I assumed the SQL does. */
+let mf: Miniflare;
+let db: D1Database;
 
-interface Row { [k: string]: unknown }
+const SCHEMA = schemaSql
+  .split(';')
+  .map((s: string) => s.trim())
+  .filter((s: string) => s.length > 0 && !s.split('\n').every((l: string) => l.trim().startsWith('--')));
 
-/** A small stand-in for D1 covering the three statements these queries use.
- *  Real enough to catch an ON CONFLICT that overwrites what it should keep. */
-function fakeDb() {
-  const users = new Map<string, Row>();
-  const best = new Map<string, Row>();
+beforeEach(async () => {
+  mf = new Miniflare({
+    modules: true,
+    script: 'export default { fetch() { return new Response("ok"); } };',
+    d1Databases: { DB: ':memory:' },
+  });
+  db = (await mf.getD1Database('DB')) as unknown as D1Database;
+  for (const statement of SCHEMA) await db.prepare(statement).run();
+});
 
-  const db = {
-    prepare(sql: string) {
-      return {
-        bind(...args: unknown[]) {
-          return {
-            async run() {
-              if (sql.includes('INSERT INTO users')) {
-                const [uid, name, avatar, anon] = args as [string, string | null, string | null, number];
-                const prev = users.get(uid);
-                users.set(uid, {
-                  uid,
-                  // COALESCE(excluded, existing) — a null must not erase a name.
-                  display_name: name ?? prev?.display_name ?? null,
-                  avatar_url: avatar ?? prev?.avatar_url ?? null,
-                  is_anonymous: anon,
-                });
-              }
-              return {};
-            },
-            async first() {
-              return null;
-            },
-            async all() {
-              if (sql.includes('FROM totals')) {
-                const rows = [...best.values()].map((b) => {
-                  const u = users.get(b.uid as string);
-                  return {
-                    uid: b.uid,
-                    completed: 1,
-                    total_score: b.score,
-                    display_name: u?.display_name ?? null,
-                    is_anonymous: u?.is_anonymous ?? null,
-                  };
-                });
-                return { results: rows };
-              }
-              return { results: [] };
-            },
-          };
-        },
-      };
-    },
-  } as unknown as D1Database;
+afterEach(async () => {
+  await mf.dispose();
+});
 
-  return { db, users, best, seedScore: (uid: string, score: number) => best.set(uid, { uid, score }) };
-}
+const LEVELS = { 'pg-a2': 1 };
+const UID = 'firebase-uid-unchanged-by-linking';
 
-const GUEST_UID = 'firebase-uid-unchanged-by-linking';
+const guestPasses = async () => {
+  await upsertUser(db, { uid: UID, displayName: null, avatarUrl: null, isAnonymous: true });
+  await db
+    .prepare(
+      `INSERT INTO submissions (id, uid, challenge_id, exec_model, prompt_text, prompt_chars, score,
+         passed, leaderboard_eligible, grader_results_json, prompt_hash)
+       VALUES ('s1', ?, 'pg-a2', 'm', 'p', 40, 88, 1, 1, '{}', 'h1')`,
+    )
+    .bind(UID)
+    .run();
+  await db
+    .prepare(`INSERT INTO best_scores (uid, challenge_id, score, passed, submission_id) VALUES (?, 'pg-a2', 88, 1, 's1')`)
+    .bind(UID)
+    .run();
+};
+
+const link = () =>
+  upsertUser(db, { uid: UID, displayName: 'Arjun', avatarUrl: 'https://x/p.jpg', isAnonymous: false });
 
 describe('a guest score surviving Google account linking', () => {
-  it('keeps the score, because linking never changes the uid', async () => {
-    const { db, seedScore } = fakeDb();
-    await upsertUser(db, { uid: GUEST_UID, displayName: null, avatarUrl: null, isAnonymous: true });
-    seedScore(GUEST_UID, 88);
-
-    // Linking: same uid, now named and no longer anonymous.
-    await upsertUser(db, { uid: GUEST_UID, displayName: 'Arjun', avatarUrl: 'https://x/p.jpg', isAnonymous: false });
-
-    const board = await leaderboard(db, 10);
-    expect(board).toHaveLength(1);
-    expect(board[0].uid).toBe(GUEST_UID);
-    expect(board[0].totalScore).toBe(88);
+  it('keeps the progress, because linking never changes the uid', async () => {
+    await guestPasses();
+    await link();
+    const [p] = await progressDetailFor(db, UID);
+    expect(p).toMatchObject({ challengeId: 'pg-a2', bestScore: 88, passed: true });
   });
 
-  it('shows their real name once linked, not "player 4f2a1c"', async () => {
-    const { db, seedScore } = fakeDb();
-    await upsertUser(db, { uid: GUEST_UID, displayName: null, avatarUrl: null, isAnonymous: true });
-    seedScore(GUEST_UID, 88);
-    expect((await leaderboard(db, 10))[0].displayName).toBeNull();
+  // Guests are not ranked; linking is exactly the moment they join the board.
+  it('puts the player on the board once linked, under their real name and photo', async () => {
+    await guestPasses();
+    expect(await leaderboard(db, 10, LEVELS)).toEqual([]);
 
-    await upsertUser(db, { uid: GUEST_UID, displayName: 'Arjun', avatarUrl: null, isAnonymous: false });
-    expect((await leaderboard(db, 10))[0].displayName).toBe('Arjun');
+    await link();
+    const [row] = await leaderboard(db, 10, LEVELS);
+    expect(row).toMatchObject({ uid: UID, displayName: 'Arjun', avatarUrl: 'https://x/p.jpg', totalScore: 88 });
   });
 
-  // The ON CONFLICT uses COALESCE on the name but not on is_anonymous, which is
-  // deliberate — a later anonymous session must not silently un-name an account,
-  // but the anonymous FLAG does have to be able to flip.
-  it('flips the anonymous flag while keeping a name already stored', async () => {
-    const { db, users } = fakeDb();
-    await upsertUser(db, { uid: GUEST_UID, displayName: 'Arjun', avatarUrl: null, isAnonymous: false });
-    await upsertUser(db, { uid: GUEST_UID, displayName: null, avatarUrl: null, isAnonymous: false });
-
-    expect(users.get(GUEST_UID)?.display_name).toBe('Arjun');
-    expect(users.get(GUEST_UID)?.is_anonymous).toBe(0);
+  // COALESCE on the name, not on the flag: a later request without a name must
+  // not un-name the account, but the anonymous flag does have to flip.
+  it('keeps a stored name when a later update carries none', async () => {
+    await link();
+    await upsertUser(db, { uid: UID, displayName: null, avatarUrl: null, isAnonymous: false });
+    const [row] = (
+      await db.prepare('SELECT display_name, is_anonymous FROM users WHERE uid = ?').bind(UID).all<{
+        display_name: string;
+        is_anonymous: number;
+      }>()
+    ).results;
+    expect(row).toEqual({ display_name: 'Arjun', is_anonymous: 0 });
   });
 });

@@ -41,6 +41,18 @@ function isJsonScore(text: string, schema: unknown): number {
   return validateJson(parsed, schema as JsonSchema) ? 1 : 0;
 }
 
+/** A validator body threw while reading the player's output — almost always
+ *  `JSON.parse` meeting prose or a code fence.
+ *
+ *  That is the player's output failing the check, not our infrastructure failing
+ *  to run it, so it is a plain fail: it scores 0, it is never `errored`, and it
+ *  never costs the run its leaderboard eligibility. It used to be recorded as an
+ *  error, which told a player whose prompt emitted ```json fences that "a grader
+ *  could not run — that is our side, not your prompt". Configuration faults — a
+ *  missing ref, an unknown validator, an unknown assertion type — stay errors,
+ *  because those genuinely are ours. */
+class OutputRejected extends Error {}
+
 function javascriptScore(
   assertion: Assertion,
   output: string,
@@ -56,7 +68,11 @@ function javascriptScore(
   if (typeof fn !== 'function') {
     throw new Error(`Validator "${assertion.ref}" is not in the registry`);
   }
-  return fn(output, { vars: { input }, args: assertion.args ?? [] }) === true ? 1 : 0;
+  try {
+    return fn(output, { vars: { input }, args: assertion.args ?? [] }) === true ? 1 : 0;
+  } catch (err) {
+    throw new OutputRejected(err instanceof Error ? err.message : String(err));
+  }
 }
 
 function rawScore(
@@ -121,6 +137,10 @@ export function evaluateAssertion(
   try {
     score = rawScore(type, assertion, output, registry, input);
   } catch (err) {
+    // The player's output broke the validator: a fail on the merits, not an error.
+    // Still never negated — `not-` must not turn an unreadable output into a pass.
+    if (err instanceof OutputRejected) return { ...base, score: 0, passed: false };
+
     // An assertion that could not be evaluated scores 0 and says why. Negation is
     // deliberately not applied — a broken assertion must never invert into a pass.
     return {

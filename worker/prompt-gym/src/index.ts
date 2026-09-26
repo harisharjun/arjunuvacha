@@ -1,17 +1,17 @@
-import { challenges, findChallenge } from './challenges';
+import { challenges, findChallenge, FREE_TO_PLAY, levels } from './challenges';
 import { publicChallenge } from './grading/reveal';
 import { EXEC_MODELS, runChallenge } from './run';
 import { InvalidRequestError, ProviderError } from './providers/errors';
 import {
   findByHash,
   insertSubmission,
-  leaderboard,
-  playerCount,
+  boardFor,
   progressDetailFor,
   promptHash,
   publicResult,
-  rankFor,
   setShowPrompt,
+  sharedResults,
+  type Viewer,
   submissionOwner,
   upsertBestScore,
   upsertUser,
@@ -167,6 +167,15 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
     return Response.json({ error: 'invalid_token', message: authError }, { status: 401, headers: cors });
   }
 
+  // The sign-in wall. Enforced here, not only greyed out in the page, and before
+  // the dedupe cache so a cached result is never a way around it.
+  if (!FREE_TO_PLAY.has(challenge.id) && (!user || user.isAnonymous)) {
+    return Response.json(
+      { error: 'sign_in_required', message: 'Sign in to play this challenge.' },
+      { status: 401, headers: cors },
+    );
+  }
+
   const hash = await promptHash(challengeId, prompt, execModel);
   if (env.DB) {
     try {
@@ -318,6 +327,17 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
   }
 }
 
+/** Who is asking, and what they have passed — the prompt gate needs both. */
+async function viewerFor(request: Request, env: Env): Promise<Viewer | undefined> {
+  if (!env.DB) return undefined;
+  const { user } = await userFromRequest(request, env.FIREBASE_PROJECT_ID);
+  if (!user) return undefined;
+  const passed = new Set(
+    (await progressDetailFor(env.DB, user.uid)).filter((p) => p.passed).map((p) => p.challengeId),
+  );
+  return { uid: user.uid, passed };
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const cors = corsHeaders(request.headers.get('Origin'));
@@ -346,7 +366,10 @@ export default {
     // rubrics and validator names never leave the Worker.
     if (pathname === '/api/challenges' && request.method === 'GET') {
       return Response.json(
-        { challenges: challenges.map(publicChallenge), models: EXEC_MODELS },
+        {
+          challenges: challenges.map((c) => ({ ...publicChallenge(c), freeToPlay: FREE_TO_PLAY.has(c.id) })),
+          models: EXEC_MODELS,
+        },
         { headers: cors },
       );
     }
@@ -361,7 +384,7 @@ export default {
     const resultMatch = /^\/api\/result\/([A-Za-z0-9-]{8,64})$/.exec(pathname);
     if (resultMatch && request.method === 'GET') {
       if (!env.DB) return Response.json({ error: 'no_database' }, { status: 503, headers: cors });
-      const result = await publicResult(env.DB, resultMatch[1]);
+      const result = await publicResult(env.DB, resultMatch[1], await viewerFor(request, env));
       if (!result) return Response.json({ error: 'not_found' }, { status: 404, headers: cors });
       return Response.json(result, { headers: cors });
     }
@@ -371,7 +394,10 @@ export default {
       if (!env.DB) return Response.json({ error: 'no_database' }, { status: 503, headers: cors });
 
       const { user } = await userFromRequest(request, env.FIREBASE_PROJECT_ID);
-      if (!user) return Response.json({ error: 'sign_in_required' }, { status: 401, headers: cors });
+      // Sharing puts a name and a photo in a public gallery, so a guest cannot.
+      if (!user || user.isAnonymous) {
+        return Response.json({ error: 'sign_in_required' }, { status: 401, headers: cors });
+      }
 
       const submissionId = visibilityMatch[1];
       const owner = await submissionOwner(env.DB, submissionId);
@@ -390,6 +416,30 @@ export default {
       const showPrompt = body.showPrompt === true;
       await setShowPrompt(env.DB, submissionId, showPrompt);
       return Response.json({ ok: true, showPrompt }, { headers: cors });
+    }
+
+    // The shared-results gallery. Public: anyone may browse who shared what and
+    // how it scored. Prompt text is gated per viewer inside the query.
+    if (pathname === '/api/shares' && request.method === 'GET') {
+      if (!env.DB) return Response.json({ error: 'no_database' }, { status: 503, headers: cors });
+      const params = new URL(request.url).searchParams;
+      const difficulty = Number(params.get('difficulty'));
+      const challengeIds = challenges
+        .filter((c) => !Number.isFinite(difficulty) || difficulty < 1 || c.difficulty === difficulty)
+        .map((c) => c.id);
+      try {
+        const viewer = await viewerFor(request, env);
+        const shares = await sharedResults(env.DB, {
+          challengeIds,
+          sort: params.get('sort') === 'score' ? 'score' : 'oldest',
+          mineOnly: params.get('mine') === '1',
+          viewer,
+          limit: 200,
+        });
+        return Response.json({ shares }, { headers: cors });
+      } catch {
+        return Response.json({ error: 'shares_unavailable' }, { status: 503, headers: cors });
+      }
     }
 
     if (pathname === '/api/leaderboard' && request.method === 'GET') {
@@ -426,15 +476,13 @@ export default {
       }
 
       try {
-        const board = await leaderboard(env.DB, limit);
-        // Someone outside the top N still gets to see where they stand, so the
-        // board is useful rather than just aspirational.
-        const inBoard = user ? board.some((row) => row.uid === user.uid) : false;
-        const you = user && !inBoard ? await rankFor(env.DB, user.uid) : null;
+        // Guests are not ranked (see ranking.ts), so a guest's `you` is null and the
+        // page shows the nudge to sign in instead of a rank.
+        const { board, you, total } = await boardFor(env.DB, levels, limit, user?.uid);
 
         // Only shipped challenges count towards progress. A withheld challenge a
-        // player banked before it was withheld would otherwise inflate "7 of 12"
-        // with a card they can no longer see.
+        // player banked before it was withheld would otherwise show as progress on
+        // a card they can no longer see.
         const shipped = new Set(challenges.map((c) => c.id));
         const progress = user
           ? (await progressDetailFor(env.DB, user.uid)).filter((p) => shipped.has(p.challengeId))
@@ -443,10 +491,10 @@ export default {
         return Response.json(
           {
             leaderboard: board,
-            you: you ?? (user ? (board.find((r) => r.uid === user.uid) ?? null) : null),
+            you,
             completed: progress.filter((p) => p.passed).map((p) => p.challengeId),
             progress,
-            totalPlayers: await playerCount(env.DB),
+            totalPlayers: total,
             totalChallenges: challenges.length,
           },
           { headers: cors },

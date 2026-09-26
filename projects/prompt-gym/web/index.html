@@ -77,8 +77,18 @@
         <div class="hero">
           <h1>Practise prompt engineering</h1>
           <p class="lede">Write a prompt, run it against hidden test cases, and find out exactly where it breaks.</p>
-          <div id="progress-strip" class="progress" hidden></div>
+          <!-- Where you stand: your rank, or the nudge to get one. -->
+          <div id="standing" class="standing" hidden></div>
         </div>
+
+        <div class="list-toolbar">
+          <div class="segmented" role="group" aria-label="Show challenges">
+            <button id="filter-all" class="seg active" type="button" aria-pressed="true">All</button>
+            <button id="filter-unsolved" class="seg" type="button" aria-pressed="false">Unsolved</button>
+          </div>
+          <a href="/prompt-gym/shared" id="gallery-link" class="text-btn gallery-link">Browse shared prompts <span aria-hidden="true">→</span></a>
+        </div>
+
         <p id="list-status" class="muted">Loading challenges…</p>
         <ul id="challenge-list" class="cards"></ul>
       </section>
@@ -109,7 +119,10 @@
         <div class="editor">
           <div class="editor-head">
             <label for="prompt" id="prompt-label">Your prompt</label>
-            <span id="prompt-hint" class="muted"></span>
+            <span class="editor-head-right">
+              <span id="prompt-hint" class="muted"></span>
+              <button id="prompt-reset" class="text-btn" type="button" hidden>Reset to the original</button>
+            </span>
           </div>
           <textarea id="prompt" rows="10" spellcheck="false"
             placeholder="Write the prompt that solves the task above…"></textarea>
@@ -128,10 +141,77 @@
 
       <!-- ─────────────────────────────── a shared result -->
       <section id="result-view" hidden>
-        <button id="result-back" class="back-link" type="button">← All challenges</button>
+        <div class="view-nav">
+          <button id="result-back" class="back-link" type="button">← All challenges</button>
+          <a href="/prompt-gym/shared" class="text-btn view-nav-link">All shared prompts →</a>
+        </div>
         <h1>Shared result</h1>
         <p id="result-status" class="muted">Loading…</p>
         <div id="result-card"></div>
+      </section>
+
+      <!-- ─────────────────────────────── the gallery of shared results -->
+      <section id="gallery-view" hidden>
+        <button id="gallery-back" class="back-link" type="button">← All challenges</button>
+        <h1>Shared prompts</h1>
+        <p class="lede">Results other players chose to share. A prompt unlocks once you've passed that challenge yourself — so nobody can copy their way up the leaderboard.</p>
+
+        <div class="gallery-controls">
+          <label class="control">
+            <span>Difficulty</span>
+            <select id="gallery-difficulty">
+              <option value="">All levels</option>
+              <option value="1">Beginner</option>
+              <option value="2">Easy</option>
+              <option value="3">Intermediate</option>
+              <option value="4">Hard</option>
+              <option value="5">Expert</option>
+            </select>
+          </label>
+          <label class="control">
+            <span>Sort by</span>
+            <select id="gallery-sort">
+              <option value="oldest">Oldest shares first</option>
+              <option value="score">Highest score</option>
+            </select>
+          </label>
+          <label id="gallery-mine-wrap" class="control-check" hidden>
+            <input type="checkbox" id="gallery-mine"> My shares
+          </label>
+        </div>
+
+        <p id="gallery-status" class="muted">Loading…</p>
+        <ul id="gallery-list" class="shares"></ul>
+      </section>
+
+      <!-- ─────────────────────────────── terms -->
+      <section id="terms-view" hidden>
+        <button id="terms-back" class="back-link" type="button">← All challenges</button>
+        <article class="prose">
+          <h1>Terms of play</h1>
+          <p class="muted">Last updated 26 September 2026</p>
+
+          <h2>A recreational project</h2>
+          <p>PromptGym is a personal, non-commercial project by Arjun Uvacha, built for learning and for fun. It comes with no warranty: scores, rankings and the site itself may change, reset or disappear at any time.</p>
+
+          <h2>What is shown publicly</h2>
+          <p>If you sign in with Google, <strong>your Google display name and profile picture are shown on the public leaderboard</strong>, and next to any result you choose to share.</p>
+          <p>Results are private unless you share them. A shared result shows your name, photo, score and the date it was run. Its prompt is readable only by players who have passed that challenge themselves. You can unshare at any time.</p>
+
+          <h2>What is stored</h2>
+          <ul>
+            <li>An account id, and — once you sign in — your Google display name and profile picture URL.</li>
+            <li>The prompts you run, their scores, and when you ran them.</li>
+          </ul>
+          <p>If you bring your own Groq key, it stays in your browser. It is sent with each run, used for that run, and never stored or logged on our side.</p>
+          <p>Prompts are sent to Groq to be run and graded, and to Cloudflare to measure similarity. Don't put anything personal or confidential in a prompt.</p>
+
+          <h2>Your consent</h2>
+          <p>By playing — signed in or as a guest — you agree to these terms. If you don't, please don't use the site.</p>
+
+          <h2>Questions</h2>
+          <p>Reach Arjun through <a href="https://arjunuvacha.com">arjunuvacha.com</a>.</p>
+        </article>
       </section>
     </main>
 
@@ -140,11 +220,24 @@
       <section class="panel board-panel" aria-labelledby="board-title">
         <div class="panel-head">
           <h2 id="board-title">Leaderboard</h2>
-          <span class="muted">top 10</span>
+          <span class="tip">
+            <button class="tip-btn" type="button" aria-describedby="rank-tip" aria-label="How ranking works">i</button>
+            <span id="rank-tip" role="tooltip" class="tip-body">
+              <strong>How ranking works</strong>
+              <ol>
+                <li>Most challenges passed at the hardest level, then the next level down — one Hard beats any number of Easy.</li>
+                <li>Tied? Most points at the hardest level.</li>
+                <li>Still tied? Fewest prompt characters in total.</li>
+                <li>Still tied? Fewest attempts.</li>
+              </ol>
+              <span>Only signed-in players are ranked.</span>
+            </span>
+          </span>
         </div>
         <p id="board-status" class="muted">Loading…</p>
         <ol id="board-top" class="board-list"></ol>
         <div id="board-you"></div>
+        <div id="board-guest" class="board-guest" hidden></div>
         <button id="board-more" class="text-btn board-more" type="button" hidden></button>
       </section>
 
@@ -181,6 +274,10 @@
     </aside>
   </div>
 
+  <footer class="site-footer">
+    <span>PromptGym is a recreational project. By playing you agree to the <a href="/prompt-gym/terms" id="terms-link">terms</a>.</span>
+  </footer>
+
   <!-- ─────────────────────────────── side panels -->
   <div id="backdrop" class="backdrop" hidden></div>
 
@@ -198,7 +295,7 @@
       <button class="drawer-close" type="button" data-close aria-label="Close">×</button>
     </div>
     <div class="drawer-body">
-      <p class="muted">Ranked by challenges passed. Ties go to the higher total score.</p>
+      <p class="muted">Ranked by passes at the hardest level first, then points, then shortest prompts, then fewest attempts. Only signed-in players are ranked.</p>
       <p id="full-board-status" class="muted">Loading…</p>
       <ol id="full-board" class="board-list board-list-full"></ol>
     </div>
