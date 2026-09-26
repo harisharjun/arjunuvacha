@@ -25,6 +25,7 @@ import {
   runCost,
   type CounterStore,
 } from './budget';
+import { bindingEmbedder, type AiBinding } from './providers/embeddings';
 import type { RunResponse } from './run';
 
 export interface Env {
@@ -36,6 +37,9 @@ export interface Env {
   DB?: D1Database;
   /** Shared-budget and per-IP rate-limit counters. See `budget.ts`. */
   BUDGET?: KVNamespace;
+  /** Workers AI, for the embeddings the `similar` assertions need. Without it
+   *  those assertions stay pending and the run is not leaderboard-eligible. */
+  AI?: AiBinding;
   BUDGET_TOKENS_PER_DAY?: string;
   BUDGET_TOKENS_PER_MINUTE?: string;
   RATE_LIMIT_PER_MINUTE?: string;
@@ -254,6 +258,7 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
       model: execModel,
       apiKey,
       gateway: { account: env.AIG_ACCOUNT, gateway: env.AIG_GATEWAY, token: env.AIG_TOKEN },
+      embedder: env.AI ? bindingEmbedder(env.AI) : undefined,
     });
 
     // Groq's own 429 leaves the player exactly where an exhausted shared budget

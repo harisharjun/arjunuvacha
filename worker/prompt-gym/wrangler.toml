@@ -58,4 +58,21 @@ migrations_dir = "migrations"
 # binding = "BUDGET"
 # id = "<paste the id from the command above>"
 
-# Still to bind: Workers AI for the embeddings the `similar` assertions need.
+# Workers AI, for the embeddings behind the `similar` assertions in pg-c1 and
+# pg-c5. Groq has no embeddings endpoint, so these go to Cloudflare instead.
+#
+# The binding needs no id and no token — unlike KV above, this one is complete as
+# written. Without it those assertions stay pending and both challenges correctly
+# report `leaderboardEligible: false`.
+#
+# Pinned model: @cf/baai/bge-base-en-v1.5 (see src/providers/embeddings.ts).
+# Changing it changes every similarity score, and so every historical grade a new
+# one would be compared against.
+[ai]
+binding = "AI"
+
+# For `npm run try -- <id> --live` on the laptop there is no binding, so the same
+# embeddings go over the REST API. Add to .dev.vars (gitignored):
+#   CF_ACCOUNT_ID=<your Cloudflare account id>
+#   CF_API_TOKEN=<an API token with Workers AI read>
+# Without them --live still works; `similar` just stays pending.

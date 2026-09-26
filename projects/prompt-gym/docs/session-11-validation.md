@@ -1,104 +1,113 @@
 # Session 11 — challenge validation pass
 
-**Run 26 Sep 2026** against the real Groq API, on `openai/gpt-oss-20b` (the
-default execution model) with `openai/gpt-oss-120b` as a second opinion on the
-six that did not score full marks. Reference and strawman prompts come from
-`challenges/prompts/`, promoted out of the YAML comments in this same pass.
+**Run 26 Sep 2026** against the real Groq API on `openai/gpt-oss-20b`, the default
+execution model, with `gpt-oss-120b` as a second opinion where the small model
+fell short. Reference and strawman prompts live in `challenges/prompts/`,
+promoted out of the YAML comments in this pass.
 
-Before this, only **pg-a2** had ever been run against a real model. All twelve
-now have been.
+Before this, only **pg-a2** had ever been run against a real model.
+
+## How to read the numbers
+
+`npm run try` has two grading paths, and the difference matters more than any
+single score:
+
+- **default** grades with `gradeChallenge`, the pure engine. It makes no judge
+  call, so every `llm-rubric` and `similar` assertion errors and scores zero. On
+  a challenge that has them the total is a **floor, not a score**.
+- **`--live`** grades through `runChallenge`, exactly as the deployed Worker
+  does. Judge calls included; `similar` runs if an embedder is configured, and
+  is excluded from scoring (not zeroed) if not.
+
+The `--live` flag was added in this pass. Three challenges that looked broken
+were only ever being under-measured.
 
 ## Results
 
-| challenge | ref (20b) | strawman | gap | ref (120b) | unmeasured | verdict |
-|---|---|---|---|---|---|---|
-| pg-a1 | 100 | 19 | +81 | — | — | good |
-| pg-a11 | 100 | 18 | +82 | — | — | good |
-| pg-a2 | 100 | 3 | +97 | — | — | good |
-| pg-a3 | 100 | 13 | +87 | — | — | good |
-| pg-b1 | 80 | 0 | +80 | 100 | — | good |
-| pg-b3 | 100 | 62 | +38 | — | — | **weak strawman** |
-| pg-b7 | 100 | 0 | +100 | — | — | good |
-| pg-c1 | 42 | 52 | -10 | 52 | 40% | **blocked** — inverted |
-| pg-c5 | 67 | 9 | +58 | 82 | 18% | partial |
-| pg-d2 | 59 | 41 | +18 | 59 | 40% | partial |
-| pg-e4 | 65 | 52 | +13 | 52 | 34% | partial |
-| pg-f1 | 62 | 0 | +62 | 71 | 16% | partial |
-
-"Unmeasured" is the fraction of each challenge's assertion weight that `npm run
-try` cannot score. The harness calls `gradeChallenge`, the pure engine — it never
-makes judge calls, so every `llm-rubric` and `similar` assertion comes back
-`ERRORED (Unknown assertion type)` and scores zero. Those totals are therefore
-floors, not scores, and the five marked *partial* have to be judged on their
-per-metric breakdown instead.
-
-## The seven that are ready
-
-pg-a1, pg-a11, pg-a2, pg-a3, pg-b1, pg-b7 all separate cleanly — reference at or
-near 100, strawman between 0 and 19. Their graders discriminate and nothing is
-unmeasured.
-
-**pg-b1 is model-sensitive.** The reference scores 80 on 20b and 100 on 120b;
-t1 fails `b1Arithmetic` and `b1CleanThreeLine` on the small model only. It still
-clears the 70% threshold on the default, so it ships, but it is the one challenge
-where the default model is visibly working harder.
-
-## Needs a decision
-
-**pg-c1 — blocked, and currently inverted.** Reference 42, strawman 52. The four
-`similar` assertions carry the `faithfulness` metric, which is 40% of the weight
-and entirely unmeasured; what remains is `novelty`, where a loose paraphrase
-beats a faithful one by construction (57% vs 79%). This is not evidence the
-challenge is broken — it is evidence it cannot be validated at all until Workers
-AI embeddings are wired up. **Do not ship pg-c1 until then**, or ship it flagged
-non-leaderboard as it already is.
-
-**pg-b3 — the strawman is too generous.** Reference 100, strawman 62 against a
-≤40 target. The strawman still fails (threshold 70%), so the challenge works, but
-"Remove any personal information from this text" scores 100% on both
-`preservation` and `over-redaction` without trying. Only the exact
-`[PHONE]`/`[EMAIL]`/`[ID]` token format and one leak on t4 separate them. Either
-accept the narrower gap or make t1/t2 depend less on the literal token strings.
-
-**pg-e4 — the big model does worse.** 65 on 20b, 52 on 120b. On 120b t1 fails
-`discipline`: it asks a clarifying question where the reference prompt says to
-just do the work. Worth a look, though the default model handles it.
-
-**pg-f1 — `triage` only reaches 50% even for the reference.** Schema and format
-are perfect and the strawman scores 0, so it discriminates, but half the triage
-signal is being missed on the default model.
-
-## The four strawmen I wrote
-
-pg-a11, pg-b1, pg-b7 and pg-c1 had a reference in the YAML but no strawman. The
-ones in `challenges/prompts/*.strawman.txt` for those four are mine, not Arjun's,
-and nobody has agreed they are the right baseline. Three of them produce clean
-separation (18, 0, 0). The pg-c1 one is the inverted case discussed above.
-
-## Golf par, re-derived
-
-`estimateTokens` is `ceil(trimmed_chars / 4)`. Measured against the reference
-prompts:
-
-| variant | parent | was | now | reference |
+| challenge | reference | strawman | gap | notes |
 |---|---|---|---|---|
-| pg-g1 | pg-a1 | 84 | **97** | 388 chars |
-| pg-g3 | pg-a2 | 40 | **49** | 193 chars |
+| pg-a1 | 100 | 19 | +81 | |
+| pg-a11 | 100 | 18 | +82 | |
+| pg-a2 | 100 | 3 | +97 | |
+| pg-a3 | 100 | 13 | +87 | |
+| pg-b1 | 80 | 0 | +80 | 100 on 120b — small-model arithmetic |
+| pg-b3 | 100 | 49 | +51 | after the preservation fix below |
+| pg-b7 | 100 | 0 | +100 | |
+| pg-c5 | 81 | 11 | +70 | live; non-eligible until embeddings |
+| pg-d2 | 100 | 60 | +40 | live |
+| pg-e4 | 88 | **75** | +13 | live — **the strawman passes** |
+| pg-f1 | 74 | 0 | +74 | live |
+| pg-c1 | 69 | **88** | **−19** | live — **inverted**, needs embeddings |
 
-Both old values were *below* the reference's own token count, which put the
-reference above par and made the bonus unreachable — `max(0, 1 - 97/84)` is 0.
-With the corrected values the reference earns exactly 0 (par is the bar, not a
-reward), 5 at three-quarters of par, 10 at half, 15 at a quarter, and a run that
-has not passed earns nothing however short.
+## What the floors hid
 
-Changed in `challenges/pg-golf-variants.json` and regenerated; never hand-edited
-in `generated/`.
+pg-d2 scored 59 without the judge and **100** with it. pg-f1 went 62 → 74,
+pg-c5 67 → 81. None of those three had anything wrong with them; the harness was
+never running a third of their graders.
 
-## Still outstanding
+## Fixed in this pass
 
-- Workers AI embeddings, without which pg-c1 and pg-c5 cannot be fully graded.
-- The judge path (`llm-rubric`) is implemented in `runChallenge` but `npm run
-  try` does not exercise it. A `--live` flag on the try script that routes
-  through `runChallenge` would make the remaining 34% of pg-d2 and pg-e4
-  measurable.
+**pg-b3 rewarded deletion as much as masking.** The strawman scored 62 by
+*removing* PII rather than masking it —
+`Customer Arun M (arun.m@example.com, 98765 43210) reported…` became
+`Customer reported…` and still passed every leak check. Nothing tested the
+reference prompt's own promise to *"leave everything else byte-for-byte
+unchanged"*: `preservation` was a single `contains "LMN-3391"`, and
+`over-redaction` was one validator on t3, the only case with no PII in it.
+
+Added `b3SkeletonT1` and `b3SkeletonT2` (weight 4, metric `preservation`) to t1
+and t2. Each collapses the mask tokens to one sentinel and requires the rest to
+match the input exactly, so deletion, rewording, a dropped ticket reference and
+over-redacting the customer's name all fail. Strawman 62 → **49**; reference
+unchanged at 100.
+
+**Golf par was unreachable.** `estimateTokens` is `ceil(trimmed_chars / 4)`.
+Measured against the reference prompts: pg-g1 84 → **97**, pg-g3 40 → **49**.
+Both old values sat *below* the reference's own token count, so the reference was
+above par and `max(0, 1 − 97/84)` paid nothing. Corrected, the reference earns
+exactly 0, then 5 / 10 / 15 at three-quarters, half and a quarter of par, and a
+run that has not passed earns nothing however short.
+
+**`similar` is now implemented.** `src/providers/embeddings.ts` (Workers AI,
+pinned to `@cf/baai/bge-base-en-v1.5`) plus `cosineSimilarity` in
+`grading/text.ts`, resolved in `run.ts` alongside the judge so `grading/` stays
+pure. The `[ai]` binding is in `wrangler.toml` and needs no credential. For
+`--live` on the laptop, add `CF_ACCOUNT_ID` and `CF_API_TOKEN` to `.dev.vars`.
+
+## Still needs a decision
+
+**pg-e4 — the strawman passes.** 88 vs **75**, against a 70% threshold. The
+naive one-liner *"If the request is unclear, ask a clarifying question"* clears
+the challenge, which means a player can pass it without learning anything. This
+is the most serious finding here and the reason is visible in the breakdown: on
+the three cases that are not t1 the two prompts behave almost identically.
+Either the cases need to separate "ask" from "just do it" more sharply, or the
+threshold has to rise.
+
+**pg-c1 — inverted, and worse live than on the floor.** Reference 69, strawman
+88. Its four `similar` assertions carry `faithfulness`, the entire point of the
+challenge; with them excluded only `novelty` is left, where a loose paraphrase
+beats a faithful one by construction. Now that embeddings are implemented this
+should resolve — but it has not been re-run, because that needs the Cloudflare
+token. **Re-run pg-c1 before shipping it.**
+
+**pg-b1 is fine, but the reference prompt is not optimal.** t1 fails because the
+model computes `12,500 + 3,000 + 2,000 = 18,500`. Both validators fired
+correctly and 120b scores 100. The prompt never tells the model to check its own
+sum, which would likely fix it.
+
+## A scoring artifact worth knowing about
+
+`byGrader` averages only the assertions that actually ran. When the judge is
+skipped because the cheap graders already failed, that case contributes nothing
+to its metric — so pg-e4's strawman reports `judgement 100%` while the reference
+reports 67%, purely because the strawman failed earlier on t1. Totals are
+unaffected; only the per-metric display misleads. Worth a note in the UI, or
+worth counting skipped judgements as absent rather than omitted.
+
+## Outstanding
+
+- `CF_ACCOUNT_ID` / `CF_API_TOKEN` in `.dev.vars`, then re-run pg-c1 and pg-c5
+  with `--live` to confirm both grade end to end.
+- pg-e4's discrimination.
 - Guest-to-Google account linking, still never confirmed end to end.

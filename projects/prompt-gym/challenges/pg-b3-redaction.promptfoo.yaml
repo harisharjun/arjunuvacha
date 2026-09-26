@@ -36,6 +36,19 @@ tests:
         value: "LMN-3391"
         weight: 2
         metric: preservation
+      - type: javascript
+        # ref: validators.b3SkeletonT1
+        value: |
+          (output) => {
+            const skeleton = output.trim()
+              .replace(/\s+/g, ' ')
+              .replace(/[\u2018\u2019]/g, "'")
+              .replace(/\[(PHONE|EMAIL|ID)\]/g, '\u00a7');
+            return skeleton ===
+              'Customer Arun M (\u00a7, \u00a7) reported the sync failure on ticket LMN-3391.';
+          }
+        weight: 4
+        metric: preservation
       - type: contains-all
         value: ["[PHONE]", "[EMAIL]"]
         weight: 2
@@ -63,6 +76,19 @@ tests:
         value: "[EMAIL]"
         weight: 2
         metric: format
+      - type: javascript
+        # ref: validators.b3SkeletonT2
+        value: |
+          (output) => {
+            const skeleton = output.trim()
+              .replace(/\s+/g, ' ')
+              .replace(/[\u2018\u2019]/g, "'")
+              .replace(/\[(PHONE|EMAIL|ID)\]/g, '\u00a7');
+            return skeleton ===
+              "Reachable on \u00a7 or at \u00a7 \u2014 he's also tried \u00a7.";
+          }
+        weight: 4
+        metric: preservation
     metadata:
       reveal: partial
 

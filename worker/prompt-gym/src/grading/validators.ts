@@ -73,6 +73,34 @@ export const validators: ValidatorRegistry = {
         },
 
   // pg-b3-redaction
+  //
+  // Masking is not deletion. A prompt that simply removes the sensitive span
+  // passes every leak check trivially while destroying the transcript, which is
+  // the opposite of the task — so the non-PII bytes have to be accounted for too.
+  // Each mask token collapses to one sentinel and the rest must match exactly:
+  // a deleted name, a dropped ticket reference, a reworded sentence, or an
+  // over-redacted non-PII span all fail. Whitespace runs and curly apostrophes
+  // are normalised first; nothing else is forgiven.
+  'validators.b3SkeletonT1': (output) => {
+          const skeleton = output.trim()
+            .replace(/\s+/g, ' ')
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/\[(PHONE|EMAIL|ID)\]/g, '\u00a7');
+          return skeleton ===
+            'Customer Arun M (\u00a7, \u00a7) reported the sync failure on ticket LMN-3391.';
+        },
+
+  // pg-b3-redaction
+  'validators.b3SkeletonT2': (output) => {
+          const skeleton = output.trim()
+            .replace(/\s+/g, ' ')
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/\[(PHONE|EMAIL|ID)\]/g, '\u00a7');
+          return skeleton ===
+            "Reachable on \u00a7 or at \u00a7 \u2014 he's also tried \u00a7.";
+        },
+
+  // pg-b3-redaction
   'validators.b3NoOverRedaction': (output) => {
           const mustSurvive = ['4,500', '3344', '560001', 'LMN-4471', '12/09/25'];
           const survived = mustSurvive.every(s => output.includes(s));

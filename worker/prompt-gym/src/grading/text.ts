@@ -63,3 +63,31 @@ export function rougeN(expected: string, actual: string, n = 1): number {
 
   return matched / reference.length;
 }
+
+/** Cosine similarity of two embedding vectors, clamped to 0–1.
+ *
+ *  Pure, like everything else in here — the network call that produces the
+ *  vectors happens in `run.ts`, because `grading/` is not allowed to do I/O.
+ *
+ *  Clamped because a cosine is mathematically in [-1, 1] but an assertion score
+ *  is defined as 0–1. A negative cosine means "unrelated, pointing the other
+ *  way", which for grading purposes is the same as no similarity at all. */
+export function cosineSimilarity(a: number[], b: number[]): number {
+  if (a.length === 0 || a.length !== b.length) return 0;
+
+  let dot = 0;
+  let normA = 0;
+  let normB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+
+  // A zero vector has no direction, so it is similar to nothing. Guarding here
+  // rather than dividing by zero and returning NaN into a score.
+  if (normA === 0 || normB === 0) return 0;
+
+  const cos = dot / (Math.sqrt(normA) * Math.sqrt(normB));
+  return Math.max(0, Math.min(1, cos));
+}

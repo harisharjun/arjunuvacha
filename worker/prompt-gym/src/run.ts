@@ -10,14 +10,18 @@ import {
 import { validators } from './grading/validators';
 import { applyReveal, type PublicTestResult } from './grading/reveal';
 import { execute, judge, type GatewayConfig } from './providers/groq';
+import { cosineSimilarity } from './grading/text';
+import type { Embedder } from './providers/embeddings';
 import { toOutcome } from './providers/errors';
 
 const EXEC_CONCURRENCY = 3;
 
 /** Assertions that need a model call. Everything else is free and runs first. */
 const MODEL_GRADED = new Set(['llm-rubric', 'classifier', 'g-eval', 'factuality', 'answer-relevance']);
-/** Needs Workers AI embeddings, which are not wired up yet. */
-const NOT_YET_RUNNABLE = new Set(['similar']);
+/** Needs Workers AI embeddings. Runnable only when an `Embedder` is supplied —
+ *  without one these stay `pending`, which keeps the run off the leaderboard
+ *  rather than scoring the player zero for a grader we could not run. */
+const NEEDS_EMBEDDINGS = new Set(['similar']);
 
 /** Pinned, and deliberately not the player's choice: if everyone graded with a
  *  different judge, no two scores would be comparable. */
@@ -53,6 +57,9 @@ export interface RunOptions {
   apiKey: string;
   gateway?: GatewayConfig;
   fetchImpl?: typeof fetch;
+  /** Supplied by the Worker from its `AI` binding, or by the try script from the
+   *  REST API. Absent means `similar` assertions cannot run. */
+  embedder?: Embedder;
 }
 
 export interface RunResponse {
@@ -76,11 +83,44 @@ export interface RunResponse {
   tests: PublicTestResult[];
 }
 
-function familyOf(type: string): 'model' | 'pending' | 'cheap' {
+function familyOf(type: string, hasEmbedder: boolean): 'model' | 'similarity' | 'pending' | 'cheap' {
   const t = bare(type);
   if (MODEL_GRADED.has(t)) return 'model';
-  if (NOT_YET_RUNNABLE.has(t)) return 'pending';
+  if (NEEDS_EMBEDDINGS.has(t)) return hasEmbedder ? 'similarity' : 'pending';
   return 'cheap';
+}
+
+/** Grades every `similar` assertion in one test case with a single embeddings
+ *  call: the output once, then each expected string. Batched because each call
+ *  is a round trip and the vectors are all needed together anyway. */
+async function gradeSimilarity(
+  assertions: Assertion[],
+  output: string,
+  embed: Embedder,
+): Promise<AssertionResult[]> {
+  const base = assertions.map((a) => ({
+    type: a.type,
+    metric: a.metric,
+    weight: a.weight ?? 1,
+  }));
+
+  try {
+    const vectors = await embed([output, ...assertions.map((a) => String(a.value ?? ''))]);
+    const [outputVector, ...expectedVectors] = vectors;
+
+    return assertions.map((a, i) => {
+      const similarity = cosineSimilarity(outputVector, expectedVectors[i]);
+      const negated = a.type.startsWith('not-');
+      const score = negated ? 1 - similarity : similarity;
+      // 0.75 matches the default documented on `Assertion.threshold`.
+      const threshold = a.threshold ?? 0.75;
+      return { ...base[i], score, passed: score >= threshold };
+    });
+  } catch (err) {
+    // Embeddings unavailable is our failure, not the player's: errored, never failed.
+    const reason = err instanceof Error ? err.message : 'Embeddings failed';
+    return base.map((b) => ({ ...b, score: 0, passed: false, error: reason }));
+  }
 }
 
 /** Turns one model-graded assertion into a result by asking the pinned judge. */
@@ -175,12 +215,22 @@ export async function runChallenge(options: RunOptions): Promise<RunResponse> {
 
     // 2. Cheap graders first — they cost nothing, and an output that is not even
     //    valid JSON does not need a rubric to explain why it is wrong.
-    const cheap = declared.filter((a) => familyOf(a.type) === 'cheap');
-    const modelGraded = declared.filter((a) => familyOf(a.type) === 'model');
-    const pending = declared.filter((a) => familyOf(a.type) === 'pending');
+    const hasEmbedder = Boolean(options.embedder);
+    const cheap = declared.filter((a) => familyOf(a.type, hasEmbedder) === 'cheap');
+    const modelGraded = declared.filter((a) => familyOf(a.type, hasEmbedder) === 'model');
+    const similarity = declared.filter((a) => familyOf(a.type, hasEmbedder) === 'similarity');
+    const pending = declared.filter((a) => familyOf(a.type, hasEmbedder) === 'pending');
     if (pending.length > 0) anyPending = true;
 
     const results = cheap.map((a) => evaluateAssertion(a, output, validators, test.input));
+
+    // Similarity sits between cheap and judged: it costs a call, but a much
+    // smaller one than the judge, and it is not gated behind the cheap graders
+    // because a paraphrase that fails a format check can still be faithful.
+    if (similarity.length > 0 && options.embedder) {
+      results.push(...(await gradeSimilarity(similarity, output, options.embedder)));
+    }
+
     const cheapAllPassed = results.every((r) => r.passed);
 
     // 3. The judge runs only if the cheap graders already passed.

@@ -6,12 +6,29 @@
  *   npm run try -- pg-a2 --prompt "Classify the ticket."
  *   npm run try -- pg-a2 --prompt-file reference.txt
  *   npm run try -- pg-a2 --prompt-file ref.txt --model openai/gpt-oss-120b
+ *   npm run try -- pg-d2 --prompt-file ref.txt --live
+ *
+ * Two grading paths, deliberately:
+ *
+ *   default  grades with `gradeChallenge`, the pure engine. Fast and free, and it
+ *            prints every individual assertion, which is what you want while
+ *            iterating on a prompt. But it makes no judge call, so every
+ *            `llm-rubric` and `similar` assertion comes back ERRORED and scores
+ *            zero — on a challenge that has them, the total is a FLOOR, not a score.
+ *
+ *   --live   grades through `runChallenge`, exactly as the deployed Worker does,
+ *            judge calls included. Slower and it spends real budget, but it is the
+ *            only way to see a model-graded challenge's true score. Output is
+ *            reveal-filtered, same as a player would see, so you get metrics and
+ *            reasons rather than individual assertions.
  *
  * The key is read from $GROQ_API_KEY, or from .dev.vars, and is never printed.
  */
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { gradeChallenge } from '../src/grading/engine';
+import { runChallenge } from '../src/run';
+import { restEmbedder, type Embedder } from '../src/providers/embeddings';
 import { estimateTokens } from '../src/grading/score';
 import { validators } from '../src/grading/validators';
 import { execute } from '../src/providers/groq';
@@ -91,12 +108,64 @@ if (!prompt) {
 
 const model = arg('model') ?? 'openai/gpt-oss-20b';
 const apiKey = loadApiKey();
+const live = process.argv.includes('--live');
+
+/** Workers AI over REST, for `similar`. Optional: without it those assertions
+ *  stay pending and the run reports itself non-eligible, exactly as the deployed
+ *  Worker does when the AI binding is missing. Needs, in .dev.vars:
+ *    CF_ACCOUNT_ID=...
+ *    CF_API_TOKEN=...     (a token with Workers AI read) */
+function loadEmbedder(): Embedder | undefined {
+  const file = join(import.meta.dirname, '..', '.dev.vars');
+  const env = existsSync(file) ? readFileSync(file, 'utf8') : '';
+  const pick = (k: string) =>
+    process.env[k] ?? env.match(new RegExp(`^\\s*${k}\\s*=\\s*"?([^"\\n]+)"?`, 'm'))?.[1]?.trim();
+
+  const account = pick('CF_ACCOUNT_ID');
+  const token = pick('CF_API_TOKEN');
+  if (!account || !token) return undefined;
+  return restEmbedder(account, token);
+}
 
 console.log(`\n${challenge.id} — ${challenge.title}`);
-console.log(`model: ${model}   cases: ${challenge.tests.length}   prompt: ${prompt.length} chars`);
+console.log(`model: ${model}   cases: ${challenge.tests.length}   prompt: ${prompt.length} chars` +
+  (live ? '   grading: LIVE (judge calls enabled)' : ''));
 console.log('─'.repeat(72));
 
 const started = Date.now();
+
+// The production path, judge and all. Kept in its own branch rather than merged
+// into the one below: this one deliberately sees only what a player sees.
+if (live) {
+  const embedder = loadEmbedder();
+  if (!embedder) {
+    console.log('note: no CF_ACCOUNT_ID / CF_API_TOKEN in .dev.vars — `similar`');
+    console.log('      assertions stay pending and this run is not eligible.');
+  }
+  const r = await runChallenge({ challenge, prompt, model, apiKey, embedder });
+
+  for (const t of r.tests) {
+    const mark = t.status === 'errored' ? '!' : t.status === 'passed' ? '✓' : '✗';
+    console.log(`\n${mark} ${t.id}  ${t.status}${t.judgingSkipped ? '  (judge skipped — cheap graders had already failed)' : ''}`);
+    if (t.output !== null) {
+      console.log(`    output: ${JSON.stringify(t.output.slice(0, 160))}${t.output.length > 160 ? '…' : ''}`);
+    }
+    for (const f of t.failures) console.log(`    - [${f.metric}] ${f.reason}`);
+  }
+
+  console.log('\n' + '─'.repeat(72));
+  console.log(`SCORE ${r.score}/100   ${r.passed ? 'PASSED' : 'did not pass'}` +
+    `   (threshold ${challenge.scoring.passThreshold * 100}%)`);
+  if (r.efficiencyBonus > 0) {
+    console.log(`  correctness ${r.baseScore} + efficiency ${r.efficiencyBonus}`);
+  }
+  console.log('by metric: ' + r.byGrader.map((m) => `${m.metric} ${(m.score * 100).toFixed(0)}%`).join('  '));
+  if (!r.leaderboardEligible) {
+    console.log('\nNOT leaderboard-eligible — a grader errored or could not run.');
+  }
+  console.log(`elapsed ${((Date.now() - started) / 1000).toFixed(1)}s\n`);
+  process.exit(0);
+}
 const truncated = new Set<string>();
 const outcomes = await mapWithLimit(
   challenge.tests,

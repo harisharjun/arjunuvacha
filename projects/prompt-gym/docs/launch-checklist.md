@@ -5,10 +5,12 @@ each item. The cloud sessions that wrote the code have no Cloudflare auth, no
 Firebase CLI auth and no Groq key, so everything in **By hand** is Arjun's.
 
 **Session 11 ran on 26 Sep 2026** — see `session-11-validation.md`. All twelve
-authored challenges have now been run against a real model. Seven are ready;
-four are partially validated because the judge path is not exercised by the try
-harness; **pg-c1 is blocked** and should not ship until Workers AI embeddings
-exist. The golf par values were re-derived (84 -> 97, 40 -> 49).
+authored challenges have now been run against a real model, and `npm run try
+--live` was added so the judge actually runs. Ten discriminate cleanly.
+**pg-e4's strawman passes the challenge** and **pg-c1 scores its strawman above
+its reference**; both need a decision before launch. pg-b3 was fixed to penalise
+deletion and over-redaction, and the golf par values were re-derived
+(84 -> 97, 40 -> 49).
 
 ---
 
@@ -68,33 +70,58 @@ Check the limits in `wrangler.toml` against your own console first —
 **Settings → Limits**. They are written for 8K tokens/minute and 200K tokens/day
 and sit under both; Groq publishes these per organisation and moves them.
 
-### 2. Secrets
+### 2. Workers AI — the `[ai]` binding needs no credential, `--live` does
+
+The `[ai]` binding in `wrangler.toml` is complete as written and deploys as is;
+it is what makes pg-c1 and pg-c5 leaderboard-eligible. Only the local
+`npm run try -- <id> --live` path needs credentials, because there is no binding
+outside the Worker. Create a Cloudflare API token with **Workers AI read** and
+add to `worker/prompt-gym/.dev.vars` (gitignored):
+
+```
+CF_ACCOUNT_ID=<your Cloudflare account id>
+CF_API_TOKEN=<the token>
+```
+
+Then re-run the two that depend on it:
+
+```bash
+cd worker/prompt-gym
+npm run try -- pg-c1 --prompt-file ../../projects/prompt-gym/challenges/prompts/pg-c1.reference.txt --live
+npm run try -- pg-c5 --prompt-file ../../projects/prompt-gym/challenges/prompts/pg-c5.reference.txt --live
+```
+
+Expect both to report leaderboard-eligible, and pg-c1's reference to beat its
+strawman. If pg-c1 is still inverted with faithfulness measured, the challenge
+itself needs work.
+
+### 3. Secrets
 
 ```bash
 npx wrangler secret list                 # GROQ_API_KEY present
 npx wrangler secret put GROQ_API_KEY     # only if it is not
 ```
 
-### 3. Anonymous play in a private window
+### 4. Anonymous play in a private window
 
 Open `https://arjunuvacha.com/prompt-gym/` in a private window. Expect: a guest
 session appears without any click, a challenge runs, a score comes back. The
 header should read "Playing as a guest".
 
-### 4. The reveal filter in the network tab
+### 5. The reveal filter in the network tab
 
 On that run, open the `POST /api/run` response. Every test case after the first
 should carry `"input": null` and no `output`. If any hidden input is visible, stop
 — that is the one bug that makes every challenge worthless.
 
-### 5. Guest-to-Google linking — still unconfirmed
+### 6. Guest-to-Google linking — still unconfirmed
 
 Score a challenge as a guest, then sign in with Google and check the score
 survived. This has never been verified end to end. If the score is lost, the
 fallback path in `web/auth.js` already tells the player so, but the linking itself
 is the thing to fix.
 
-### 6. The BYO-key path, end to end
+### 7. The BYO-key path, end to end
 
 - Landing page: the panel is collapsed and reads "Your key, your compute, no
   waiting".
@@ -105,18 +132,19 @@ is the thing to fix.
   input focused, and the same wording as the landing page. Put the real value
   back afterwards.
 
-### 7. Decisions left over from Session 11
+### 8. Decisions left over from Session 11
 
 Done, but it surfaced four things that are yours to call — full detail in
 `session-11-validation.md`:
 
-- **pg-c1** cannot be validated without embeddings and currently scores its
-  strawman *above* its reference. Hold it back, or ship it flagged
-  non-leaderboard as it already is.
-- **pg-b3**'s strawman scores 62 against a <= 40 target. It still fails, so this
-  is a judgement call about how sharp you want the gap.
-- **pg-e4** scores worse on 120b than on 20b.
-- **pg-f1**'s `triage` metric tops out at 50% even for the reference.
+- **pg-e4's strawman passes** — 88 vs 75 against a 70% threshold. A player can
+  clear it with a naive one-liner. Needs sharper cases or a higher threshold.
+- **pg-c1 scores its strawman above its reference** (69 vs 88) because
+  `faithfulness` was unmeasurable. Embeddings are now implemented, so re-run it
+  with `--live` once the Cloudflare token is in `.dev.vars` — it has not been
+  re-run yet.
+- **pg-b1's reference prompt** never tells the model to check its own sum, which
+  is why t1 fails on 20b. The challenge itself is sound.
 
 ---
 

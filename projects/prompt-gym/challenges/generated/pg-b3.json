@@ -49,6 +49,12 @@
           "metric": "preservation"
         },
         {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "preservation",
+          "ref": "validators.b3SkeletonT1"
+        },
+        {
           "type": "contains-all",
           "value": [
             "[PHONE]",
@@ -75,6 +81,12 @@
           "value": "[EMAIL]",
           "weight": 2,
           "metric": "format"
+        },
+        {
+          "type": "javascript",
+          "weight": 4,
+          "metric": "preservation",
+          "ref": "validators.b3SkeletonT2"
         }
       ]
     },
