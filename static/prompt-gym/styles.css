@@ -193,7 +193,7 @@ h1, h2, h3 { letter-spacing: -0.015em; }
 /* The turn. Same weight, the brand's accent, on its own line: the sentence that
    takes back what the first one granted. */
 .hero-turn { display: block; color: var(--maroon); }
-.hero-sub { margin: .9rem 0 0; color: var(--muted); font-size: 1.1rem; line-height: 1.55; max-width: 34rem; }
+.hero-sub { margin: .9rem 0 0; color: var(--muted); font-size: 1.1rem; line-height: 1.55; max-width: 38rem; text-wrap: pretty; }
 .hero-cta { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; margin-top: 1.4rem; }
 .hero-btn { font-size: 1rem; padding: .78rem 1.35rem; border-radius: 10px; }
 .hero-note { font-size: .85rem; color: var(--muted); }
@@ -237,7 +237,13 @@ h1, h2, h3 { letter-spacing: -0.015em; }
   font-size: .78rem; line-height: 1.5; color: var(--muted);
 }
 .story-foot strong { color: var(--fg); }
-.hero-origin { margin: 1.4rem 0 0; font-size: .82rem; color: var(--muted); font-style: italic; }
+/* Arjun's own note, in the first person: set apart from the pitch so it reads
+   as him talking rather than as more marketing. */
+.hero-note-personal {
+  margin: 1rem 0 0; padding-left: .85rem; max-width: 36rem;
+  border-left: 3px solid color-mix(in srgb, var(--maroon) 55%, transparent);
+  font-size: .95rem; line-height: 1.6; color: var(--fg); text-wrap: pretty;
+}
 
 /* One version under the other wherever the main column is too narrow for both:
    beside the sidebar on a small laptop, and on a phone. */

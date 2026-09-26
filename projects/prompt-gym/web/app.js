@@ -435,7 +435,7 @@ function renderHero() {
       : "You've passed every challenge.";
     return;
   }
-  button.textContent = 'Find out where yours breaks';
+  button.textContent = 'Get going';
   // pg-a2 is the example's own job, so say so: the story continues in the challenge.
   const sameJob = next.id === 'pg-a2' ? ', the job in the example' : '';
   note.textContent = isGuest()

@@ -1,6 +1,28 @@
 # PromptGym — first-fold copy
 
-## Current: the regression story (26 Sep 2026, second pass)
+## Current: Arjun's own words (26 Sep 2026, third pass)
+
+Neither generated version said what Arjun wanted, so the fold now uses his copy,
+with grammar tidied and nothing else changed:
+
+**How good are you at writing prompts?**
+Try your luck with these challenges. They range from beginner to expert, so you
+can test your ability at every level.
+
+> I built this fun mini-eval system to give my fellow PMs a sneak peek into how
+> messy it can get when you update a system prompt for a new use case, and it
+> silently breaks an older one.
+
+Button: **Get going**
+
+The personal note is set apart with a rule so it reads as Arjun talking. The
+v1/v2 example card from the second pass stays under it, since it shows exactly
+what the note describes; the second pass's headline, subheadline and "Arjun
+built PromptGym after…" line are gone.
+
+---
+
+## Second pass: the regression story
 
 Arjun's premise: people building agentic systems keep editing prompts to cover
 new use cases, and the old ones quietly break. That is what evals exist to

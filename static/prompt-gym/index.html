@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PromptGym · Arjun Uvacha</title>
-<meta name="description" content="Your prompt worked. Then you fixed it. You added a line to handle a new case, and an old one quietly broke. PromptGym re-checks every case, every run.">
+<meta name="description" content="How good are you at writing prompts? Try your luck with PromptGym's challenges, from beginner to expert.">
 <!-- Root-relative, not relative. Firebase rewrites every path under /prompt-gym/**
      to this file, so a share link at /prompt-gym/r/<id> would resolve "styles.css"
      to /prompt-gym/r/styles.css — which the rewrite serves as this HTML, leaving the
@@ -17,7 +17,7 @@
      there is nowhere to inject per-result tags. See docs/repo-layout.md §6. -->
 <meta property="og:title" content="PromptGym">
 <!-- What LinkedIn shows under a pasted link, so it carries the same line as the page. -->
-<meta property="og:description" content="Your prompt worked. Then you fixed it. PromptGym re-checks every case, every run.">
+<meta property="og:description" content="How good are you at writing prompts? Try your luck with these challenges, from beginner to expert.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://arjunuvacha.com/prompt-gym/">
 <meta name="twitter:card" content="summary_large_image">
@@ -78,13 +78,13 @@
         <!-- The first fold. Copy and the seven pairs it beat: docs/landing-copy.md. -->
         <div class="hero">
           <div class="hero-copy">
-            <h1 class="hero-title">Your prompt worked. <span class="hero-turn">Then you fixed it.</span></h1>
-            <p class="hero-sub">You added a line to handle a new case, and an old one quietly broke. PromptGym re&#8209;checks every case, every run.</p>
+            <h1 class="hero-title">How good are you <span class="hero-turn">at writing prompts?</span></h1>
+            <p class="hero-sub">Try your luck with these challenges. They range from beginner to expert, so you can test your ability at every level.</p>
+            <p class="hero-note-personal">I built this fun mini-eval system to give my fellow PMs a sneak peek into how messy it can get when you update a system prompt for a new use case, and it silently breaks an older one.</p>
             <div class="hero-cta">
-              <button id="hero-start" class="primary hero-btn" type="button">Find out where yours breaks</button>
+              <button id="hero-start" class="primary hero-btn" type="button">Get going</button>
               <span id="hero-note" class="hero-note"></span>
             </div>
-            <p class="hero-origin">Arjun built PromptGym after breaking his own AI agents exactly this way.</p>
           </div>
 
           <!-- The whole premise as one worked example: a fix that breaks something.
