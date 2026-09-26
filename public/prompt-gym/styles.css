@@ -183,9 +183,9 @@ h1, h2, h3 { letter-spacing: -0.015em; }
 /* The first fold: the line, the mechanic, one button — and beside them, the
    thing the line is about. */
 .hero {
-  display: grid; grid-template-columns: minmax(0, 1fr) 17.5rem; gap: 2rem; align-items: center;
   margin: .5rem 0 1.75rem;
 }
+.hero-copy { max-width: 44rem; }
 .hero-title {
   margin: 0; font-size: 2.45rem; line-height: 1.12; letter-spacing: -0.028em; font-weight: 750;
   text-wrap: balance;
@@ -198,31 +198,52 @@ h1, h2, h3 { letter-spacing: -0.015em; }
 .hero-btn { font-size: 1rem; padding: .78rem 1.35rem; border-radius: 10px; }
 .hero-note { font-size: .85rem; color: var(--muted); }
 
-.hero-demo {
-  margin: 0; padding: .95rem 1rem .9rem;
+/* The story card: one prompt, two versions, and the fix that broke something. */
+.hero-story {
+  margin: 1.75rem 0 0; padding: 1rem 1.15rem 1rem;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-  box-shadow: var(--shadow); font-size: .82rem;
+  box-shadow: var(--shadow); font-size: .8rem;
 }
-.hero-demo figcaption {
+.hero-story figcaption {
   font-size: .68rem; font-weight: 650; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--muted); margin-bottom: .6rem;
+  color: var(--muted); margin-bottom: .7rem;
 }
-.demo-cases { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
-.demo-cases li {
-  display: grid; grid-template-columns: 1fr auto; gap: .2rem .5rem; align-items: center;
-  padding: .45rem .6rem; border-radius: 7px; border-left: 3px solid var(--pass); background: var(--bg);
+.story-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+/* v1 then v2, read left to right; the dashed rule is the moment the line was added. */
+.story-step + .story-step { padding-left: 1.25rem; border-left: 1px dashed var(--line-strong); }
+.story-prompt { display: flex; gap: .5rem; align-items: baseline; margin: 0 0 .5rem; }
+.story-v {
+  flex: none; font-size: .68rem; font-weight: 700; padding: .1rem .4rem; border-radius: 5px;
+  background: var(--accent-soft); color: var(--accent);
 }
-.demo-cases li b { font-size: .75rem; color: var(--pass); }
-.demo-cases li.bad { border-left-color: var(--fail); background: color-mix(in srgb, var(--fail) 7%, var(--bg)); }
-.demo-cases li.bad b { color: var(--fail); }
-.demo-cases li em { grid-column: 1 / -1; font-style: normal; font-size: .75rem; color: var(--muted); line-height: 1.4; }
-.demo-score { display: flex; align-items: baseline; gap: .4rem; margin-top: .75rem; padding-top: .65rem; border-top: 1px solid var(--line); }
-.demo-score strong { font-size: 1.15rem; letter-spacing: -0.02em; }
-.demo-score span { color: var(--muted); }
+.story-prompt code { font-family: var(--mono); font-size: .76rem; line-height: 1.45; color: var(--fg); }
+.story-prompt ins { text-decoration: none; color: var(--pass); font-weight: 600; }
+.story-cases { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+.story-cases li {
+  display: grid; grid-template-columns: 1.05rem minmax(0, 1fr) auto; gap: .15rem .45rem; align-items: baseline;
+  padding: .38rem .55rem; border-radius: 7px; background: var(--bg);
+}
+.story-cases li::before { font-weight: 800; font-size: .8rem; }
+.story-cases li.ok::before { content: "\2713"; color: var(--pass); }
+.story-cases li.bad::before { content: "\2717"; color: var(--fail); }
+.story-cases li.bad { background: color-mix(in srgb, var(--fail) 8%, var(--bg)); }
+.story-cases q { quotes: "\201C" "\201D"; line-height: 1.4; }
+.story-cases b { font-family: var(--mono); font-size: .74rem; font-weight: 600; color: var(--muted); }
+.story-cases li.bad b { color: var(--fail); }
+.story-cases em { grid-column: 2 / -1; font-style: normal; font-size: .74rem; color: var(--muted); line-height: 1.4; }
+.story-cases li.bad em { color: var(--fail); }
+.story-foot {
+  margin: .9rem 0 0; padding-top: .75rem; border-top: 1px solid var(--line);
+  font-size: .78rem; line-height: 1.5; color: var(--muted);
+}
+.story-foot strong { color: var(--fg); }
+.hero-origin { margin: 1.4rem 0 0; font-size: .82rem; color: var(--muted); font-style: italic; }
 
-@media (max-width: 760px) {
-  .hero { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
-  .hero-demo { max-width: 22rem; }
+/* One version under the other wherever the main column is too narrow for both:
+   beside the sidebar on a small laptop, and on a phone. */
+@media (min-width: 961px) and (max-width: 1100px), (max-width: 700px) {
+  .story-steps { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .story-step + .story-step { padding: .85rem 0 0; margin-top: .85rem; border-left: 0; border-top: 1px dashed var(--line-strong); }
 }
 
 

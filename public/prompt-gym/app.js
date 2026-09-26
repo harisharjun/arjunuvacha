@@ -436,7 +436,11 @@ function renderHero() {
     return;
   }
   button.textContent = 'Find out where yours breaks';
-  note.textContent = isGuest() ? `No signup. Starts with “${next.title}”.` : `Next up: “${next.title}”.`;
+  // pg-a2 is the example's own job, so say so: the story continues in the challenge.
+  const sameJob = next.id === 'pg-a2' ? ', the job in the example' : '';
+  note.textContent = isGuest()
+    ? `No signup, about two minutes. Starts with “${next.title}”${sameJob}.`
+    : `Next up: “${next.title}”${sameJob}.`;
 }
 
 $('hero-start').addEventListener('click', () => {

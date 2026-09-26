@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PromptGym · Arjun Uvacha</title>
-<meta name="description" content="Your prompt works. On the inputs you tried. PromptGym runs it on the ones you didn't, and shows which cases broke.">
+<meta name="description" content="Your prompt worked. Then you fixed it. You added a line to handle a new case, and an old one quietly broke. PromptGym re-checks every case, every run.">
 <!-- Root-relative, not relative. Firebase rewrites every path under /prompt-gym/**
      to this file, so a share link at /prompt-gym/r/<id> would resolve "styles.css"
      to /prompt-gym/r/styles.css — which the rewrite serves as this HTML, leaving the
@@ -17,7 +17,7 @@
      there is nowhere to inject per-result tags. See docs/repo-layout.md §6. -->
 <meta property="og:title" content="PromptGym">
 <!-- What LinkedIn shows under a pasted link, so it carries the same line as the page. -->
-<meta property="og:description" content="Your prompt works. On the inputs you tried. PromptGym runs it on the ones you didn't.">
+<meta property="og:description" content="Your prompt worked. Then you fixed it. PromptGym re-checks every case, every run.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://arjunuvacha.com/prompt-gym/">
 <meta name="twitter:card" content="summary_large_image">
@@ -78,25 +78,43 @@
         <!-- The first fold. Copy and the seven pairs it beat: docs/landing-copy.md. -->
         <div class="hero">
           <div class="hero-copy">
-            <h1 class="hero-title">Your prompt works. <span class="hero-turn">On the inputs you tried.</span></h1>
-            <p class="hero-sub">PromptGym runs it on the ones you didn't. Two minutes, no signup to start, and a score that shows which cases broke.</p>
+            <h1 class="hero-title">Your prompt worked. <span class="hero-turn">Then you fixed it.</span></h1>
+            <p class="hero-sub">You added a line to handle a new case, and an old one quietly broke. PromptGym re&#8209;checks every case, every run.</p>
             <div class="hero-cta">
               <button id="hero-start" class="primary hero-btn" type="button">Find out where yours breaks</button>
               <span id="hero-note" class="hero-note"></span>
             </div>
+            <p class="hero-origin">Arjun built PromptGym after breaking his own AI agents exactly this way.</p>
           </div>
 
-          <!-- Illustrative, and labelled so: the shape of a real scorecard, using the
-               real metric names, so the promise above has a picture. -->
-          <figure class="hero-demo" aria-label="An example scorecard">
-            <figcaption>Example scorecard</figcaption>
-            <ol class="demo-cases">
-              <li class="ok"><span>Case 1</span><b>Passed</b></li>
-              <li class="ok"><span>Case 2</span><b>Passed</b></li>
-              <li class="ok"><span>Case 3</span><b>Passed</b></li>
-              <li class="bad"><span>Case 4</span><b>Failed</b><em>No guessing: a value appeared that the input never gave.</em></li>
-            </ol>
-            <div class="demo-score"><strong>3 of 4</strong><span>cases passed</span></div>
+          <!-- The whole premise as one worked example: a fix that breaks something.
+               Labels are pg-a2's real ones, so the story matches the challenge the
+               button opens. The tickets are invented on purpose: pg-a2's own test
+               inputs are hidden, apart from the published "charged twice" example. -->
+          <figure class="hero-story" aria-label="Example: one prompt, two versions, and a fix that breaks an older case">
+            <figcaption>One prompt, two versions</figcaption>
+
+            <div class="story-steps">
+            <div class="story-step">
+              <p class="story-prompt"><span class="story-v">v1</span><code>Label the support ticket: billing, bug or account_access. One word.</code></p>
+              <ul class="story-cases">
+                <li class="ok"><q>I was charged twice.</q><b>billing</b></li>
+                <li class="ok"><q>Can't log in after resetting my password.</q><b>account_access</b></li>
+                <li class="bad"><q>The payment page won't load.</q><b>billing</b><em>A new kind of ticket. It should be bug.</em></li>
+              </ul>
+            </div>
+
+            <div class="story-step">
+              <p class="story-prompt"><span class="story-v">v2</span><code><ins>+ If something isn't working, it's a bug.</ins></code></p>
+              <ul class="story-cases">
+                <li class="ok"><q>I was charged twice.</q><b>billing</b></li>
+                <li class="ok"><q>The payment page won't load.</q><b>bug</b><em>Fixed.</em></li>
+                <li class="bad"><q>Can't log in after resetting my password.</q><b>bug</b><em>Broken. This one used to work, and nothing told you.</em></li>
+              </ul>
+            </div>
+            </div>
+
+            <p class="story-foot">Teams building AI agents keep a list of cases that must keep working, and re-run all of it after every change. That list is called an <strong>eval</strong>. Every challenge here is a small one, with the cases hidden.</p>
           </figure>
         </div>
 

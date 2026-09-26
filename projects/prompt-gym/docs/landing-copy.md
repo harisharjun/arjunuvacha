@@ -1,5 +1,49 @@
 # PromptGym — first-fold copy
 
+## Current: the regression story (26 Sep 2026, second pass)
+
+Arjun's premise: people building agentic systems keep editing prompts to cover
+new use cases, and the old ones quietly break. That is what evals exist to
+catch. So the first fold now tells that story instead of the "untested inputs"
+one below.
+
+**Your prompt worked. Then you fixed it.**
+You added a line to handle a new case, and an old one quietly broke. PromptGym
+re-checks every case, every run.
+
+Under it, a worked example rather than an explanation, written for someone who
+has used ChatGPT but never heard the word eval:
+
+- **v1** `Label the support ticket: billing, bug or account_access. One word.`
+  Two tickets pass; a new kind of ticket ("The payment page won't load.") comes
+  back `billing` when it should be `bug`.
+- **v2** adds one sensible line: `If something isn't working, it's a bug.` The
+  new ticket passes. "Can't log in after resetting my password." — which v1 got
+  right as `account_access` — now comes back `bug`. Nothing flags it.
+- A footer names the thing: a list of cases that must keep working, re-run
+  after every change, is called an eval, and every challenge here is a small one.
+
+Choices worth keeping:
+
+- **The labels are pg-a2's real ones**, and the button opens pg-a2 for a new
+  visitor, so the story continues into the challenge ("the job in the example").
+- **The tickets are invented.** pg-a2's own inputs are hidden, apart from the
+  published "charged twice" example. Never lift a hidden test input into the page.
+- **The regression is one a reader would have made themselves.** "If something
+  isn't working, it's a bug" is a reasonable fix, and "can't log in" is plainly
+  something not working — that is why it lands.
+- **It claims only what the product does:** every run grades every hidden case
+  together. It does not say PromptGym compares a run with your previous one; it
+  does not do that today.
+- "Arjun built PromptGym after breaking his own AI agents exactly this way" is
+  his own account of why it exists. Remove it if it ever stops being true.
+
+The pair below it was the first version of the fold, kept for the reasoning.
+
+---
+
+## First pass: "Your prompt works. On the inputs you tried."
+
 Written 26 Sep 2026 against the brief: LinkedIn visitors who believe they are
 good at prompting and have never been measured. Headlines at most 8 words,
 subheadlines at most 25. No em dashes, no exclamation marks, no "practise",
@@ -10,7 +54,7 @@ an injection attempt" is pg-d2, which is withheld (`src/challenges.ts`,
 `WITHHELD`). None of these pairs mention injection. Put it back only once pg-d2
 ships.
 
-## The eight pairs
+### The eight pairs
 
 | # | Angle | Headline | Subheadline |
 |---|---|---|---|
@@ -29,7 +73,7 @@ Claims checked against the code: #3's "four" is pg-a1's four cases; #7's
 button sends a guest; "which cases broke, and why" is the `partial` reveal,
 which returns each case's status and failure reasons.
 
-## The pick: #1
+### The pick: #1
 
 **Your prompt works. On the inputs you tried.**
 PromptGym runs it on the ones you didn't. Two minutes, no signup to start, and
@@ -42,7 +86,7 @@ dares and ego challenges (#2, #4, #5) ask for a fight before they have earned
 attention, and the specific claims (#3, #8) describe the mechanic to someone who
 has not yet decided to care.
 
-## Buttons
+### Buttons
 
 1. **Find out where yours breaks** ← shipped
 2. Try one, two minutes
