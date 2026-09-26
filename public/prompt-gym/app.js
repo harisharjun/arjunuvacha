@@ -395,6 +395,7 @@ function renderList() {
   soon.appendChild(card);
   list.appendChild(soon);
 
+  renderHero();
   renderStanding();
 }
 
@@ -408,6 +409,42 @@ function setFilter(which) {
 }
 $('filter-all').addEventListener('click', () => setFilter('all'));
 $('filter-unsolved').addEventListener('click', () => setFilter('unsolved'));
+
+// --------------------------------------------------------------------- hero
+
+/** Where the hero's button goes: the easiest challenge this player can open and
+ *  has not passed. For a guest that is always a free one, which is what makes
+ *  "no signup to start" true of wherever the button lands. */
+function nextChallenge() {
+  const open = challenges
+    .filter((c) => !isLocked(c) && !isPassed(c))
+    .sort((a, b) => (a.difficulty ?? 1) - (b.difficulty ?? 1));
+  return open[0] ?? null;
+}
+
+function renderHero() {
+  const button = $('hero-start');
+  const note = $('hero-note');
+  if (challenges.length === 0) return;
+
+  const next = nextChallenge();
+  if (!next) {
+    button.textContent = 'See the leaderboard';
+    note.textContent = isGuest()
+      ? 'Every free challenge is passed. Sign in to unlock the rest.'
+      : "You've passed every challenge.";
+    return;
+  }
+  button.textContent = 'Find out where yours breaks';
+  note.textContent = isGuest() ? `No signup. Starts with “${next.title}”.` : `Next up: “${next.title}”.`;
+}
+
+$('hero-start').addEventListener('click', () => {
+  const next = nextChallenge();
+  if (next) openChallenge(next);
+  else if (isGuest()) startSignIn();
+  else openFullBoard();
+});
 
 // ----------------------------------------------------------------- standing
 
@@ -425,7 +462,6 @@ function renderStanding() {
 
   const passedCount = challenges.filter(isPassed).length;
   const free = challenges.filter((c) => c.freeToPlay);
-  const firstFree = free.find((c) => !isPassed(c)) ?? free[0];
   const lockedCount = challenges.filter(isLocked).length;
 
   const badge = (value, caption, zero = false) => {
@@ -440,12 +476,6 @@ function renderStanding() {
     return t;
   };
   const actions = el('div', 'standing-actions');
-  const startBtn = (label) => {
-    const b = el('button', 'primary', label);
-    b.type = 'button';
-    b.addEventListener('click', () => openChallenge(firstFree));
-    return b;
-  };
   const signInBtn = () => {
     const g = googleButton();
     g.addEventListener('click', () => startSignIn());
@@ -459,11 +489,10 @@ function renderStanding() {
     box.classList.add('nudge');
     const allFreeDone = free.length > 0 && free.every(isPassed);
     if (passedCount === 0) {
-      box.append(
-        badge('0', 'passed', true),
-        text('Pass your first challenge', `Start with “${firstFree?.title}” — it takes about two minutes.`),
-      );
-      actions.append(startBtn('Start'));
+      // A first-time guest already has the hero's button, pointing at the same
+      // challenge. A second box saying "Start" would only compete with it.
+      box.hidden = true;
+      return;
     } else if (allFreeDone) {
       box.append(
         badge(String(passedCount), 'passed'),
@@ -482,9 +511,9 @@ function renderStanding() {
     box.classList.add('nudge');
     box.append(
       badge('0', 'passed', true),
-      text("You haven't passed a challenge yet", `Pass one to join the leaderboard — start with “${firstFree?.title}”.`),
+      text("You haven't passed a challenge yet", 'Pass one to join the leaderboard.'),
     );
-    actions.append(startBtn('Start'));
+    // No "Start" here: the hero's button, just above, already goes to the same place.
   } else {
     const levels = Object.entries(myStanding.passedByLevel ?? {})
       .sort((a, b) => Number(b[0]) - Number(a[0]))
@@ -1304,6 +1333,8 @@ onUserChanged((user) => {
   $('account-loading').textContent = signingOut ? 'Signing out…' : 'Signing in…';
   $('account-guest').hidden = !user || !user.isAnonymous;
   $('account-user').hidden = !user || user.isAnonymous;
+  $('feedback-fab').hidden = !user || user.isAnonymous;
+  if ($('feedback-fab').hidden && openDrawer === $('drawer-feedback')) closeDrawer();
   if (user) signingOut = false;
 
   if (user && !user.isAnonymous) {
@@ -1348,6 +1379,89 @@ $('signout').addEventListener('click', () => {
   progress = new Map();
   myStanding = null;
   signOutUser();
+});
+
+// ----------------------------------------------------------------- feedback
+
+// Signed-in players only. The button is hidden from guests, and the Worker
+// refuses them too — this only decides what the page offers.
+const FEEDBACK_MAX = 2000;
+const feedbackDraftKey = 'feedback-draft';
+
+/** Where the player is, sent with the message so a bug report arrives with its
+ *  context. Only the challenge id is added: the Worker checks it exists. */
+function feedbackContext() {
+  const onChallenge = current && !$('play-view').hidden;
+  return { page: location.pathname, challengeId: onChallenge ? current.id : null, title: onChallenge ? current.title : null };
+}
+
+function updateFeedbackCount() {
+  const length = $('feedback-message').value.trim().length;
+  $('feedback-count').textContent = `${$('feedback-message').value.length} / ${FEEDBACK_MAX}`;
+  $('feedback-send').disabled = length === 0;
+}
+
+function openFeedback() {
+  $('feedback-form').hidden = false;
+  $('feedback-done').hidden = true;
+  $('feedback-status').textContent = '';
+  $('feedback-message').value = storageGet(feedbackDraftKey) ?? '';
+  const ctx = feedbackContext();
+  $('feedback-context').textContent = ctx.title
+    ? `Sent with your name, email and the challenge you're on (“${ctx.title}”), so a reply can reach you.`
+    : 'Sent with your name, email and the page you are on, so a reply can reach you.';
+  updateFeedbackCount();
+  showDrawer('drawer-feedback');
+  $('feedback-message').focus();
+}
+
+$('feedback-fab').addEventListener('click', openFeedback);
+$('feedback-message').addEventListener('input', () => {
+  updateFeedbackCount();
+  storageSet(feedbackDraftKey, $('feedback-message').value);
+});
+$('feedback-another').addEventListener('click', openFeedback);
+
+$('feedback-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const message = $('feedback-message').value.trim();
+  if (!message) return;
+
+  const send = $('feedback-send');
+  const status = $('feedback-status');
+  send.disabled = true;
+  send.textContent = 'Sending…';
+  status.className = 'feedback-status';
+  status.textContent = '';
+
+  try {
+    const token = await getIdToken();
+    const { page, challengeId } = feedbackContext();
+    const res = await fetch(`${API}/api/feedback`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: JSON.stringify({ message, page, challengeId }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const why =
+        data.message ??
+        (res.status === 401 ? 'Sign in with Google to send feedback.' : 'It could not be sent just now. Please try again.');
+      throw new Error(why);
+    }
+    // Sent: the draft has done its job.
+    storageSet(feedbackDraftKey, '');
+    $('feedback-message').value = '';
+    $('feedback-form').hidden = true;
+    $('feedback-done').hidden = false;
+  } catch (err) {
+    // The draft is still saved, so nothing typed is lost.
+    status.className = 'feedback-status error';
+    status.textContent = err.message;
+  } finally {
+    send.textContent = 'Send';
+    updateFeedbackCount();
+  }
 });
 
 // -------------------------------------------------------------------- wiring

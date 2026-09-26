@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PromptGym · Arjun Uvacha</title>
-<meta name="description" content="Practise prompt engineering against real test suites and get graded, structured feedback on where your prompt breaks.">
+<meta name="description" content="Your prompt works. On the inputs you tried. PromptGym runs it on the ones you didn't, and shows which cases broke.">
 <!-- Root-relative, not relative. Firebase rewrites every path under /prompt-gym/**
      to this file, so a share link at /prompt-gym/r/<id> would resolve "styles.css"
      to /prompt-gym/r/styles.css — which the rewrite serves as this HTML, leaving the
@@ -16,7 +16,8 @@
      from static files and its rewrites cannot target a Cloudflare Worker, so
      there is nowhere to inject per-result tags. See docs/repo-layout.md §6. -->
 <meta property="og:title" content="PromptGym">
-<meta property="og:description" content="Write a prompt. Run it against hidden test cases. Find out where it breaks.">
+<!-- What LinkedIn shows under a pasted link, so it carries the same line as the page. -->
+<meta property="og:description" content="Your prompt works. On the inputs you tried. PromptGym runs it on the ones you didn't.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://arjunuvacha.com/prompt-gym/">
 <meta name="twitter:card" content="summary_large_image">
@@ -74,12 +75,33 @@
     <main id="main">
       <!-- ─────────────────────────────── challenge list -->
       <section id="list-view">
+        <!-- The first fold. Copy and the seven pairs it beat: docs/landing-copy.md. -->
         <div class="hero">
-          <h1>Practise prompt engineering</h1>
-          <p class="lede">Write a prompt, run it against hidden test cases, and find out exactly where it breaks.</p>
-          <!-- Where you stand: your rank, or the nudge to get one. -->
-          <div id="standing" class="standing" hidden></div>
+          <div class="hero-copy">
+            <h1 class="hero-title">Your prompt works. <span class="hero-turn">On the inputs you tried.</span></h1>
+            <p class="hero-sub">PromptGym runs it on the ones you didn't. Two minutes, no signup to start, and a score that shows which cases broke.</p>
+            <div class="hero-cta">
+              <button id="hero-start" class="primary hero-btn" type="button">Find out where yours breaks</button>
+              <span id="hero-note" class="hero-note"></span>
+            </div>
+          </div>
+
+          <!-- Illustrative, and labelled so: the shape of a real scorecard, using the
+               real metric names, so the promise above has a picture. -->
+          <figure class="hero-demo" aria-label="An example scorecard">
+            <figcaption>Example scorecard</figcaption>
+            <ol class="demo-cases">
+              <li class="ok"><span>Case 1</span><b>Passed</b></li>
+              <li class="ok"><span>Case 2</span><b>Passed</b></li>
+              <li class="ok"><span>Case 3</span><b>Passed</b></li>
+              <li class="bad"><span>Case 4</span><b>Failed</b><em>No guessing: a value appeared that the input never gave.</em></li>
+            </ol>
+            <div class="demo-score"><strong>3 of 4</strong><span>cases passed</span></div>
+          </figure>
         </div>
+
+        <!-- Where you stand: your rank, or the nudge to get one. -->
+        <div id="standing" class="standing" hidden></div>
 
         <div class="list-toolbar">
           <div class="segmented" role="group" aria-label="Show challenges">
@@ -203,6 +225,7 @@
           <ul>
             <li>An account id, and — once you sign in — your Google display name and profile picture URL.</li>
             <li>The prompts you run, their scores, and when you ran them.</li>
+            <li>Any feedback you send, with your Google name and email address and the page you sent it from, so Arjun can reply. It is emailed to him through Resend.</li>
           </ul>
           <p>Prompts are sent to be run and graded — to Groq for guests, and to OpenAI for signed-in players — and to Cloudflare to measure similarity. Don't put anything personal or confidential in a prompt.</p>
 
@@ -213,7 +236,7 @@
           <p>By playing — signed in or as a guest — you agree to these terms. If you don't, please don't use the site.</p>
 
           <h2>Questions</h2>
-          <p>Reach Arjun through <a href="https://arjunuvacha.com">arjunuvacha.com</a>.</p>
+          <p>Signed in, use the Feedback button at the bottom of the page. Otherwise, reach Arjun through <a href="https://arjunuvacha.com">arjunuvacha.com</a>.</p>
         </article>
       </section>
     </main>
@@ -271,6 +294,39 @@
       <p class="muted">Ranked by passes at the hardest level first, then points, then shortest prompts, then fewest attempts. Only signed-in players are ranked.</p>
       <p id="full-board-status" class="muted">Loading…</p>
       <ol id="full-board" class="board-list board-list-full"></ol>
+    </div>
+  </aside>
+
+  <!-- Signed-in players only: the Worker refuses guests, and the button is not
+       shown to them. -->
+  <button id="feedback-fab" class="feedback-fab" type="button" hidden>
+    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H9l-4 3v-3H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <span>Feedback</span>
+  </button>
+
+  <aside id="drawer-feedback" class="drawer" role="dialog" aria-modal="true" aria-labelledby="feedback-title" hidden>
+    <div class="drawer-head">
+      <h2 id="feedback-title">Send feedback</h2>
+      <button class="drawer-close" type="button" data-close aria-label="Close">×</button>
+    </div>
+    <div class="drawer-body">
+      <form id="feedback-form" class="feedback-form">
+        <p class="feedback-intro">Something broken, confusing or missing? Tell Arjun directly. Every message reaches him, and he can reply to you by email.</p>
+        <label for="feedback-message" class="visually-hidden">Your message</label>
+        <textarea id="feedback-message" rows="8" maxlength="2000" required
+          placeholder="What happened, and what did you expect?"></textarea>
+        <div class="feedback-foot">
+          <span id="feedback-count" class="muted">0 / 2000</span>
+          <button id="feedback-send" class="primary" type="submit" disabled>Send</button>
+        </div>
+        <p id="feedback-context" class="muted feedback-context"></p>
+        <p id="feedback-status" class="feedback-status" role="status" aria-live="polite"></p>
+      </form>
+      <div id="feedback-done" class="feedback-done" hidden>
+        <p><strong>Thanks, that's sent.</strong></p>
+        <p class="muted">Arjun reads every message. If a reply is needed, it will come to your Google email.</p>
+        <button id="feedback-another" class="secondary" type="button">Send another</button>
+      </div>
     </div>
   </aside>
 

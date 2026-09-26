@@ -178,9 +178,52 @@ h1, h2, h3 { letter-spacing: -0.015em; }
 }
 
 /* ───────────────────────────── list view */
-.hero { margin-bottom: 1.5rem; }
-.hero h1 { font-size: 1.85rem; margin: 0 0 .35rem; }
 .lede { margin: 0; color: var(--muted); font-size: 1.02rem; max-width: 60ch; }
+
+/* The first fold: the line, the mechanic, one button — and beside them, the
+   thing the line is about. */
+.hero {
+  display: grid; grid-template-columns: minmax(0, 1fr) 17.5rem; gap: 2rem; align-items: center;
+  margin: .5rem 0 1.75rem;
+}
+.hero-title {
+  margin: 0; font-size: 2.45rem; line-height: 1.12; letter-spacing: -0.028em; font-weight: 750;
+  text-wrap: balance;
+}
+/* The turn. Same weight, the brand's accent, on its own line: the sentence that
+   takes back what the first one granted. */
+.hero-turn { display: block; color: var(--maroon); }
+.hero-sub { margin: .9rem 0 0; color: var(--muted); font-size: 1.1rem; line-height: 1.55; max-width: 34rem; }
+.hero-cta { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; margin-top: 1.4rem; }
+.hero-btn { font-size: 1rem; padding: .78rem 1.35rem; border-radius: 10px; }
+.hero-note { font-size: .85rem; color: var(--muted); }
+
+.hero-demo {
+  margin: 0; padding: .95rem 1rem .9rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); font-size: .82rem;
+}
+.hero-demo figcaption {
+  font-size: .68rem; font-weight: 650; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .6rem;
+}
+.demo-cases { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+.demo-cases li {
+  display: grid; grid-template-columns: 1fr auto; gap: .2rem .5rem; align-items: center;
+  padding: .45rem .6rem; border-radius: 7px; border-left: 3px solid var(--pass); background: var(--bg);
+}
+.demo-cases li b { font-size: .75rem; color: var(--pass); }
+.demo-cases li.bad { border-left-color: var(--fail); background: color-mix(in srgb, var(--fail) 7%, var(--bg)); }
+.demo-cases li.bad b { color: var(--fail); }
+.demo-cases li em { grid-column: 1 / -1; font-style: normal; font-size: .75rem; color: var(--muted); line-height: 1.4; }
+.demo-score { display: flex; align-items: baseline; gap: .4rem; margin-top: .75rem; padding-top: .65rem; border-top: 1px solid var(--line); }
+.demo-score strong { font-size: 1.15rem; letter-spacing: -0.02em; }
+.demo-score span { color: var(--muted); }
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .hero-demo { max-width: 22rem; }
+}
 
 
 .cards {
@@ -235,7 +278,7 @@ h1, h2, h3 { letter-spacing: -0.015em; }
 
 /* standing: your rank, or the nudge to get one */
 .standing {
-  margin-top: 1.25rem; padding: 1rem 1.15rem;
+  margin: 0 0 1.5rem; padding: 1rem 1.15rem;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
   box-shadow: var(--shadow);
   display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
@@ -598,7 +641,12 @@ label.inline { display: inline-flex; align-items: center; gap: .4rem; margin: 0;
   .header-inner { padding: .6rem 1rem; }
   .shell { padding: 1.25rem 1rem 3rem; }
   .guest-note, .brand-by { display: none; }
-  .hero h1, .play-head h1 { font-size: 1.5rem; }
+  .play-head h1 { font-size: 1.5rem; }
+  .hero-title { font-size: 1.62rem; }
+  .hero-sub { font-size: 1rem; }
+  .hero-btn { width: 100%; }
+  .feedback-fab span { display: none; }
+  .feedback-fab { padding: .75rem; }
   .user-name { max-width: 7rem; }
   .toast { width: calc(100% - 2rem); }
   .facts { grid-template-columns: 1fr 1fr; }
@@ -609,3 +657,32 @@ label.inline { display: inline-flex; align-items: center; gap: .4rem; margin: 0;
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
 }
+
+/* ───────────────────────────── feedback */
+.feedback-fab {
+  position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 30;
+  display: inline-flex; align-items: center; gap: .45rem;
+  font: inherit; font-size: .875rem; font-weight: 600; cursor: pointer;
+  padding: .65rem 1rem; border-radius: 999px;
+  background: var(--surface); color: var(--fg);
+  border: 1px solid var(--line-strong); box-shadow: var(--shadow-lg);
+}
+.feedback-fab:hover { border-color: var(--accent); color: var(--accent); }
+.feedback-fab svg { width: 1.1rem; height: 1.1rem; }
+.feedback-intro { margin: 0 0 1rem; line-height: 1.55; }
+.feedback-form textarea {
+  width: 100%; resize: vertical; min-height: 9rem;
+  font: inherit; font-size: .925rem; line-height: 1.5; padding: .7rem .8rem;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--fg);
+}
+.feedback-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+.feedback-foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: .6rem; }
+.feedback-context { margin: .9rem 0 0; font-size: .8rem; line-height: 1.5; }
+.feedback-status { margin: .6rem 0 0; font-size: .875rem; }
+.feedback-status:empty { display: none; }
+.feedback-status.error { color: var(--fail); }
+.feedback-done p { margin: 0 0 .6rem; line-height: 1.55; }
+.feedback-done .secondary { margin-top: .6rem; }
+/* The floating button must not sit on top of the footer's last line. */
+.site-footer { padding-bottom: 5rem; }
