@@ -638,7 +638,7 @@ label.inline { display: inline-flex; align-items: center; gap: .4rem; margin: 0;
 @media (max-width: 560px) {
   .header-inner { padding: .6rem 1rem; }
   .shell { padding: 1.25rem 1rem 3rem; }
-  .guest-note, .brand-by { display: none; }
+  .guest-note { display: none; }
   .play-head h1 { font-size: 1.5rem; }
   .hero-title { font-size: 1.62rem; }
   .hero-sub { font-size: 1rem; }
@@ -684,3 +684,42 @@ label.inline { display: inline-flex; align-items: center; gap: .4rem; margin: 0;
 .feedback-done .secondary { margin-top: .6rem; }
 /* The floating button must not sit on top of the footer's last line. */
 .site-footer { padding-bottom: 5rem; }
+
+/* "Make my prompt public" on a passing scorecard */
+.public-toggle { display: inline-flex; align-items: center; gap: .55rem; flex-wrap: wrap; }
+.switch { display: inline-flex; align-items: center; gap: .55rem; cursor: pointer; font-size: .9rem; font-weight: 600; margin: 0; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch-track {
+  position: relative; flex: none; width: 2.3rem; height: 1.3rem; border-radius: 999px;
+  background: var(--line-strong); transition: background .15s;
+}
+.switch-track::after {
+  content: ""; position: absolute; top: .15rem; left: .15rem; width: 1rem; height: 1rem; border-radius: 50%;
+  background: var(--surface); box-shadow: 0 1px 2px rgba(0, 0, 0, .25); transition: transform .15s;
+}
+.switch input:checked + .switch-track { background: var(--pass); }
+.switch input:checked + .switch-track::after { transform: translateX(1rem); }
+.switch input:focus-visible + .switch-track { outline: 2px solid var(--accent); outline-offset: 2px; }
+.switch input:disabled + .switch-track { opacity: .6; }
+.info { position: relative; display: inline-flex; }
+.info-body {
+  position: absolute; bottom: calc(100% + .5rem); left: 50%; z-index: 20;
+  width: min(18rem, 80vw); transform: translate(-50%, 4px);
+  padding: .65rem .8rem; border-radius: var(--radius-sm);
+  background: var(--fg); color: var(--bg); font-size: .8rem; font-weight: 400; line-height: 1.5;
+  box-shadow: var(--shadow-lg); opacity: 0; visibility: hidden; transition: opacity .12s, transform .12s;
+}
+.info:hover .info-body, .info.open .info-body, .info .tip-btn:focus-visible + .info-body {
+  opacity: 1; visibility: visible; transform: translate(-50%, 0);
+}
+.public-view { font-size: .85rem; }
+/* On a phone the (i) sits too near the edge to centre anything on it: the
+   explanation spans the toggle's row instead. */
+@media (max-width: 560px) {
+  .public-toggle { position: relative; }
+  .public-toggle .info { position: static; }
+  .public-toggle .info-body { left: 0; right: 0; width: auto; transform: translateY(4px); }
+  .public-toggle .info:hover .info-body, .public-toggle .info.open .info-body,
+  .public-toggle .info .tip-btn:focus-visible + .info-body { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .switch-track, .switch-track::after, .info-body { transition: none; } }

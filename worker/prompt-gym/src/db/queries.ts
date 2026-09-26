@@ -21,21 +21,45 @@ export async function promptHash(
 
 export interface StoredSubmission {
   id: string;
+  /** Whose run this row is. The cache is global, so it may be somebody else's. */
+  uid: string | null;
+  /** Whether its owner has put it in the shared-prompts gallery. */
+  shared: boolean;
   result: RunResponse;
 }
 
 /** Looks for an identical previous submission. Everything runs at temperature 0,
  *  so returning the stored grading is honest — and it makes re-running a prompt
- *  you already submitted free, which matters against a shared budget. */
-export async function findByHash(db: D1Database, hash: string): Promise<StoredSubmission | null> {
+ *  you already submitted free, which matters against a shared budget.
+ *
+ *  Prefers the caller's own row when there is one. Re-running a passing prompt is
+ *  the natural thing to do before sharing it, and only a row they own can be
+ *  shared — or can say that it already has been. */
+export async function findByHash(
+  db: D1Database,
+  hash: string,
+  uid?: string | null,
+): Promise<StoredSubmission | null> {
   const row = await db
-    .prepare('SELECT id, grader_results_json FROM submissions WHERE prompt_hash = ? LIMIT 1')
-    .bind(hash)
-    .first<{ id: string; grader_results_json: string }>();
+    .prepare(
+      `SELECT s.id, s.uid, s.grader_results_json, COALESCE(sh.show_prompt, 0) AS show_prompt
+         FROM submissions s
+         LEFT JOIN share_results sh ON sh.submission_id = s.id
+        WHERE s.prompt_hash = ?
+        ORDER BY CASE WHEN s.uid = ? THEN 0 ELSE 1 END, s.created_at DESC
+        LIMIT 1`,
+    )
+    .bind(hash, uid ?? null)
+    .first<{ id: string; uid: string | null; grader_results_json: string; show_prompt: number }>();
 
   if (!row) return null;
   try {
-    return { id: row.id, result: JSON.parse(row.grader_results_json) as RunResponse };
+    return {
+      id: row.id,
+      uid: row.uid ?? null,
+      shared: row.show_prompt === 1,
+      result: JSON.parse(row.grader_results_json) as RunResponse,
+    };
   } catch {
     // A corrupt row should cause a re-run, not a 500.
     return null;

@@ -263,15 +263,43 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
   const hash = await promptHash(challengeId, prompt, execModel);
   if (env.DB) {
     try {
-      const cached = await findByHash(env.DB, hash);
+      const cached = await findByHash(env.DB, hash, user?.uid);
       if (cached) {
         // The cache is global, so this may be someone else's earlier run of the
         // same prompt. It still counts for whoever submits it: everything is
         // temperature 0, so they would have got this result themselves.
+        let result = cached.result;
+        let shareable = Boolean(user) && cached.uid === user?.uid;
+        let sharedToGallery = shareable && cached.shared;
+
+        // Someone else's row can be neither shared nor banked as theirs, so the
+        // player gets a row of their own: the same grading, under their uid, with
+        // no model call. Without it, a passing prompt that happened to match
+        // another player's could never be made public by the person who wrote it.
+        if (user && !shareable) {
+          const own = { ...cached.result, submissionId: crypto.randomUUID() };
+          try {
+            // The user row first: submissions.uid references it, and this may be
+            // the very first thing this player has done here.
+            await upsertUser(env.DB, {
+              uid: user.uid,
+              displayName: user.name,
+              avatarUrl: user.picture,
+              isAnonymous: user.isAnonymous,
+            });
+            await insertSubmission(env.DB, { result: own, uid: user.uid, prompt, hash, byoKeyUsed: false });
+            result = own;
+            shareable = true;
+            sharedToGallery = false;
+          } catch {
+            /* keep serving the cached grading; it just cannot be shared this time */
+          }
+        }
+
         let banked = false;
-        if (user) banked = await recordForUser(env.DB, user, cached.result);
+        if (user) banked = await recordForUser(env.DB, user, result);
         return Response.json(
-          { ...cached.result, cached: true, uid: user?.uid ?? null, newBest: banked },
+          { ...result, cached: true, shareable, sharedToGallery, uid: user?.uid ?? null, newBest: banked },
           { headers: cors },
         );
       }
@@ -352,6 +380,8 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
     }
 
     let newBest = false;
+    // Only a run that was stored, under someone, can be linked to or shared.
+    let shareable = false;
     if (env.DB) {
       // A storage failure must not lose the player the run they just paid for, so
       // the scorecard is returned either way and the write failure is swallowed.
@@ -371,6 +401,7 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
           hash,
           byoKeyUsed: Boolean(byoKey),
         });
+        shareable = Boolean(user);
         if (user) newBest = await upsertBestScore(env.DB, user.uid, result);
       } catch {
         /* persistence is best-effort; the scorecard is what the player came for */
@@ -378,7 +409,15 @@ async function handleRun(request: Request, env: Env, cors: Record<string, string
     }
 
     return Response.json(
-      { ...result, byoKeyUsed: Boolean(byoKey), cached: false, uid: user?.uid ?? null, newBest },
+      {
+        ...result,
+        byoKeyUsed: Boolean(byoKey),
+        cached: false,
+        shareable,
+        sharedToGallery: false,
+        uid: user?.uid ?? null,
+        newBest,
+      },
       { headers: cors },
     );
   } catch (err) {

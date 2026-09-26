@@ -776,6 +776,71 @@ function shareToggle(submissionId, initiallyShared, onChange) {
   return btn;
 }
 
+let publicTipId = 0;
+// One listener for every (i) on the page: a tap anywhere else closes them.
+document.addEventListener('click', () => {
+  for (const open of document.querySelectorAll('.info.open')) open.classList.remove('open');
+});
+
+/** "Make my prompt public": a switch, an explanation behind an (i), and a way to
+ *  go and see it once it is on. Publishing puts the run in the shared-prompts
+ *  gallery; its text stays readable only to players who passed the challenge. */
+function publicToggle(result) {
+  const wrap = el('div', 'public-toggle');
+
+  const label = el('label', 'switch');
+  const box = document.createElement('input');
+  box.type = 'checkbox';
+  box.setAttribute('role', 'switch');
+  box.checked = Boolean(result.sharedToGallery);
+  label.append(box, el('span', 'switch-track'), el('span', 'switch-label', 'Make my prompt public'));
+
+  const tipId = `public-tip-${++publicTipId}`;
+  const info = el('span', 'info');
+  const infoBtn = el('button', 'tip-btn', 'i');
+  infoBtn.type = 'button';
+  infoBtn.setAttribute('aria-label', 'What making your prompt public does');
+  infoBtn.setAttribute('aria-describedby', tipId);
+  const infoBody = el('span', 'info-body',
+    'This helps compare prompts written by different players, and see how each one is different or unique. ' +
+    'It is shown with your name and photo, and its text can be read only by players who have passed this challenge themselves.');
+  infoBody.id = tipId;
+  infoBody.setAttribute('role', 'tooltip');
+  info.append(infoBtn, infoBody);
+  // Phones have no hover: a tap opens it, a tap anywhere else closes it.
+  infoBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    info.classList.toggle('open');
+  });
+
+  const view = el('a', 'text-btn public-view', 'See it in Shared prompts →');
+  view.href = `${BASE}/shared`;
+  view.hidden = !box.checked;
+  view.addEventListener('click', (e) => {
+    e.preventDefault();
+    navigate(`${BASE}/shared`);
+  });
+
+  box.addEventListener('change', async () => {
+    const on = box.checked;
+    box.disabled = true;
+    try {
+      await setShared(result.submissionId, on);
+      result.sharedToGallery = on;
+      view.hidden = !on;
+      toast(on ? 'Your prompt is public in Shared prompts.' : 'Your prompt is private again.');
+    } catch (err) {
+      box.checked = !on;
+      toast(err.message);
+    } finally {
+      box.disabled = false;
+    }
+  });
+
+  wrap.append(label, info, view);
+  return wrap;
+}
+
 function renderScorecard(result) {
   const card = $('scorecard');
   card.replaceChildren();
@@ -825,9 +890,11 @@ function renderScorecard(result) {
     card.appendChild(box);
   }
 
-  // Share controls. The link is an unguessable id, so it is unlisted; the gallery
-  // is opt-in, and only for signed-in players — sharing shows a name and a photo.
-  if (result.submissionId && !result.cached) {
+  // Share controls. The link is an unguessable id, so it is unlisted. Only a run
+  // stored under this player can be linked or published; the Worker says which
+  // (older Workers did not, and there a cached run was never theirs to share).
+  const shareable = result.shareable ?? (Boolean(result.submissionId) && !result.cached);
+  if (shareable && result.submissionId) {
     const share = el('div', 'share');
     const url = `${location.origin}${BASE}/r/${result.submissionId}`;
 
@@ -845,14 +912,16 @@ function renderScorecard(result) {
     });
     share.appendChild(copy);
 
-    if (isGuest()) {
-      const g = googleButton('Log in to share your results');
-      g.addEventListener('click', () => startSignIn(() => renderScorecard(result)));
-      share.appendChild(g);
-    } else {
-      share.appendChild(shareToggle(result.submissionId, Boolean(result.sharedToGallery), (v) => {
-        result.sharedToGallery = v;
-      }));
+    // Publishing is for a prompt that passed: the gallery is where players compare
+    // working solutions. A guest has no name to publish under, so they sign in first.
+    if (result.passed) {
+      if (isGuest()) {
+        const g = googleButton('Sign in to make your prompt public');
+        g.addEventListener('click', () => startSignIn(() => renderScorecard(result)));
+        share.appendChild(g);
+      } else {
+        share.appendChild(publicToggle(result));
+      }
     }
     card.appendChild(share);
   }
@@ -1411,8 +1480,8 @@ function openFeedback() {
   $('feedback-message').value = storageGet(feedbackDraftKey) ?? '';
   const ctx = feedbackContext();
   $('feedback-context').textContent = ctx.title
-    ? `Sent with your name, email and the challenge you're on (“${ctx.title}”), so a reply can reach you.`
-    : 'Sent with your name, email and the page you are on, so a reply can reach you.';
+    ? `Sent with your name, email and the challenge you're on (“${ctx.title}”), so my reply can reach you.`
+    : 'Sent with your name, email and the page you are on, so my reply can reach you.';
   updateFeedbackCount();
   showDrawer('drawer-feedback');
   $('feedback-message').focus();
