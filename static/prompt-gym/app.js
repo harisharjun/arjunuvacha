@@ -272,7 +272,7 @@ function route() {
   const result = /\/r\/([A-Za-z0-9-]{8,64})$/.exec(path);
   const play = /\/c\/([a-z0-9-]+)$/.exec(path);
   closeDrawer();
-  document.querySelector('.tip')?.classList.remove('open');
+  tip?.classList.remove('open');
 
   if (result) return loadSharedResult(result[1]);
   if (path === `${BASE}/shared`) return openGallery();
@@ -1237,12 +1237,29 @@ for (const id of ['gallery-difficulty', 'gallery-sort', 'gallery-mine']) {
   $(id).addEventListener('change', loadGallery);
 }
 
-// The ranking tooltip opens on hover, and on tap — phones have no hover.
-document.querySelector('.tip-btn').addEventListener('click', (e) => {
+// The ranking tooltip opens on hover, and on tap — phones have no hover. It is
+// fixed-positioned so the scrolling sidebar cannot clip it, which means placing
+// it here: below the button, right-aligned to it, kept inside the window.
+const tip = document.querySelector('.tip');
+function placeTip() {
+  const btn = tip.querySelector('.tip-btn').getBoundingClientRect();
+  const body = tip.querySelector('.tip-body');
+  const width = body.offsetWidth || 280;
+  const left = Math.min(Math.max(8, btn.right - width), window.innerWidth - width - 8);
+  body.style.left = `${left}px`;
+  body.style.top = `${btn.bottom + 8}px`;
+}
+tip.addEventListener('mouseenter', placeTip);
+tip.querySelector('.tip-btn').addEventListener('focus', placeTip);
+tip.querySelector('.tip-btn').addEventListener('click', (e) => {
   e.stopPropagation();
-  e.currentTarget.parentElement.classList.toggle('open');
+  placeTip();
+  tip.classList.toggle('open');
 });
-document.addEventListener('click', () => document.querySelector('.tip')?.classList.remove('open'));
+document.addEventListener('click', () => tip.classList.remove('open'));
+// A fixed tooltip would drift away from its button; close it instead.
+window.addEventListener('scroll', () => tip.classList.remove('open'), { passive: true });
+document.querySelector('.sidebar').addEventListener('scroll', () => tip.classList.remove('open'), { passive: true });
 
 // ------------------------------------------------------------------ account
 

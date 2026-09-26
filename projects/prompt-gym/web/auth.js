@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   linkWithPopup,
   signOut,
+  updateProfile,
   GoogleAuthProvider,
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
@@ -84,8 +85,35 @@ export async function getIdToken(force = false) {
   }
 }
 
+/** Copies the Google name and photo onto the Firebase account itself.
+ *
+ *  Linking a guest account to Google leaves `displayName` and `photoURL` empty on
+ *  the account — the Google provider entry has them, the account does not. The ID
+ *  token's `name` and `picture` claims mirror the account, so the Worker never saw
+ *  a name, and the leaderboard called every linked player "Anonymous User" while
+ *  the header, reading the provider entry, showed their real name. Writing the
+ *  profile once and re-minting the token fixes it for good; for accounts already
+ *  affected it runs on their next visit. Best-effort: a failure here costs a name
+ *  on the board, never the session. */
+async function repairProfile(user) {
+  if (user.isAnonymous || (user.displayName && user.photoURL)) return;
+  const displayName = profileField(user, 'displayName');
+  const photoURL = profileField(user, 'photoURL');
+  if (!displayName && !photoURL) return;
+  if (displayName === user.displayName && photoURL === user.photoURL) return;
+  try {
+    await updateProfile(user, { displayName, photoURL });
+    await user.getIdToken(true);
+  } catch (err) {
+    console.warn('Could not store the Google profile:', err.code ?? err.message);
+  }
+}
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
+    // Before anyone learns who is signed in, so the first request the page makes
+    // already carries the name.
+    await repairProfile(user);
     setUser(user);
     markReady();
     return;
@@ -124,6 +152,7 @@ export async function signInWithGoogle() {
   if (anon?.isAnonymous) {
     try {
       const credential = await linkWithPopup(anon, provider);
+      await repairProfile(credential.user);
       // Linking keeps the same uid, so Firebase may emit no auth-state change at
       // all. Without this the header would still read "playing as a guest" after
       // a sign-in that actually worked.

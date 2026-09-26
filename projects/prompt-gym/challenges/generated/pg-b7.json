@@ -2,7 +2,7 @@
   "id": "pg-b7",
   "title": "List the action items",
   "mode": "goal",
-  "difficulty": 3,
+  "difficulty": 2,
   "tags": [],
   "graderFamilies": [
     "rule-based"

@@ -78,8 +78,8 @@ export function findChallenge(id: string): Challenge | undefined {
 /** Playable without signing in. Everything else sits behind the sign-in wall —
  *  enforced by the Worker on /api/run, not just greyed out in the page.
  *
- *  One Beginner, one Easy, one Intermediate: enough to learn what the game is,
- *  and a reason to sign in for the rest. */
+ *  One Beginner and two Easy (pg-b7 moved from Intermediate to Easy on 26 Sep
+ *  2026): enough to learn what the game is, and a reason to sign in for the rest. */
 export const FREE_TO_PLAY = new Set(['pg-a2', 'pg-a3', 'pg-b7']);
 
 /** Difficulty of every shipped challenge, for the leaderboard's ordering. Built
