@@ -1,0 +1,29 @@
+{{- $title := .Title -}}
+{{- $siteTitle := .Site.Title -}}
+
+{{/* Overrides the theme's. The home page is the landing story now, not the post
+     list, so it has no pages to number. The theme built a paginator here just to
+     title "page 2", and that alone made Hugo write /page/2/, /page/3/ copies of
+     the landing page. The post list and its numbering live at /blog/. */}}
+{{- if .IsHome -}}
+    {{ $title = $siteTitle }}
+{{- else if eq .Kind "term" -}}
+    <!-- Taxonomy page -->
+
+    <!-- Build paginator -->
+    {{ $notHidden := where .Pages "Params.hidden" "!=" true }}
+    {{ $pag := .Paginate ($notHidden) }}
+
+    <!-- {TAXONOMY_TYPE}: {TAXONOMY_TERM} -->
+    {{ $title = slice (title .Data.Singular) ": " $title }}
+
+    {{ if .Paginator.HasPrev }}
+        <!-- Add page number-->
+        {{ $title = $title | append " - " .Paginator }}
+    {{ end }} 
+
+    {{ $title = $title | append " - " $siteTitle }}
+    {{ $title = delimit $title "" }}
+{{- end -}}
+
+{{ return $title }}

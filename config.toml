@@ -144,27 +144,36 @@ enabled = true
 [params.imageProcessing.content]
 enabled = true
 
+# Menu order is by weight, lowest first: Home, About (-120, in about.md), AI Lab,
+# Product Work, Blog, Archives (-70, archives.md), Search (-60, search.md).
 [menu]
   [[menu.main]]
 identifier = "home"
 name = "Home"
 url = "/"
-weight = -100
+weight = -130
 pre = "home"
 
   [[menu.main]]
 identifier = "work"
 name = "Product Work"
 url = "/work/"
-weight = -90
+weight = -100
 pre = "briefcase"
 
   [[menu.main]]
 identifier = "ailab"
 name = "AI Lab"
 url = "/ai-lab/"
-weight = -80
+weight = -110
 pre = "sparkles"
+
+  [[menu.main]]
+identifier = "blog"
+name = "Blog"
+url = "/blog/"
+weight = -90
+pre = "notebook"
 
   [[menu.social]]
     identifier = "linkedin"

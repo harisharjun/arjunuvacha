@@ -1,0 +1,121 @@
+{{/* The home page: the story of the blog as a comic strip, panel by panel, then
+     the two ways in (Blog, AI Lab). The post list that used to live here is at
+     /blog/ now (layouts/blog/list.html). Panels and cards are content, in
+     content/_index.md. */}}
+{{ define "body-class" }}template-home{{ end }}
+
+{{/* Before the first paint, so panels start hidden instead of flashing in and
+     then fading. Without JavaScript this never runs and every panel just shows. */}}
+{{ define "head" }}
+<script>document.documentElement.classList.add('au-js')</script>
+{{ end }}
+
+{{ define "main" }}
+{{ $landing := .Params.landing }}
+<div class="au-home">
+    <h1 class="au-visually-hidden">{{ .Site.Title }}: {{ .Site.Params.description }}</h1>
+
+    <section class="au-story" aria-label="The story behind {{ .Site.Title }}">
+        {{ range $i, $p := $landing.panels }}
+            {{ $name := printf "arjun_uvacha_panel_%02d.png" (int $p.panel) }}
+            {{ $web := resources.Get (printf "img/web_images/%s" $name) }}
+            {{ $mobile := resources.Get (printf "img/mobile_images/%s" $name) | default $web }}
+            {{/* Same size, re-encoded as WebP: about a third of the PNG's bytes
+                 for artwork like this, with no visible change. */}}
+            {{ $webOut := $web.Resize (printf "%dx webp q88" $web.Width) }}
+            {{ $mobileOut := $mobile.Resize (printf "%dx webp q88" $mobile.Width) }}
+            <figure class="au-panel au-reveal{{ if $p.wide }} au-panel--wide{{ end }}">
+                <picture>
+                    <source media="(max-width: 767px)" srcset="{{ $mobileOut.RelPermalink }}"
+                        width="{{ $mobileOut.Width }}" height="{{ $mobileOut.Height }}" type="image/webp">
+                    <img src="{{ $webOut.RelPermalink }}" width="{{ $webOut.Width }}" height="{{ $webOut.Height }}"
+                        alt="{{ $p.alt }}" decoding="async"
+                        {{ if lt $i 3 }}loading="eager"{{ else }}loading="lazy"{{ end }}
+                        {{ if eq $i 0 }}fetchpriority="high"{{ end }}>
+                </picture>
+            </figure>
+        {{ end }}
+    </section>
+
+    <nav class="au-entry" aria-label="Where to next">
+        {{ range $landing.cards }}
+        <a class="au-card au-reveal au-card--{{ .icon }}" href="{{ .link | relURL }}">
+            <span class="au-card-icon">{{ partial "helper/icon" .icon }}</span>
+            <span class="au-card-tagline">{{ .tagline }}</span>
+            <span class="au-card-title">{{ .name }}</span>
+            <span class="au-card-desc">{{ .description }}</span>
+            <span class="au-card-cta">{{ .cta }} &rarr;</span>
+        </a>
+        {{ end }}
+    </nav>
+</div>
+
+{{/* The story unfolds in order, one panel at a time: a panel fades in once its
+     image has loaded, it has come into view (or a later one has), and a moment
+     has passed since the one before. Landing shows the first rows in sequence;
+     the rest follow as the reader scrolls. Reduced-motion readers get it all at
+     once. */}}
+<script>
+(function () {
+    var items = [].slice.call(document.querySelectorAll('.au-reveal'));
+    var show = function (el) { el.classList.add('is-shown'); };
+    if (!items.length) return;
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        items.forEach(show);
+        return;
+    }
+
+    var GAP_MS = 450;          // between one panel starting and the next
+    var GIVE_UP_MS = 4000;     // how long the next panel waits for its image
+    var next = 0, seen = -1, lastAt = 0, timer = null;
+
+    var loaded = function (el) {
+        var img = el.querySelector('img');
+        return !img || el.dataset.gaveUp === '1' || (img.complete && img.naturalWidth > 0);
+    };
+
+    function pump() {
+        timer = null;
+        if (next >= items.length || next > seen) return;
+        var el = items[next];
+        if (!loaded(el)) {
+            // Its load event calls back in. The wait only starts now, when it is
+            // next in line, so a lazy image below the fold is not given up on early.
+            if (!el.dataset.waiting) {
+                el.dataset.waiting = '1';
+                setTimeout(function () { el.dataset.gaveUp = '1'; schedule(); }, GIVE_UP_MS);
+            }
+            return;
+        }
+        var wait = lastAt + GAP_MS - Date.now();
+        if (wait > 0) { timer = setTimeout(pump, wait); return; }
+        show(el);
+        lastAt = Date.now();
+        next += 1;
+        schedule();
+    }
+    function schedule() { if (!timer) timer = setTimeout(pump, 0); }
+
+    var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+            if (e.isIntersecting) {
+                seen = Math.max(seen, items.indexOf(e.target));
+                io.unobserve(e.target);
+            }
+        });
+        schedule();
+    }, { rootMargin: '0px 0px -6% 0px' });
+
+    items.forEach(function (el) {
+        io.observe(el);
+        var img = el.querySelector('img');
+        if (img && !loaded(el)) {
+            img.addEventListener('load', schedule);
+            img.addEventListener('error', function () { el.dataset.gaveUp = '1'; schedule(); });
+        }
+    });
+})();
+</script>
+
+{{ partialCached "footer/footer" . }}
+{{ end }}

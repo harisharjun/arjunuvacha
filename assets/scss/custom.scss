@@ -1561,3 +1561,186 @@ a.ailab-card:hover {
     border: 2px solid var(--lab-purple);
     color: var(--lab-purple);
 }
+
+/* ============================================================
+   Home (/) — the story of the blog as a comic strip, then the
+   two ways in. Layout: layouts/index.html; panels and cards:
+   content/_index.md. The post list moved to /blog/.
+   ============================================================ */
+
+.template-home .main {
+    padding-top: var(--main-top-padding);
+}
+
+.au-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* The panels are drawn about 1000px wide. Wider than that and they would be
+   stretched soft, so the strip keeps its own width and sits centred. */
+.au-home {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}
+
+/* Two to a row on a computer, like a comic page; wide panels take the row. */
+.au-story {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.au-panel {
+    margin: 0;
+    min-width: 0;
+}
+
+.au-panel--wide {
+    grid-column: 1 / -1;
+}
+
+.au-panel img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* ---- The unfolding. Only with JavaScript: without it, nothing is hidden. ---- */
+.au-js .au-reveal {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+    filter: blur(6px);
+    transition:
+        opacity 1.2s ease,
+        transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+        filter 1.2s ease;
+}
+
+.au-js .au-reveal.is-shown {
+    opacity: 1;
+    transform: none;
+    filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .au-js .au-reveal {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        transition: none;
+    }
+}
+
+/* ---- The two ways in ---- */
+.au-entry {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.au-card {
+    --au-accent: #d9480f;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 30px 28px;
+    border-radius: 20px;
+    border-top: 4px solid var(--au-accent);
+    background: var(--card-background);
+    box-shadow: var(--shadow-l1);
+    color: inherit;
+    text-decoration: none;
+}
+
+/* The hover lift is added once the card has faded in, so the two transitions
+   never fight over `transform`. */
+.au-card.is-shown,
+html:not(.au-js) .au-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.au-card:hover,
+.au-card:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-l2);
+}
+
+/* Blog in the strip's sunset orange; AI Lab in its own page's purple. */
+.au-card--sparkles {
+    --au-accent: var(--lab-purple);
+}
+
+.au-card-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: #fff;
+    background: var(--au-accent);
+}
+
+.au-card-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
+.au-card-tagline {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--au-accent);
+}
+
+.au-card-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--card-text-color-main);
+}
+
+.au-card-desc {
+    flex: 1;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: var(--card-text-color-secondary);
+}
+
+.au-card-cta {
+    margin-top: 6px;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--au-accent);
+}
+
+/* A phone: every panel on its own row (the mobile files are drawn for it),
+   then the cards stacked. */
+@media (max-width: 767px) {
+    .au-home {
+        gap: 28px;
+    }
+
+    .au-story {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .au-entry {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .au-card {
+        padding: 24px 22px;
+    }
+}
