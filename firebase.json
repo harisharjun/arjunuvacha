@@ -8,8 +8,13 @@
     ],
     "redirects": [
       {
-        "regex": "^/page/(\\d+)/?$",
-        "destination": "/blog/page/:1/",
+        "source": "/page/:n",
+        "destination": "/blog/page/:n/",
+        "type": 301
+      },
+      {
+        "source": "/page/:n/",
+        "destination": "/blog/page/:n/",
         "type": 301
       }
     ],
