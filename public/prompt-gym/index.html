@@ -3,24 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PromptGym · Arjun Uvacha</title>
-<meta name="description" content="How good are you at writing prompts? Try your luck with PromptGym's challenges, from beginner to expert.">
+<title>PromptGym · How good are you at writing prompts?</title>
+<meta name="description" content="A fun mini-eval system by Arjun Uvacha. Write a prompt for a short task and see if it holds up against hidden test cases. Beginner to expert.">
 <!-- Root-relative, not relative. Firebase rewrites every path under /prompt-gym/**
      to this file, so a share link at /prompt-gym/r/<id> would resolve "styles.css"
      to /prompt-gym/r/styles.css — which the rewrite serves as this HTML, leaving the
      page unstyled and the module script unparseable. -->
 <link rel="stylesheet" href="/prompt-gym/styles.css">
-<link rel="icon" href="/favicon.png">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="theme-color" content="#722929">
 
-<!-- A generic card, not a per-result one. Firebase Hosting serves /prompt-gym/**
-     from static files and its rewrites cannot target a Cloudflare Worker, so
-     there is nowhere to inject per-result tags. See docs/repo-layout.md §6. -->
-<meta property="og:title" content="PromptGym">
-<!-- What LinkedIn shows under a pasted link, so it carries the same line as the page. -->
-<meta property="og:description" content="How good are you at writing prompts? Try your luck with these challenges, from beginner to expert.">
+<!-- Link previews (WhatsApp, LinkedIn, Slack, X). One generic card for every URL:
+     Firebase Hosting serves /prompt-gym/** from static files and its rewrites
+     cannot target a Cloudflare Worker, so there is nowhere to inject per-result
+     tags. See docs/repo-layout.md §6.
+
+     Crawlers do not run JavaScript and do not resolve relative URLs reliably, so
+     the image is absolute. No og:url on purpose: every path serves this same file,
+     and a fixed og:url would send a shared challenge link to the landing page.
+
+     The image is web/prompt_gym.png: 400×300 today, under 300 KB (WhatsApp drops the
+     thumbnail from larger files). LinkedIn only shows the large card from 1200×627;
+     smaller images get a small thumbnail. If it is ever replaced, change the file name —
+     WhatsApp and LinkedIn cache images by URL for days. -->
+<meta property="og:site_name" content="Arjun Uvacha">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://arjunuvacha.com/prompt-gym/">
+<meta property="og:title" content="PromptGym: how good are you at writing prompts?">
+<meta property="og:description" content="A fun mini-eval system. Write a prompt for a short task and see if it holds up against hidden test cases. Beginner to expert.">
+<meta property="og:image" content="https://arjunuvacha.com/prompt-gym/prompt_gym.png">
+<meta property="og:image:secure_url" content="https://arjunuvacha.com/prompt-gym/prompt_gym.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="400">
+<meta property="og:image:height" content="300">
+<meta property="og:image:alt" content="PromptGym: prompt-writing challenges graded against hidden test cases">
+<meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PromptGym: how good are you at writing prompts?">
+<meta name="twitter:description" content="A fun mini-eval system. Write a prompt for a short task and see if it holds up against hidden test cases. Beginner to expert.">
+<meta name="twitter:image" content="https://arjunuvacha.com/prompt-gym/prompt_gym.png">
+<meta name="twitter:image:alt" content="PromptGym: prompt-writing challenges graded against hidden test cases">
 </head>
 <body>
   <header class="site-header">
