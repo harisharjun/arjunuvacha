@@ -9,7 +9,12 @@ hasCJKLanguage = false
 enableEmoji = true
 enableGitInfo = true
 enableRobotsTXT = true
-canonifyURLs = true
+# Off since 27 Sep 2026. On, it rewrote every link to an absolute
+# https://arjunuvacha.com/ address, so the staging site loaded its stylesheet and
+# images from production and broke whenever it had assets production did not.
+# Root-relative links work on both; share tags and canonical links stay absolute
+# because the theme builds them from .Permalink.
+canonifyURLs = false
 
 [languages.en]
 languageName = "English"
