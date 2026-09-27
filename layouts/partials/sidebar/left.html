@@ -110,4 +110,56 @@
             {{ end }}
         </div>
     </ol>
+
+    {{/* Phones only: a slim bar that slides in once the header above has scrolled
+         away, so the menu is always one tap off. Its button works the theme's own
+         menu toggle; while the bar is showing, the menu opens just below it. The
+         full header is not made sticky itself: at ~330px it would cover half the
+         screen. */}}
+    {{ $barAvatar := "" }}
+    {{ with .Site.Params.sidebar.avatar }}{{ with resources.Get .src }}{{ $barAvatar = (.Resize "80x").RelPermalink }}{{ end }}{{ end }}
+    <div class="au-mobile-bar" id="au-mobile-bar" aria-hidden="true">
+        <a class="au-mobile-bar-home" href="{{ .Site.BaseURL | relLangURL }}" tabindex="-1">
+            {{ with $barAvatar }}<img src="{{ . }}" width="32" height="32" alt="">{{ end }}
+            <span>{{ .Site.Title }}</span>
+        </a>
+        <button class="hamburger hamburger--spin" type="button" id="au-bar-toggle" aria-label="{{ T `toggleMenu` }}" tabindex="-1">
+            <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+        </button>
+    </div>
+    <script>
+    (function () {
+        var bar = document.getElementById('au-mobile-bar');
+        var barToggle = document.getElementById('au-bar-toggle');
+        var themeToggle = document.getElementById('toggle-menu');
+        var menu = document.getElementById('main-menu');
+        var aside = bar && bar.parentElement;
+        var edge = aside && (aside.querySelector('.social-menu') || aside.querySelector('header'));
+        if (!bar || !themeToggle || !menu || !edge || !('IntersectionObserver' in window)) return;
+
+        var phone = window.matchMedia('(max-width: 767px)');
+        var sync = function () { barToggle.classList.toggle('is-active', themeToggle.classList.contains('is-active')); };
+        var closeMenu = function () { if (menu.classList.contains('show')) { themeToggle.click(); sync(); } };
+
+        barToggle.addEventListener('click', function () { themeToggle.click(); sync(); });
+        themeToggle.addEventListener('click', function () { setTimeout(sync, 0); });
+
+        function setStuck(stuck) {
+            if (document.body.classList.contains('au-nav-stuck') === stuck) return;
+            // The menu lives in the page flow at the top and in a fixed panel under
+            // the bar; switching with it open would jump the page, so close it first.
+            closeMenu();
+            document.body.classList.toggle('au-nav-stuck', stuck);
+            bar.setAttribute('aria-hidden', stuck ? 'false' : 'true');
+            [].forEach.call(bar.querySelectorAll('a, button'), function (el) { el.tabIndex = stuck ? 0 : -1; });
+        }
+
+        new IntersectionObserver(function (entries) {
+            var e = entries[0];
+            // Stuck once the header's last row is fully above the top of the screen.
+            setStuck(phone.matches && !e.isIntersecting && e.boundingClientRect.top < 0);
+        }).observe(edge);
+        phone.addEventListener('change', function (m) { if (!m.matches) setStuck(false); });
+    })();
+    </script>
 </aside>

@@ -35,11 +35,11 @@
 
 <link rel='canonical' href='https://arjunuvacha.com/tags/motivation/'>
 
-<link rel="stylesheet" href="/scss/style.min.feb20e57db7062dbf86a5289626f1573810a80d454ee13cec6d1da5d780fc257.css"><meta property='og:title' content='Tag: motivation - Arjun Uvacha'>
+<link rel="stylesheet" href="/scss/style.min.9ec3ce0d9cc041e5111c45d1e2c3c3648bca8ee5e57d940b3e28f3c88be6a936.css"><meta property='og:title' content='Tag: motivation - Arjun Uvacha'>
 <meta property='og:description' content='🔍 a product manager&#39;s perspective of everyday things.'>
 <meta property='og:url' content='https://arjunuvacha.com/tags/motivation/'>
 <meta property='og:site_name' content='Arjun Uvacha'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2026-09-27T16:47:32&#43;05:30 '/><meta property='og:image' content='https://arjunuvacha.com/img/au.png' />
+<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2026-09-27T17:06:19&#43;05:30 '/><meta property='og:image' content='https://arjunuvacha.com/img/au.png' />
 <meta name="twitter:site" content="@arjunuvacha_">
     <meta name="twitter:creator" content="@arjunuvacha_"><meta name="twitter:title" content="Tag: motivation - Arjun Uvacha">
 <meta name="twitter:description" content="🔍 a product manager&#39;s perspective of everyday things."><meta name="twitter:card" content="summary_large_image">
@@ -360,6 +360,54 @@
             
         </div>
     </ol>
+
+    
+    
+    
+    <div class="au-mobile-bar" id="au-mobile-bar" aria-hidden="true">
+        <a class="au-mobile-bar-home" href="/" tabindex="-1">
+            <img src="/img/au_hub85b891999db1c786a7f5e71f3e9fa26_19310_80x0_resize_box_3.png" width="32" height="32" alt="">
+            <span>Arjun Uvacha</span>
+        </a>
+        <button class="hamburger hamburger--spin" type="button" id="au-bar-toggle" aria-label="Toggle Menu" tabindex="-1">
+            <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+        </button>
+    </div>
+    <script>
+    (function () {
+        var bar = document.getElementById('au-mobile-bar');
+        var barToggle = document.getElementById('au-bar-toggle');
+        var themeToggle = document.getElementById('toggle-menu');
+        var menu = document.getElementById('main-menu');
+        var aside = bar && bar.parentElement;
+        var edge = aside && (aside.querySelector('.social-menu') || aside.querySelector('header'));
+        if (!bar || !themeToggle || !menu || !edge || !('IntersectionObserver' in window)) return;
+
+        var phone = window.matchMedia('(max-width: 767px)');
+        var sync = function () { barToggle.classList.toggle('is-active', themeToggle.classList.contains('is-active')); };
+        var closeMenu = function () { if (menu.classList.contains('show')) { themeToggle.click(); sync(); } };
+
+        barToggle.addEventListener('click', function () { themeToggle.click(); sync(); });
+        themeToggle.addEventListener('click', function () { setTimeout(sync, 0); });
+
+        function setStuck(stuck) {
+            if (document.body.classList.contains('au-nav-stuck') === stuck) return;
+            
+            
+            closeMenu();
+            document.body.classList.toggle('au-nav-stuck', stuck);
+            bar.setAttribute('aria-hidden', stuck ? 'false' : 'true');
+            [].forEach.call(bar.querySelectorAll('a, button'), function (el) { el.tabIndex = stuck ? 0 : -1; });
+        }
+
+        new IntersectionObserver(function (entries) {
+            var e = entries[0];
+            
+            setStuck(phone.matches && !e.isIntersecting && e.boundingClientRect.top < 0);
+        }).observe(edge);
+        phone.addEventListener('change', function (m) { if (!m.matches) setStuck(false); });
+    })();
+    </script>
 </aside>
 
     <aside class="sidebar right-sidebar sticky">

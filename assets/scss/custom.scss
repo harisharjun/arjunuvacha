@@ -1838,3 +1838,88 @@ html:not(.au-js) .au-card {
         padding: 24px 22px;
     }
 }
+
+/* ============================================================
+   Phones: the slim sticky bar (layouts/partials/sidebar/left.html)
+   and tighter top spacing on the landing pages.
+   ============================================================ */
+
+.au-mobile-bar {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .au-mobile-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 56px;
+        padding: 0 15px;
+        background: var(--body-background);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06), 0 6px 18px rgba(0, 0, 0, 0.06);
+        transform: translateY(-110%);
+        visibility: hidden;
+        transition: transform 0.28s ease, visibility 0s linear 0.28s;
+    }
+
+    body.au-nav-stuck .au-mobile-bar {
+        transform: none;
+        visibility: visible;
+        transition: transform 0.28s ease, visibility 0s;
+    }
+
+    .au-mobile-bar-home {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        color: var(--card-text-color-main);
+        text-decoration: none;
+        font-size: 1.7rem;
+        font-weight: 700;
+    }
+
+    .au-mobile-bar-home img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        box-shadow: var(--shadow-l1);
+    }
+
+    .au-mobile-bar .hamburger {
+        padding-top: 4px;
+    }
+
+    /* While the bar is showing, the menu opens as a panel right under it. */
+    body.au-nav-stuck #main-menu.show {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        margin: 0;
+        max-height: calc(100vh - 56px);
+        overflow-y: auto;
+    }
+
+    /* The landing pages added their own top padding on top of the theme's gap
+       under the header; on a phone that read as an empty band. */
+    .template-home .main-container,
+    .template-ailab .main-container {
+        gap: 20px;
+    }
+
+    .template-home .main,
+    .template-ailab .main {
+        padding-top: 0;
+    }
+
+    .au-intro {
+        padding-top: 0;
+    }
+}
