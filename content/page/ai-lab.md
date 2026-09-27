@@ -14,13 +14,23 @@ ailab:
     by me. They keep my product instincts honest: every prompt, every edge
     case, every user complaint is mine to fix.
   stats:
-    - value: "5"
+    - value: "6"
       label: "products shipped"
     - value: "0→1"
       label: "solo, every time"
     - value: "100%"
       label: "vibe-coded by hand"
+  # Newest first. Add a new build at the top.
   projects:
+    - name: "PromptGym"
+      tagline: "A mini-eval system for prompts"
+      description: >
+        Write a prompt for a short task and see if it holds up against hidden
+        test cases. Every output is graded three ways: code checks, semantic
+        similarity, and an LLM judge with a rubric. With a leaderboard.
+      icon: "gym"
+      link: "/prompt-gym/"
+      link_label: "Try it live"
     - name: "Anvi Chatbot"
       tagline: "Conversational AI assistant"
       description: >

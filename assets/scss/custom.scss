@@ -1572,15 +1572,6 @@ a.ailab-card:hover {
     padding-top: var(--main-top-padding);
 }
 
-.au-visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-}
-
 /* The panels are drawn about 1000px wide. Wider than that and they would be
    stretched soft, so the strip keeps its own width and sits centred. */
 .au-home {
@@ -1590,6 +1581,92 @@ a.ailab-card:hover {
     display: flex;
     flex-direction: column;
     gap: 36px;
+}
+
+/* ---- The opening: what the name means, before any picture ---- */
+.au-home {
+    --au-sunset: #d9480f;
+}
+
+.au-intro {
+    padding: 8px 4px 0;
+}
+
+.au-intro-kicker {
+    margin: 0 0 14px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--au-sunset);
+}
+
+.au-intro-title {
+    margin: 0 0 16px;
+    font-size: 3.6rem;
+    line-height: 1.2;
+    font-weight: 800;
+    color: var(--card-text-color-main);
+    text-wrap: balance;
+}
+
+.au-intro-lede {
+    max-width: 62ch;
+    margin: 0 0 22px;
+    font-size: 1.75rem;
+    line-height: 1.65;
+    color: var(--card-text-color-secondary);
+}
+
+.au-intro-lede em {
+    font-style: italic;
+    color: var(--card-text-color-main);
+}
+
+.au-intro-cue {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--card-text-color-secondary);
+}
+
+.au-intro-arrow {
+    display: inline-block;
+    margin-left: 4px;
+    animation: au-nudge 2.4s ease-in-out infinite;
+}
+
+@keyframes au-nudge {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(4px); }
+}
+
+/* ---- Chapter lines between the panels ---- */
+.au-beat {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 30px 4px 8px;
+}
+
+.au-story > .au-beat:first-child {
+    margin-top: 0;
+}
+
+.au-beat-label {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--au-sunset);
+}
+
+.au-beat-text {
+    max-width: 60ch;
+    font-size: 1.75rem;
+    line-height: 1.55;
+    color: var(--card-text-color-main);
 }
 
 /* Two to a row on a computer, like a comic page; wide panels take the row. */
@@ -1632,6 +1709,10 @@ a.ailab-card:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .au-intro-arrow {
+        animation: none;
+    }
+
     .au-js .au-reveal {
         opacity: 1;
         transform: none;
@@ -1728,6 +1809,19 @@ html:not(.au-js) .au-card {
 @media (max-width: 767px) {
     .au-home {
         gap: 28px;
+    }
+
+    .au-intro-title {
+        font-size: 2.7rem;
+    }
+
+    .au-intro-lede,
+    .au-beat-text {
+        font-size: 1.6rem;
+    }
+
+    .au-beat {
+        margin-top: 22px;
     }
 
     .au-story {

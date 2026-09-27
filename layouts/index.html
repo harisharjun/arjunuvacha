@@ -13,7 +13,16 @@
 {{ define "main" }}
 {{ $landing := .Params.landing }}
 <div class="au-home">
-    <h1 class="au-visually-hidden">{{ .Site.Title }}: {{ .Site.Params.description }}</h1>
+    {{/* The first thing a visitor reads: what the name means, so the panels
+         below read as a story rather than a gallery. */}}
+    {{ with $landing.intro }}
+    <header class="au-intro au-reveal">
+        <p class="au-intro-kicker">{{ .kicker }}</p>
+        <h1 class="au-intro-title">{{ .title }}</h1>
+        <p class="au-intro-lede">{{ .lede | safeHTML }}</p>
+        <p class="au-intro-cue" aria-hidden="true">{{ .cue }} <span class="au-intro-arrow">&darr;</span></p>
+    </header>
+    {{ end }}
 
     <section class="au-story" aria-label="The story behind {{ .Site.Title }}">
         {{ range $i, $p := $landing.panels }}
@@ -24,6 +33,12 @@
                  for artwork like this, with no visible change. */}}
             {{ $webOut := $web.Resize (printf "%dx webp q88" $web.Width) }}
             {{ $mobileOut := $mobile.Resize (printf "%dx webp q88" $mobile.Width) }}
+            {{ with $p.beat }}
+            <p class="au-beat au-reveal">
+                <span class="au-beat-label">{{ .label }}</span>
+                <span class="au-beat-text">{{ .text }}</span>
+            </p>
+            {{ end }}
             <figure class="au-panel au-reveal{{ if $p.wide }} au-panel--wide{{ end }}">
                 <picture>
                     <source media="(max-width: 767px)" srcset="{{ $mobileOut.RelPermalink }}"
