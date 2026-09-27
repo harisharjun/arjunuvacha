@@ -14,12 +14,29 @@ import {
 // Public by design: Firebase web config identifies the project, it does not
 // authorise anything. Security comes from the authorised-domains list and from
 // the Worker verifying every token's signature and `aud`.
-const firebaseConfig = {
-  apiKey: 'AIzaSyDnH_WHo0-amyN9evSs39w5DQ0zWQB-G4g',
-  authDomain: 'arjunuvacha-3de80.firebaseapp.com',
-  projectId: 'arjunuvacha-3de80',
-  appId: '1:803439518846:web:d42740ad6e11bbe9db642f',
-};
+//
+// Two projects, so testing never touches real accounts (27 Sep 2026). Only the
+// production domains get the production project; staging, localhost and anything
+// else get the test one, which the staging Worker is configured to accept.
+const PRODUCTION_HOSTS = new Set([
+  'arjunuvacha.com',
+  'www.arjunuvacha.com',
+  'arjunuvacha-3de80.web.app',
+  'arjunuvacha-3de80.firebaseapp.com',
+]);
+const firebaseConfig = PRODUCTION_HOSTS.has(location.hostname)
+  ? {
+      apiKey: 'AIzaSyDnH_WHo0-amyN9evSs39w5DQ0zWQB-G4g',
+      authDomain: 'arjunuvacha-3de80.firebaseapp.com',
+      projectId: 'arjunuvacha-3de80',
+      appId: '1:803439518846:web:d42740ad6e11bbe9db642f',
+    }
+  : {
+      apiKey: 'AIzaSyDBAL5mJakFh1puHBKR-t_FI35_ezFmwpQ',
+      authDomain: 'arjunuvacha-test.firebaseapp.com',
+      projectId: 'arjunuvacha-test',
+      appId: '1:833713704989:web:f7d6660b369f7a35b876f4',
+    };
 
 const auth = getAuth(initializeApp(firebaseConfig));
 const provider = new GoogleAuthProvider();
