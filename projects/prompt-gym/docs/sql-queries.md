@@ -82,6 +82,29 @@ SELECT CASE is_anonymous WHEN 1 THEN 'guest' ELSE 'signed in' END AS kind, COUNT
 FROM users GROUP BY is_anonymous;
 ```
 
+**All signed-in players**
+
+Just the names:
+
+```sql
+SELECT display_name FROM users WHERE is_anonymous = 0 ORDER BY display_name;
+```
+
+With when they first showed up, how much they've played, and when they last ran
+something. `first_seen` can be from before they signed in, because a guest who
+links Google keeps the same account. Someone who signed in but never ran a prompt
+shows 0 runs.
+
+```sql
+SELECT u.display_name, u.created_at AS first_seen,
+       COUNT(s.id) AS runs, COALESCE(SUM(s.passed), 0) AS passes,
+       MAX(s.created_at) AS last_run
+FROM users u LEFT JOIN submissions s ON s.uid = u.uid
+WHERE u.is_anonymous = 0
+GROUP BY u.uid
+ORDER BY last_run DESC;
+```
+
 **Best score per player and challenge**
 
 ```sql
