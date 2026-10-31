@@ -558,7 +558,9 @@ function disconnect() {
 }
 
 // ───────────── navigation ─────────────
-const inPlay = () => !!game && game.winner === null;
+// A game is under way once a move has been made. Quitting before that — straight
+// after Start game — gives nothing up, so it leaves without asking or recording.
+const inPlay = () => !!game && game.winner === null && game.moveNo > 0;
 
 function askQuit() {
   if (!inPlay()) return leave();
