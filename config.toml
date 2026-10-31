@@ -150,7 +150,7 @@ enabled = true
 enabled = true
 
 # Menu order is by weight, lowest first: Home, About (-120, in about.md), AI Lab,
-# Product Work, Blog, Archives (-70, archives.md), Search (-60, search.md).
+# Games, Product Work, Blog, Archives (-70, archives.md), Search (-60, search.md).
 [menu]
   [[menu.main]]
 identifier = "home"
@@ -172,6 +172,14 @@ name = "AI Lab"
 url = "/ai-lab/"
 weight = -110
 pre = "sparkles"
+
+  # Games live outside Hugo (static/games/), so the menu links to them by URL.
+  [[menu.main]]
+identifier = "games"
+name = "Games"
+url = "/games/"
+weight = -105
+pre = "dice"
 
   [[menu.main]]
 identifier = "blog"

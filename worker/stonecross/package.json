@@ -1,0 +1,12 @@
+{
+  "name": "stonecross-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --env staging",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.86.0"
+  }
+}

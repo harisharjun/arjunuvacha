@@ -26,6 +26,15 @@
     ],
     "headers": [
       {
+        "comment": "Same reason as /prompt-gym/** below: the games and the site-wide sign-in ship unhashed filenames, and /auth/auth.js is shared by every page, so a stale copy for an hour after a deploy would mix old and new code. `no-cache` revalidates; an unchanged file still costs only a 304.",
+        "source": "/games/**",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "/auth/**",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
         "comment": "The SPA ships unhashed filenames, so Firebase's default max-age=3600 leaves returning visitors running an old app.js against a new index.html for an hour after every deploy. `no-cache` still caches \u2014 it just revalidates first, so an unchanged file costs a 304. Scoped to /prompt-gym/** so nothing about the blog's caching changes.",
         "source": "/prompt-gym/**",
         "headers": [

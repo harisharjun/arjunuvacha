@@ -1,0 +1,65 @@
+# stonecross worker — Cloudflare config
+# Online rooms and saved results for the games at arjunuvacha.com/games/.
+# Two players share a 6-digit code; each code is one Durable Object that holds
+# the game and checks every move with the same engine the page uses. Finished
+# games are written to D1 against the players' Firebase accounts (the same uids
+# PromptGym uses). See README.md.
+#
+# Local:   npx wrangler d1 migrations apply games-staging --local --env staging
+#          npx wrangler dev --env staging        (http://localhost:8787)
+#          Localhost signs in to the test Firebase project, so local runs use the
+#          staging settings, as the page does.
+# Deploy:  npx wrangler deploy                    (https://stonecross.harisharjun127.workers.dev)
+#          npx wrangler deploy --env staging      (https://stonecross-staging.harisharjun127.workers.dev)
+#
+# No secrets. SQLite-backed Durable Objects and D1 are both on the free plan.
+name = "stonecross"
+main = "worker.js"
+compatibility_date = "2025-04-01"
+
+[vars]
+# Not a secret: the `aud` a token must carry. Production signs in against
+# arjunuvacha-3de80, exactly like PromptGym's production Worker.
+FIREBASE_PROJECT_ID = "arjunuvacha-3de80"
+
+[[durable_objects.bindings]]
+name = "ROOM"
+class_name = "Room"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Room"]
+
+# Results. Create once and paste the id it prints over the placeholder:
+#   npx wrangler d1 create games
+#   npx wrangler d1 migrations apply games --remote
+# The placeholder is deliberate: until it is replaced, `wrangler deploy` fails
+# loudly instead of deploying a Worker with nowhere to save results.
+[[d1_databases]]
+binding = "DB"
+database_name = "games"
+database_id = "1adb7ed9-9462-4655-98b5-f9254733fe84"
+migrations_dir = "migrations"
+
+# ─────────────────────────────────────────────────────────────── staging
+# For arjunuvacha-test.web.app and localhost, which sign in to the test Firebase
+# project (see /auth/auth.js). Its own D1, so testing never touches real records.
+# Bindings and vars don't inherit into an environment, so they're repeated here.
+#   npx wrangler d1 create games-staging
+#   npx wrangler d1 migrations apply games-staging --remote --env staging
+#   npx wrangler deploy --env staging
+[env.staging]
+name = "stonecross-staging"
+
+[env.staging.vars]
+FIREBASE_PROJECT_ID = "arjunuvacha-test"
+
+[[env.staging.durable_objects.bindings]]
+name = "ROOM"
+class_name = "Room"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "games-staging"
+database_id = "33c1be46-9a51-40b8-81e5-5dab8db99128"
+migrations_dir = "migrations"

@@ -1,0 +1,118 @@
+/* Games on arjunuvacha.com — shared by /games/ and every game page.
+   Colours and type follow the main site (hugo-theme-stack as configured in
+   config.toml: light only, Lato, white cards on #f5f5fa, the home page's sunset
+   orange). The header is PromptGym's: mark, product name, account on the right. */
+:root {
+  --bg: #f5f5fa;
+  --card: #ffffff;
+  --card-selected: #eaeaea;
+  --ink: #000000;
+  --ink-2: #1b1d1f;
+  --muted: #747474;
+  --faint: #bababa;
+  --line: rgba(218, 218, 218, 0.6);
+  --line-strong: #d4d4d8;
+  --accent: #d9480f;          /* the home page's sunset */
+  --accent-dark: #b93c0b;
+  --accent-soft: #fbe9e1;
+  --accent-ink: #ffffff;
+  --shadow-l1: 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 2px rgba(0, 0, 0, 0.06), 0px 0px 1px rgba(0, 0, 0, 0.04);
+  --shadow-l2: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+  --shadow-l4: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+  --radius: 20px;
+  --radius-sm: 10px;
+  --font: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", "Droid Sans", "Helvetica Neue", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink-2);
+  font: 16px/1.55 var(--font);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+}
+a { color: var(--accent); }
+h1, h2, h3 { color: var(--ink); letter-spacing: -0.01em; margin: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ───────────── header (PromptGym's) */
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  max-width: 82rem; margin: 0 auto; padding: .7rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.brand { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+.brand-mark { display: block; line-height: 0; border-radius: 8px; flex: none; }
+.brand-mark img { width: 40px; height: 40px; display: block; }
+.brand-text { display: flex; flex-direction: column; text-decoration: none; color: inherit; line-height: 1.15; min-width: 0; }
+.brand-name { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--ink); }
+.brand-by { font-size: .75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header-right { display: flex; align-items: center; gap: .9rem; flex: none; }
+.header-link {
+  background: none; border: 0; padding: .3rem; font: inherit; font-size: .9rem; color: var(--muted);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.header-link:hover { color: var(--ink); }
+
+@media (max-width: 560px) {
+  .header-inner { padding: .6rem 1rem; gap: .6rem; }
+  .brand-mark img { width: 34px; height: 34px; }
+  .brand-by { display: none; }
+  .header-right { gap: .5rem; }
+}
+
+/* ───────────── shared bits */
+.btn {
+  font: inherit; font-weight: 700; font-size: .95rem; cursor: pointer;
+  border: 1px solid var(--line-strong); background: var(--card); color: var(--ink-2);
+  border-radius: var(--radius-sm); padding: 11px 18px; transition: transform .08s, background .15s, box-shadow .15s;
+  text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: .4em;
+}
+.btn:hover { background: var(--bg); }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--accent); border-color: transparent; color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent-dark); }
+.btn:disabled { opacity: .55; cursor: default; }
+
+.kicker {
+  margin: 0; font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+}
+
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0;
+  background: var(--ink-2); color: #fff; padding: 10px 16px; border-radius: 10px; font-size: .9rem;
+  transition: .2s; pointer-events: none; z-index: 30; max-width: calc(100vw - 32px);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ───────────── footer: the home page's, with the theme's styles
+   (hugo-theme-stack partials/footer.scss at the site's 10px rem) */
+footer.site-footer {
+  max-width: 1000px; margin: 0 auto; padding: 20px 16px 40px;
+  font-size: 14px; line-height: 1.75; color: #34495e;
+}
+footer.site-footer::before {
+  content: ""; display: block; height: 3px; width: 50px; background: #bababa; margin-bottom: 20px;
+}
+footer.site-footer a { color: #34495e; text-decoration: none; }
+footer.site-footer a:hover { text-decoration: underline; }
+footer.site-footer .copyright { font-weight: bold; margin-bottom: 5px; }
+footer.site-footer .foot-social { display: flex; gap: 20px; margin: 10px 0 5px; }
+footer.site-footer .foot-social a { line-height: 0; }
+footer.site-footer .foot-social a:hover { opacity: .7; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
