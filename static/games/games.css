@@ -101,15 +101,15 @@ h1, h2, h3 { color: var(--ink); letter-spacing: -0.01em; margin: 0; }
    (hugo-theme-stack partials/footer.scss at the site's 10px rem) */
 footer.site-footer {
   max-width: 1000px; margin: 0 auto; padding: 20px 16px 40px;
-  font-size: 14px; line-height: 1.75; color: #34495e;
+  font-size: 14px; line-height: 1.75; color: #34495e; text-align: center;
 }
 footer.site-footer::before {
-  content: ""; display: block; height: 3px; width: 50px; background: #bababa; margin-bottom: 20px;
+  content: ""; display: block; height: 3px; width: 50px; background: #bababa; margin: 0 auto 20px;
 }
 footer.site-footer a { color: #34495e; text-decoration: none; }
 footer.site-footer a:hover { text-decoration: underline; }
 footer.site-footer .copyright { font-weight: bold; margin-bottom: 5px; }
-footer.site-footer .foot-social { display: flex; gap: 20px; margin: 10px 0 5px; }
+footer.site-footer .foot-social { display: flex; justify-content: center; gap: 20px; margin: 10px 0 5px; }
 footer.site-footer .foot-social a { line-height: 0; }
 footer.site-footer .foot-social a:hover { opacity: .7; }
 

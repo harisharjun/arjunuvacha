@@ -3,7 +3,7 @@
 //   POST /rooms               (signed in)  -> { code }        create a room
 //   GET  /rooms/:code                      -> { exists, full } check a code
 //   GET  /rooms/:code/ws                   WebSocket; first message { type: 'auth', idToken }
-//   POST /results/system      (signed in)  { id, level, starter, moves } -> { result, stats }
+//   POST /results/system      (signed in)  { id, level, starter, moves, conceded? } -> { result, stats }
 //   GET  /me/stats?game=stonecross (signed in) -> your record
 //
 // Sign-in works as on PromptGym: the page sends a Firebase ID token (a guest's
@@ -12,9 +12,10 @@
 //   - online games are played on the server, so their results are exact;
 //   - games against the system are played in the browser (the search needs more
 //     CPU than a Worker gets), so the page sends the move list and this Worker
-//     replays it with the same engine. Illegal or unfinished games are refused.
-//     It can't prove the system's moves came from the real AI; the level is the
-//     player's word.
+//     replays it with the same engine. Illegal games are refused, and so are
+//     unfinished ones unless the page says the player gave it up (`conceded`),
+//     which only ever records a loss. It can't prove the system's moves came
+//     from the real AI; the level is the player's word.
 import { newGame, findMove, play } from '../../static/games/stonecross/engine.js';
 import { userFromRequest, verifyIdToken, jwksUrlFrom, TokenError } from './verify.js';
 
@@ -112,7 +113,7 @@ async function statsFor(db, uid) {
 }
 
 /** Replays a game against the system. Returns the final state, or an error. */
-function replaySystemGame(starter, moves) {
+function replaySystemGame(starter, moves, conceded = false) {
   let s = newGame(starter);
   for (const mv of moves) {
     if (s.winner !== null) return { error: 'moves_after_end' };
@@ -121,7 +122,12 @@ function replaySystemGame(starter, moves) {
     if (!m) return { error: 'illegal_move' };
     s = play(s, m);
   }
-  if (s.winner === null) return { error: 'unfinished' };
+  if (s.winner === null) {
+    // Given up part-way: the player is Ivory (seat 0), so the system takes it.
+    // Nothing to check — nobody lies to lose.
+    if (conceded) return { state: { ...s, winner: 1, reason: 'conceded' } };
+    return { error: 'unfinished' };
+  }
   return { state: s };
 }
 
@@ -163,7 +169,8 @@ export default {
       if (!LEVELS.has(body.level)) return json({ error: 'bad_level' }, 400, origin);
       if (body.starter !== 0 && body.starter !== 1) return json({ error: 'bad_starter' }, 400, origin);
       if (!Array.isArray(body.moves) || body.moves.length > 200) return json({ error: 'bad_moves' }, 400, origin);
-      const { state, error: replayError } = replaySystemGame(body.starter, body.moves);
+      if (body.conceded !== undefined && typeof body.conceded !== 'boolean') return json({ error: 'bad_conceded' }, 400, origin);
+      const { state, error: replayError } = replaySystemGame(body.starter, body.moves, body.conceded === true);
       if (replayError) return json({ error: replayError }, 422, origin);
       // The player is always Ivory (seat 0) against the system.
       await recordGame(env.DB, {
@@ -377,6 +384,15 @@ export class Room {
       room.game = play(g, m);
       room.moves ??= [];
       room.moves.push([m.from, m.to]);
+      await this.record(room);
+      await this.save(room);
+      return this.broadcast(room);
+    }
+
+    if (msg.type === 'concede') {
+      const g = room.game;
+      if (!g || g.winner !== null) return;
+      room.game = { ...g, winner: 1 - seat, reason: 'conceded' };
       await this.record(room);
       await this.save(room);
       return this.broadcast(room);

@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS games (
   room_code   TEXT,                      -- online only
   starter     INTEGER NOT NULL,          -- seat that moved first
   winner      TEXT NOT NULL,             -- '0' | '1' | 'draw'
-  reason      TEXT,                      -- 'banked' | 'outnumbered' | 'blocked'
+  reason      TEXT,                      -- 'banked' | 'outnumbered' | 'blocked' | 'conceded'
   plies       INTEGER NOT NULL,
   moves_json  TEXT NOT NULL,             -- [[from, to], ...] so any game can be replayed
   finished_at TEXT NOT NULL DEFAULT (datetime('now'))

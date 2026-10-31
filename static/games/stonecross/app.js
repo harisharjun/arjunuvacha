@@ -74,6 +74,7 @@ const REASONS = {
   banked: 'Three stones made it across.',
   outnumbered: 'Not enough stones left to get three across.',
   blocked: 'Both sides were stuck, so the most stones banked wins.',
+  conceded: 'The game was given up.',
 };
 
 // ───────────── state ─────────────
@@ -557,6 +558,35 @@ function disconnect() {
 }
 
 // ───────────── navigation ─────────────
+const inPlay = () => !!game && game.winner === null;
+
+function askQuit() {
+  if (!inPlay()) return leave();
+  $('quitConfirm').showModal();
+}
+
+// Confirmed: give the game up, then go back to the menu. Online, the room
+// awards it to the other seat; against the system, the Worker records the loss.
+// Pass & play isn't saved, so there is nothing to concede but the game itself.
+function quitGame() {
+  if (inPlay()) {
+    if (mode?.kind === 'online') send({ type: 'concede' });
+    else if (mode?.kind === 'ai') saveConceded();
+  }
+  leave();
+}
+
+// The moves played so far, flagged as given up. Nothing here is worth gaming:
+// a player only ever concedes against themselves.
+function saveConceded() {
+  if (!game || saved) return;
+  saved = true;
+  const body = JSON.stringify({ id: gameId, level: mode.level, starter: game.starter, moves: history, conceded: true });
+  api('/results/system', { method: 'POST', body })
+    .then((res) => { stats = res.stats; renderRecord(); })
+    .catch(() => {});
+}
+
 function leave() {
   disconnect();
   conn.code = null;
@@ -583,14 +613,18 @@ $('createRoom').addEventListener('click', createRoom);
 $('joinForm').addEventListener('submit', (e) => { e.preventDefault(); joinRoom($('joinCode').value.trim()); });
 $('joinCode').addEventListener('input', (e) => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
 $('cancelWait').addEventListener('click', leave);
-$('leaveBtn').addEventListener('click', leave);
+$('leaveBtn').addEventListener('click', askQuit);
+$('quitYes').addEventListener('click', () => { $('quitConfirm').close(); quitGame(); });
+$('quitNo').addEventListener('click', () => $('quitConfirm').close());
 $('overMenu').addEventListener('click', leave);
 $('restartBtn').addEventListener('click', () => (mode.kind === 'ai' ? startAi() : startLocal()));
 $('againBtn').addEventListener('click', () => {
   if (mode.kind === 'online') { send({ type: 'rematch' }); room.rematch[mode.seat] = true; overlay(); }
   else { $('over').hidden = true; mode.kind === 'ai' ? startAi() : startLocal(); }
 });
-$('rulesBtn').addEventListener('click', () => $('rules').showModal());
+for (const b of document.querySelectorAll('[data-rules]')) {
+  b.addEventListener('click', () => $('rules').showModal());
+}
 
 const shareUrl = (code) => `${location.origin}${location.pathname}?code=${code}`;
 $('copyCode').addEventListener('click', async () => {
