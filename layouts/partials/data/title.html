@@ -6,7 +6,7 @@
      title "page 2", and that alone made Hugo write /page/2/, /page/3/ copies of
      the landing page. The post list and its numbering live at /blog/. */}}
 {{- if .IsHome -}}
-    {{ $title = $siteTitle }}
+    {{ $title = printf "Home | %s" $siteTitle }}
 {{- else if eq .Kind "term" -}}
     <!-- Taxonomy page -->
 

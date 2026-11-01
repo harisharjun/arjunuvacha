@@ -6,20 +6,22 @@
   display: flex; flex-direction: column; align-items: center;
 }
 #board {
-  display: block; width: min(100%, calc((100dvh - 210px) * 340 / 390)); min-width: 280px;
+  display: block; width: min(100%, calc((100dvh - 265px) * 340 / 390)); min-width: 280px;
   touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab;
 }
 #board.dragging { cursor: grabbing; }
 #board.pop { animation: pop .45s ease-out; }
 @keyframes pop { 40% { transform: scale(1.04); } }
 
-.status { display: flex; gap: .5em; margin: 4px 0 12px; color: var(--muted); font-size: .95rem; }
+.status { display: flex; gap: .5em; margin: 4px 0 8px; color: var(--muted); font-size: .95rem; }
 .status #levelName { font-weight: 700; color: var(--ink-2); }
 
-.tools { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+/* Undo on its own line, with Start over and Hint below it. */
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: min(100%, 300px); margin-top: 8px; }
 .tools .btn { padding: 9px 16px; }
+#undoBtn { grid-column: 1 / -1; }
 
-.win { text-align: center; }
+.win { text-align: center; margin-top: 8px; }
 .win-title { margin: 0; font-size: 1.25rem; font-weight: 900; color: var(--ink); }
 .win-sub { margin: 2px 0 12px; color: var(--muted); font-size: .95rem; }
 .win-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
@@ -49,7 +51,8 @@
 .how-text { margin: 4px 0 10px; min-height: 4.65em; font-size: .95rem; }
 /* The picture gives way on a short phone, so the buttons stay on screen. */
 #howStage { display: block; width: min(100%, 44dvh); margin: 0 auto; }
-.how-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin-top: 10px; }
+.how-note { margin: 4px 0 0; min-height: 2.8em; text-align: center; font-weight: 700; font-size: .9rem; line-height: 1.4; color: var(--ink); }
+.how-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin-top: 4px; }
 .how-nav .btn { padding: 8px 14px; }
 #howBack { justify-self: start; }
 #howNext { justify-self: end; white-space: nowrap; }

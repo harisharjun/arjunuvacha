@@ -63,13 +63,13 @@
     <!-- A hidden sheet of every picture, for the squares of paper to show their part of. -->
     <svg id="artDefs" width="0" height="0" aria-hidden="true" style="position:absolute"></svg>
 
-    <svg id="board" viewBox="0 0 340 390" role="img" aria-label="A sheet of paper to fold, and a small picture of the result to make. Drag the paper across a dashed line to fold it."></svg>
-
     <div class="status">
       <span id="levelName"></span>
       <span class="dot" aria-hidden="true">·</span>
       <span id="foldCount"></span>
     </div>
+
+    <svg id="board" viewBox="0 0 340 390" role="img" aria-label="A sheet of paper to fold, and a small picture of the result to make. Drag the paper across a dashed line to fold it."></svg>
 
     <div class="tools" id="tools">
       <button class="btn" id="undoBtn" type="button">Undo</button>
@@ -96,6 +96,7 @@
     <h2 id="howTitle"></h2>
     <p class="how-text" id="howText" aria-live="polite"></p>
     <svg id="howStage" viewBox="0 0 300 250" aria-hidden="true"></svg>
+    <p class="how-note" id="howNote" aria-live="polite"></p>
     <div class="how-nav">
       <button class="btn" id="howBack" type="button">Back</button>
       <div class="how-dots" id="howDots"></div>

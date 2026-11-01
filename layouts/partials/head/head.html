@@ -2,11 +2,11 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <link rel="stylesheet" href="../../styles.css">
 
-<title itemprop="name">{{ .Title }} | {{ .Site.Title }}</title>
-<meta property="og:title" content="{{ .Title }} | {{ .Site.Title }}" />
-<meta name="twitter:title" content="{{ .Title }} | {{ .Site.Title }}" />
-<meta itemprop="name" content="{{ .Title }} | {{ .Site.Title }}" />
-<meta name="application-name" content="{{ .Title }} | {{ .Site.Title }}" />
+<title itemprop="name">{{ if .IsHome }}Home{{ else }}{{ .Title }}{{ end }} | {{ .Site.Title }}</title>
+<meta property="og:title" content="{{ if .IsHome }}Home{{ else }}{{ .Title }}{{ end }} | {{ .Site.Title }}" />
+<meta name="twitter:title" content="{{ if .IsHome }}Home{{ else }}{{ .Title }}{{ end }} | {{ .Site.Title }}" />
+<meta itemprop="name" content="{{ if .IsHome }}Home{{ else }}{{ .Title }}{{ end }} | {{ .Site.Title }}" />
+<meta name="application-name" content="{{ if .IsHome }}Home{{ else }}{{ .Title }}{{ end }} | {{ .Site.Title }}" />
 <meta property="og:site_name" content="{{ .Site.Params.sitename }}" />
 
 {{- $description := partialCached "data/description" . .RelPermalink -}}

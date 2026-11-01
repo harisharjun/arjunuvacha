@@ -48,15 +48,17 @@ export function applyFold(cells, c) {
   return next;
 }
 
+// Whether the square at k shows the face the target wants there, the right way round.
+export function squareMatches(cells, k, level) {
+  const b = bounds(cells), [x, y] = P(k), top = cells.get(k)[0], e = level.fin[faceId(top)];
+  return !!e && e[0] === x - b.x0 && e[1] === y - b.y0 && (e[2] === 1) === top.x && (e[3] === 1) === top.y;
+}
+
 // Solved when the top faces are the target's, each where and how it should be.
 export function isSolved(cells, level) {
   const b = bounds(cells);
   if (b.x1 - b.x0 !== level.w || b.y1 - b.y0 !== level.h || cells.size !== level.w * level.h) return false;
-  for (const [k, stack] of cells) {
-    const [x, y] = P(k), top = stack[0], e = level.fin[faceId(top)];
-    if (!e || e[0] !== x - b.x0 || e[1] !== y - b.y0 || (e[2] === 1) !== top.x || (e[3] === 1) !== top.y) return false;
-  }
-  return true;
+  return [...cells.keys()].every((k) => squareMatches(cells, k, level));
 }
 
 function stateKey(cells) {
