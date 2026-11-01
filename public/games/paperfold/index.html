@@ -50,6 +50,9 @@
         </a>
       </div>
       <div class="header-right">
+        <button class="how-to" id="howBtn" type="button" aria-label="How to play">
+          <span class="how-ico" aria-hidden="true">?</span><span class="how-label">How to play</span>
+        </button>
         <button class="btn slim" id="soundBtn" type="button" aria-pressed="true">Sound on</button>
         <button class="btn slim" id="mapBtn" type="button">Levels</button>
       </div>
@@ -84,6 +87,21 @@
       </div>
     </div>
   </main>
+
+  <dialog class="how" id="how" aria-labelledby="howTitle">
+    <div class="how-head">
+      <span id="howCount"></span>
+      <button class="btn slim" id="howClose" type="button">Close</button>
+    </div>
+    <h2 id="howTitle"></h2>
+    <p class="how-text" id="howText" aria-live="polite"></p>
+    <svg id="howStage" viewBox="0 0 300 250" aria-hidden="true"></svg>
+    <div class="how-nav">
+      <button class="btn" id="howBack" type="button">Back</button>
+      <div class="how-dots" id="howDots"></div>
+      <button class="btn primary" id="howNext" type="button">Next</button>
+    </div>
+  </dialog>
 
   <dialog class="map" id="map" aria-labelledby="mapTitle">
     <div class="map-head">

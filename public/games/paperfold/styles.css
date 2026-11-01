@@ -25,6 +25,39 @@
 .win-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .win-actions .btn { padding: 9px 16px; }
 
+/* The How to play button, as on Stonecross; on a phone it keeps its badge and drops its words. */
+.how-to {
+  font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: .45em; padding: 6px 12px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent-dark); border: 1px solid rgba(217, 72, 15, .25);
+  transition: background .15s, color .15s, border-color .15s;
+}
+.how-to:hover { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.how-ico {
+  display: grid; place-items: center; flex: none; width: 1.15em; height: 1.15em; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink); font-size: .78em; font-weight: 900;
+}
+.how-to:hover .how-ico { background: var(--accent-ink); color: var(--accent); }
+
+.how {
+  width: min(92vw, 440px); max-height: calc(100dvh - 24px); border: 0; border-radius: var(--radius);
+  padding: 18px 20px; box-shadow: var(--shadow-l4); color: var(--ink-2);
+}
+.how::backdrop { background: rgba(0, 0, 0, .45); }
+.how-head { display: flex; align-items: center; justify-content: space-between; font-size: .85rem; color: var(--muted); }
+.how h2 { font-size: 1.35rem; margin-top: 4px; }
+.how-text { margin: 4px 0 10px; min-height: 4.65em; font-size: .95rem; }
+/* The picture gives way on a short phone, so the buttons stay on screen. */
+#howStage { display: block; width: min(100%, 44dvh); margin: 0 auto; }
+.how-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin-top: 10px; }
+.how-nav .btn { padding: 8px 14px; }
+#howBack { justify-self: start; }
+#howNext { justify-self: end; white-space: nowrap; }
+.how-dots { display: flex; gap: 2px; }
+.how-dots button { width: 16px; height: 28px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+.how-dots button::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); }
+.how-dots button.now::before { background: var(--accent); }
+
 .map {
   width: min(92vw, 460px); max-height: 88dvh; border: 0; border-radius: var(--radius);
   padding: 20px; box-shadow: var(--shadow-l4); color: var(--ink-2);
@@ -49,4 +82,7 @@
 
 @media (max-width: 560px) {
   .play { padding: 4px 12px 20px; }
+  .how-to { padding: 6px; gap: 0; }
+  .how-to .how-label { display: none; }
+  .how-ico { font-size: .95em; }
 }
