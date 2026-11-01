@@ -1,5 +1,6 @@
 // Stonecross — page logic: menu, the board, the system opponent, online rooms.
 import * as E from './engine.js';
+import { openRules, openRulesOnce } from './tutorial.js';
 
 // Which Worker, by hostname, as PromptGym does: localhost talks to `wrangler dev`,
 // the staging site to the staging Worker (both sign in to the test Firebase
@@ -66,7 +67,7 @@ function faceOf(p) {
   return mode.kind === 'online' ? room?.names?.[p] || null : null;
 }
 const LEVELS = {
-  beginner: { label: 'Beginner', hint: 'Plays loosely. Good for learning the rules.' },
+  beginner: { label: 'Easy', hint: 'Plays loosely. Good for learning the rules.' },
   intermediate: { label: 'Intermediate', hint: 'Thinks two moves ahead.' },
   difficult: { label: 'Difficult', hint: 'Searches deep. Expect to lose a few.' },
 };
@@ -83,7 +84,7 @@ let game = null;
 let selected = -1; // board index of the selected stone
 let thinking = false;
 let room = null;   // online extras: { online, rematch }
-let level = 'intermediate';
+let level = 'beginner';
 let localStarter = 0;
 let history = [];  // [[from, to], ...] of the current game against the system
 let gameId = null; // its id, so a retried save can't count twice
@@ -96,6 +97,7 @@ const safe = (fn, fallback = null) => { try { return fn(); } catch { return fall
 function show(name) {
   for (const s of ['menu', 'waiting', 'game']) $(s).hidden = s !== name;
   window.scrollTo(0, 0);
+  if (name === 'game') openRulesOnce();
 }
 
 function toast(text, ms = 2200) {
@@ -172,6 +174,8 @@ function afterChange(prev) {
   const l = game.last;
   if (l && l.skipped !== undefined && (!prev || prev.moveNo < game.moveNo)) {
     toast(`${nameOf(l.skipped)} had no legal move, so the turn passes.`);
+  } else if (l?.bank && game.winner === null && (!prev || prev.moveNo < game.moveNo)) {
+    toast(`${nameOf(l.by)} got a stone across: ${game.banked[l.by]} of ${E.WIN_BANK}`);
   }
 }
 
@@ -195,7 +199,7 @@ function render() {
       + (last && (last.from === i || last.to === i) && !last.pass ? ' last' : '')
       + (t ? ' target' + (t.capture !== null ? ' capture' : '') + (t.bank ? ' bank' : '') : '');
     el.setAttribute('aria-label', t
-      ? (t.bank ? 'Bank here' : t.capture !== null ? 'Jump and capture' : 'Move here')
+      ? (t.bank ? 'Cross here' : t.capture !== null ? 'Jump and capture' : 'Move here')
       : `Row ${7 - Math.floor(d / 7)}, column ${(d % 7) + 1}` + (game.board[i] >= 0 ? (E.owner(game.board[i]) === 0 ? ', ivory stone' : ', onyx stone') : ''));
   }
 
@@ -226,9 +230,19 @@ function render() {
   // players
   panel($('pBot'), me);
   panel($('pTop'), 1 - me);
+  finishLine($('finishTop'), me, '↑');
+  finishLine($('finishBot'), 1 - me, '↓');
   $('status').textContent = statusText();
   $('restartBtn').hidden = mode.kind === 'online';
   overlay();
+}
+
+// The row each side is racing to, said in words at the edge of the board.
+function finishLine(el, p, arrow) {
+  const mine = mode.kind !== 'local' && p === bottom();
+  const whose = mine ? 'Your' : `${nameOf(p)}'s`;
+  el.textContent = `${arrow} ${whose} finish line: get ${E.WIN_BANK} stones here`;
+  el.classList.toggle('mine', mine || mode.kind === 'local');
 }
 
 function panel(el, p) {
@@ -253,6 +267,7 @@ function panel(el, p) {
   if (mode.kind === 'online' && p !== mode.seat && room && !room.online[p]) sub += ' · <span class="off">offline</span>';
   el.querySelector('.name').textContent = name;
   el.querySelector('.sub').innerHTML = sub;
+  el.querySelector('.score-n').innerHTML = `<b>${game.banked[p]}</b> of ${E.WIN_BANK} across`;
   const bank = el.querySelector('.bank');
   const had = bank.querySelectorAll('i.full').length;
   bank.innerHTML = '';
@@ -625,7 +640,7 @@ $('againBtn').addEventListener('click', () => {
   else { $('over').hidden = true; mode.kind === 'ai' ? startAi() : startLocal(); }
 });
 for (const b of document.querySelectorAll('[data-rules]')) {
-  b.addEventListener('click', () => $('rules').showModal());
+  b.addEventListener('click', openRules);
 }
 
 const shareUrl = (code) => `${location.origin}${location.pathname}?code=${code}`;

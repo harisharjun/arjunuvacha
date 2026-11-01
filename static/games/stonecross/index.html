@@ -71,11 +71,11 @@
       <article class="card">
         <h2>Play the system</h2>
         <div class="seg" role="radiogroup" aria-label="Level" id="levelSeg">
-          <button role="radio" data-level="beginner" aria-checked="false">Beginner</button>
-          <button role="radio" data-level="intermediate" aria-checked="true">Intermediate</button>
+          <button role="radio" data-level="beginner" aria-checked="true">Easy</button>
+          <button role="radio" data-level="intermediate" aria-checked="false">Intermediate</button>
           <button role="radio" data-level="difficult" aria-checked="false">Difficult</button>
         </div>
-        <p class="hint" id="levelHint">Thinks two moves ahead.</p>
+        <p class="hint" id="levelHint">Plays loosely. Good for learning the rules.</p>
         <label class="check"><input type="checkbox" id="aiFirst"> Let the system move first</label>
         <button class="btn primary" id="playAi" type="button">Start game</button>
       </article>
@@ -130,20 +130,28 @@
     <div class="player them" id="pTop">
       <span class="chip"></span>
       <div class="who"><b class="name"></b><small class="sub"></small></div>
-      <div class="bank" aria-label="Banked"></div>
+      <div class="score">
+        <span class="score-n"></span>
+        <div class="bank" aria-hidden="true"></div>
+      </div>
     </div>
 
     <div class="board-wrap">
+      <p class="finish mine" id="finishTop"></p>
       <div class="board" id="board">
         <div class="cells" id="cells"></div>
         <div class="stones" id="stones"></div>
       </div>
+      <p class="finish" id="finishBot"></p>
     </div>
 
     <div class="player me" id="pBot">
       <span class="chip"></span>
       <div class="who"><b class="name"></b><small class="sub"></small></div>
-      <div class="bank" aria-label="Banked"></div>
+      <div class="score">
+        <span class="score-n"></span>
+        <div class="bank" aria-hidden="true"></div>
+      </div>
     </div>
 
     <div class="over" id="over" hidden>
@@ -182,18 +190,32 @@
   </footer>
   <script>document.querySelectorAll('[data-year]').forEach(function (e) { e.textContent = new Date().getFullYear(); });</script>
 
-  <dialog id="rules">
-    <h2>How to play</h2>
-    <ol>
-      <li>You start with <b>7 stones</b> on your home row. Your goal is the far side.</li>
-      <li>On your turn, move one stone <b>forward</b> or <b>diagonally forward</b> into an empty cell.</li>
-      <li>Or <b>jump</b> straight over an adjacent stone in one of those directions, into the empty cell beyond. Jump an opponent's stone and you <b>capture</b> it. Jump your own and you just move further.</li>
-      <li>A stone that reaches the far row is <b>banked</b>: it leaves the board and scores.</li>
-      <li>First to bank <b>3</b> wins. If you can no longer get 3 across, you lose.</li>
-      <li>No backward or sideways moves. If you have no legal move, your turn is skipped.</li>
-    </ol>
-    <p class="hint"><b>Tip:</b> don't stand next to an enemy stone with an empty cell behind you, unless a friend is covering it.</p>
-    <form method="dialog"><button class="btn primary">Got it</button></form>
+  <dialog id="rules" class="tut" aria-labelledby="tutTitle">
+    <div class="tut-head">
+      <span id="tutStep"></span>
+      <button class="link" id="tutSkip" type="button">Skip</button>
+    </div>
+    <h2 id="tutTitle"></h2>
+    <p class="tut-text" id="tutText" aria-live="polite"></p>
+    <div class="tut-stage">
+      <p class="finish mine"><span aria-hidden="true">↑</span> Your finish line</p>
+      <div class="board" id="tutBoard" aria-hidden="true">
+        <div class="cells" id="tutCells"></div>
+        <div class="stones" id="tutStones"></div>
+      </div>
+    </div>
+    <div class="tut-foot">
+      <p class="tut-note" id="tutNote"></p>
+      <div class="score" id="tutScore" hidden>
+        <span class="score-n"></span>
+        <div class="bank"></div>
+      </div>
+    </div>
+    <div class="tut-nav">
+      <button class="btn" id="tutBack" type="button">Back</button>
+      <div class="tut-dots" id="tutDots"></div>
+      <button class="btn primary" id="tutNext" type="button">Next</button>
+    </div>
   </dialog>
 
   <dialog id="quitConfirm">
