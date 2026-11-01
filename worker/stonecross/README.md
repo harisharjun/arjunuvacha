@@ -69,6 +69,10 @@ hugo server                                                             # http:/
 (4.156 requires Node 22). `npm install` once, and every `npx wrangler` below
 picks up the pinned copy instead of downloading a newer one that won't start.
 
+Its `overrides` patch the dev tools wrangler 4.86.0 pins (`sharp`, `undici`, `ws`,
+`esbuild`), which Dependabot flags. None of them ship in the Worker. Moving to
+Node 22 and a current wrangler would let these overrides go.
+
 On localhost the pages sign in to the **arjunuvacha-test** Firebase project (as
 PromptGym does), so the Worker runs with its staging settings, which expect
 tokens from that project.
