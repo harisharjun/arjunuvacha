@@ -1,4 +1,4 @@
-// Stonecross — How to play: five short scenes, each looping on a small board.
+// Stonecross — How to play: six short scenes, each looping on a small board.
 // The scenes run on the real engine, so the dots and captures they show are the
 // game's own. A scene is a starting position and a script of beats:
 //   say   the caption under the board
@@ -12,17 +12,23 @@ import * as E from './engine.js';
 
 const at = (r, c) => E.idx(r, c);
 
+const START = {
+  iv: [0, 1, 2, 3, 4, 5, 6].map((c) => [6, c]),
+  on: [0, 1, 2, 3, 4, 5, 6].map((c) => [0, c]),
+};
+
 export const SCENES = [
   {
     title: 'Move one stone',
     text: 'Get 3 stones across to win. On your turn, move one stone one cell into an empty space, straight or diagonally ahead.',
     script: [
-      { set: { iv: [[4, 3]], on: [] }, say: 'Pick a stone. The dots show where it can go.', t: 400 },
-      { pick: [4, 3], t: 1600 },
-      { no: [[4, 2], [4, 4], [5, 2], [5, 3], [5, 4]], say: 'Never sideways, never back.', t: 1900 },
-      { no: [], go: [[4, 3], [3, 2]], say: 'Diagonally ahead…', t: 800 },
-      { pick: [3, 2], t: 900 },
-      { go: [[3, 2], [2, 2]], say: 'or straight ahead.', t: 1500 },
+      { set: START, say: 'You start with 7 stones on your home row.', t: 1800 },
+      { pick: [6, 3], say: 'Pick a stone. The dots show where it can go.', t: 1800 },
+      { go: [[6, 3], [5, 3]], say: 'Straight ahead…', t: 1000 },
+      { pick: [5, 3], t: 900 },
+      { go: [[5, 3], [4, 2]], say: 'or diagonally ahead.', t: 1300 },
+      { pick: [4, 2], t: 500 },
+      { no: [[4, 1], [4, 3], [5, 1], [5, 2], [5, 3]], say: 'Never sideways, never back.', t: 2200 },
     ],
   },
   {
@@ -46,14 +52,21 @@ export const SCENES = [
     ],
   },
   {
-    title: 'Keep your stones safe',
-    text: 'The other side can capture you the same way. Keep a stone right behind yours and it can’t be jumped.',
+    title: 'You can be captured too',
+    text: 'The other side captures the same way. A stone with an empty cell behind it can be jumped.',
     script: [
-      { set: { iv: [[3, 3], [6, 1], [6, 5]], on: [[2, 3]] }, say: 'The cell behind your stone is empty.', t: 1200 },
-      { pick: [2, 3], t: 1200 },
-      { go: [[2, 3], [4, 3]], say: 'So the enemy jumps it.', t: 1800 },
-      { set: { iv: [[3, 3], [4, 3], [6, 5]], on: [[2, 3]] }, say: 'Now a friend covers it from behind.', t: 1300 },
-      { pick: [2, 3], say: 'No jump. The enemy has to go around.', t: 2300 },
+      { set: { iv: [[3, 3], [6, 1], [6, 5]], on: [[2, 3]] }, say: 'The cell behind your stone is empty.', t: 1500 },
+      { pick: [2, 3], say: 'The ring marks the capture.', t: 1500 },
+      { go: [[2, 3], [4, 3]], say: 'So the enemy jumps it.', t: 2000 },
+    ],
+  },
+  {
+    title: 'A friend covers you',
+    text: 'Keep one of your stones right behind another, and the enemy can’t jump it.',
+    script: [
+      { set: { iv: [[3, 3], [4, 3], [6, 5]], on: [[2, 3]] }, say: 'A friend stands right behind your stone.', t: 1600 },
+      { pick: [2, 3], say: 'No ring this time: the enemy can’t jump.', t: 2300 },
+      { go: [[2, 3], [3, 2]], say: 'It has to go around.', t: 1800 },
     ],
   },
   {
