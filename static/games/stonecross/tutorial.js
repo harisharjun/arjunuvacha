@@ -1,4 +1,4 @@
-// Stonecross — How to play: six short scenes, each looping on a small board.
+// Stonecross — How to play: five short scenes, each looping on a small board.
 // The scenes run on the real engine, so the dots and captures they show are the
 // game's own. A scene is a starting position and a script of beats:
 //   say   the caption under the board
@@ -11,36 +11,11 @@
 import * as E from './engine.js';
 
 const at = (r, c) => E.idx(r, c);
-const walkUp = (c, from = 6) => {
-  const beats = [];
-  for (let r = from; r > 0; r--) beats.push({ go: [[r, c], [r - 1, c]], t: 170 });
-  return beats;
-};
-
-const START = {
-  iv: [0, 1, 2, 3, 4, 5, 6].map((c) => [6, c]),
-  on: [0, 1, 2, 3, 4, 5, 6].map((c) => [0, c]),
-};
 
 export const SCENES = [
   {
-    title: 'Race to the other side',
-    text: 'Be the first to get 3 of your stones across the board.',
-    score: true,
-    script: [
-      { set: START, say: 'You each start with 7 stones, facing each other.', t: 2200 },
-      { set: { iv: START.iv, on: [[0, 0], [0, 1], [0, 5], [0, 6], [1, 0], [1, 6], [2, 0]] }, say: 'Your stones head for the far row.', t: 900 },
-      ...walkUp(3),
-      { say: 'One across.', t: 900 },
-      ...walkUp(2),
-      { say: 'Two.', t: 700 },
-      ...walkUp(4),
-      { say: 'Three across. You win!', t: 2600 },
-    ],
-  },
-  {
     title: 'Move one stone',
-    text: 'On your turn, move one stone one cell into an empty space, straight or diagonally ahead.',
+    text: 'Get 3 stones across to win. On your turn, move one stone one cell into an empty space, straight or diagonally ahead.',
     script: [
       { set: { iv: [[4, 3]], on: [] }, say: 'Pick a stone. The dots show where it can go.', t: 400 },
       { pick: [4, 3], t: 1600 },
@@ -86,9 +61,13 @@ export const SCENES = [
     text: 'First to 3 across wins. Left with too few stones to reach 3, you lose. No legal move? Your turn is skipped.',
     score: true,
     script: [
-      { set: { iv: [[1, 2], [5, 1], [5, 5]], on: [[0, 2], [2, 5], [3, 1]], banked: 2 }, say: 'Two across, one to go.', t: 1100 },
-      { pick: [1, 2], say: 'An enemy stone blocks straight ahead.', t: 1600 },
-      { go: [[1, 2], [0, 3]], say: 'Three across. You win!', t: 2300 },
+      { set: { iv: [[1, 1], [1, 3], [1, 5], [5, 2], [5, 4]], on: [[0, 5], [3, 0], [3, 6]] }, say: 'Three stones, one cell from your finish line.', t: 1500 },
+      { pick: [1, 1], say: 'The cell ahead is empty.', t: 1300 },
+      { go: [[1, 1], [0, 1]], say: 'Straight across. That’s 1.', t: 1500 },
+      { pick: [1, 3], say: 'Empty again.', t: 1100 },
+      { go: [[1, 3], [0, 3]], say: 'Across. That’s 2.', t: 1500 },
+      { pick: [1, 5], say: 'An enemy stone blocks the cell ahead, so go diagonally.', t: 2200 },
+      { go: [[1, 5], [0, 4]], say: 'Across. That’s 3. You win!', t: 2600 },
       { set: { iv: [[3, 3], [6, 0], [6, 6]], on: [[2, 3], [1, 1], [1, 5], [0, 3]] }, say: 'Now just 3 stones left, none across yet.', t: 1300 },
       { go: [[2, 3], [4, 3]], say: 'One is captured. Only 2 left, so 3 is out of reach. You lose.', t: 3000 },
     ],
