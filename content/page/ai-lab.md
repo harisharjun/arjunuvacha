@@ -14,7 +14,7 @@ ailab:
     by me. They keep my product instincts honest: every prompt, every edge
     case, every user complaint is mine to fix.
   stats:
-    - value: "6"
+    - value: "8"
       label: "products shipped"
     - value: "0→1"
       label: "solo, every time"
@@ -22,6 +22,24 @@ ailab:
       label: "vibe-coded by hand"
   # Newest first. Add a new build at the top.
   projects:
+    - name: "Paperfold"
+      tagline: "A folding puzzle that explains itself"
+      description: >
+        Drag the paper to fold it until the picture comes together. 25 levels
+        with no instructions on screen, each checked by a solver that finds the
+        fewest folds it can be done in.
+      icon: "fold"
+      link: "/games/paperfold/"
+      link_label: "Play it"
+    - name: "Stonecross"
+      tagline: "A two-player crossing game"
+      description: >
+        Get three stones across the board before your opponent does. Play a
+        computer opponent at three levels, or send a friend a 6-digit code and
+        play from anywhere.
+      icon: "stones"
+      link: "/games/stonecross/"
+      link_label: "Play it"
     - name: "PromptGym"
       tagline: "A mini-eval system for prompts"
       description: >

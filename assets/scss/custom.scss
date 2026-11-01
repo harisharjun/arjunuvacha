@@ -1923,3 +1923,35 @@ html:not(.au-js) .au-card {
         padding-top: 0;
     }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Sidebar menu. The theme colours unselected items with its body
+   text grey (#bababa), which read as disabled. Unselected items are
+   now plainly readable, with a hover state; the current one is
+   marked with the home page's sunset, so the two can't be confused.
+   ───────────────────────────────────────────────────────────── */
+/* The pills are taller than the bare links, so the gap shrinks to keep the spacing. */
+#main-menu {
+    gap: 16px;
+}
+
+#main-menu li a {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    color: #3d4a5c;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+#main-menu li a:hover,
+#main-menu li a:focus-visible {
+    background-color: rgba(52, 73, 94, 0.08);
+    color: #1f2d3d;
+}
+
+#main-menu li.current a {
+    background-color: #fbe9e1;
+    color: #b93c0b;
+    font-weight: 700;
+}
+

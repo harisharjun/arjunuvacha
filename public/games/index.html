@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Games · Arjun Uvacha</title>
-  <meta name="description" content="Small board games by Arjun Uvacha. Play the system at three levels, or share a 6-digit code and play a friend.">
+  <meta name="description" content="Small games by Arjun Uvacha: fold paper into pictures in Paperfold, or play the system or a friend in Stonecross.">
   <meta property="og:site_name" content="Arjun Uvacha">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Games · Arjun Uvacha">
-  <meta property="og:description" content="Small board games. Play the system, or share a code and play a friend.">
+  <meta property="og:description" content="Small games: fold paper into pictures, or play the system or a friend.">
   <meta property="og:image" content="https://arjunuvacha.com/img/au.png">
   <meta name="twitter:card" content="summary">
   <meta name="theme-color" content="#f5f5fa">
@@ -47,6 +47,8 @@
     .game.soon { border-top-color: var(--line-strong); box-shadow: none; background: transparent; border: 2px dashed var(--line-strong); }
     .game.soon .game-art { background: transparent; height: 120px; color: var(--faint); font-size: 2.4rem; }
     .game.soon .game-title { color: var(--muted); }
+
+    .fold-art { transform: rotate(-5deg); border-radius: 4px; box-shadow: var(--shadow-l2), 0 10px 24px rgba(120, 70, 20, .18); }
 
     /* The board on the Stonecross card: a little game in progress. */
     .board-art {
@@ -95,12 +97,32 @@
     <section class="intro">
       <p class="kicker">Games</p>
       <h1>Small games, built for a quick match.</h1>
-      <p class="lede">Easy to learn, with enough in them to keep you thinking. Play the system at your level, or send a friend a 6-digit code and play each other from anywhere.</p>
-      <p class="signin-note" id="signinNote">Every game you finish is saved to your record.</p>
+      <p class="lede">Easy to learn, with enough in them to keep you thinking. Fold paper into pictures in Paperfold, or take on the system or a friend in Stonecross.</p>
+      <p class="signin-note" id="signinNote">Every Stonecross game you finish is saved to your record.</p>
     </section>
 
     <!-- One <a class="game"> per game, newest first. -->
     <section class="list" aria-label="Games">
+      <a class="game" href="/games/paperfold/">
+        <div class="game-art" aria-hidden="true">
+          <svg class="fold-art" viewBox="0 0 150 150" width="150" height="150">
+            <rect width="50" height="150" fill="#D85A30"/><rect x="50" width="100" height="150" fill="#F3E9D2"/>
+            <rect y="0" width="150" height="50" fill="#D85A30"/>
+            <path d="M75 28 126 72H112V126H86V94H64V126H38V72H24Z" fill="#24323D"/>
+            <path d="M50 0V150M100 0V150M0 50H150M0 100H150" fill="none" stroke="#8A7A5C" stroke-width=".8"/>
+          </svg>
+        </div>
+        <div class="game-body">
+          <span class="game-title">Paperfold</span>
+          <p class="game-desc">Fold the paper until the picture comes together. Every fold you make changes what's on top, so the order matters.</p>
+          <ul class="tags">
+            <li>25 levels</li>
+            <li>Drag to fold</li>
+            <li>No sign-in needed</li>
+          </ul>
+          <span class="cta">Play Paperfold →</span>
+        </div>
+      </a>
       <a class="game" href="/games/stonecross/">
         <div class="game-art" aria-hidden="true">
           <div class="board-art">
@@ -165,9 +187,9 @@
     authReady.then(() => onUserChanged((u) => {
       if (u && !u.isAnonymous) {
         note.innerHTML = '';
-        note.append('Signed in as ', Object.assign(document.createElement('b'), { textContent: u.name || 'you' }), '. Every game you finish is saved to your record.');
+        note.append('Signed in as ', Object.assign(document.createElement('b'), { textContent: u.name || 'you' }), '. Every Stonecross game you finish is saved to your record.');
       } else {
-        note.textContent = "You're playing as a guest, and your games are saved to this browser's guest account. Sign in with Google to keep your record on any device and show your name to friends.";
+        note.textContent = "You're playing as a guest, and your Stonecross games are saved to this browser's guest account. Sign in with Google to keep your record on any device and show your name to friends.";
       }
     }));
   </script>

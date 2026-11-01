@@ -1,0 +1,52 @@
+/* Paperfold. Shares /games/games.css; this is the board, its controls and the level map. */
+.header-right .slim, .map-head .slim { padding: 6px 12px; font-size: .85rem; }
+
+.play {
+  max-width: 480px; margin: 0 auto; padding: 8px 16px 24px;
+  display: flex; flex-direction: column; align-items: center;
+}
+#board {
+  display: block; width: min(100%, calc((100dvh - 210px) * 340 / 390)); min-width: 280px;
+  touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab;
+}
+#board.dragging { cursor: grabbing; }
+#board.pop { animation: pop .45s ease-out; }
+@keyframes pop { 40% { transform: scale(1.04); } }
+
+.status { display: flex; gap: .5em; margin: 4px 0 12px; color: var(--muted); font-size: .95rem; }
+.status #levelName { font-weight: 700; color: var(--ink-2); }
+
+.tools { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.tools .btn { padding: 9px 16px; }
+
+.win { text-align: center; }
+.win-title { margin: 0; font-size: 1.25rem; font-weight: 900; color: var(--ink); }
+.win-sub { margin: 2px 0 12px; color: var(--muted); font-size: .95rem; }
+.win-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.win-actions .btn { padding: 9px 16px; }
+
+.map {
+  width: min(92vw, 460px); max-height: 88dvh; border: 0; border-radius: var(--radius);
+  padding: 20px; box-shadow: var(--shadow-l4); color: var(--ink-2);
+}
+.map::backdrop { background: rgba(0, 0, 0, .45); }
+.map-head { display: flex; align-items: center; justify-content: space-between; }
+.map-note { margin: 6px 0 14px; color: var(--muted); font-size: .9rem; }
+.map-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.map-cell {
+  position: relative; aspect-ratio: 1; padding: 4px; border-radius: var(--radius-sm); cursor: pointer;
+  border: 1px solid var(--line-strong); background: var(--card); font: inherit; font-weight: 700; color: var(--ink-2);
+  display: grid; place-items: center; overflow: hidden;
+}
+.map-cell:hover:not(:disabled) { background: var(--bg); }
+.map-cell:disabled { color: var(--faint); background: var(--bg); cursor: default; border-style: dashed; }
+.map-cell.current { border: 2px solid var(--accent); }
+.map-cell svg { width: 100%; height: 100%; display: block; }
+.map-cell .perfect {
+  position: absolute; right: 3px; top: 3px; width: 9px; height: 9px; border-radius: 50%;
+  background: #EF9F27; box-shadow: 0 0 0 1.5px #fff;
+}
+
+@media (max-width: 560px) {
+  .play { padding: 4px 12px 20px; }
+}
