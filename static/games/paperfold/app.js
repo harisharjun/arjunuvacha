@@ -1,5 +1,5 @@
 // Paperfold: the board and everything around it. The rules are in engine.js.
-import { K, P, startCells, bounds, creases, applyFold, isSolved, solve } from './engine.js';
+import { K, P, startCells, bounds, creases, applyFold, isSolved, solve, stateKey } from './engine.js';
 import { LEVELS } from './levels.js';
 import { artFor } from './art.js';
 import { GOLD, el, tile, picture, drawLines, drawFold } from './draw.js';
@@ -15,14 +15,19 @@ const track = (name, params) => safe(() => window.gtag && window.gtag('event', n
 // ── progress: kept in this browser, and sent to the account (see the end of this file)
 const KEY = 'paperfold-progress';
 let progress = safe(() => JSON.parse(localStorage.getItem(KEY))) || { solved: {}, at: 0 };
+// The most moves plus undos in any one attempt at a level, solved or not.
+progress.effort = progress.effort || {};
 let soundOn = safe(() => localStorage.getItem('paperfold-sound')) !== 'off';
 const saveProgress = () => safe(() => localStorage.setItem(KEY, JSON.stringify(progress)));
 const firstUnsolved = () => { const i = LEVELS.findIndex((_, n) => !progress.solved[n]); return i < 0 ? LEVELS.length - 1 : i; };
-const isOpen = (n) => n === 0 || !!progress.solved[n] || !!progress.solved[n - 1];
+// On staging and localhost every level is open, so a reviewer can go straight to any of them.
+const REVIEW = ['arjunuvacha-test.web.app', 'arjunuvacha-test.firebaseapp.com', 'localhost', '127.0.0.1'].includes(location.hostname);
+const isOpen = (n) => REVIEW || n === 0 || !!progress.solved[n] || !!progress.solved[n - 1];
 
 // ── state
 let lvl = 0, L = null, cells = null, history = [], won = false, clean = true, usedHint = false;
 let drag = null, preview = null, animId = 0, lastOffset = null, peekTimer = 0, loopTimer = 0;
+let attemptActions = 0, effortUnsent = false, hintLine = null;
 
 $('artDefs').innerHTML = LEVELS.map((l, i) => `<g id="art-${i}">${artFor(l.art, l.w, l.h)}</g>`).join('');
 
@@ -54,7 +59,7 @@ function render() {
   drawTarget();
   const g = paperGroup();
   for (const [k, st] of cells) { const [x, y] = P(k); tile(g, x, y, S, st[0], L, lvl, { edge: !won, depth: st.length, data: true }); }
-  if (!won) drawLines(g, cells, S);
+  if (!won) { drawLines(g, cells, S); if (hintLine) drawLines(g, cells, S, hintLine); }
   $('foldCount').textContent = `${history.length} of ${L.par} ${L.par === 1 ? 'fold' : 'folds'}`;
 }
 
@@ -75,9 +80,20 @@ function commit(c) {
   preview = null;
   history.push(cells);
   cells = applyFold(cells, c);
+  hintLine = null;
+  countAction();
   tone(190, 0, .09, .05);
   if (isSolved(cells, L)) finish();
   render();
+}
+
+function countAction() {
+  attemptActions++;
+  if (attemptActions > (progress.effort[lvl] || 0)) {
+    progress.effort[lvl] = attemptActions;
+    effortUnsent = true;
+    saveProgress();
+  }
 }
 
 function finish() {
@@ -97,10 +113,12 @@ function finish() {
     : usedHint ? 'You used a hint. Play again for a perfect fold.' : 'You took an undo. Play again for a perfect fold.';
   $('nextBtn').hidden = lvl === LEVELS.length - 1;
   if (lvl === LEVELS.length - 1) $('winSub').textContent += ' That was the last level, for now.';
-  track('paperfold_level_complete', { level: lvl + 1, perfect, hint: usedHint });
+  track('paperfold_level_complete', { level: lvl + 1, perfect, hint: usedHint, actions: attemptActions });
 }
 
 function load(n) {
+  if (effortUnsent) syncProgress();
+  attemptActions = 0; hintLine = null;
   lvl = n; L = LEVELS[n]; cells = startCells(L.sheet); history = []; won = false; clean = true; usedHint = false;
   drag = null; preview = null; animId++; lastOffset = null;
   clearTimeout(peekTimer); stopLoop();
@@ -111,6 +129,7 @@ function load(n) {
   $('levelName').textContent = `Level ${n + 1} of ${LEVELS.length}`;
   render();
   if (L.demo) loopFold(L.demo);
+  if (L.decoys && !LEVELS[n - 1].decoys && !progress.solved[n]) toast('From here, every square is printed, and only some prints belong to the picture. Hints mark the line, not the side.', 7000);
   track('paperfold_level_start', { level: n + 1 });
 }
 
@@ -200,28 +219,48 @@ board.addEventListener('pointercancel', () => { drag = null; board.classList.rem
 
 // ── controls
 let toastTimer = 0;
-function toast(msg) {
+function toast(msg, ms = 2600) {
   const t = $('toast');
   t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms);
 }
 
 $('undoBtn').addEventListener('click', () => {
   if (won || !history.length) return;
   stopLoop(); clearTimeout(peekTimer); animId++; preview = null;
-  cells = history.pop(); clean = false;
+  cells = history.pop(); clean = false; hintLine = null;
+  countAction();
   render();
   track('paperfold_undo', { level: lvl + 1 });
 });
 $('resetBtn').addEventListener('click', () => { track('paperfold_start_over', { level: lvl + 1 }); load(lvl); });
+// The next fold. Levels with a known route check it first: searching six folds from
+// the start is 400,000 positions, too many to do on a click.
+function nextFold() {
+  if (!L.route) { const r = solve(cells, L, Math.max(L.par, 4)); return r && r[0]; }
+  const here = stateKey(cells);
+  let s = startCells(L.sheet);
+  for (const f of L.route) {
+    if (stateKey(s) === here) return f;
+    s = applyFold(s, f);
+  }
+  const r = solve(cells, L, 3);
+  return r && r[0];
+}
+
 $('hintBtn').addEventListener('click', () => {
   if (won) return;
   clearTimeout(peekTimer);
-  const route = solve(cells, L, Math.max(L.par, 4));
-  track('paperfold_hint', { level: lvl + 1, stuck: !route });
-  if (!route) { toast("This fold can't reach the picture. Undo it, or start over."); return; }
+  const fold = nextFold();
+  track('paperfold_hint', { level: lvl + 1, stuck: !fold });
+  if (!fold) { toast(L.route ? 'No quick route from here. Undo or start over.' : "This fold can't reach the picture. Undo it, or start over."); return; }
   usedHint = true;
-  loopFold(route[0], 2);
+  if (L.decoys) {
+    stopLoop();
+    hintLine = { ax: fold.ax, k: fold.k };
+    render();
+    toast('Fold on the marked line. You decide which side.');
+  } else loopFold(fold, 2);
 });
 $('againBtn').addEventListener('click', () => load(lvl));
 $('nextBtn').addEventListener('click', () => { if (lvl < LEVELS.length - 1) load(lvl + 1); });
@@ -233,7 +272,8 @@ $('soundBtn').addEventListener('click', () => {
 $('shareBtn').addEventListener('click', async () => {
   const url = `${location.origin}${location.pathname}`;
   const done = Object.keys(progress.solved).length;
-  const text = `I've folded ${done} of ${LEVELS.length} pictures in Paperfold. Think you can do it in fewer folds?`;
+  const perfect = Object.values(progress.solved).filter((v) => v.perfect).length;
+  const text = `I've folded ${done} of ${LEVELS.length} pictures in Paperfold, ${perfect} of them perfect. Think you can beat that?`;
   track('paperfold_share', { level: lvl + 1 });
   if (navigator.share) { safe(() => navigator.share({ title: 'Paperfold', text, url }).catch(() => {})); return; }
   const ok = await navigator.clipboard?.writeText(`${text} ${url}`).then(() => true, () => false);
@@ -272,8 +312,9 @@ $('mapClose').addEventListener('click', () => $('map').close());
 $('map').addEventListener('click', (ev) => { if (ev.target === $('map')) $('map').close(); });
 
 showSound();
-const saved = Number(progress.at);
-load(Number.isInteger(saved) && saved >= 0 && saved < LEVELS.length && isOpen(saved) ? (progress.solved[saved] ? firstUnsolved() : saved) : firstUnsolved());
+const asked = REVIEW ? Number(new URLSearchParams(location.search).get('level')) - 1 : -1;
+const saved = asked >= 0 && asked < LEVELS.length ? asked : Number(progress.at);
+load(asked >= 0 && asked < LEVELS.length ? asked : Number.isInteger(saved) && saved >= 0 && saved < LEVELS.length && isOpen(saved) ? (progress.solved[saved] ? firstUnsolved() : saved) : firstUnsolved());
 
 // ── the account. As on Stonecross: a guest from the first visit, and signing in links
 // the guest. Everything the game keeps here goes to whichever account is signed in,
@@ -305,12 +346,15 @@ async function syncProgress() {
     const res = await fetch(`${API}/paperfold/progress`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ levels, at: Number.isInteger(progress.at) ? progress.at : null, sound: safe(() => localStorage.getItem('paperfold-sound')) || null }),
+      keepalive: true,
+      body: JSON.stringify({ levels, effort: progress.effort, at: Number.isInteger(progress.at) ? progress.at : null, sound: safe(() => localStorage.getItem('paperfold-sound')) || null }),
     });
     if (!res.ok) throw new Error(String(res.status));
     const saved = await res.json();
     if (run !== syncRun || !account || account.uid !== uid) return;
     savedToAccount = true;
+    effortUnsent = false;
+    for (const n of Object.keys(saved.effort || {})) progress.effort[n] = Math.max(progress.effort[n] || 0, saved.effort[n]);
     let gained = false;
     for (const n of Object.keys(saved.levels)) {
       const had = progress.solved[n];
@@ -339,13 +383,16 @@ function onAccount(u) {
   // fresh. A guest's goes with them into the account they sign in to.
   const owner = safe(() => JSON.parse(localStorage.getItem(OWNER_KEY)));
   if (owner && !owner.guest && owner.uid !== u.uid) {
-    progress = { solved: {}, at: 0 };
+    progress = { solved: {}, at: 0, effort: {} };
     saveProgress();
     load(0);
   }
   safe(() => localStorage.setItem(OWNER_KEY, JSON.stringify({ uid: u.uid, guest: u.isAnonymous })));
   syncProgress();
 }
+
+// Leaving mid-level still counts. If this doesn't get out in time, the next visit sends it.
+addEventListener('pagehide', () => { if (effortUnsent) syncProgress(); });
 
 import('/auth/auth.js').then(async (m) => {
   m.enableGuests();

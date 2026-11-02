@@ -56,6 +56,10 @@ existing Google account. Unlike the results above it is the player's word: there
 are no folds to replay, and nothing ranks players, so nothing checks it. A browser
 is cleared only when a signed-in player signs out, so the next person starts fresh.
 
+`paperfold_effort` measures how hard each level is in practice: the most moves plus
+undos in any one attempt, counting attempts that were never finished. Start over
+begins a new attempt. Hints aren't counted.
+
 `GET /me/stats` returns the record shown under "Your record" on the game page.
 Every finished game also keeps its move list, so any game can be replayed later.
 
@@ -134,6 +138,8 @@ first player's seat instead of taking the other one.
 
 Useful queries:
 ```bash
+npx wrangler d1 execute games --remote --command \
+  "SELECT level + 1 AS level, COUNT(*) AS players, ROUND(AVG(max_actions), 1) AS avg_peak, MAX(max_actions) AS highest FROM paperfold_effort GROUP BY level ORDER BY level"
 npx wrangler d1 execute games --remote --command \
   "SELECT pl.display_name, COUNT(*) AS levels, SUM(p.perfect) AS perfect, MAX(p.updated_at) AS last FROM paperfold_progress p JOIN players pl ON pl.uid = p.uid GROUP BY p.uid"
 npx wrangler d1 execute games --remote --command \

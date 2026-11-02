@@ -20,6 +20,18 @@ const ICONS = {
   lighthouse: '<path d="M42 4H58V14H64V24H36V14H42ZM38 28H62L72 96H28Z"/>',
   rocket: '<path d="M50 2C66 16 70 36 68 62H32C30 36 34 16 50 2ZM32 56 16 80 32 76ZM68 56 84 80 68 76ZM40 68H60L54 96H46Z"/>',
   flower: `<circle cx="50" cy="30" r="15"/><circle cx="31" cy="44" r="15"/><circle cx="69" cy="44" r="15"/><circle cx="38" cy="62" r="13"/><circle cx="62" cy="62" r="13"/><path d="M50 60V98" stroke="${INK}" stroke-width="6" fill="none"/>`,
+  anchor: `<path d="M50 28V90M28 46H72" fill="none" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="16" r="10" fill="none" stroke="${INK}" stroke-width="7"/><path d="M12 56C14 80 32 92 50 92 68 92 86 80 88 56" fill="none" stroke="${INK}" stroke-width="8" stroke-linecap="round"/>`,
+  umbrella: `<path d="M6 52C10 24 28 10 50 10 72 10 90 24 94 52Z"/><path d="M50 52V84C50 96 34 96 32 84" fill="none" stroke="${INK}" stroke-width="7" stroke-linecap="round"/>`,
+  cup: `<path d="M12 22H72V62C72 78 60 88 42 88 24 88 12 78 12 62Z"/><path d="M72 32H82C94 32 94 60 82 60H72" fill="none" stroke="${INK}" stroke-width="8"/>`,
+  key: `<circle cx="50" cy="22" r="18" fill="none" stroke="${INK}" stroke-width="10"/><path d="M50 40V94M50 66H68M50 84H68" fill="none" stroke="${INK}" stroke-width="10"/>`,
+  leaf: `<path d="M86 8C40 8 12 34 14 74 54 78 86 52 86 8Z"/><path d="M6 94C22 70 40 52 62 34" fill="none" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`,
+  crown: '<path d="M8 28 30 52 50 16 70 52 92 28 84 80H16Z"/>',
+  bell: `<path d="M50 8C28 8 22 28 22 48 22 64 12 70 10 78H90C88 70 78 64 78 48 78 28 72 8 50 8Z"/><circle cx="50" cy="88" r="9"/>`,
+  apple: `<path d="M50 30C32 16 10 26 10 52 10 78 30 96 42 94 46 93 54 93 58 94 70 96 90 78 90 52 90 26 68 16 50 30Z"/><path d="M50 28C50 16 56 8 68 6" fill="none" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>`,
+  mushroom: '<path d="M6 54C8 24 28 8 50 8 72 8 92 24 94 54Z"/><path d="M38 60H62L68 94H32Z"/>',
+  cactus: `<path d="M50 94V10M50 58H24V34M50 44H76V24" fill="none" stroke="${INK}" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>`,
+  cat: '<path d="M16 8 40 28H60L84 8 86 56C86 78 70 92 50 92 30 92 14 78 14 56Z"/>',
+  lamp: `<path d="M30 8H70L84 48H16Z"/><path d="M50 48V84" fill="none" stroke="${INK}" stroke-width="8"/><path d="M26 92H74" fill="none" stroke="${INK}" stroke-width="10" stroke-linecap="round"/>`,
   kite: `<path d="M50 4 84 40 50 78 16 40Z"/><path d="M50 78C40 86 60 90 50 98" fill="none" stroke="${INK}" stroke-width="5"/>`,
 };
 

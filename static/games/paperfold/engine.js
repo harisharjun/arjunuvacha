@@ -61,7 +61,7 @@ export function isSolved(cells, level) {
   return [...cells.keys()].every((k) => squareMatches(cells, k, level));
 }
 
-function stateKey(cells) {
+export function stateKey(cells) {
   const b = bounds(cells);
   return [...cells].map(([k, v]) => {
     const [x, y] = P(k);

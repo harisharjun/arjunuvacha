@@ -5,7 +5,7 @@
 //   GET  /rooms/:code/ws                   WebSocket; first message { type: 'auth', idToken }
 //   POST /results/system      (signed in)  { id, level, starter, moves, conceded? } -> { result, stats }
 //   GET  /me/stats?game=stonecross (signed in) -> your record
-//   POST /paperfold/progress  (signed in)  { levels, at, sound } -> what the account has
+//   POST /paperfold/progress  (signed in)  { levels, effort, at, sound } -> what the account has
 //
 // Sign-in works as on PromptGym: the page sends a Firebase ID token (a guest's
 // or a Google account's) and this Worker verifies it with the same checks as
@@ -135,6 +135,7 @@ function replaySystemGame(starter, moves, conceded = false) {
 // ───────────────────────────── Paperfold
 
 const MAX_PAPERFOLD_LEVEL = 999;
+const MAX_PAPERFOLD_ACTIONS = 100000;
 const validLevel = (n) => Number.isInteger(n) && n >= 0 && n <= MAX_PAPERFOLD_LEVEL;
 
 /** Checks what a browser sends, or says what is wrong with it. */
@@ -150,21 +151,36 @@ function readPaperfoldProgress(body) {
     if (!/^\d+$/.test(k) || !validLevel(level) || !v || typeof v !== 'object' || typeof v.perfect !== 'boolean') return { error: 'bad_levels' };
     rows.push({ level, perfect: v.perfect ? 1 : 0 });
   }
+  const effort = body.effort ?? {};
+  if (typeof effort !== 'object' || Array.isArray(effort)) return { error: 'bad_effort' };
+  const efforts = [];
+  for (const k of Object.keys(effort).slice(0, MAX_PAPERFOLD_LEVEL + 2)) {
+    const level = Number(k), actions = effort[k];
+    if (!/^\d+$/.test(k) || !validLevel(level) || !Number.isInteger(actions) || actions < 0 || actions > MAX_PAPERFOLD_ACTIONS) return { error: 'bad_effort' };
+    efforts.push({ level, actions });
+  }
+  if (efforts.length > MAX_PAPERFOLD_LEVEL + 1) return { error: 'bad_effort' };
   const at = body.at ?? null, sound = body.sound ?? null;
   if (at !== null && !validLevel(at)) return { error: 'bad_at' };
   if (sound !== null && sound !== 'on' && sound !== 'off') return { error: 'bad_sound' };
-  return { rows, at, sound };
+  return { rows, efforts, at, sound };
 }
 
 /** Adds to an account's progress and returns all of it. A level never un-solves,
  *  and a perfect never un-perfects, so any device can send what it has at any time. */
-async function savePaperfoldProgress(db, uid, { rows, at, sound }) {
+async function savePaperfoldProgress(db, uid, { rows, efforts, at, sound }) {
   const writes = rows.map((r) => db.prepare(
     `INSERT INTO paperfold_progress (uid, level, perfect) VALUES (?, ?, ?)
      ON CONFLICT(uid, level) DO UPDATE SET
        perfect = MAX(paperfold_progress.perfect, excluded.perfect),
        updated_at = datetime('now')`,
   ).bind(uid, r.level, r.perfect));
+  for (const e of efforts) writes.push(db.prepare(
+    `INSERT INTO paperfold_effort (uid, level, max_actions) VALUES (?, ?, ?)
+     ON CONFLICT(uid, level) DO UPDATE SET
+       max_actions = MAX(paperfold_effort.max_actions, excluded.max_actions),
+       updated_at = datetime('now')`,
+  ).bind(uid, e.level, e.actions));
   if (at !== null || sound !== null) {
     writes.push(db.prepare(
       `INSERT INTO paperfold_state (uid, last_level, sound) VALUES (?, ?, ?)
@@ -179,7 +195,10 @@ async function savePaperfoldProgress(db, uid, { rows, at, sound }) {
   const state = await db.prepare('SELECT last_level, sound FROM paperfold_state WHERE uid = ?').bind(uid).first();
   const levels = {};
   for (const r of results ?? []) levels[r.level] = { perfect: r.perfect === 1 };
-  return { levels, at: state?.last_level ?? null, sound: state?.sound ?? null };
+  const { results: spent } = await db.prepare('SELECT level, max_actions FROM paperfold_effort WHERE uid = ?').bind(uid).all();
+  const effort = {};
+  for (const r of spent ?? []) effort[r.level] = r.max_actions;
+  return { levels, effort, at: state?.last_level ?? null, sound: state?.sound ?? null };
 }
 
 // ───────────────────────────── HTTP

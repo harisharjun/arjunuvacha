@@ -25,7 +25,7 @@ ailab:
     - name: "Paperfold"
       tagline: "A folding puzzle that explains itself"
       description: >
-        Drag the paper to fold it until the picture comes together. 25 levels
+        Drag the paper to fold it until the picture comes together. 50 levels
         with no instructions on screen, each checked by a solver that finds the
         fewest folds it can be done in.
       icon: "fold"

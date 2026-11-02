@@ -19,6 +19,7 @@ export function tile(parent, x, y, s, l, level, n, { edge = true, depth = 1, dat
   if (data) { a['data-x'] = x; a['data-y'] = y; }
   el('rect', a, t);
   const e = level.fin[faceId(l)];
+  if (!e && level.decoys) decoy(t, s, l, n, level);
   if (e) {
     const wrap = el('g', {}, t);
     if ((e[2] === 1) !== l.x) wrap.setAttribute('transform', `rotate(180 ${s / 2} ${s / 2})`);
@@ -26,6 +27,16 @@ export function tile(parent, x, y, s, l, level, n, { edge = true, depth = 1, dat
   }
   if (edge) el('rect', { x: .5, y: .5, width: s - 1, height: s - 1, fill: 'none', stroke: EDGE, 'stroke-width': depth > 1 ? 1.6 : .5 }, t);
   return t;
+}
+
+// A piece of the same picture, cut across the grid and turned, on a face that is never
+// part of the result. Its window never lines up with the squares, so it can't pass for
+// a real piece, and it sits on the picture's edge, so it is never all ink or all blank.
+function decoy(t, s, l, n, level) {
+  const h = (l.i * 31 + (l.f ? 7 : 19) + n * 13) % 97, a = h * 2.399, r = Math.min(level.w, level.h) * .37;
+  const ux = level.w / 2 + r * Math.cos(a) - .5, uy = level.h / 2 + r * Math.sin(a) - .5, turn = ((h % 4) * 90 + (l.x ? 180 : 0)) % 360;
+  const wrap = el('g', { transform: `rotate(${turn} ${s / 2} ${s / 2})${h % 2 ? ` translate(${s} 0) scale(-1 1)` : ''}` }, t);
+  el('use', { href: `#art-${n}` }, el('svg', { width: s, height: s, viewBox: `${ux} ${uy} 1 1` }, wrap));
 }
 
 // The finished picture, for the target box and the level map.
