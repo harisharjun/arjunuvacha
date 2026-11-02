@@ -1,5 +1,5 @@
 /* Paperfold. Shares /games/games.css; this is the board, its controls and the level map. */
-.header-right .slim, .map-head .slim { padding: 6px 12px; font-size: .85rem; }
+.status .slim, .map-head .slim { padding: 6px 12px; font-size: .85rem; }
 
 .play {
   max-width: 480px; margin: 0 auto; padding: 8px 16px 24px;
@@ -13,7 +13,8 @@
 #board.pop { animation: pop .45s ease-out; }
 @keyframes pop { 40% { transform: scale(1.04); } }
 
-.status { display: flex; gap: .5em; margin: 4px 0 8px; color: var(--muted); font-size: .95rem; }
+.status { display: flex; align-items: center; gap: .5em; margin: 4px 0 8px; color: var(--muted); font-size: .95rem; }
+.status #mapBtn { margin-left: .4em; }
 .status #levelName { font-weight: 700; color: var(--ink-2); }
 
 /* Undo on its own line, with Start over and Hint below it. */
@@ -67,6 +68,7 @@
 }
 .map::backdrop { background: rgba(0, 0, 0, .45); }
 .map-head { display: flex; align-items: center; justify-content: space-between; }
+.map-actions { display: flex; gap: 6px; }
 .map-note { margin: 6px 0 14px; color: var(--muted); font-size: .9rem; }
 .map-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .map-cell {

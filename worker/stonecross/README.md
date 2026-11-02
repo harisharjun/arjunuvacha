@@ -16,7 +16,7 @@ worker/stonecross/
   worker.js, wrangler.toml        rooms + results: POST /rooms, WS /rooms/:code/ws,
                                   POST /results/system, GET /me/stats
   verify.js                       Firebase token check (copy of PromptGym's)
-  migrations/0001_initial.sql     D1: players, games, game_players
+  migrations/                     D1: players, games, game_players, paperfold_progress, paperfold_state
 ```
 
 ## Accounts and results (same as PromptGym)
@@ -47,6 +47,14 @@ How results get saved:
   can't prove the system's moves came from the real AI, so the level is the
   player's word. Each game has an id, so a retry can't count twice.
 - **Pass & play** on one device isn't saved (both sides are the same person).
+
+**Paperfold** progress is saved by `POST /paperfold/progress`. The game plays
+entirely in the browser and keeps its progress there, then sends all of it to the
+account on every visit and after every solved level. Saving only ever adds, so it
+can repeat safely, and it merges into whichever account is signed in, including an
+existing Google account. Unlike the results above it is the player's word: there
+are no folds to replay, and nothing ranks players, so nothing checks it. A browser
+is cleared only when a signed-in player signs out, so the next person starts fresh.
 
 `GET /me/stats` returns the record shown under "Your record" on the game page.
 Every finished game also keeps its move list, so any game can be replayed later.
@@ -126,6 +134,8 @@ first player's seat instead of taking the other one.
 
 Useful queries:
 ```bash
+npx wrangler d1 execute games --remote --command \
+  "SELECT pl.display_name, COUNT(*) AS levels, SUM(p.perfect) AS perfect, MAX(p.updated_at) AS last FROM paperfold_progress p JOIN players pl ON pl.uid = p.uid GROUP BY p.uid"
 npx wrangler d1 execute games --remote --command \
   "SELECT g.mode, g.level, gp.result, COUNT(*) FROM game_players gp JOIN games g ON g.id = gp.game_id GROUP BY 1,2,3"
 ```

@@ -98,7 +98,7 @@
       <p class="kicker">Games</p>
       <h1>Small games, built for a quick match.</h1>
       <p class="lede">Easy to learn, with enough in them to keep you thinking. Fold paper into pictures in Paperfold, or take on the system or a friend in Stonecross.</p>
-      <p class="signin-note" id="signinNote">Every Stonecross game you finish is saved to your record.</p>
+      <p class="signin-note" id="signinNote">Your Stonecross games and Paperfold levels are saved to your account.</p>
     </section>
 
     <!-- One <a class="game"> per game, newest first. -->
@@ -118,7 +118,7 @@
           <ul class="tags">
             <li>25 levels</li>
             <li>Drag to fold</li>
-            <li>No sign-in needed</li>
+            <li>Play as a guest</li>
           </ul>
           <span class="cta">Play Paperfold →</span>
         </div>
@@ -187,9 +187,9 @@
     authReady.then(() => onUserChanged((u) => {
       if (u && !u.isAnonymous) {
         note.innerHTML = '';
-        note.append('Signed in as ', Object.assign(document.createElement('b'), { textContent: u.name || 'you' }), '. Every Stonecross game you finish is saved to your record.');
+        note.append('Signed in as ', Object.assign(document.createElement('b'), { textContent: u.name || 'you' }), '. Your Stonecross games and Paperfold levels are saved to your account.');
       } else {
-        note.textContent = "You're playing as a guest, and your Stonecross games are saved to this browser's guest account. Sign in with Google to keep your record on any device and show your name to friends.";
+        note.textContent = "You're playing as a guest, and your games are saved to this browser's guest account. Sign in with Google to keep your record on any device and show your name to friends.";
       }
     }));
   </script>

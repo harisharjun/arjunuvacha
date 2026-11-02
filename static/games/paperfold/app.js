@@ -12,7 +12,7 @@ const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const safe = (f) => { try { return f(); } catch (e) { return undefined; } };
 const track = (name, params) => safe(() => window.gtag && window.gtag('event', name, params));
 
-// ── progress: this browser only
+// ── progress: kept in this browser, and sent to the account (see the end of this file)
 const KEY = 'paperfold-progress';
 let progress = safe(() => JSON.parse(localStorage.getItem(KEY))) || { solved: {}, at: 0 };
 let soundOn = safe(() => localStorage.getItem('paperfold-sound')) !== 'off';
@@ -87,6 +87,7 @@ function finish() {
   progress.solved[lvl] = { perfect: perfect || !!(was && was.perfect) };
   progress.at = lvl;
   saveProgress();
+  syncProgress();
   [523, 659, 784].forEach((f, i) => tone(f, i * .1, .5, .07));
   if (!calm) { board.classList.remove('pop'); board.getBoundingClientRect(); board.classList.add('pop'); }
   $('tools').hidden = true;
@@ -241,12 +242,16 @@ $('shareBtn').addEventListener('click', async () => {
 
 // ── the level map
 function openMap() {
+  fillMap();
+  $('map').showModal();
+}
+function fillMap() {
   const grid = $('mapGrid');
   grid.innerHTML = '';
   const solved = Object.keys(progress.solved).length, perfects = Object.values(progress.solved).filter((s) => s.perfect).length;
   $('mapNote').textContent = solved
-    ? `${solved} of ${LEVELS.length} pictures folded, ${perfects} perfect. Saved in this browser.`
-    : 'Finish a level to open the next one. Saved in this browser.';
+    ? `${solved} of ${LEVELS.length} pictures folded, ${perfects} perfect. ${whereSaved()}`
+    : `Finish a level to open the next one. ${whereSaved()}`;
   LEVELS.forEach((level, n) => {
     const b = document.createElement('button'), s = progress.solved[n];
     b.type = 'button'; b.className = 'map-cell' + (n === lvl ? ' current' : '');
@@ -260,7 +265,6 @@ function openMap() {
     b.addEventListener('click', () => { $('map').close(); load(n); });
     grid.appendChild(b);
   });
-  $('map').showModal();
 }
 $('mapBtn').addEventListener('click', openMap);
 $('howBtn').addEventListener('click', () => { track('paperfold_how_to', { level: lvl + 1 }); openHowTo(); });
@@ -270,3 +274,82 @@ $('map').addEventListener('click', (ev) => { if (ev.target === $('map')) $('map'
 showSound();
 const saved = Number(progress.at);
 load(Number.isInteger(saved) && saved >= 0 && saved < LEVELS.length && isOpen(saved) ? (progress.solved[saved] ? firstUnsolved() : saved) : firstUnsolved());
+
+// ── the account. As on Stonecross: a guest from the first visit, and signing in links
+// the guest. Everything the game keeps here goes to whichever account is signed in,
+// on every visit and after every solved level; the Worker only ever adds to it. If
+// Firebase or the Worker can't be reached the game carries on, saved in this browser,
+// and the next visit sends it. Folds are not kept, here or there.
+const HOST = location.hostname;
+const API = HOST === 'localhost' || HOST === '127.0.0.1'
+  ? 'http://localhost:8787'
+  : HOST === 'arjunuvacha-test.web.app' || HOST === 'arjunuvacha-test.firebaseapp.com'
+    ? 'https://stonecross-staging.harisharjun127.workers.dev'
+    : 'https://stonecross.harisharjun127.workers.dev';
+const OWNER_KEY = 'paperfold-owner';
+let authModule = null, account = null, savedToAccount = false, syncRun = 0;
+
+function whereSaved() {
+  if (!savedToAccount) return 'Saved in this browser.';
+  return account?.isAnonymous ? 'Saved to your guest account. Sign in to keep it on any device.' : 'Saved to your account.';
+}
+
+async function syncProgress() {
+  if (!authModule || !account) return;
+  const run = ++syncRun, uid = account.uid;
+  try {
+    const token = await authModule.getIdToken();
+    if (!token) return;
+    const levels = {};
+    for (const n of Object.keys(progress.solved)) levels[n] = { perfect: !!progress.solved[n].perfect };
+    const res = await fetch(`${API}/paperfold/progress`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ levels, at: Number.isInteger(progress.at) ? progress.at : null, sound: safe(() => localStorage.getItem('paperfold-sound')) || null }),
+    });
+    if (!res.ok) throw new Error(String(res.status));
+    const saved = await res.json();
+    if (run !== syncRun || !account || account.uid !== uid) return;
+    savedToAccount = true;
+    let gained = false;
+    for (const n of Object.keys(saved.levels)) {
+      const had = progress.solved[n];
+      if (!had || (saved.levels[n].perfect && !had.perfect)) gained = true;
+      progress.solved[n] = { perfect: saved.levels[n].perfect };
+    }
+    saveProgress();
+    if (saved.sound && safe(() => localStorage.getItem('paperfold-sound')) === null) {
+      soundOn = saved.sound !== 'off';
+      safe(() => localStorage.setItem('paperfold-sound', saved.sound));
+      showSound();
+    }
+    // New to this device: pick up where the account left off, unless a level is under way.
+    if (gained && !history.length && !won && progress.solved[lvl]) load(firstUnsolved());
+    if ($('map').open) fillMap();
+  } catch (err) {
+    console.warn('Paperfold progress not saved to the account yet:', err.message);
+  }
+}
+
+function onAccount(u) {
+  account = u;
+  savedToAccount = false;
+  if (!u) { syncRun++; return; }
+  // A signed-in player's progress is theirs: whoever comes next on this browser starts
+  // fresh. A guest's goes with them into the account they sign in to.
+  const owner = safe(() => JSON.parse(localStorage.getItem(OWNER_KEY)));
+  if (owner && !owner.guest && owner.uid !== u.uid) {
+    progress = { solved: {}, at: 0 };
+    saveProgress();
+    load(0);
+  }
+  safe(() => localStorage.setItem(OWNER_KEY, JSON.stringify({ uid: u.uid, guest: u.isAnonymous })));
+  syncProgress();
+}
+
+import('/auth/auth.js').then(async (m) => {
+  m.enableGuests();
+  authModule = m;
+  await m.authReady;
+  m.onUserChanged(onAccount);
+}).catch((err) => console.warn('Sign-in unavailable; progress stays in this browser.', err));

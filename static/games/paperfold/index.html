@@ -53,8 +53,7 @@
         <button class="how-to" id="howBtn" type="button" aria-label="How to play">
           <span class="how-ico" aria-hidden="true">?</span><span class="how-label">How to play</span>
         </button>
-        <button class="btn slim" id="soundBtn" type="button" aria-pressed="true">Sound on</button>
-        <button class="btn slim" id="mapBtn" type="button">Levels</button>
+        <au-account></au-account>
       </div>
     </div>
   </header>
@@ -67,6 +66,7 @@
       <span id="levelName"></span>
       <span class="dot" aria-hidden="true">·</span>
       <span id="foldCount"></span>
+      <button class="btn slim" id="mapBtn" type="button">Levels</button>
     </div>
 
     <svg id="board" viewBox="0 0 340 390" role="img" aria-label="A sheet of paper to fold, and a small picture of the result to make. Drag the paper across a dashed line to fold it."></svg>
@@ -107,7 +107,10 @@
   <dialog class="map" id="map" aria-labelledby="mapTitle">
     <div class="map-head">
       <h2 id="mapTitle">Levels</h2>
-      <button class="btn slim" id="mapClose" type="button">Close</button>
+      <div class="map-actions">
+        <button class="btn slim" id="soundBtn" type="button" aria-pressed="true">Sound on</button>
+        <button class="btn slim" id="mapClose" type="button">Close</button>
+      </div>
     </div>
     <p class="map-note" id="mapNote"></p>
     <div class="map-grid" id="mapGrid"></div>
@@ -139,6 +142,7 @@
 
   <script>document.querySelectorAll('[data-year]').forEach(function (e) { e.textContent = new Date().getFullYear(); });</script>
 
+  <script type="module" src="/auth/account.js"></script>
   <script type="module" src="/games/paperfold/app.js"></script>
 </body>
 </html>

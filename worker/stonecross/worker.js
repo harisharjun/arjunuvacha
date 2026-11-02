@@ -5,6 +5,7 @@
 //   GET  /rooms/:code/ws                   WebSocket; first message { type: 'auth', idToken }
 //   POST /results/system      (signed in)  { id, level, starter, moves, conceded? } -> { result, stats }
 //   GET  /me/stats?game=stonecross (signed in) -> your record
+//   POST /paperfold/progress  (signed in)  { levels, at, sound } -> what the account has
 //
 // Sign-in works as on PromptGym: the page sends a Firebase ID token (a guest's
 // or a Google account's) and this Worker verifies it with the same checks as
@@ -131,6 +132,56 @@ function replaySystemGame(starter, moves, conceded = false) {
   return { state: s };
 }
 
+// ───────────────────────────── Paperfold
+
+const MAX_PAPERFOLD_LEVEL = 999;
+const validLevel = (n) => Number.isInteger(n) && n >= 0 && n <= MAX_PAPERFOLD_LEVEL;
+
+/** Checks what a browser sends, or says what is wrong with it. */
+function readPaperfoldProgress(body) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return { error: 'bad_body' };
+  const levels = body.levels ?? {};
+  if (typeof levels !== 'object' || Array.isArray(levels)) return { error: 'bad_levels' };
+  const keys = Object.keys(levels);
+  if (keys.length > MAX_PAPERFOLD_LEVEL + 1) return { error: 'bad_levels' };
+  const rows = [];
+  for (const k of keys) {
+    const level = Number(k), v = levels[k];
+    if (!/^\d+$/.test(k) || !validLevel(level) || !v || typeof v !== 'object' || typeof v.perfect !== 'boolean') return { error: 'bad_levels' };
+    rows.push({ level, perfect: v.perfect ? 1 : 0 });
+  }
+  const at = body.at ?? null, sound = body.sound ?? null;
+  if (at !== null && !validLevel(at)) return { error: 'bad_at' };
+  if (sound !== null && sound !== 'on' && sound !== 'off') return { error: 'bad_sound' };
+  return { rows, at, sound };
+}
+
+/** Adds to an account's progress and returns all of it. A level never un-solves,
+ *  and a perfect never un-perfects, so any device can send what it has at any time. */
+async function savePaperfoldProgress(db, uid, { rows, at, sound }) {
+  const writes = rows.map((r) => db.prepare(
+    `INSERT INTO paperfold_progress (uid, level, perfect) VALUES (?, ?, ?)
+     ON CONFLICT(uid, level) DO UPDATE SET
+       perfect = MAX(paperfold_progress.perfect, excluded.perfect),
+       updated_at = datetime('now')`,
+  ).bind(uid, r.level, r.perfect));
+  if (at !== null || sound !== null) {
+    writes.push(db.prepare(
+      `INSERT INTO paperfold_state (uid, last_level, sound) VALUES (?, ?, ?)
+       ON CONFLICT(uid) DO UPDATE SET
+         last_level = COALESCE(excluded.last_level, paperfold_state.last_level),
+         sound      = COALESCE(excluded.sound, paperfold_state.sound),
+         updated_at = datetime('now')`,
+    ).bind(uid, at, sound));
+  }
+  if (writes.length) await db.batch(writes);
+  const { results } = await db.prepare('SELECT level, perfect FROM paperfold_progress WHERE uid = ?').bind(uid).all();
+  const state = await db.prepare('SELECT last_level, sound FROM paperfold_state WHERE uid = ?').bind(uid).first();
+  const levels = {};
+  for (const r of results ?? []) levels[r.level] = { perfect: r.perfect === 1 };
+  return { levels, at: state?.last_level ?? null, sound: state?.sound ?? null };
+}
+
 // ───────────────────────────── HTTP
 
 export default {
@@ -184,6 +235,14 @@ export default {
       const { user, error } = await signedIn();
       if (!user) return json({ error }, 401, origin);
       return json(await statsFor(env.DB, user.uid), 200, origin);
+    }
+
+    if (url.pathname === '/paperfold/progress' && request.method === 'POST') {
+      const { user, error } = await signedIn();
+      if (!user) return json({ error }, 401, origin);
+      const read = readPaperfoldProgress(await request.json().catch(() => null));
+      if (read.error) return json({ error: read.error }, 400, origin);
+      return json(await savePaperfoldProgress(env.DB, user.uid, read), 200, origin);
     }
 
     const m = url.pathname.match(/^\/rooms\/(\d{6})(\/ws)?$/);
