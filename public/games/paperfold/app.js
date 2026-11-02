@@ -20,9 +20,8 @@ progress.effort = progress.effort || {};
 let soundOn = safe(() => localStorage.getItem('paperfold-sound')) !== 'off';
 const saveProgress = () => safe(() => localStorage.setItem(KEY, JSON.stringify(progress)));
 const firstUnsolved = () => { const i = LEVELS.findIndex((_, n) => !progress.solved[n]); return i < 0 ? LEVELS.length - 1 : i; };
-// On staging and localhost every level is open, so a reviewer can go straight to any of them.
-const REVIEW = ['arjunuvacha-test.web.app', 'arjunuvacha-test.firebaseapp.com', 'localhost', '127.0.0.1'].includes(location.hostname);
-const isOpen = (n) => REVIEW || n === 0 || !!progress.solved[n] || !!progress.solved[n - 1];
+// A level opens once the one before it is solved. Solved levels stay open to replay.
+const isOpen = (n) => n === 0 || !!progress.solved[n] || !!progress.solved[n - 1];
 
 // ── state
 let lvl = 0, L = null, cells = null, history = [], won = false, clean = true, usedHint = false;
@@ -263,7 +262,7 @@ $('hintBtn').addEventListener('click', () => {
   } else loopFold(fold, 2);
 });
 $('againBtn').addEventListener('click', () => load(lvl));
-$('nextBtn').addEventListener('click', () => { if (lvl < LEVELS.length - 1) load(lvl + 1); });
+$('nextBtn').addEventListener('click', () => { if (lvl < LEVELS.length - 1 && isOpen(lvl + 1)) load(lvl + 1); });
 $('soundBtn').addEventListener('click', () => {
   soundOn = !soundOn;
   safe(() => localStorage.setItem('paperfold-sound', soundOn ? 'on' : 'off'));
@@ -302,7 +301,7 @@ function fillMap() {
       picture(v, level, n, 20, false);
       if (s.perfect) b.appendChild(Object.assign(document.createElement('span'), { className: 'perfect' }));
     } else b.textContent = n + 1;
-    b.addEventListener('click', () => { $('map').close(); load(n); });
+    b.addEventListener('click', () => { if (!isOpen(n)) return; $('map').close(); load(n); });
     grid.appendChild(b);
   });
 }
@@ -312,9 +311,8 @@ $('mapClose').addEventListener('click', () => $('map').close());
 $('map').addEventListener('click', (ev) => { if (ev.target === $('map')) $('map').close(); });
 
 showSound();
-const asked = REVIEW ? Number(new URLSearchParams(location.search).get('level')) - 1 : -1;
-const saved = asked >= 0 && asked < LEVELS.length ? asked : Number(progress.at);
-load(asked >= 0 && asked < LEVELS.length ? asked : Number.isInteger(saved) && saved >= 0 && saved < LEVELS.length && isOpen(saved) ? (progress.solved[saved] ? firstUnsolved() : saved) : firstUnsolved());
+const saved = Number(progress.at);
+load(Number.isInteger(saved) && saved >= 0 && saved < LEVELS.length && isOpen(saved) ? (progress.solved[saved] ? firstUnsolved() : saved) : firstUnsolved());
 
 // ── the account. As on Stonecross: a guest from the first visit, and signing in links
 // the guest. Everything the game keeps here goes to whichever account is signed in,
