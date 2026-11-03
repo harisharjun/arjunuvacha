@@ -1,12 +1,14 @@
 // Paperfold: the board and everything around it. The rules are in engine.js.
-import { K, P, startCells, bounds, creases, applyFold, isSolved, solve, stateKey } from './engine.js';
+import { K, P, startCells, bounds, creases, movedCells, reflect, applyFold, isSolved, solve, stateKey } from './engine.js';
 import { LEVELS } from './levels.js';
 import { artFor } from './art.js';
-import { GOLD, el, tile, picture, drawLines, drawFold } from './draw.js';
+import { GOLD, el, tile, picture, drawLines, makeFlap, fitted, tween } from './draw.js';
 import { openHowTo } from './tutorial.js';
 
 const $ = (id) => document.getElementById(id);
 const S = 50, CX = 170, CY = 240;
+// The part of the board the paper may use, below the picture to make.
+const BOX = { x0: 10, x1: 330, y0: 106, y1: 384 };
 const board = $('board');
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const safe = (f) => { try { return f(); } catch (e) { return undefined; } };
@@ -25,15 +27,18 @@ const isOpen = (n) => n === 0 || !!progress.solved[n] || !!progress.solved[n - 1
 
 // ── state
 let lvl = 0, L = null, cells = null, history = [], won = false, clean = true, usedHint = false;
-let drag = null, preview = null, animId = 0, lastOffset = null, peekTimer = 0, loopTimer = 0;
+let drag = null, flap = null, animId = 0, lastOffset = null, peekTimer = 0, loopTimer = 0, settling = false;
+// Where the paper sits, the folds made so far, and where it sat before each one, for undo.
+let view = null, views = [], lines = [], pinned = null;
 let attemptActions = 0, effortUnsent = false, hintLine = null;
 
 $('artDefs').innerHTML = LEVELS.map((l, i) => `<g id="art-${i}">${artFor(l.art, l.w, l.h)}</g>`).join('');
 
-function offset() {
-  const b = bounds(cells);
+function centred(cs) {
+  const b = bounds(cs);
   return { x: CX - (b.x0 + b.x1) / 2 * S, y: CY - (b.y0 + b.y1) / 2 * S };
 }
+const offset = () => pinned || view || centred(cells);
 
 function drawTarget() {
   const s = Math.floor(Math.min(25, 96 / L.w, 78 / L.h));
@@ -54,6 +59,7 @@ function paperGroup() {
 }
 
 function render() {
+  flap = null;
   board.innerHTML = '';
   drawTarget();
   const g = paperGroup();
@@ -62,23 +68,27 @@ function render() {
   $('foldCount').textContent = `${history.length} of ${L.par} ${L.par === 1 ? 'fold' : 'folds'}`;
 }
 
-// Fold the paper over the line on screen, without keeping it yet.
-function showPreview(c) {
-  if ((!c && !preview) || (c && preview && c.ax === preview.ax && c.k === preview.k && c.side === preview.side)) return;
+// A fold on screen for a line, lying flat, not kept until it is committed.
+function startFlap(line) {
   animId++;
-  preview = c;
-  if (!c) { render(); return; }
-  const id = animId;
   board.innerHTML = '';
   drawTarget();
-  drawFold(paperGroup(), cells, c, L, lvl, S, { ms: calm ? 0 : 200, alive: () => id === animId });
+  flap = makeFlap(board, paperGroup(), cells, line, L, lvl, S);
+  return flap;
+}
+function animateFlap(to, ms, done) {
+  const id = ++animId, f = flap;
+  if (f) tween(f.c, to, calm ? 0 : ms, (c) => f.set(c), done, () => id === animId && flap === f);
 }
 
 function commit(c) {
   animId++;
-  preview = null;
   history.push(cells);
+  lines.push(c);
+  views.push(view);
   cells = applyFold(cells, c);
+  view = fitted(cells, view, S, BOX);
+  safe(() => navigator.vibrate && navigator.vibrate(12));
   hintLine = null;
   countAction();
   tone(190, 0, .09, .05);
@@ -119,7 +129,8 @@ function load(n) {
   if (effortUnsent) syncProgress();
   attemptActions = 0; hintLine = null;
   lvl = n; L = LEVELS[n]; cells = startCells(L.sheet); history = []; won = false; clean = true; usedHint = false;
-  drag = null; preview = null; animId++; lastOffset = null;
+  lines = []; views = []; view = centred(cells); pinned = null;
+  drag = null; flap = null; animId++; lastOffset = null; settling = false;
   clearTimeout(peekTimer); stopLoop();
   progress.at = n; saveProgress();
   board.classList.remove('pop');
@@ -132,19 +143,21 @@ function load(n) {
   track('paperfold_level_start', { level: n + 1 });
 }
 
-// Show a fold again and again until the player touches the paper. Teaches level 1; also the hint.
+// Shows a fold again and again until the player touches the paper. Teaches level 1;
+// also the hint on the early levels.
 function loopFold(c, times = Infinity) {
   stopLoop();
-  let on = false, left = times * 2;
-  const tick = () => {
-    if (left-- <= 0) { stopLoop(); showPreview(null); return; }
-    on = !on;
-    showPreview(on ? c : null);
+  let left = times;
+  const once = () => {
+    if (left-- <= 0) { stopLoop(); render(); return; }
+    startFlap(c);
+    animateFlap(-1, 1000, () => {
+      loopTimer = setTimeout(() => animateFlap(1, 600, () => { render(); loopTimer = setTimeout(once, 500); }), 600);
+    });
   };
-  tick();
-  loopTimer = setInterval(tick, 1100);
+  once();
 }
-function stopLoop() { clearInterval(loopTimer); loopTimer = 0; }
+function stopLoop() { clearTimeout(loopTimer); loopTimer = 0; }
 
 // ── sound
 let audio = null;
@@ -160,25 +173,38 @@ function tone(f, at, d, g) {
 }
 function showSound() { $('soundBtn').textContent = soundOn ? 'Sound on' : 'Sound off'; $('soundBtn').setAttribute('aria-pressed', soundOn); }
 
-// ── dragging. As with real paper, the fold falls halfway between where you
-// grabbed and where your finger is, so it lands on the line nearest that point.
+// ── dragging. The paper follows the finger: the part you grab lifts from a line and stays
+// under your finger, standing up as you reach the line and landing past it. The line is
+// the one nearest halfway between where you grabbed and where your finger is.
 function point(ev) {
   const r = board.getBoundingClientRect(), f = 340 / r.width, o = offset();
   return { x: (ev.clientX - r.left) * f - o.x, y: (ev.clientY - r.top) * f - o.y };
 }
 const onPaper = (p) => cells.has(K(Math.floor(p.x / S), Math.floor(p.y / S)));
+const sameLine = (a, b) => a && b && a.ax === b.ax && a.k === b.k && a.side === b.side;
 
-function foldFor(a, b) {
-  const dx = b.x - a.x, dy = b.y - a.y, ax = Math.abs(dx) >= Math.abs(dy) ? 0 : 1, d = ax === 0 ? dx : dy, from = ax === 0 ? a.x : a.y;
-  if (Math.abs(d) < 12) return null;
-  const mid = from + d / 2;
+// `also` is one more line to consider: the last fold's, which can be the paper's edge now.
+function lineFor(a, b, ax, also = null) {
+  const d = ax === 0 ? b.x - a.x : b.y - a.y, from = ax === 0 ? a.x : a.y;
+  if (Math.abs(d) < 8) return null;
+  const mid = from + d / 2, ks = creases(cells, ax);
+  if (also && also.ax === ax && !ks.includes(also.k)) ks.push(also.k);
   let best = null, gap = Infinity;
-  for (const k of creases(cells, ax)) {
+  for (const k of ks) {
     const pos = k * S;
     if (d > 0 ? pos < from - 14 : pos > from + 14) continue;
     if (Math.abs(pos - mid) < gap) { gap = Math.abs(pos - mid); best = k; }
   }
   return best === null ? null : { ax, k: best, side: d > 0 ? 0 : 1 };
+}
+
+// How far over a flap is, from where it was grabbed and where the finger is now: 1 flat,
+// 0 standing up, -1 folded over. `landed` is for unfolding, grabbed where it landed.
+function foldCos(line, grab, q, landed) {
+  const pos = line.k * S, now = line.ax === 0 ? q.x : q.y, start = line.side === 0 ? -1 : 1;
+  let g = line.ax === 0 ? grab.x : grab.y;
+  if (Math.abs(g - pos) < S * .35) g = pos + (landed ? -start : start) * S * .5;
+  return (landed ? -1 : 1) * (now - pos) / (g - pos);
 }
 
 function nearestFold(p) {
@@ -190,31 +216,108 @@ function nearestFold(p) {
   return best;
 }
 
+// A tap doesn't fold; the nearest edge lifts a little to show the paper can move.
+function peek(p) {
+  const line = nearestFold(p);
+  if (!line) { render(); return; }
+  startFlap(line);
+  animateFlap(.45, 180, () => { peekTimer = setTimeout(() => { if (flap && !drag) animateFlap(1, 200, render); }, 350); });
+}
+
+// The fold just made sits on top, so it can be dragged back over its line to unfold it.
+// Only the last one: earlier folds are underneath it. It counts as an undo.
+function lastFoldAt(p) {
+  if (!history.length) return null;
+  const prev = history[history.length - 1], line = lines[lines.length - 1], here = K(Math.floor(p.x / S), Math.floor(p.y / S));
+  const landed = movedCells(prev, line).map((k) => { const [x, y] = reflect(P(k), line); return K(x, y); });
+  return landed.includes(here) ? { prev, line } : null;
+}
+function startUnfold(d) {
+  d.unfold = d.back;
+  d.current = cells;
+  pinned = offset();
+  cells = d.back.prev;
+  startFlap(d.back.line).set(-1);
+}
+function endUnfold(d, unfolded) {
+  pinned = null;
+  settling = false;
+  if (unfolded) {
+    cells = d.unfold.prev; history.pop(); lines.pop(); view = views.pop(); clean = false; hintLine = null;
+    countAction();
+    track('paperfold_unfold', { level: lvl + 1 });
+  } else cells = d.current;
+  render();
+}
+
 board.addEventListener('pointerdown', (ev) => {
-  if (won) return;
-  stopLoop(); clearTimeout(peekTimer); showPreview(null);
+  if (won || settling) return;
+  stopLoop(); clearTimeout(peekTimer);
+  if (flap) { animId++; render(); }
   const p = point(ev);
   if (!onPaper(p)) return;
-  drag = { p };
+  drag = { p, ax: null, locked: false, line: null, back: lastFoldAt(p), unfold: null, v: 0, t: performance.now(), at: 0 };
   board.classList.add('dragging');
   safe(() => board.setPointerCapture(ev.pointerId));
   ev.preventDefault();
 });
-board.addEventListener('pointermove', (ev) => { if (drag) showPreview(foldFor(drag.p, point(ev))); });
+board.addEventListener('pointermove', (ev) => {
+  if (!drag) return;
+  const q = point(ev), dx = q.x - drag.p.x, dy = q.y - drag.p.y;
+  if (drag.ax === null) {
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 6) return;
+    drag.ax = Math.abs(dx) >= Math.abs(dy) ? 0 : 1;
+    drag.at = drag.ax === 0 ? drag.p.x : drag.p.y;
+  }
+  const along = drag.ax === 0 ? q.x : q.y, now = performance.now();
+  drag.v = (along - drag.at) / Math.max(1, now - drag.t); drag.t = now; drag.at = along;
+  if (!drag.locked) {
+    const b = drag.back, line = lineFor(drag.p, q, drag.ax, b && b.line);
+    // Dragging the fold just made back over its own line unfolds it. Over any other
+    // line, the same drag is an ordinary fold.
+    const unfolding = !!(b && line && line.ax === b.line.ax && line.k === b.line.k && line.side !== b.line.side);
+    if (unfolding && !drag.unfold) { drag.line = null; startUnfold(drag); }
+    else if (!unfolding && drag.unfold) { pinned = null; cells = drag.current; drag.unfold = null; drag.line = null; render(); }
+    if (!unfolding && !sameLine(line, drag.line)) { drag.line = line; if (line) startFlap(line); else render(); }
+  }
+  if (drag.unfold) {
+    const c = foldCos(drag.unfold.line, drag.p, q, true);
+    flap.set(c);
+    if (c > -.8) drag.locked = true;
+    return;
+  }
+  if (!drag.line) return;
+  const c = foldCos(drag.line, drag.p, q, false);
+  flap.set(Math.min(1, c));
+  // Once the flap has visibly lifted, the line stays put even if the finger drifts.
+  if (c < .8) drag.locked = true;
+});
 board.addEventListener('pointerup', (ev) => {
   if (!drag) return;
-  const p = drag.p, q = point(ev), c = foldFor(p, q);
+  const d = drag, q = point(ev);
   drag = null;
   board.classList.remove('dragging');
-  if (c) { commit(c); return; }
-  // A tap does not fold; the paper lifts to show that it can be moved.
-  const n = nearestFold(p);
-  if (Math.abs(q.x - p.x) + Math.abs(q.y - p.y) < 12 && n) {
-    showPreview(n);
-    peekTimer = setTimeout(() => showPreview(null), 550);
-  } else showPreview(null);
+  if (d.unfold) {
+    const towardStart = (d.unfold.line.side === 0 ? -1 : 1) * d.v, unfold = flap.c > 0 || (flap.c > -.75 && towardStart > .45);
+    settling = true;
+    animateFlap(unfold ? 1 : -1, 170, () => endUnfold(d, unfold));
+    return;
+  }
+  if (!d.line || !flap) {
+    if (Math.abs(q.x - d.p.x) + Math.abs(q.y - d.p.y) < 8) peek(d.p); else render();
+    return;
+  }
+  // Past halfway, or flicked toward the line, the fold finishes; otherwise it falls back.
+  const toward = (d.line.side === 0 ? 1 : -1) * d.v, keep = flap.c < 0 || (flap.c < .75 && toward > .45);
+  settling = true;
+  animateFlap(keep ? -1 : 1, 170, () => { settling = false; if (keep) commit(d.line); else render(); });
 });
-board.addEventListener('pointercancel', () => { drag = null; board.classList.remove('dragging'); showPreview(null); });
+board.addEventListener('pointercancel', () => {
+  if (drag && drag.unfold) { pinned = null; cells = drag.current; }
+  drag = null; settling = false; animId++;
+  board.classList.remove('dragging');
+  render();
+});
 
 // ── controls
 let toastTimer = 0;
@@ -225,9 +328,9 @@ function toast(msg, ms = 2600) {
 }
 
 $('undoBtn').addEventListener('click', () => {
-  if (won || !history.length) return;
-  stopLoop(); clearTimeout(peekTimer); animId++; preview = null;
-  cells = history.pop(); clean = false; hintLine = null;
+  if (won || settling || !history.length) return;
+  stopLoop(); clearTimeout(peekTimer); animId++;
+  cells = history.pop(); lines.pop(); view = views.pop(); clean = false; hintLine = null;
   countAction();
   render();
   track('paperfold_undo', { level: lvl + 1 });
@@ -248,7 +351,7 @@ function nextFold() {
 }
 
 $('hintBtn').addEventListener('click', () => {
-  if (won) return;
+  if (won || settling) return;
   clearTimeout(peekTimer);
   const fold = nextFold();
   track('paperfold_hint', { level: lvl + 1, stuck: !fold });
@@ -306,7 +409,23 @@ function fillMap() {
   });
 }
 $('mapBtn').addEventListener('click', openMap);
-$('howBtn').addEventListener('click', () => { track('paperfold_how_to', { level: lvl + 1 }); openHowTo(); });
+// New players see How to play once, the first time they arrive with nothing solved. It
+// waits for the account's progress first, so a returning player on a new device skips it.
+const HOW_TO_SEEN = 'paperfold-how-to-seen';
+let howToDecided = false;
+function showHowTo(auto) {
+  safe(() => localStorage.setItem(HOW_TO_SEEN, '1'));
+  track('paperfold_how_to', { level: lvl + 1, auto });
+  openHowTo();
+}
+function maybeShowHowTo() {
+  if (howToDecided) return;
+  howToDecided = true;
+  if (Object.keys(progress.solved).length || safe(() => localStorage.getItem(HOW_TO_SEEN))) return;
+  showHowTo(true);
+}
+setTimeout(maybeShowHowTo, 2500);
+$('howBtn').addEventListener('click', () => showHowTo(false));
 $('mapClose').addEventListener('click', () => $('map').close());
 $('map').addEventListener('click', (ev) => { if (ev.target === $('map')) $('map').close(); });
 
@@ -371,6 +490,7 @@ async function syncProgress() {
   } catch (err) {
     console.warn('Paperfold progress not saved to the account yet:', err.message);
   }
+  maybeShowHowTo();
 }
 
 function onAccount(u) {

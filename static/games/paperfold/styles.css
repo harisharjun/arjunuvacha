@@ -28,7 +28,7 @@
 .win-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .win-actions .btn { padding: 9px 16px; }
 
-/* The How to play button, as on Stonecross; on a phone it keeps its badge and drops its words. */
+/* The How to play button, as on Stonecross, under the board where it is easy to find. */
 .how-to {
   font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; white-space: nowrap;
   display: inline-flex; align-items: center; gap: .45em; padding: 6px 12px; border-radius: 999px;
@@ -41,6 +41,7 @@
   background: var(--accent); color: var(--accent-ink); font-size: .78em; font-weight: 900;
 }
 .how-to:hover .how-ico { background: var(--accent-ink); color: var(--accent); }
+.how-to-play { margin-top: 14px; font-size: .95rem; padding: 8px 16px; }
 
 .how {
   width: min(92vw, 440px); max-height: calc(100dvh - 24px); border: 0; border-radius: var(--radius);
@@ -87,7 +88,4 @@
 
 @media (max-width: 560px) {
   .play { padding: 4px 12px 20px; }
-  .how-to { padding: 6px; gap: 0; }
-  .how-to .how-label { display: none; }
-  .how-ico { font-size: .95em; }
 }

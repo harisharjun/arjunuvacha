@@ -65,27 +65,102 @@ export function drawLines(g, cells, S, active) {
   }
 }
 
-// Fold the paper over its line on screen, without changing the sheet itself.
-export function drawFold(g, cells, c, level, n, S, { ms = 200, alive = () => true } = {}) {
-  const moved = movedCells(cells, c), set = new Set(moved);
-  for (const k of moved) { const [x, y] = P(k); el('rect', { x: x * S + 1, y: y * S + 1, width: S - 2, height: S - 2, fill: 'none', stroke: EDGE, 'stroke-dasharray': '3 3' }, g); }
-  for (const [k, st] of cells) if (!set.has(k)) { const [x, y] = P(k); tile(g, x, y, S, st[0], level, n, { depth: st.length }); }
-  drawLines(g, cells, S, c);
-  const up = el('g', {}, g), over = el('g', { visibility: 'hidden' }, g);
-  for (const k of moved) {
-    const st = cells.get(k), [x, y] = P(k), [qx, qy] = reflect([x, y], c);
-    tile(up, x, y, S, st[0], level, n, { depth: st.length });
-    tile(over, qx, qy, S, flip(st[st.length - 1], c.ax), level, n, { depth: st.length + 1 });
+// Where the paper sits. It stays put after a fold, so you can see what moved, and shifts
+// only when it would leave `box` (the part of the board it may use), as far as it needs to.
+export function fitted(cells, view, S, box) {
+  const b = bounds(cells), out = { x: view.x, y: view.y };
+  for (const [axis, lo0, hi0, min, max] of [['x', b.x0, b.x1, box.x0, box.x1], ['y', b.y0, b.y1, box.y0, box.y1]]) {
+    const lo = lo0 * S + out[axis], hi = hi0 * S + out[axis];
+    if (hi - lo > max - min) out[axis] += (min + max) / 2 - (lo + hi) / 2;
+    else if (lo < min) out[axis] += min - lo;
+    else if (hi > max) out[axis] -= hi - max;
   }
-  const pos = c.k * S;
-  const squash = (s) => (c.ax === 0 ? `translate(${pos} 0) scale(${s} 1) translate(${-pos} 0)` : `translate(0 ${pos}) scale(1 ${s}) translate(0 ${-pos})`);
+  return out;
+}
+
+// Moves a value from `from` to `to` over `ms`, easing out. If frames stall (a background
+// tab, a phone saving power) it still finishes on time. Stops quietly once `alive` is false.
+export function tween(from, to, ms, set, done, alive = () => true) {
   const t0 = performance.now();
+  let ended = false;
+  const end = () => {
+    if (ended || !alive()) return;
+    ended = true; clearTimeout(late); set(to);
+    if (done) done();
+  };
+  const late = setTimeout(end, ms + 150);
   const step = (now) => {
-    if (!alive()) return;
-    const t = ms ? Math.min(1, (now - t0) / ms) : 1, s = 1 - 2 * t * t * (3 - 2 * t);
-    if (s >= 0) up.setAttribute('transform', squash(Math.max(s, .001)));
-    else { up.setAttribute('visibility', 'hidden'); over.setAttribute('visibility', 'visible'); over.setAttribute('transform', squash(Math.max(-s, .001))); }
-    if (t < 1) requestAnimationFrame(step);
+    if (ended || !alive()) return;
+    const t = ms ? Math.min(1, (now - t0) / ms) : 1;
+    set(from + (to - from) * (1 - Math.pow(1 - t, 3)));
+    if (t < 1) requestAnimationFrame(step); else end();
   };
   step(t0);
+}
+
+const TABLE = 'rgba(138, 122, 92, .10)';
+
+// A fold in progress, drawn so it reads as paper turning over: the flap squashes toward
+// its line, darkens as it turns away, casts a shadow on the paper it is heading for, and
+// its free edge widens as it rises toward you. `set(c)` moves it, where c is the cosine of
+// its angle: 1 lying flat, 0 standing up, -1 folded over. The sheet itself doesn't change.
+export function makeFlap(svg, g, cells, line, level, n, S) {
+  const tag = svg.id || 'paper', moved = movedCells(cells, line), inFlap = new Set(moved);
+  const defs = [...svg.children].find((e) => e.tagName === 'defs') || el('defs', {}, svg);
+  for (const k of moved) { const [x, y] = P(k); el('rect', { x: x * S + 1, y: y * S + 1, width: S - 2, height: S - 2, fill: TABLE, stroke: EDGE, 'stroke-dasharray': '3 3' }, g); }
+  for (const [k, st] of cells) if (!inFlap.has(k)) { const [x, y] = P(k); tile(g, x, y, S, st[0], level, n, { depth: st.length }); }
+  drawLines(g, cells, S, line);
+
+  const pos = line.k * S, dir = line.side === 0 ? 1 : -1, across = moved.map((k) => P(k)[1 - line.ax]);
+  const c0 = Math.min(...across) * S, c1 = (Math.max(...across) + 1) * S, mid = (c0 + c1) / 2;
+  const reach = Math.max(...moved.map((k) => { const v = P(k)[line.ax]; return line.side === 0 ? pos - v * S : (v + 1) * S - pos; }));
+  const grad = el('linearGradient', { id: `${tag}-shadow`, gradientUnits: 'userSpaceOnUse' }, defs);
+  const shadow = el('rect', { fill: `url(#${tag}-shadow)`, opacity: 0 }, g);
+
+  // The flap's squares, one group per column of squares, kept out of sight and drawn in strips below.
+  const up = el('g', {}, g), over = el('g', { visibility: 'hidden' }, g), upShade = [], overShade = [], cols = {};
+  const column = (side, col) => cols[side + col] || (cols[side + col] = el('g', { id: `${tag}-${side}${col}` }, defs));
+  const shade = (t) => el('rect', { x: .5, y: .5, width: S - 1, height: S - 1, fill: '#000', opacity: 0 }, t);
+  for (const k of moved) {
+    const st = cells.get(k), p = P(k), q = reflect(p, line);
+    upShade.push(shade(tile(column('u', p[line.ax]), p[0], p[1], S, st[0], level, n, { depth: st.length })));
+    overShade.push(shade(tile(column('o', q[line.ax]), q[0], q[1], S, flip(st[st.length - 1], line.ax), level, n, { depth: st.length + 1 })));
+  }
+  // Each half is cut into thin strips across the fold, so the free edge can widen while
+  // the crease keeps its width: a trapezoid, which a single SVG transform can't draw.
+  const strips = [], STRIP = 5, count = Math.ceil(reach / STRIP);
+  for (const [parent, side, toward] of [[up, 'u', -dir], [over, 'o', dir]]) {
+    for (let i = 0; i < count; i++) {
+      const lo = Math.min(pos + toward * i * STRIP, pos + toward * (i + 1) * STRIP), col = Math.floor((lo + .01) / S);
+      if (!cols[side + col]) continue;
+      const id = `${tag}-${side}s${i}`, clip = el('clipPath', { id, clipPathUnits: 'userSpaceOnUse' }, defs);
+      el('rect', line.ax === 0 ? { x: lo - .3, width: STRIP + .6, y: c0 - 400, height: c1 - c0 + 800 } : { y: lo - .3, height: STRIP + .6, x: c0 - 400, width: c1 - c0 + 800 }, clip);
+      strips.push({ use: el('use', { href: `#${tag}-${side}${col}` }, el('g', { 'clip-path': `url(#${id})` }, parent)), d: (i + .5) * STRIP });
+    }
+  }
+
+  const squash = (s) => (line.ax === 0 ? `translate(${pos} 0) scale(${s} 1) translate(${-pos} 0)` : `translate(0 ${pos}) scale(1 ${s}) translate(0 ${-pos})`);
+  const widen = (m) => (line.ax === 0 ? `translate(0 ${mid}) scale(1 ${m}) translate(0 ${-mid})` : `translate(${mid} 0) scale(${m} 1) translate(${-mid} 0)`);
+  let now = 1;
+  function set(c) {
+    c = Math.max(-1, Math.min(1, c));
+    now = c;
+    const lift = Math.sqrt(1 - c * c), front = c >= 0;
+    up.setAttribute('visibility', front ? 'visible' : 'hidden');
+    over.setAttribute('visibility', front ? 'hidden' : 'visible');
+    (front ? up : over).setAttribute('transform', squash(Math.max(Math.abs(c), .002)));
+    for (const r of front ? upShade : overShade) r.setAttribute('opacity', (.42 * (1 - Math.abs(c))).toFixed(3));
+    for (const s of strips) s.use.setAttribute('transform', widen(1 + .22 * lift * Math.min(1, s.d / reach)));
+    // Darkest at the crease, reaching past the flap's edge, gone once it lands.
+    const w = reach * Math.max(0, -c) + Math.min(reach, S) * .9 * lift + 4, a = pos, b = pos + dir * w;
+    grad.innerHTML = `<stop offset="0" stop-color="#1b1408" stop-opacity="${(.78 * lift).toFixed(3)}"/><stop offset=".3" stop-color="#1b1408" stop-opacity="${(.42 * lift).toFixed(3)}"/><stop offset="1" stop-color="#1b1408" stop-opacity="0"/>`;
+    if (line.ax === 0) { grad.setAttribute('x1', a); grad.setAttribute('x2', b); grad.setAttribute('y1', 0); grad.setAttribute('y2', 0); }
+    else { grad.setAttribute('y1', a); grad.setAttribute('y2', b); grad.setAttribute('x1', 0); grad.setAttribute('x2', 0); }
+    const lo = Math.min(a, b), len = Math.abs(b - a);
+    if (line.ax === 0) { shadow.setAttribute('x', lo); shadow.setAttribute('width', len); shadow.setAttribute('y', c0); shadow.setAttribute('height', c1 - c0); }
+    else { shadow.setAttribute('y', lo); shadow.setAttribute('height', len); shadow.setAttribute('x', c0); shadow.setAttribute('width', c1 - c0); }
+    shadow.setAttribute('opacity', lift > .01 ? 1 : 0);
+  }
+  set(1);
+  return { line, set, get c() { return now; } };
 }
