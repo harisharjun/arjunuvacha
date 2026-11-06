@@ -22,8 +22,13 @@ progress.effort = progress.effort || {};
 let soundOn = safe(() => localStorage.getItem('paperfold-sound')) !== 'off';
 const saveProgress = () => safe(() => localStorage.setItem(KEY, JSON.stringify(progress)));
 const firstUnsolved = () => { const i = LEVELS.findIndex((_, n) => !progress.solved[n]); return i < 0 ? LEVELS.length - 1 : i; };
+// For testing on staging and localhost only: a link with ?level=N opens that level, and
+// every level stays open while the link is in the address bar. Production ignores it.
+const STAGING = ['arjunuvacha-test.web.app', 'arjunuvacha-test.firebaseapp.com', 'localhost', '127.0.0.1'].includes(location.hostname);
+const askedLevel = STAGING ? Number(new URLSearchParams(location.search).get('level')) : NaN;
+const testing = Number.isInteger(askedLevel) && askedLevel >= 1 && askedLevel <= LEVELS.length;
 // A level opens once the one before it is solved. Solved levels stay open to replay.
-const isOpen = (n) => n === 0 || !!progress.solved[n] || !!progress.solved[n - 1];
+const isOpen = (n) => testing || n === 0 || !!progress.solved[n] || !!progress.solved[n - 1];
 
 // ── state
 let lvl = 0, L = null, cells = null, history = [], won = false, clean = true, usedHint = false;
@@ -139,7 +144,9 @@ function load(n) {
   $('levelName').textContent = `Level ${n + 1} of ${LEVELS.length}`;
   render();
   if (L.demo) loopFold(L.demo);
-  if (L.decoys && !LEVELS[n - 1].decoys && !progress.solved[n]) toast('From here, every square is printed, and only some prints belong to the picture. Hints mark the line, not the side.', 7000);
+  const before = LEVELS[n - 1] || {};
+  if (L.decoyFaces?.length && !before.decoyFaces?.length && !progress.solved[n]) toast("From here, some squares carry prints that aren't part of the picture, a few more each level.", 7000);
+  if (L.lineHint && !before.lineHint && !progress.solved[n]) toast('From here, hints mark the line to fold on, not which side.', 7000);
   track('paperfold_level_start', { level: n + 1 });
 }
 
@@ -357,7 +364,7 @@ $('hintBtn').addEventListener('click', () => {
   track('paperfold_hint', { level: lvl + 1, stuck: !fold });
   if (!fold) { toast(L.route ? 'No quick route from here. Undo or start over.' : "This fold can't reach the picture. Undo it, or start over."); return; }
   usedHint = true;
-  if (L.decoys) {
+  if (L.lineHint) {
     stopLoop();
     hintLine = { ax: fold.ax, k: fold.k };
     render();
@@ -421,7 +428,7 @@ function showHowTo(auto) {
 function maybeShowHowTo() {
   if (howToDecided) return;
   howToDecided = true;
-  if (Object.keys(progress.solved).length || safe(() => localStorage.getItem(HOW_TO_SEEN))) return;
+  if (testing || Object.keys(progress.solved).length || safe(() => localStorage.getItem(HOW_TO_SEEN))) return;
   showHowTo(true);
 }
 setTimeout(maybeShowHowTo, 2500);
@@ -431,7 +438,7 @@ $('map').addEventListener('click', (ev) => { if (ev.target === $('map')) $('map'
 
 showSound();
 const saved = Number(progress.at);
-load(Number.isInteger(saved) && saved >= 0 && saved < LEVELS.length && isOpen(saved) ? (progress.solved[saved] ? firstUnsolved() : saved) : firstUnsolved());
+load(testing ? askedLevel - 1 : Number.isInteger(saved) && saved >= 0 && saved < LEVELS.length && isOpen(saved) ? (progress.solved[saved] ? firstUnsolved() : saved) : firstUnsolved());
 
 // ── the account. As on Stonecross: a guest from the first visit, and signing in links
 // the guest. Everything the game keeps here goes to whichever account is signed in,

@@ -19,7 +19,7 @@ export function tile(parent, x, y, s, l, level, n, { edge = true, depth = 1, dat
   if (data) { a['data-x'] = x; a['data-y'] = y; }
   el('rect', a, t);
   const e = level.fin[faceId(l)];
-  if (!e && level.decoys) decoy(t, s, l, n, level);
+  if (!e && level.decoyFaces && level.decoyFaces.includes(faceId(l))) decoy(t, s, l, n, level);
   if (e) {
     const wrap = el('g', {}, t);
     if ((e[2] === 1) !== l.x) wrap.setAttribute('transform', `rotate(180 ${s / 2} ${s / 2})`);
