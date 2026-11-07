@@ -1,0 +1,7 @@
+# Pages that live outside Hugo, in static/, so Hugo can't list them in the sitemap itself.
+# layouts/_default/sitemap.xml adds these. Add a page here when you add one to static/.
+- url: /games/
+- url: /games/paperfold/
+- url: /games/stonecross/
+- url: /prompt-gym/
+- url: /tax-copilot/
