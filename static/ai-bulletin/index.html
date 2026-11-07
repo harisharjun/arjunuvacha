@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Bulletin · What actually changed in AI today</title>
+<meta name="description" content="A daily, globally-sourced AI briefing — ranked by how much each story actually matters, not by when it was published. On quiet days it says so.">
+<!-- Root-relative, not relative. Firebase rewrites /ai-bulletin/** to this file,
+     so an archive link at /ai-bulletin/2026-11-06 would otherwise resolve
+     "app.js" to /ai-bulletin/app.js only by luck and "styles" not at all. Same
+     reasoning as static/prompt-gym/index.html. -->
+<link rel="icon" href="https://arjunuvacha.com/favicon.png" type="image/png">
+<meta name="theme-color" content="#34495E">
+
+<meta property="og:site_name" content="Arjun Uvacha">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI Bulletin: what actually changed in AI today">
+<meta property="og:description" content="A daily, globally-sourced AI briefing — ranked by significance, not recency. Ongoing stories are tracked as threads. On quiet days it says so.">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AI Bulletin: what actually changed in AI today">
+<meta name="twitter:description" content="A daily, globally-sourced AI briefing — ranked by significance, not recency.">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2MQEL0WD3M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2MQEL0WD3M');
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Lato matches arjunuvacha.com's own font, as the tax-copilot page does, so this
+     reads as part of the same site rather than a separate app. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Tokens copied from static/tax-copilot/index.html so the two standalone pages
+   stay in step with each other and with the blog's own --accent-color. */
+:root{
+  --paper:#F5F5FA; --surface:#FFFFFF; --sunk:#ECEFEB; --raise:#FFFFFF;
+  --ink:#14201C; --muted:#5F6D68; --faint:#8A968F; --rule:#DDE3DE; --rule-2:#C9D2CC;
+  --accent:#34495E; --accent-ink:#FFFFFF; --accent-soft:#E8ECF0;
+  --flag:#A6522C; --flag-soft:#F6E9E0;
+  --good:#00795F; --warn:#C1521A;
+  --shadow:0 1px 2px rgba(20,32,28,.05),0 10px 30px -20px rgba(20,32,28,.35);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F1512; --surface:#161D1A; --sunk:#1B2320; --raise:#1D2622;
+  --ink:#E7ECE8; --muted:#97A49D; --faint:#75827B; --rule:#27312C; --rule-2:#35423C;
+  --accent:#8CA3BC; --accent-ink:#0F1512; --accent-soft:#1E2733;
+  --flag:#DB9468; --flag-soft:#31221A;
+  --good:#3FA98A; --warn:#D07A3A;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -20px rgba(0,0,0,.9);
+}}
+:root[data-theme="dark"]{
+  --paper:#0F1512; --surface:#161D1A; --sunk:#1B2320; --raise:#1D2622;
+  --ink:#E7ECE8; --muted:#97A49D; --faint:#75827B; --rule:#27312C; --rule-2:#35423C;
+  --accent:#8CA3BC; --accent-ink:#0F1512; --accent-soft:#1E2733;
+  --flag:#DB9468; --flag-soft:#31221A;
+  --good:#3FA98A; --warn:#D07A3A;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -20px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Lato",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font-weight:700;font-size:clamp(30px,5.2vw,44px);line-height:1.1;letter-spacing:-.015em}
+h2{font-weight:700;font-size:clamp(20px,3.1vw,26px);line-height:1.2;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:700;line-height:1.3}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--faint)}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.tiny{font-size:12.5px}
+
+/* ---------- chrome ---------- */
+.topbar{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 22px}
+.brand{display:flex;align-items:center;gap:9px;margin-right:auto}
+.brand-home{display:flex;flex:none;border-radius:50%;opacity:.92;transition:opacity .12s}
+.brand-home:hover{opacity:1}
+.brand-logo{width:42px;height:42px;border-radius:50%;object-fit:cover;display:block}
+.brand b{font-weight:700;font-size:19px;letter-spacing:-.01em}
+.pill{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.07em;
+  text-transform:uppercase;padding:3px 9px;border-radius:20px;border:1px solid var(--rule-2);
+  color:var(--muted);white-space:nowrap;flex:none;width:fit-content}
+.pill.warn{background:var(--flag-soft);border-color:transparent;color:var(--flag)}
+main{max-width:760px;margin:0 auto;padding:34px 22px 120px}
+
+/* ---------- masthead ---------- */
+.masthead{display:flex;flex-direction:column;gap:12px;padding-bottom:26px;
+  border-bottom:2px solid var(--rule-2)}
+.dateline{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.through-line{font-size:clamp(17px,2.4vw,20px);line-height:1.5;max-width:60ch}
+select{font:inherit;font-size:13px;padding:5px 8px;border-radius:7px;border:1px solid var(--rule-2);
+  background:var(--surface);color:var(--ink)}
+
+/* ---------- cards ---------- */
+.cards{display:flex;flex-direction:column;gap:0;margin-top:8px}
+.card{padding:26px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:10px}
+.card.lead{padding-top:30px}
+.card.lead h3{font-size:clamp(22px,3.4vw,28px);letter-spacing:-.01em;line-height:1.18}
+.card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.07em;
+  text-transform:uppercase;padding:2px 8px;border-radius:4px;background:var(--sunk);color:var(--muted)}
+.tag.region{background:var(--accent-soft);color:var(--accent)}
+/* The significance score, shown rather than hidden. The ranking is the product,
+   so the number it ranked on belongs on the card. */
+.sig{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:500;
+  padding:2px 8px;border-radius:4px;border:1px solid var(--rule-2);color:var(--muted)}
+.sig.high{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
+.why{font-size:15.5px;line-height:1.55;padding-left:13px;border-left:3px solid var(--accent-soft);
+  color:var(--ink)}
+.thread{font-size:13.5px;color:var(--muted)}
+.thread b{font-weight:700;color:var(--ink)}
+.claims{font-size:13px;color:var(--warn)}
+.card-foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:2px}
+.src{font-size:13.5px;color:var(--muted);text-decoration:none}
+.src:hover{color:var(--accent);text-decoration:underline}
+.votes{display:flex;gap:6px;margin-left:auto}
+.vote{background:none;border:1px solid var(--rule-2);border-radius:7px;padding:3px 10px;
+  font:inherit;font-size:13px;cursor:pointer;color:var(--muted);transition:.12s;line-height:1.4}
+.vote:hover{border-color:var(--accent);color:var(--accent)}
+.vote.on{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:700}
+
+/* ---------- also noted ---------- */
+.notes{margin-top:30px;padding:22px;background:var(--surface);border:1px solid var(--rule);
+  border-radius:12px;box-shadow:var(--shadow)}
+.notes ul{margin:12px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
+.notes li{font-size:14.5px;line-height:1.5}
+
+/* ---------- regret box ---------- */
+.regret{margin-top:30px;padding:22px;border:1px dashed var(--rule-2);border-radius:12px;
+  display:flex;flex-direction:column;gap:11px}
+.regret textarea{font:inherit;font-size:14.5px;padding:10px 12px;border-radius:8px;
+  border:1px solid var(--rule-2);background:var(--surface);color:var(--ink);resize:vertical;min-height:62px}
+.btn{background:var(--accent);color:var(--accent-ink);padding:9px 18px;font:inherit;font-weight:600;
+  font-size:14.5px;border:none;border-radius:8px;cursor:pointer;width:fit-content}
+.btn:disabled{opacity:.5;cursor:default}
+
+.state{padding:60px 0;text-align:center;color:var(--muted)}
+footer{max-width:760px;margin:0 auto;padding:0 22px 70px;color:var(--faint);font-size:13px}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <a href="/" class="brand-home" aria-label="Arjun Uvacha — home">
+      <img src="/favicon.png" alt="" width="42" height="42" class="brand-logo">
+    </a>
+    <b>AI Bulletin</b>
+  </div>
+  <span class="pill" id="producer-pill" hidden></span>
+  <select id="archive" aria-label="Pick an edition" hidden></select>
+</div>
+
+<main>
+  <div class="state" id="loading">Loading today's edition…</div>
+
+  <div class="state" id="empty" hidden>
+    <p>No editions yet.</p>
+    <p class="small">The first one lands tomorrow morning.</p>
+  </div>
+
+  <div class="state" id="failed" hidden>
+    <p>Couldn't reach the bulletin.</p>
+    <p class="small">It's probably the network, not the news.</p>
+  </div>
+
+  <article id="edition" hidden>
+    <header class="masthead">
+      <div class="dateline">
+        <span class="eyebrow">✦ AI BULLETIN</span>
+        <span class="eyebrow mono" id="date"></span>
+      </div>
+      <h1 id="headline">What actually changed in AI today</h1>
+      <p class="through-line" id="through-line"></p>
+      <p class="tiny muted" id="stats"></p>
+    </header>
+
+    <div class="cards" id="cards"></div>
+
+    <section class="notes" id="notes-wrap" hidden>
+      <span class="eyebrow">Also noted</span>
+      <ul id="notes"></ul>
+    </section>
+
+    <!-- The regret box. Stage 8 of the design doc: a miss nobody writes down is a
+         miss nobody can diagnose, and the four reasons a story gets missed need
+         four different fixes. -->
+    <section class="regret">
+      <span class="eyebrow">What did I miss?</span>
+      <p class="small muted">Saw something today that should have been here? Tell the curator — misses are what tune the ranking.</p>
+      <textarea id="missed" placeholder="The story, and a link if you have one…" maxlength="1000"></textarea>
+      <button class="btn" id="send-missed">Send it</button>
+      <p class="small" id="missed-said" hidden></p>
+    </section>
+  </article>
+</main>
+
+<footer>
+  <p>Ranked by significance, not recency — and on a quiet day it says so.
+  Every headline links to its primary source; the one-line read is written here.
+  Part of the <a href="/ai-lab/">AI Lab</a>.</p>
+</footer>
+
+<script type="module" src="/ai-bulletin/app.js"></script>
+</body>
+</html>

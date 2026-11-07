@@ -22,6 +22,11 @@
       {
         "source": "/prompt-gym/**",
         "destination": "/prompt-gym/index.html"
+      },
+      {
+        "comment": "So /ai-bulletin/2026-11-06 is a real, linkable URL for one edition. The page reads the date out of the path and asks the Worker for it; every path serves the same file, which is why its assets are referenced root-relative.",
+        "source": "/ai-bulletin/**",
+        "destination": "/ai-bulletin/index.html"
       }
     ],
     "headers": [
@@ -32,6 +37,11 @@
       },
       {
         "source": "/auth/**",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "comment": "Same reason as the others: index.html and app.js ship unhashed filenames, so Firebase's default max-age=3600 would leave a returning reader on an old app.js for an hour after a deploy. The edition itself is fetched from the Worker and never cached here.",
+        "source": "/ai-bulletin/**",
         "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
       },
       {

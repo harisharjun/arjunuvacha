@@ -1,0 +1,65 @@
+# ai-bulletin worker — Cloudflare config
+# Stores and serves the daily AI news edition at arjunuvacha.com/ai-bulletin/.
+# No model is called here and no curation happens here: a producer POSTs a
+# finished edition to /ingest/edition and this Worker keeps it. That is what
+# lets the producer be a Claude cloud routine now and a coded pipeline later
+# without the page or the schema changing. See
+# projects/ai-bulletin/ai-bulletin-design-doc.md.
+#
+# Local:   npx wrangler d1 migrations apply ai-bulletin-staging --local --env staging
+#          npx wrangler dev --env staging        (http://localhost:8787)
+# Deploy:  npx wrangler deploy                   (https://ai-bulletin.harisharjun127.workers.dev)
+#          npx wrangler deploy --env staging     (https://ai-bulletin-staging.harisharjun127.workers.dev)
+name = "ai-bulletin"
+main = "worker.js"
+compatibility_date = "2025-04-01"
+
+[vars]
+# Not a secret: the `aud` an ID token must carry. Sign-in is optional here —
+# anyone can read the bulletin and thumb a card as a guest — but a signed-in
+# visitor's votes are stored against the same Firebase uid the games and
+# PromptGym use, so they follow the account rather than the browser.
+FIREBASE_PROJECT_ID = "arjunuvacha-3de80"
+
+# Secret, set with `npx wrangler secret put BULLETIN_INGEST_SECRET` (and again
+# with `--env staging`). Generate one with `openssl rand -hex 32`.
+#
+# This is the only thing standing between the public internet and an edition
+# published under Arjun's name on arjunuvacha.com, which is why /ingest/edition
+# returns 503 rather than accepting anything when it is unset — a Worker that
+# would publish whatever it was sent should refuse to run at all.
+# The same value goes to the producer (the cloud routine, later the CI job).
+
+# Editions, cards, threads and feedback. Create once and paste the id it prints
+# over the placeholder:
+#   npx wrangler d1 create ai-bulletin
+#   npx wrangler d1 migrations apply ai-bulletin --remote
+# The placeholder is deliberate, as in stonecross: until it is replaced,
+# `wrangler deploy` fails loudly instead of deploying a Worker with nowhere to
+# keep the editions.
+[[d1_databases]]
+binding = "DB"
+database_name = "ai-bulletin"
+database_id = "1c1419eb-7225-42af-bc84-c48c5af629c3"
+migrations_dir = "migrations"
+
+# ─────────────────────────────────────────────────────────────── staging
+# For arjunuvacha-test.web.app and localhost. Its own D1, so a test run of the
+# routine can never publish an edition to the live page — the failure mode that
+# matters most here, since an edition is public the moment it lands.
+# Bindings and vars don't inherit into an environment, so they're repeated.
+#   npx wrangler d1 create ai-bulletin-staging
+#   npx wrangler d1 migrations apply ai-bulletin-staging --remote --env staging
+#   npx wrangler secret put BULLETIN_INGEST_SECRET --env staging
+#   npx wrangler deploy --env staging
+[env.staging]
+name = "ai-bulletin-staging"
+
+[env.staging.vars]
+FIREBASE_PROJECT_ID = "arjunuvacha-test"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "ai-bulletin-staging"
+database_id = "7062e117-2b60-4895-9e82-498cd835bee9"
+migrations_dir = "migrations"

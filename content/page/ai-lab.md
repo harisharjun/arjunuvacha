@@ -14,7 +14,7 @@ ailab:
     by me. They keep my product instincts honest: every prompt, every edge
     case, every user complaint is mine to fix.
   stats:
-    - value: "8"
+    - value: "9"
       label: "products shipped"
     - value: "0→1"
       label: "solo, every time"
@@ -22,6 +22,15 @@ ailab:
       label: "vibe-coded by hand"
   # Newest first. Add a new build at the top.
   projects:
+    - name: "AI Bulletin"
+      tagline: "What actually changed in AI today"
+      description: >
+        A daily, globally-sourced AI briefing, ranked by how much each story
+        matters rather than when it was published. Ongoing stories are tracked
+        as threads, every score is shown, and on a quiet day it says so.
+      icon: "bulletin"
+      link: "/ai-bulletin/"
+      link_label: "Read today's"
     - name: "Paperfold"
       tagline: "A folding puzzle that explains itself"
       description: >
